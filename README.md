@@ -36,18 +36,17 @@ to build
 
         git clone https://github.com/tracktunes/ionic-recorder
         cd ionic-recorder
-        ./bin/recreate_app.sh
-* Wait a good 10 minutes here ...
-* Now check the output of the file `typescript` at the end of this long process.
+* If this is the first time you've cloned the directory, you'll need some type definitions to avoid compiler warnings, get them by executing this:
 
-        cat typescript
-* Note that a new 'ionic-recorder' directory is created inside the existing one.
-If all tests passed, you can type
+        ./bin/install_typings.sh
+* Install the npm packages needed by this project
 
-        cd ionic-recorder
-        npm start
-and a web browser window will pop up with the app running in it after it has been compiled from sources.
-* To start coding, just open the root project with VSCode - the code is in the subdirectory 'app'.
+        npm install
+* Typescript will complain about some missing types at a couple of spots in the node_modules packages just installed.  To avoid those, execute:
+
+        ./bin/fix_typings.sh
+
+* You should be good to go.  The app will pop up in a 'chromium-browser' if you have that installed on your linux box, after you type 'npm start' - you can check the script section of 'package.json' to find a few other useful global commands - for testing, for example. 
 
 ## Version
 The current version is maintained [in the VERSION file at the project's home directory](https://github.com/tracktunes/ionic-recorder/blob/master/VERSION).
