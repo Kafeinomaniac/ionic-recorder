@@ -36,5 +36,6 @@ npm install --save-dev awesome-typescript-loader \
     traceur \
     ts-node \
     tslint \
+    tslint-eslint-rules \
     typescript \
     typings \

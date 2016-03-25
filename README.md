@@ -36,11 +36,8 @@ to build
 
         git clone https://github.com/tracktunes/ionic-recorder
         cd ionic-recorder
-        script
-* Now type the following into the new script shell:
-
-        ./bin/recreate_app.sh; exit
-* Now wait a good 10 minutes ...
+        ./bin/recreate_app.sh
+* Wait a good 10 minutes here ...
 * Now check the output of the file `typescript` at the end of this long process.
 
         cat typescript
