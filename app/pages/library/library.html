@@ -56,7 +56,7 @@
 <ion-content [class]="platform.platforms()" padding>
     <ion-list *ngIf="folderNode" class="file-folder-list">
         <ion-item clear *ngFor="#i of folderNode.childOrder">
-            <ion-label (click)="onClickListItem(folderItems[i])>
+            <ion-label (click)="onClickListItem(folderItems[i])">
                 <ion-icon [name]="itemIconName(i)" medium-gray>
                 </ion-icon>
                 {{folderItems[i].name}}
