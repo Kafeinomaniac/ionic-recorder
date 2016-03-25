@@ -58,7 +58,11 @@ perl -pi -e 's/\"double\"/\"single\"/' tslint.json
 # install typings definitions
 ./bin/install_typings.sh
 
+# patches to fix some type complaints by the Typescript compiler
 ./bin/fix_typings.sh
+
+# install package.json (ionic) packages
+./npm install
 
 # run the main gulp test task, which runs other tasks in order
 # NOTE: seems like we can't run these tasks in order from the
