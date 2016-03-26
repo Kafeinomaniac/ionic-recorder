@@ -21,6 +21,8 @@ export class LibraryPage {
 
     private totalSelectedCounter: number = 0;
 
+    private unfiledFolderKey: number;
+
     /**
      * @constructor
      * @param
@@ -47,6 +49,15 @@ export class LibraryPage {
                         if (!selectedNodes) {
                             alert('no selected nodes! ' + selectedNodes);
                         }
+                        this.appState.getProperty('unfiledFolderKey')
+                            .subscribe(
+                            (unfiledFolderKey: number) => {
+                                this.unfiledFolderKey = unfiledFolderKey;
+                            },
+                            (error: any) => {
+                                alert('in getProperty: ' + error);
+                            }
+                            ); // getProperty().subscribe(
                     },
                     (error: any) => {
                         alert('in getProperty: ' + error);
@@ -206,12 +217,31 @@ export class LibraryPage {
     }
 
     onClickDeleteButton() {
+        if (this.selectedNodes[this.unfiledFolderKey]) {
+            this.alertAndDo([
+                'The Unfiled folder is selected for deletion, ',
+                'but the Unfiled folder cannot be deleted. Unselect it ',
+                'and delete the rest?'].join(),
+                'Yes, unselect',
+                () => {
+                    delete this.selectedNodes[this.unfiledFolderKey];
+                }
+            );
+        }
         let nSelectedNodes = Object.keys(this.selectedNodes).length,
             selectedNodesHere: { [id: string]: TreeNode; } =
                 this.selectedNodesHere(),
             nSelectedNodesHere = Object.keys(selectedNodesHere).length,
             nSelectedNodesNotHere = nSelectedNodes - nSelectedNodesHere;
         console.log('nchec ' + nSelectedNodes + ', in ' + nSelectedNodesHere);
+        
+        if (nSelectedNodes === 0) {
+            // for the case of unselecting only Unfiled folder in the alert
+            // above and nothing is left in selected.  otherwise this condition
+            // should never be met.
+            return;
+        }
+        
         if (nSelectedNodesNotHere) {
             if (nSelectedNodesHere) {
                 this.alertAndDo([
@@ -264,6 +294,7 @@ export class LibraryPage {
     }
 
     deleteButtonDisabled() {
+        // return this.selectedNodes[this.unfiledFolderKey];
         return false;
     }
 
