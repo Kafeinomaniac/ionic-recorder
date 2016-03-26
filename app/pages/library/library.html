@@ -15,7 +15,7 @@
 </ion-navbar>
 
 <span *ngIf="folderNode" class="library-page-path-message">
-    <span>{{getPath()}}</span>&nbsp; folder
+    Folder &nbsp;<span>{{getPath()}}</span>
 </span>
 
 <div class="buttonbar3">
@@ -69,10 +69,6 @@
         </ion-item>
     </ion-list>
 </ion-content>
-
-<span *ngIf="nSelectedNodes()" class="library-page-path-message">
-    Selection controls: &nbsp; <a>(click here to jump to next selected)</a>
-</span>
 
 <div class="buttonbar4" *ngIf="nSelectedNodes()">
     <button almost-dark (click)="onClickDownButton()" [disabled]="downButtonDisabled()" ion-row center>
