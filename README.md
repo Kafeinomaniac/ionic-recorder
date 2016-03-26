@@ -46,6 +46,10 @@ to build
 
 * You should be good to go.  Check the Getting Started Coding page or the Getting Started Using page (neither page exists yet). You can open the root directory 'ionic-recorder' in VSCode.  All the code is under subdirectory 'app'.
 
+* The 'package.json' file has some useful high level commands at the 'scripts' subsection.  Sample useful commands in there:
+
+        npm test - runs through tests
+        npm start - starts a server and pops up a browser running the app
 
 ## Version
 The current version is maintained [in the VERSION file at the project's home directory](https://github.com/tracktunes/ionic-recorder/blob/master/VERSION).
