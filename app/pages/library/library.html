@@ -5,7 +5,7 @@
         <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Library</ion-title>
-     <ion-buttons end *ngIf="nSelectedNodes()">
+    <ion-buttons end *ngIf="nSelectedNodes()">
         <button small (click)="onClickTotalSelected()">
             <ion-badge darkest-gray item-right>
                 Total selected: {{nSelectedNodes()}}
@@ -56,7 +56,7 @@
                 </span>
                 <ion-icon *ngIf="!folderItems[i].dataKey" name="folder" medium-gray>
                 </ion-icon>
-                    {{folderItems[i].name}}
+                {{folderItems[i].name}}
             </ion-label>
             <ion-checkbox [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])" medium-gray item-left>
             </ion-checkbox>

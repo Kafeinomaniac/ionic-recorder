@@ -216,32 +216,21 @@ export class LibraryPage {
             });
     }
 
-    onClickDeleteButton() {
-        if (this.selectedNodes[this.unfiledFolderKey]) {
-            this.alertAndDo([
-                'The Unfiled folder is selected for deletion, ',
-                'but the Unfiled folder cannot be deleted. Unselect it ',
-                'and delete the rest?'].join(),
-                'Yes, unselect',
-                () => {
-                    delete this.selectedNodes[this.unfiledFolderKey];
-                }
-            );
-        }
+    checkIfDeletingInOtherFolders() {
         let nSelectedNodes = Object.keys(this.selectedNodes).length,
             selectedNodesHere: { [id: string]: TreeNode; } =
                 this.selectedNodesHere(),
             nSelectedNodesHere = Object.keys(selectedNodesHere).length,
             nSelectedNodesNotHere = nSelectedNodes - nSelectedNodesHere;
         console.log('nchec ' + nSelectedNodes + ', in ' + nSelectedNodesHere);
-        
+
         if (nSelectedNodes === 0) {
             // for the case of unselecting only Unfiled folder in the alert
             // above and nothing is left in selected.  otherwise this condition
             // should never be met.
             return;
         }
-        
+
         if (nSelectedNodesNotHere) {
             if (nSelectedNodesHere) {
                 this.alertAndDo([
@@ -274,6 +263,28 @@ export class LibraryPage {
         else {
             // all selected nodes are in this folder
             this.deleteNodes(selectedNodesHere);
+        }
+    }
+
+    onClickDeleteButton() {
+        if (this.selectedNodes[this.unfiledFolderKey]) {
+
+            console.log('===> checkIfNotDeletingUnfiled(): ' +
+                this.selectedNodes[this.unfiledFolderKey]);
+
+            this.alertAndDo([
+                'The Unfiled folder is selected for deletion, ',
+                'but the Unfiled folder cannot be deleted. Unselect it ',
+                'and delete the rest?'].join(''),
+                'Yes',
+                () => {
+                    delete this.selectedNodes[this.unfiledFolderKey];
+                    this.checkIfDeletingInOtherFolders();
+                }
+            );
+        }
+        else {
+            this.checkIfDeletingInOtherFolders();
         }
     }
 
