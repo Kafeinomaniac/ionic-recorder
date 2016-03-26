@@ -5,7 +5,7 @@
         <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Library</ion-title>
-    <ion-buttons end *ngIf="nSelectedNodes()">
+     <ion-buttons end *ngIf="nSelectedNodes()">
         <button small (click)="onClickTotalSelected()">
             <ion-badge darkest-gray item-right>
                 Total selected: {{nSelectedNodes()}}
@@ -15,7 +15,7 @@
 </ion-navbar>
 
 <span *ngIf="folderNode" class="library-page-path-message">
-    At: &nbsp; <span>{{getPath()}}</span>
+    Folder &nbsp; <span>{{getPath()}}</span>
 </span>
 
 <div class="buttonbar4">
@@ -57,14 +57,22 @@
     <ion-list *ngIf="folderNode" class="file-folder-list">
         <ion-item clear *ngFor="#i of folderNode.childOrder" class="library-item">
             <ion-label button clear (click)="onClickListItem(folderItems[i])">
-                <ion-icon [name]="itemIconName(i)" medium-gray>
+                <span *ngIf="folderItems[i].dataKey">
+                    <ion-icon  name="document" medium-gray>
+                    </ion-icon>
+                    &nbsp;
+                    <ion-icon *ngIf="folderItems[i].dataKey" name="play" medium-gray>
+                    </ion-icon>
+                    &nbsp;
+                </span>
+                <ion-icon *ngIf="!folderItems[i].dataKey" name="folder" medium-gray>
                 </ion-icon>
-                {{folderItems[i].name}}
+                    {{folderItems[i].name}}
             </ion-label>
             <ion-checkbox [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])" medium-gray item-left>
             </ion-checkbox>
-            <button clear item-right class="library-item-play-button">
-                <ion-icon *ngIf="folderItems[i].dataKey" name="play"></ion-icon>
+            <button clear item-right>
+                <ion-icon name="more"></ion-icon>
             </button>
         </ion-item>
         <ion-item class="library-empty-folder-message" *ngIf="!folderNode.childOrder.length">
@@ -73,24 +81,22 @@
     </ion-list>
 </ion-content>
 
+<span *ngIf="nSelectedNodes()" class="library-page-path-message">
+    Selection
+</span>
+
 <div class="buttonbar5" *ngIf="nSelectedNodes()">
-    <button almost-dark (click)="onClickUpButton()" [disabled]="upButtonDisabled()" ion-row center>
-        <ion-col>
-            <ion-icon name="arrow-up"></ion-icon>
-            <br> Up
-            <br>
-        </ion-col>
-    </button>
     <button almost-dark (click)="onClickDownButton()" [disabled]="downButtonDisabled()" ion-row center>
         <ion-col>
-            <ion-icon name="arrow-down"></ion-icon>
-            <br> Down
+            <ion-icon name="play"></ion-icon>
+            <br> Play
             <br>
         </ion-col>
     </button>
     <button almost-dark (click)="onClickMoveButton()" [disabled]="moveButtonDisabled()" ion-row center>
         <ion-col>
-            <ion-icon name="move"></ion-icon>
+            <ion-icon name="share-alt"></ion-icon>
+            <ion-icon name="folder-outline"></ion-icon>
             <br> Move
             <br>
         </ion-col>
