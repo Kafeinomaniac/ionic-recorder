@@ -36,11 +36,22 @@ to build
 
         git clone https://github.com/tracktunes/ionic-recorder
         cd ionic-recorder
+<<<<<<< HEAD
 * Install the npm packages needed by this project
 
         npm install
 * Typescript will complain about some missing types at a couple of spots in the node_modules packages just installed.  To avoid those, execute:
 
+=======
+* If this is the first time you've cloned the directory, you'll need some type definitions to avoid compiler warnings, get them by executing this:
+
+        ./bin/install_typings.sh
+* Install the npm packages needed by this project
+
+        npm install
+* Typescript will complain about some missing types at a couple of spots in the node_modules packages just installed.  To avoid those, execute:
+
+>>>>>>> 32315fae89c7c481cf40f0426a0dd3b231cd0476
         ./bin/fix_typings.sh
 
 * You should be good to go.  The app will pop up in a 'chromium-browser' if you have that installed on your linux box, after you type 'npm start' - you can check the script section of 'package.json' to find a few other useful global commands - for testing, for example. 
