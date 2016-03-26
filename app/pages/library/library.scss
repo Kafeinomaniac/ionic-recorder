@@ -89,7 +89,14 @@ div.buttonbar5 button {
 }
 
 // control appearance of the text that says a folder is empty
+ion-content ion-list ion-item.library-item ion-label.button span.button-inner {
+    text-align: left;
+    justify-content: left;
+}
+
+// control appearance of the text that says a folder is empty
 ion-content ion-list ion-item.library-empty-folder-message {
     text-align: center;
     color: map-get($colors, logo-orange);
 }
+
