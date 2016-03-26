@@ -364,7 +364,7 @@ export class LibraryPage {
     }
 
     onClickListItem(node: TreeNode) {
-        console.log('onClickItem(' + node.name + ') ' + node[DB_KEY_PATH]);
+        console.log('onClickListItem(' + node.name + ') ' + node[DB_KEY_PATH]);
         if (this.localDB.isFolderNode(node)) {
             this.switchFolder(node[DB_KEY_PATH], true);
         }
@@ -373,18 +373,6 @@ export class LibraryPage {
     onClickParentButton() {
         if (this.folderNode) {
             this.switchFolder(this.folderNode.parentKey, true);
-        }
-    }
-
-    itemIconName(key: string) {
-        if (!this.folderItems || !this.folderItems[key]) {
-            return '';
-        }
-        if (this.localDB.isDataNode(this.folderItems[key])) {
-            return 'document';
-        }
-        else {
-            return 'folder';
         }
     }
 

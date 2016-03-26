@@ -28,7 +28,7 @@ span.library-page-path-message {
 }
 
 // appearance of buttonbars
-div.buttonbar4, div.buttonbar5 {
+div.buttonbar3, div.buttonbar4, div.buttonbar5 {
     // background-color is made same as navbars so that
     // it all looks like one section around the content
     background-color: map-get($colors, almost-dark);
@@ -74,6 +74,10 @@ ion-alert {
     }
 }
 
+div.buttonbar3 button {
+    width: 31%;
+}
+
 // four button bar
 // set width to be a little less than 25% or you get
 // weird side effects
@@ -85,7 +89,7 @@ div.buttonbar4 button {
 // set width to be a little less than 20% or you get
 // weird side effects
 div.buttonbar5 button {
-   width: 23%;
+   width: 18%;
 }
 
 // control appearance of the text that says a folder is empty
