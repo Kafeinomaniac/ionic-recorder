@@ -38,11 +38,10 @@ export class LibraryPage {
      * @constructor
      * @description
      * @returns {void}
-     * @description called first time the graphics are initialized 
-     * ( see Ionic Life Cycle hooks: 
-     *     https://webcake.co/page-lifecycle-hooks-in-ionic-2/ )
+     * @description called first time the graphics are initialized.
+     * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
      */
-    ngOnInit() {
+    onPageDidEnter() {
         console.warn('ngOnInit() --------------------');
         // switch folders, via AppState
         this.appState.getLastViewedFolderKey().subscribe(
@@ -76,7 +75,11 @@ export class LibraryPage {
             }
         ); // getProperty().subscbribe(
     }
-
+    /*
+    onPageDidEnter() {
+        console.warn('Library:onPageDidEnter()-------------------------');
+    }
+    */
     getPath() {
         let path: string = this.folderNode.path + '/' + this.folderNode.name,
             rootPath: string = '/' + ROOT_FOLDER_NAME;
@@ -321,11 +324,13 @@ export class LibraryPage {
             alert('switchFolder -- invalid key!');
             return;
         }
+        /*
         if (this.folderNode && this.folderNode[DB_KEY_PATH] === key) {
             // we're already in that folder
             alert('why switch twice in a row to the same folder?');
             return;
         }
+        */
         console.log('switchFolder(' + key + ', ' + updateState + ')');
 
         // for non-root folders, we set this.folderNode here
