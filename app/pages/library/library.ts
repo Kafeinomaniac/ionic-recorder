@@ -25,16 +25,23 @@ export class LibraryPage {
 
     /**
      * @constructor
-     * @param
+     * @param {NavController} nav
+     * @param {Platform} platform
      */
-    constructor(private navController: NavController,
+    constructor(
+        private nav: NavController,
         private platform: Platform) {
         console.log('constructor():LibraryPage');
     }
 
-    // onPageWillEnter
-    // Ionic Life Cycle Hooks:
-    // https://webcake.co/page-lifecycle-hooks-in-ionic-2/
+    /**
+     * @constructor
+     * @description
+     * @returns {void}
+     * @description called first time the graphics are initialized 
+     * ( see Ionic Life Cycle hooks: 
+     *     https://webcake.co/page-lifecycle-hooks-in-ionic-2/ )
+     */
     ngOnInit() {
         console.warn('ngOnInit() --------------------');
         // switch folders, via AppState
@@ -132,7 +139,7 @@ export class LibraryPage {
             alert.addButton('Cancel');
         }
 
-        this.navController.present(alert).then();
+        this.nav.present(alert).then();
     }
 
     unselectItemsNotHere() {
@@ -425,7 +432,7 @@ export class LibraryPage {
             parentItems: this.folderItems
         });
 
-        this.navController.present(addFolderModal);
+        this.nav.present(addFolderModal);
 
         addFolderModal.onDismiss((folderName: string) => {
             if (folderName) {
