@@ -181,7 +181,8 @@ export class LibraryPage {
             'Permanently delete ' + nNodes + ' item' +
             (nNodes > 1 ? 's?' : '?'),
             'Ok', () => {
-                console.log('deleting ' + nNodes + ' selected items ...');
+                console.log('Library::deleteNodes(): deleting ' + nNodes +
+                    ' selected items ...');
                 this.localDB.deleteNodes(keyDict).subscribe(
                     () => {
                         let i: number,
@@ -229,7 +230,6 @@ export class LibraryPage {
                 this.selectedNodesHere(),
             nSelectedNodesHere = Object.keys(selectedNodesHere).length,
             nSelectedNodesNotHere = nSelectedNodes - nSelectedNodesHere;
-        console.log('nchec ' + nSelectedNodes + ', in ' + nSelectedNodesHere);
 
         if (nSelectedNodes === 0) {
             // for the case of unselecting only Unfiled folder in the alert
@@ -275,9 +275,6 @@ export class LibraryPage {
 
     onClickDeleteButton() {
         if (this.selectedNodes[this.unfiledFolderKey]) {
-
-            console.log('===> checkIfNotDeletingUnfiled(): ' +
-                this.selectedNodes[this.unfiledFolderKey]);
 
             this.alertAndDo([
                 'The Unfiled folder is selected for deletion, ',
@@ -386,7 +383,6 @@ export class LibraryPage {
     }
 
     onClickCheckbox(node: TreeNode) {
-        console.log('onClickCheckbox()');
         // reset the counter for flipping through selected nodes
         this.totalSelectedCounter = 0;
 
@@ -417,6 +413,7 @@ export class LibraryPage {
         if (this.localDB.isFolderNode(node)) {
             this.switchFolder(node[DB_KEY_PATH], true);
         }
+        // TODO: here's where we initiate the player
     }
 
     onClickParentButton() {

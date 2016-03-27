@@ -1225,16 +1225,23 @@ export class LocalDB {
                             nFoldersProcessed++;
                             if (nFoldersProcessed === nFolders) {
                                 observer.next(keyDict);
+                                console.log('=> expand result:' +
+                                    Object.keys(keyDict).join(', '));
                                 observer.complete();
                             }
                         },
                         (error: any) => {
                             observer.error(error);
                         }
-                    );
+                    ); // getSubtreeNodesArray(node).subscribe(
                 }
-            }
-
+                else {
+                    // for data nodes we just return keyDict as is
+                    // i.e. we do nothing
+                    observer.next(keyDict);
+                    observer.complete();
+                }
+            } // if (this.isFolderNode(node)) { .. else { ..
         });
         return source;
     }
