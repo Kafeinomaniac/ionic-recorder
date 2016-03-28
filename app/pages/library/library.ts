@@ -82,11 +82,7 @@ export class LibraryPage {
             }
         ); // getProperty().subscbribe(
     }
-    /*
-    onPageDidEnter() {
-        console.warn('Library:onPageDidEnter()-------------------------');
-    }
-    */
+
     getPath() {
         let path: string = this.folderNode.path + '/' + this.folderNode.name,
             rootPath: string = '/' + ROOT_FOLDER_NAME;

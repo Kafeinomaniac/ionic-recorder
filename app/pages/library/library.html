@@ -14,25 +14,10 @@
     </ion-buttons>
 </ion-navbar>
 
-<!--ion-row class="library-player">
-    <ion-col button clear>
-        <ion-icon name="play"></ion-icon>
-    </ion-col>
-    <ion-col width-75 center>
-        <ion-row class="player">
-            <span class="time">{{playerTime}}</span>
-            <progress max="100" value="80"></progress>
-            <span class="duration">{{currentDuration}}</span>
-        </ion-row>
-    </ion-col>
-    <ion-col button clear>
-        <ion-icon name="close"></ion-icon>
-    </ion-col>
-</ion-row-->
 <audio-player></audio-player>
 
 <span *ngIf="folderNode" class="library-page-path-message">
-    Folder &nbsp;<span>{{getPath()}}</span>
+    At: &nbsp;<span>{{getPath()}}</span>
 </span>
 
 <div class="buttonbar3">
@@ -64,13 +49,10 @@
 
 <ion-content [class]="platform.platforms()">
     <ion-list *ngIf="folderNode" class="file-folder-list">
-        <!--ion-item-divider class="library-player" sticky>
-
-        </ion-item-divider-->
         <ion-item clear *ngFor="#i of folderNode.childOrder" class="library-item">
             <ion-label button clear (click)="onClickListItem(folderItems[i])">
                 <span *ngIf="folderItems[i].dataKey">
-                <ion-icon name="play" medium-gray>
+                <ion-icon name="document" medium-gray>
                 </ion-icon>
                 &nbsp;
                 </span>
