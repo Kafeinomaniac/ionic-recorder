@@ -100,7 +100,6 @@ export class AppState {
             this.getProperty('lastViewedFolderKey').subscribe(
                 (lastViewedFolderKey: number) => {
                     if (lastViewedFolderKey === DB_NO_KEY) {
-                        console.log('lastViewedFolder not yet set');
                         // we have not yet set the lastViewedFolderKey
                         // here we set it to the default, which is root folder
                         this.getProperty('rootFolderKey').subscribe(
@@ -111,8 +110,6 @@ export class AppState {
                                     rootFolderKey)
                                     .subscribe(
                                     () => {
-                                        console.log('updated to: ' +
-                                            rootFolderKey);
                                         observer.next(rootFolderKey);
                                         observer.complete();
                                     },
@@ -155,7 +152,7 @@ export class AppState {
                     observer.complete();
                 }
                 else {
-                    console.warn('... no STATE yet ...');
+                    // console.warn('... no STATE yet ...');
                     setTimeout(repeat, MAX_DB_INIT_TIME / 10);
                 }
             };

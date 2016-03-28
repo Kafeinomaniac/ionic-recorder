@@ -78,11 +78,6 @@ export class AudioPlayer implements OnChanges {
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
         console.log('AudioPlayer:ngOnChanges() title: ' + this.title);
         if (changeRecord['title']) {
-            if (!changeRecord['url']) {
-                console.error('title but no url');
-                alert('title but no url');
-                throw Error('title but no url');
-            }
             if (this.title !== undefined) {
                 this.show();
             }

@@ -18,6 +18,7 @@ const IMPOSSIBLE_TAB_INDEX = -1;
     }
 })
 export class TracktunesApp {
+    private webAudio: WebAudio = WebAudio.Instance;
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
     private rootPage: Type = TabsPage;
@@ -38,7 +39,6 @@ export class TracktunesApp {
     }
 
     ngOnInit() {
-        console.log('OPE');
         this.appState.getProperty('lastSelectedTab').subscribe(
             (tabIndex: number) => {
                 this.selectTab(tabIndex, false);

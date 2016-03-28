@@ -43,6 +43,7 @@ export class RecordPage {
 
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
+    private webAudio: WebAudio = WebAudio.Instance;
     
     /**
      * @constructor
@@ -50,9 +51,7 @@ export class RecordPage {
      * @param {WebAudio} webAudio
      * @param {IonicApp} app
      */
-    constructor(private platform: Platform, private webAudio: WebAudio,
-        private app: IonicApp) {
-
+    constructor(private platform: Platform, private app: IonicApp) {
         console.log('constructor():RecordPage');
         this.gain = 100;
         this.decibels = '0.00 dB';
@@ -64,7 +63,7 @@ export class RecordPage {
 
         // function that gets called with a newly created blob when
         // we hit the stop button - saves blob to local db
-        webAudio.onStop = (blob: Blob) => {
+        this.webAudio.onStop = (blob: Blob) => {
             let now: Date = new Date(),
                 itemCount: number = 0,
                 month: number = now.getMonth() + 1,
@@ -89,7 +88,7 @@ export class RecordPage {
                         );
                 },
                 (getError: any) => {
-                    console.log('getProperty error: ' + getError);
+                    console.error('getProperty error: ' + getError);
                 }
             ); // getProperty().subscribe(
         }; // webAudio.onStop = (blob: Blob) => { ...
@@ -99,7 +98,6 @@ export class RecordPage {
     }
 
     monitorVolumeAndTimeInfiniteLoop() {
-        console.log('monitorVolumeAndTimeInfiniteLoop()');
         this.totalPauseTime = this.monitorTotalTime = this.lastPauseTime = 0;
         this.monitorStartTime = Date.now();
 

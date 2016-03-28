@@ -52,7 +52,6 @@ export class LibraryPage {
         // switch folders, via AppState
         this.appState.getLastViewedFolderKey().subscribe(
             (lastViewedFolderKey: number) => {
-                console.log('lastViewedFolderKey: ' + lastViewedFolderKey);
                 // this is it!  here's where we enter the last viewed folder
                 this.switchFolder(lastViewedFolderKey, false);
                 this.appState.getProperty('selectedNodes').subscribe(
@@ -145,10 +144,6 @@ export class LibraryPage {
         }
 
         this.nav.present(alert).then();
-    }
-
-    unselectItemsNotHere() {
-        console.log('unselectItemsNotHere()');
     }
 
     onClickMoveButton() {

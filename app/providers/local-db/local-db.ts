@@ -63,7 +63,6 @@ export class LocalDB {
         }
         this.openDB().subscribe(
             (db: IDBDatabase) => {
-                // console.log('got DB in constructor');
                 this.db = db;
             },
             (error: any) => {
@@ -84,7 +83,6 @@ export class LocalDB {
     // DB_NO_KEY.  Returns true if key is a  whole number
     // greater than zero.
     validateKey(key: number): boolean {
-        // console.log('validateKey(' + key + ')');
         return (
             key &&
             !isNaN(key) &&
@@ -152,7 +150,7 @@ export class LocalDB {
                     observer.complete();
                 }
                 else {
-                    console.warn('... no DB yet ...');
+                    // console.warn('... no DB yet ...');
                     setTimeout(repeat, MAX_DB_INIT_TIME / 10);
                 }
             };
@@ -313,8 +311,6 @@ export class LocalDB {
                         let getRequest: IDBRequest = store.get(key);
 
                         getRequest.onsuccess = (event: IDBEvent) => {
-                            console.log('-> *** <- readStoreItem(' +
-                                key + '): SUCCESS!');
                             let mismatchOccured: boolean = false;
                             if (getRequest.result) {
                                 // getRequest.result is node we got from db
@@ -631,14 +627,12 @@ export class LocalDB {
 
     // returns observable of parent node (updated with new child order)
     attachToParent(childNode: TreeNode) {
-        console.log('ATTACH TO PARENT: ' + childNode.name);
         let source: Observable<TreeNode> = Observable.create((observer) => {
             if (this.validateKey(childNode.parentKey)) {
                 // you have to read the existing child order first,
                 // in order to add to the front of it
                 this.readNode(childNode.parentKey).subscribe(
                     (parentNode: TreeNode) => {
-                        console.log('READNODE GOT ::: ' + parentNode);
                         // push newly created nodes to the front of
                         // the parent childOrder list
                         parentNode.childOrder = prependArray(
@@ -653,10 +647,6 @@ export class LocalDB {
                                         parentNode.name;
                                     this.updateNode(childNode).subscribe(
                                         () => {
-                                            console.log('SET CHILDNODE PATH' +
-                                                'OF ' + childNode.name +
-                                                ' TO: ' + parentNode.path +
-                                                '/' + parentNode.name);
                                             observer.next(parentNode);
                                             observer.complete();
                                         },
@@ -694,7 +684,6 @@ export class LocalDB {
                     childNode.path = '';
                     this.updateNode(childNode).subscribe(
                         () => {
-                            console.log('SET CHILDNODE PATH TO EMPTY STRING');
                             observer.next(null);
                             observer.complete();
                         },
@@ -714,8 +703,6 @@ export class LocalDB {
     }
 
     detachNodesFromParent(childNodes: TreeNode[]) {
-        console.log('detachNodesFromParent(' +
-            childNodes.map(x => x.name).join(', ') + ')');
         let source: Observable<TreeNode> = Observable.create((observer) => {
             let nNodes: number = childNodes.length;
             if (nNodes === 0) {
@@ -777,8 +764,6 @@ export class LocalDB {
     }
 
     detachNodesFromParents(nodes: TreeNode[]) {
-        console.log('detachNodesFromParents(' +
-            nodes.map(x => x.name).join(', ') + ')');
         let source: Observable<void> = Observable.create((observer) => {
             // 1) group parents
             let i: number,
@@ -991,7 +976,6 @@ export class LocalDB {
     // returned If a node with key 'key' is not in the tree, null
     // TreeNode object is returned
     readNode(key: number) {
-        console.log('READNODE ' + key);
         let source: Observable<TreeNode> = Observable.create((observer) => {
             this.readStoreItem(DB_TREE_STORE_NAME, key).subscribe(
                 (treeNode: TreeNode) => {
@@ -1019,7 +1003,6 @@ export class LocalDB {
                 this.getNodeByNameInParent(name, parentKey).subscribe(
                     (readTreeNode: TreeNode) => {
                         if (readTreeNode) {
-                            console.log('data node in DB, returning it ...');
                             // found a node in parent by name 'name'
                             this.readNodeData(readTreeNode).subscribe(
                                 (dataNode: DataNode) => {
@@ -1036,7 +1019,6 @@ export class LocalDB {
                             );
                         } // if (node) {
                         else {
-                            console.log('data node not in DB, creating it ...');
                             // no node in parent by name 'name', create it
                             this.createDataNode(
                                 name, parentKey, data).subscribe(
@@ -1072,14 +1054,10 @@ export class LocalDB {
                 this.getNodeByNameInParent(name, parentKey).subscribe(
                     (readTreeNode: TreeNode) => {
                         if (readTreeNode) {
-                            console.log(
-                                'folder node in DB, returning it ...');
                             observer.next(readTreeNode);
                             observer.complete();
                         }
                         else {
-                            console.log(
-                                'folder node not in DB, creating it ...');
                             this.createFolderNode(
                                 name, parentKey).subscribe(
                                 (parentChild: ParentChild) => {
@@ -1124,7 +1102,6 @@ export class LocalDB {
     // in both tree store and data store associated with data node
     // TODO(?): convert this to key input
     deleteDataNode(dataNode: TreeNode) {
-        console.log('====> deleteDataNode(' + dataNode.name + ')');
         let source: Observable<void> = Observable.create((observer) => {
             this.deleteDataStoreItem(dataNode.dataKey)
                 .subscribe(() => {
@@ -1147,7 +1124,6 @@ export class LocalDB {
     }
 
     deleteFolderNode(folderNode: TreeNode) {
-        console.log('====> deleteFolderNode(' + folderNode.name + ')');
         let source: Observable<void> = Observable.create((observer) => {
             this.deleteTreeStoreItem(folderNode[DB_KEY_PATH])
                 .subscribe(() => {
@@ -1187,7 +1163,6 @@ export class LocalDB {
 
     // expandForDeleteNodes
     expandKeyDict(keyDict: { [id: string]: TreeNode; }) {
-        console.log('=> expand(' + Object.keys(keyDict).join(', ') + ')');
         let source: Observable<Object> = Observable.create((observer) => {
             // add nodes supplied argument nodes into the keyDict
             // if a node is a folder node, we get its subtree and
@@ -1225,8 +1200,6 @@ export class LocalDB {
                             nFoldersProcessed++;
                             if (nFoldersProcessed === nFolders) {
                                 observer.next(keyDict);
-                                console.log('=> expand result:' +
-                                    Object.keys(keyDict).join(', '));
                                 observer.complete();
                             }
                         },
@@ -1317,7 +1290,6 @@ export class LocalDB {
     // TreeNode that's got
     // the key of one of the nodeKeys keys
     ls(nodeKeys: number[]): Observable<TreeNode> {
-        console.log('LS: ' + nodeKeys);
         return <Observable<TreeNode>>Observable.fromArray(nodeKeys)
             .flatMap((key: number) => this.readNode(key));
     }
@@ -1326,14 +1298,11 @@ export class LocalDB {
     // TreeNode that's got
     // the key of one of the nodeKeys keys
     lsNode(node: TreeNode): Observable<TreeNode> {
-        console.log('LS NODE: ' + node.childOrder);
         return this.ls(node.childOrder);
     }
 
     // returns boolean
     isLeaf(node: TreeNode) {
-        console.log('isLeaf(' + node.name + '): ' +
-            (this.isDataNode(node) || !node.childOrder.length));
         // returns true or false depending on if it's a leaf node.
         // a leaf node is either a data node or an empty folder node
         return this.isDataNode(node) || !node.childOrder.length;
@@ -1353,7 +1322,6 @@ export class LocalDB {
     // enumerates the entire getSubtreeNodes() sequence, returns an
     // array of treenodes
     getSubtreeNodesArray(node: TreeNode): Observable<TreeNode[]> {
-        console.log('getSubtreeNodesArray: ' + node.name);
         let source: Observable<TreeNode[]> = Observable.create((observer) => {
             let nodes: TreeNode[] = [];
             this.getSubtreeNodes(node).subscribe(
@@ -1364,8 +1332,6 @@ export class LocalDB {
                     observer.error(error);
                 },
                 () => {
-                    console.log('-----> GOT NODES: ' +
-                        nodes.map(x => x.name).join(', '));
                     observer.next(nodes);
                     observer.complete();
                 }

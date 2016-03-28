@@ -3,6 +3,9 @@ import {Injectable} from 'angular2/core';
 
 @Injectable()
 export class WebAudio {
+    // 'instance' is used as part of Singleton pattern implementation
+    private static instance: WebAudio = null;
+    
     private audioContext: AudioContext;
     private audioGainNode: AudioGainNode;
     private mediaRecorder: MediaRecorder;
@@ -14,8 +17,17 @@ export class WebAudio {
     onStop: (blob: Blob) => void;
 
     constructor() {
+        console.log('constructor():WebAudio');
         this.blobChunks = [];
         this.initAudio();
+    }
+    
+    // Singleton pattern implementation
+    static get Instance() {
+        if (!this.instance) {
+            this.instance = new WebAudio();
+        }
+        return this.instance;
     }
 
     initAudio() {
