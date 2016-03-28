@@ -93,13 +93,64 @@ div.buttonbar5 button {
 }
 
 // control appearance of the text that says a folder is empty
-ion-content ion-list ion-item.library-item ion-label.button span.button-inner {
+ion-content ion-list.file-folder-list ion-item.library-item ion-label.button span.button-inner {
     text-align: left;
     justify-content: left;
 }
 
 // control appearance of the text that says a folder is empty
-ion-content ion-list ion-item.library-empty-folder-message {
+ion-content ion-list.file-folder-list ion-item.library-empty-folder-message {
     text-align: center;
     color: map-get($colors, logo-orange);
+}
+
+ion-content ion-list.file-folder-list ion-item-divider.library-player {
+     background: map-get($colors , darkest-gray);
+     color: map-get($colors, light);
+}
+
+ion-content ion-list.file-folder-list ion-item-divider {
+    // next line shrinks space around player by a lot
+    padding: 0;
+    
+    // next block shrinks space around player by a bit more
+    ion-row { 
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    
+    :first-child {
+        padding-left: 0.3em;
+    }
+    :last-child {
+        padding-right: 0.3em;
+    }
+}
+
+progress[value] {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    /* appearance: none; */
+    width: 100%;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: map-get($colors, medium-gray);
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+progress[value]::-webkit-progress-value {
+  background-color: map-get($colors, logo-red); 
+  border-radius: 2px; 
+  background-size: 35px 20px, 100% 100%, 100% 100%;
+}
+
+progress[value]::-webkit-progress-value::before {
+  content: '80%';
+  position: absolute;
+  right: 0;
+  top: -125%;
 }

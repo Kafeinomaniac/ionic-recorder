@@ -22,6 +22,9 @@ export class LibraryPage {
     private totalSelectedCounter: number = 0;
 
     private unfiledFolderKey: number;
+    
+    private playerTime: string;
+    private currentDuration: string;
 
     /**
      * @constructor
@@ -32,6 +35,8 @@ export class LibraryPage {
         private nav: NavController,
         private platform: Platform) {
         console.log('constructor():LibraryPage');
+        this.playerTime = "4:01";
+        this.currentDuration = "4:21";
     }
 
     /**
