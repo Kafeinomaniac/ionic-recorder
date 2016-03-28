@@ -7,21 +7,21 @@ ion-row.audio-player {
     padding-top: 0;
     padding-bottom: 0;
 
-    // add a dark line to separate the player
-    // border-bottom: 1px solid map-get($colors, dark);
-    ion-col ion-row span.time {
-        padding-right: 0.5em;
-        padding-left: 0;
-    }
-    ion-col ion-row span.duration {
-        padding-left: 0.5em;
-        padding-right: 0;
-    }
-
     ion-col {
         padding: 0;
+        
         ion-row {
             padding: 0;
+            
+            span.time {
+                padding-right: 0.5em;
+                padding-left: 0;
+            }
+
+            span.duration {
+                padding-left: 0.5em;
+                padding-right: 0;
+            }
 
             progress[value] {
                 // Reset the default appearance

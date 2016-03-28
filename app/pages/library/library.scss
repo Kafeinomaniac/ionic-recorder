@@ -103,7 +103,7 @@ ion-content ion-list.file-folder-list ion-item.library-empty-folder-message {
     text-align: center;
     color: map-get($colors, logo-orange);
 }
-
+/*
 ion-row.library-player {
     background: map-get($colors , almost-dark);
     color: map-get($colors, light);
@@ -131,9 +131,9 @@ ion-row.library-player {
 }
 
 progress[value] {
-    /* Reset the default appearance */
+    // Reset the default appearance
     -webkit-appearance: none;
-    /* appearance: none; */
+    // appearance: none;
     width: 100%;
     // padding-left: 0.5em;
     // padding-right: 0.5em;
@@ -162,3 +162,4 @@ progress[value]::-webkit-progress-value{
     border-radius: 2px;
     background-size: 35px 20px, 100% 100%, 100% 100%;
 }
+*/

@@ -1,6 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
+import {IONIC_DIRECTIVES} from 'ionic-angular'; 
 
 
 /**
@@ -12,12 +13,13 @@ import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
 @Component({
     selector: 'audio-player',
     templateUrl: 'build/components/audio-player/audio-player.html',
+    directives: [IONIC_DIRECTIVES]
 })
 export class AudioPlayer implements OnChanges {
-    @Input() private title: string;
-    @Input() private url: string;
-    private playerTime: string;
-    private playerDuration: string;
+    @Input() private title: string = '';
+    @Input() private url: string = '';
+    private time: string = '0:00';
+    private duration: string = '0:00';
 
     constructor() {
         console.log('constructor():AudioPlayer');
