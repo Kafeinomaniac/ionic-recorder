@@ -104,20 +104,12 @@ ion-content ion-list.file-folder-list ion-item.library-empty-folder-message {
     color: map-get($colors, logo-orange);
 }
 
-ion-content ion-list.file-folder-list ion-item-divider.library-player {
-     background: map-get($colors , darkest-gray);
-     color: map-get($colors, light);
-}
+ion-row.library-player {
+    background: map-get($colors , almost-dark);
+    color: map-get($colors, light);
 
-ion-content ion-list.file-folder-list ion-item-divider {
-    // next line shrinks space around player by a lot
-    padding: 0;
-    
-    // next block shrinks space around player by a bit more
-    ion-row { 
-        padding-top: 0;
-        padding-bottom: 0;
-    }
+    padding-top: 0;
+    padding-bottom: 0;
     
     :first-child {
         padding-left: 0.3em;
@@ -125,6 +117,7 @@ ion-content ion-list.file-folder-list ion-item-divider {
     :last-child {
         padding-right: 0.3em;
     }
+    border-bottom: 1px solid map-get($colors, dark);
 }
 
 progress[value] {
@@ -132,25 +125,17 @@ progress[value] {
     -webkit-appearance: none;
     /* appearance: none; */
     width: 100%;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
 }
 
 progress[value]::-webkit-progress-bar {
-  background-color: map-get($colors, medium-gray);
-  border-radius: 2px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    background-color: map-get($colors, medium-gray);
+    border-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    border: 1px solid map-get($colors, dark-gray);
 }
 
 progress[value]::-webkit-progress-value {
-  background-color: map-get($colors, logo-red); 
-  border-radius: 2px; 
-  background-size: 35px 20px, 100% 100%, 100% 100%;
-}
-
-progress[value]::-webkit-progress-value::before {
-  content: '80%';
-  position: absolute;
-  right: 0;
-  top: -125%;
+    background-color: map-get($colors, logo-red); 
+    border-radius: 2px; 
+    background-size: 35px 20px, 100% 100%, 100% 100%;
 }

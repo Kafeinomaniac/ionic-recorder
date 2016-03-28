@@ -14,6 +14,23 @@
     </ion-buttons>
 </ion-navbar>
 
+<ion-row class="library-player">
+    <ion-col button clear>
+        <ion-icon name="play"></ion-icon>
+    </ion-col>
+    <ion-col button clear>
+        <ion-icon name="square"></ion-icon>
+    </ion-col>
+    <ion-col width-80 center>
+        <ion-row>
+            {{playerTime}}
+            <progress max="100" value="80"></progress>
+            {{currentDuration}}
+        </ion-row>
+    </ion-col>
+</ion-row>
+
+
 <span *ngIf="folderNode" class="library-page-path-message">
     Folder &nbsp;<span>{{getPath()}}</span>
 </span>
@@ -47,23 +64,9 @@
 
 <ion-content [class]="platform.platforms()">
     <ion-list *ngIf="folderNode" class="file-folder-list">
-        <ion-item-divider class="library-player" sticky>
-            <ion-row>
-                <ion-col button clear>
-                    <ion-icon name="play"></ion-icon>
-                </ion-col>
-                <ion-col button clear>
-                    <ion-icon name="square"></ion-icon>
-                </ion-col>
-                <ion-col width-80 center>
-                    <ion-row>
-                        {{playerTime}}
-                        <progress max="100" value="80"></progress>
-                        {{currentDuration}}
-                    </ion-row>
-                </ion-col>
-            </ion-row>
-        </ion-item-divider>
+        <!--ion-item-divider class="library-player" sticky>
+
+        </ion-item-divider-->
         <ion-item clear *ngFor="#i of folderNode.childOrder" class="library-item">
             <ion-label button clear (click)="onClickListItem(folderItems[i])">
                 <span *ngIf="folderItems[i].dataKey">
@@ -87,11 +90,11 @@
     </ion-list>
 </ion-content>
 
-<div class="buttonbar4" *ngIf="nSelectedNodes()">
-    <button almost-dark (click)="onClickDownButton()" [disabled]="downButtonDisabled()" ion-row center>
+<div class="buttonbar5" *ngIf="nSelectedNodes()">
+    <button almost-dark (click)="onClickShareButton()" ion-row center>
         <ion-col>
-            <ion-icon name="play"></ion-icon>
-            <br> Play
+            <ion-icon name="information-circle"></ion-icon>
+            <br> Info
             <br>
         </ion-col>
     </button>
@@ -114,6 +117,13 @@
         <ion-col>
             <ion-icon name="share"></ion-icon>
             <br> Share
+            <br>
+        </ion-col>
+    </button>
+    <button almost-dark (click)="onClickDownButton()" [disabled]="downButtonDisabled()" ion-row center>
+        <ion-col>
+            <ion-icon name="more"></ion-icon>
+            <br> More
             <br>
         </ion-col>
     </button>
