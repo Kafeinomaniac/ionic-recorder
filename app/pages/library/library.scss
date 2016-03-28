@@ -75,7 +75,7 @@ ion-alert {
 }
 
 div.buttonbar3 button {
-    width: 31%;
+    width: 30.9%;
 }
 
 // four button bar
@@ -110,14 +110,24 @@ ion-row.library-player {
 
     padding-top: 0;
     padding-bottom: 0;
-    
-    :first-child {
-        padding-left: 0.3em;
+
+    // add a dark line to separate the player
+    // border-bottom: 1px solid map-get($colors, dark);
+    ion-col ion-row span.time {
+        padding-right: 0.5em;
+        padding-left: 0;
     }
-    :last-child {
-        padding-right: 0.3em;
+    ion-col ion-row span.duration {
+        padding-left: 0.5em;
+        padding-right: 0;
     }
-    border-bottom: 1px solid map-get($colors, dark);
+
+    ion-col {
+        padding: 0;
+        ion-row {
+            padding: 0;
+        }
+    }
 }
 
 progress[value] {
@@ -125,6 +135,11 @@ progress[value] {
     -webkit-appearance: none;
     /* appearance: none; */
     width: 100%;
+    // padding-left: 0.5em;
+    // padding-right: 0.5em;
+    background: map-get($colors, light-gray);
+    border-radius: 2px;
+    border: 0;
 }
 
 progress[value]::-webkit-progress-bar {
@@ -134,7 +149,15 @@ progress[value]::-webkit-progress-bar {
     border: 1px solid map-get($colors, dark-gray);
 }
 
-progress[value]::-webkit-progress-value {
+// moz-progress-bar is -webkit-progress-value...
+progress[value]::-moz-progress-bar {
+    background-color: map-get($colors, logo-red);
+    border-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    border: 1px solid map-get($colors, dark-gray);
+}
+
+progress[value]::-webkit-progress-value{
     background-color: map-get($colors, logo-red); 
     border-radius: 2px; 
     background-size: 35px 20px, 100% 100%, 100% 100%;

@@ -18,15 +18,15 @@
     <ion-col button clear>
         <ion-icon name="play"></ion-icon>
     </ion-col>
-    <ion-col button clear>
-        <ion-icon name="square"></ion-icon>
-    </ion-col>
-    <ion-col width-80 center>
-        <ion-row>
-            {{playerTime}}
+    <ion-col width-75 center>
+        <ion-row class="player">
+            <span class="time">{{playerTime}}</span>
             <progress max="100" value="80"></progress>
-            {{currentDuration}}
+            <span class="duration">{{currentDuration}}</span>
         </ion-row>
+    </ion-col>
+    <ion-col button clear>
+        <ion-icon name="close"></ion-icon>
     </ion-col>
 </ion-row>
 
@@ -47,7 +47,7 @@
     <button almost-dark (click)="onClickParentButton()" [disabled]="parentButtonDisabled()" ion-row center>
         <ion-col>
             <ion-icon name="arrow-up"></ion-icon>
-            <ion-icon name="folder-outline"></ion-icon>
+            <ion-icon name="folder"></ion-icon>
             <br> Go to parent
             <br>
         </ion-col>
@@ -55,7 +55,7 @@
     <button almost-dark (click)="onClickAddButton()" ion-row center>
         <ion-col>
             <ion-icon name="add"></ion-icon>
-            <ion-icon name="folder-outline"></ion-icon>
+            <ion-icon name="folder"></ion-icon>
             <br> New folder
             <br>
         </ion-col>
@@ -101,7 +101,7 @@
     <button almost-dark (click)="onClickMoveButton()" [disabled]="moveButtonDisabled()" ion-row center>
         <ion-col>
             <ion-icon name="share-alt"></ion-icon>
-            <ion-icon name="folder-outline"></ion-icon>
+            <ion-icon name="folder"></ion-icon>
             <br> Move
             <br>
         </ion-col>
