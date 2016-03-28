@@ -25,8 +25,9 @@ export class LibraryPage {
 
     private unfiledFolderKey: number;
 
-    private playerTime: string;
-    private currentDuration: string;
+    private playerTitle: string;
+    private playerTime: string = '0:00';
+    private playerDuration: string = '0:00';
 
     /**
      * @constructor
@@ -37,8 +38,6 @@ export class LibraryPage {
         private nav: NavController,
         private platform: Platform) {
         console.log('constructor():LibraryPage');
-        this.playerTime = "4:01";
-        this.currentDuration = "4:21";
     }
 
     /**
@@ -421,7 +420,10 @@ export class LibraryPage {
         if (this.localDB.isFolderNode(node)) {
             this.switchFolder(node[DB_KEY_PATH], true);
         }
-        // TODO: here's where we initiate the player
+        else {
+            // TODO: here's where we initiate the player
+            this.playerTitle = node.name;
+        }
     }
 
     onClickParentButton() {

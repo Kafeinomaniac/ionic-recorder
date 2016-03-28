@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
-import {IONIC_DIRECTIVES} from 'ionic-angular'; 
+import {IONIC_DIRECTIVES} from 'ionic-angular';
 
 
 /**
@@ -20,6 +20,7 @@ export class AudioPlayer implements OnChanges {
     @Input() private url: string = '';
     private time: string = '0:00';
     private duration: string = '0:00';
+    private hidden: boolean = true;
 
     constructor() {
         console.log('constructor():AudioPlayer');
@@ -29,5 +30,12 @@ export class AudioPlayer implements OnChanges {
     }
 
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
+        console.log('AudioPlayer:ngOnChanges() title: ' + this.title);
+        if (changeRecord['title']) {
+            // TODO: require that a change in URL occurs too
+            if (this.title !== undefined && this.title !== '') {
+                this.hidden = false;
+            }
+        }
     }
 }

@@ -1,19 +1,22 @@
 <!-- Copyright (c) 2016 Tracktunes Inc -->
-<ion-row class="audio-player">
-<span>{{title}}</span>
-</ion-row>
-<ion-row class="audio-player">
-    <ion-col button clear>
-        <ion-icon name="play"></ion-icon>
-    </ion-col>
-    <ion-col width-75 center>
-        <ion-row>
-            <span class="time">{{time}}</span>
-            <progress max="100" value="80"></progress>
-            <span class="duration">{{duration}}</span>
-        </ion-row>
-    </ion-col>
-    <ion-col button clear>
-        <ion-icon name="close"></ion-icon>
-    </ion-col>
-</ion-row>
+
+<div class="audio-player" [hidden]="hidden">
+    <ion-row>
+        Playing: &nbsp; <span class="player-title">{{title}}</span>
+    </ion-row>
+    <ion-row>
+        <ion-col button clear>
+            <ion-icon name="play"></ion-icon>
+        </ion-col>
+        <ion-col width-75 center>
+            <ion-row>
+                <span class="time">{{time}}</span>
+                <progress max="100" value="80"></progress>
+                <span class="duration">{{duration}}</span>
+            </ion-row>
+        </ion-col>
+        <ion-col button clear>
+            <ion-icon name="close"></ion-icon>
+        </ion-col>
+    </ion-row>
+</div>

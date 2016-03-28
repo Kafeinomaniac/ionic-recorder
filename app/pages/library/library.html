@@ -14,10 +14,10 @@
     </ion-buttons>
 </ion-navbar>
 
-<audio-player></audio-player>
+<audio-player [title]="playerTitle"></audio-player>
 
 <span *ngIf="folderNode" class="library-page-path-message">
-    At: &nbsp;<span>{{getPath()}}</span>
+    Viewing: &nbsp;<span>{{getPath()}}</span>
 </span>
 
 <div class="buttonbar3">

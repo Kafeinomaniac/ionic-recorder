@@ -1,17 +1,18 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-ion-row.audio-player {
+
+div.audio-player ion-row {
     background: map-get($colors , almost-dark);
     color: map-get($colors, light);
     justify-content: center; 
     
     padding-top: 0;
     padding-bottom: 0;
-
-    span {
+    
+    span.player-title {
         font-size: 13px;
         word-wrap: break-word;
-        // color: map-get($colors, logo-orange);
+        color: map-get($colors, logo-orange);
     }
 
     ion-col {
