@@ -26,8 +26,8 @@ export class LibraryPage {
     private unfiledFolderKey: number;
 
     private playerTitle: string;
-    private playerTime: string = '0:00';
-    private playerDuration: string = '0:00';
+    // private playerTime: string = '0:00';
+    // private playerDuration: string = '0:00';
 
     /**
      * @constructor
@@ -421,8 +421,17 @@ export class LibraryPage {
             this.switchFolder(node[DB_KEY_PATH], true);
         }
         else {
-            // TODO: here's where we initiate the player
-            this.playerTitle = node.name;
+            // TODO: here's where we initiate the player`
+
+            // the following if-statement is how we trigger 
+            // audio-player change detection even if the title 
+            // did not change since last time we clicked on it
+            if (this.playerTitle === node.name) {
+                this.playerTitle += ' ';
+            }
+            else {
+                this.playerTitle = node.name;
+            }
         }
     }
 

@@ -14,7 +14,7 @@
 span.library-page-path-message {
     background-color: map-get($colors, almost-dark);
     color: $text-color;
-    font-size: 13px;
+    font-size: $toolbar-title-font-size;
     text-align: center;
     word-wrap: break-word;
     padding-left: 1em;

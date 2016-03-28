@@ -29,12 +29,28 @@ export class AudioPlayer implements OnChanges {
     ngOnInit() {
     }
 
+    onClickPlayPauseButton() {
+
+    }
+
+    show() {
+        this.hidden = false;
+    }
+
+    hide() {
+        this.hidden = true;
+    }
+
+    onClickCloseButton() {
+        // TODO: stop the playing
+        this.hide();
+    }
+
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
         console.log('AudioPlayer:ngOnChanges() title: ' + this.title);
         if (changeRecord['title']) {
-            // TODO: require that a change in URL occurs too
-            if (this.title !== undefined && this.title !== '') {
-                this.hidden = false;
+            if (this.title !== undefined) {
+                this.show();
             }
         }
     }

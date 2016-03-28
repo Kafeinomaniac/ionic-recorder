@@ -40,3 +40,10 @@ $colors: (
 
 $text-color: map-get($colors, light) !default;
 $background-color: map-get($colors, dark) !default;
+
+// some globals shared between files
+
+// font size of library page 'Viewing: ...' line and of the audio-player page
+// 'Playing ...' line
+
+$toolbar-title-font-size: 13px;
