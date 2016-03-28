@@ -6,10 +6,12 @@ from '../../providers/local-db/local-db';
 import {AppState, ROOT_FOLDER_NAME} from '../../providers/app-state/app-state';
 import {AddFolderPage} from '../add-folder/add-folder';
 import {prependArray} from '../../providers/utils/utils';
+import {AudioPlayer} from '../../components/audio-player/audio-player';
 
 
 @Page({
-    templateUrl: 'build/pages/library/library.html'
+    templateUrl: 'build/pages/library/library.html',
+    directives: [AudioPlayer]
 })
 export class LibraryPage {
     private folderNode: TreeNode = null;
@@ -22,7 +24,7 @@ export class LibraryPage {
     private totalSelectedCounter: number = 0;
 
     private unfiledFolderKey: number;
-    
+
     private playerTime: string;
     private currentDuration: string;
 

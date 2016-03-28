@@ -1,3 +1,4 @@
+// Copyright (c) 2016 Tracktunes Inc
 
 ion-row.audio-player {
     background: map-get($colors , almost-dark);
@@ -21,44 +22,44 @@ ion-row.audio-player {
         padding: 0;
         ion-row {
             padding: 0;
+
+            progress[value] {
+                // Reset the default appearance
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                width: 100%;
+                // the background color here does not affect anything
+                // on android but on iOs it is the color of the right hand
+                // side of the progress bar - the time left part.
+                background: map-get($colors, light-gray);
+                border-radius: 2px;
+                border: 0;
+            }
+
+            progress[value]::-webkit-progress-bar {
+                background-color: map-get($colors, medium-gray);
+                border-radius: 2px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+                // border around entire progress bar in webkit
+                border: 1px solid map-get($colors, dark-gray);
+            }
+
+            // moz-progress-bar is -webkit-progress-value...
+            progress[value]::-moz-progress-bar {
+                // sets only the left hand side part of the progress
+                // bar color
+                background-color: map-get($colors, logo-red);
+                border-radius: 2px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+                // border around entire progress bar in Firefox
+                border: 1px solid map-get($colors, dark-gray);
+            }
+
+            progress[value]::-webkit-progress-value{
+                background-color: map-get($colors, logo-red);
+                border-radius: 2px;
+                background-size: 35px 20px, 100% 100%, 100% 100%;
+            }
         }
     }
-}
-
-progress[value] {
-    /* Reset the default appearance */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 100%;
-    // the background color here does not affect anything
-    // on android but on iOs it is the color of the right hand side of
-    // the progress bar - the time left part.
-    background: map-get($colors, light-gray);
-    border-radius: 2px;
-    border: 0;
-}
-
-progress[value]::-webkit-progress-bar {
-    background-color: map-get($colors, medium-gray);
-    border-radius: 2px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-    // border around entire progress bar in webkit
-    border: 1px solid map-get($colors, dark-gray);
-}
-
-// moz-progress-bar is -webkit-progress-value...
-progress[value]::-moz-progress-bar {
-    // sets only the left hand side part of the progress
-    // bar color
-    background-color: map-get($colors, logo-red);
-    border-radius: 2px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-    // border around entire progress bar in Firefox
-    border: 1px solid map-get($colors, dark-gray);
-}
-
-progress[value]::-webkit-progress-value{
-    background-color: map-get($colors, logo-red); 
-    border-radius: 2px; 
-    background-size: 35px 20px, 100% 100%, 100% 100%;
 }

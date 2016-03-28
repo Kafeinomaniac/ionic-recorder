@@ -158,7 +158,7 @@ progress[value]::-moz-progress-bar {
 }
 
 progress[value]::-webkit-progress-value{
-    background-color: map-get($colors, logo-red); 
-    border-radius: 2px; 
+    background-color: map-get($colors, logo-red);
+    border-radius: 2px;
     background-size: 35px 20px, 100% 100%, 100% 100%;
 }
