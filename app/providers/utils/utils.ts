@@ -1,4 +1,4 @@
-// Copyright (C) 2015, 2016 Tracktunes Inc
+// Copyright (c) 2016 Tracktunes Inc
 
 // not efficient but sufficient and clear
 export function num2str(num: number, nDecimals: number) {
@@ -29,7 +29,7 @@ export function msec2time(msec: number) {
 
 export function copyFromObject(src: Object, dest: Object): Object {
     'use strict';
-    // console.log('copyObject(' + src + ',' + dest + ')');
+    // console.log('copyFrp,Object(' + src + ',' + dest + ')');
     for (let i in src) {
         if (src.hasOwnProperty(i)) {
             // console.log('copyObject: copying ' + i);

@@ -1,4 +1,4 @@
-// Copyright (C) 2015, 2016 Tracktunes Inc
+// Copyright (c) 2016 Tracktunes Inc
 
 import {App, IonicApp, Platform, Nav, NavController} from 'ionic-angular';
 import {Type, enableProdMode, ViewChild} from 'angular2/core';

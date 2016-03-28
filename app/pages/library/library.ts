@@ -1,4 +1,4 @@
-// Copyright (C) 2015, 2016 Tracktunes Inc
+// Copyright (c) 2016 Tracktunes Inc
 
 import {Page, NavController, Platform, Modal, Alert} from 'ionic-angular';
 import {LocalDB, TreeNode, ParentChild, DB_NO_KEY, DB_KEY_PATH}

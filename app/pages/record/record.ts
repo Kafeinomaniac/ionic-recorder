@@ -1,4 +1,4 @@
-// Copyright (C) 2015, 2016 Tracktunes Inc
+// Copyright (c) 2016 Tracktunes Inc
 
 import {Page, Platform, IonicApp} from 'ionic-angular';
 import {VuGauge} from '../../components/vu-gauge/vu-gauge';
@@ -43,7 +43,13 @@ export class RecordPage {
 
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
-
+    
+    /**
+     * @constructor
+     * @param {Platform} platform
+     * @param {WebAudio} webAudio
+     * @param {IonicApp} app
+     */
     constructor(private platform: Platform, private webAudio: WebAudio,
         private app: IonicApp) {
 

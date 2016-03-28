@@ -1,4 +1,4 @@
-// Copyright (C) 2015, 2016 Tracktunes Inc
+// Copyright (c) 2016 Tracktunes Inc
 
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
 

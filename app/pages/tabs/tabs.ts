@@ -1,10 +1,11 @@
-// Copyright (C) 2015, 2016 Tracktunes Inc
+// Copyright (c) 2016 Tracktunes Inc
 
 import {Page, IonicApp} from 'ionic-angular';
 import {Type} from 'angular2/core';
 import {RecordPage} from '../record/record';
 import {LibraryPage} from '../library/library';
 import {AppState} from '../../providers/app-state/app-state';
+
 
 @Page({
     templateUrl: 'build/pages/tabs/tabs.html'
@@ -15,6 +16,10 @@ export class TabsPage {
     private tab2Root: Type = LibraryPage;
     private selectedIndex: number;
 
+    /**
+     * @constructor
+     * @param {IonicApp} app
+     */
     constructor(private app: IonicApp) {
         console.log('constructor():TabsPage');
         this.tab1Root = RecordPage;
@@ -27,6 +32,6 @@ export class TabsPage {
             (getError: any) => {
                 console.log('getProperty error: ' + getError);
             }
-        ); // getProperty().subscribe(
+        ); // getProperty('lastSelectedTab').subscribe(
     }
 }
