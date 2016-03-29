@@ -5,7 +5,7 @@ import {Injectable} from 'angular2/core';
 export class WebAudio {
     // 'instance' is used as part of Singleton pattern implementation
     private static instance: WebAudio = null;
-    
+
     private audioContext: AudioContext;
     private audioGainNode: AudioGainNode;
     private mediaRecorder: MediaRecorder;
@@ -14,6 +14,9 @@ export class WebAudio {
     private analyserBufferLength: number;
     private sourceNode: MediaElementAudioSourceNode;
     private blobChunks: Blob[];
+
+    private playbackSource: AudioBufferSourceNode;
+
     onStop: (blob: Blob) => void;
 
     constructor() {
@@ -21,7 +24,7 @@ export class WebAudio {
         this.blobChunks = [];
         this.initAudio();
     }
-    
+
     // Singleton pattern implementation
     static get Instance() {
         if (!this.instance) {
@@ -49,7 +52,7 @@ export class WebAudio {
             })
             .catch((error: any) => {
                 // alert('getUserMedia() - ' + error.name + ' - ' + error.message);
-                throw Error('getUserMedia() - ' + error.name);
+                throw Error('getUserMedia() - ' + error.name + ' - ' + error.message);
             });
     }
 
@@ -58,8 +61,29 @@ export class WebAudio {
             alert('MediaRecorder not available!');
             throw Error('MediaRecorder not available!');
         }
-
-        this.mediaRecorder = new MediaRecorder(stream);
+        if (MediaRecorder.isTypeSupported('audio/wav')) {
+            console.log('audio/wav SUPPORTED!!!!!!!');
+        }
+        else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+            console.log('audio/ogg SUPPORTED!!!!!!!');
+        }
+        else if (MediaRecorder.isTypeSupported('audio/mp3')) {
+            console.log('audio/mp3 SUPPORTED!!!!!!!');
+        }
+        else if (MediaRecorder.isTypeSupported('audio/m4a')) {
+            console.log('audio/m4a SUPPORTED!!!!!!!');
+        }
+        else if (MediaRecorder.isTypeSupported('audio/webm')) {
+            console.log('audio/webm SUPPORTED!!!!!!!');
+        }
+        else {
+            console.log('UNSUPPORTED !!!!!!!!!!!');
+            console.dir(MediaRecorder.isTypeSupported);
+            console.log(MediaRecorder.isTypeSupported);
+        }
+        this.mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'audio/webm'
+        });
 
         this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
             // console.log('ondataavailable()');
@@ -72,23 +96,18 @@ export class WebAudio {
                 throw Error('WebAudio:onStop() not set!');
             }
 
-            if (this.blobChunks.length > 1) {
-                // finalBlob = Blob(this.blobChunks, {
-                //     neither Chrome nor Firefox implement Blob.type yet, it seems
-                //     need to check if ogg is supported in webkit/chrome
-                //     type: this.blobChunks[0].type || 'audio/ogg'
-                // });
-                this.onStop(new Blob(this.blobChunks));
-            }
-            else {
-                this.onStop(this.blobChunks[0]);
-            }
+            let blob: Blob = new Blob(this.blobChunks, {
+                type: 'audio/webm'
+            });
+
+            this.onStop(blob);
 
             this.blobChunks = [];
         };
     }
 
     connectNodes(stream: MediaStream) {
+        console.log('WebAudio:connectNodes()');
         this.sourceNode = this.audioContext.createMediaStreamSource(stream);
         this.analyserNode = this.audioContext.createAnalyser();
         this.analyserNode.fftSize = 2048;

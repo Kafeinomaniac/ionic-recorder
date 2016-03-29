@@ -22,12 +22,25 @@ export class AudioPlayer implements OnChanges {
     private duration: string = '0:00';
     private hidden: boolean = true;
     private playPauseButtonIcon: string = 'play';
+    private audioElement: HTMLAudioElement;
 
     constructor() {
         console.log('constructor():AudioPlayer');
     }
 
     ngOnInit() {
+        this.audioElement = <HTMLAudioElement>(
+            document.getElementById('audio-player-audio-tag')
+        );
+
+        this.audioElement.addEventListener('ended', () => {
+            console.log('AUDIO ENDED');
+            this.onAudioEnded();
+        });
+    }
+
+    onAudioEnded() {
+        this.playPauseButtonIcon = 'play';
     }
 
     show() {
@@ -39,23 +52,12 @@ export class AudioPlayer implements OnChanges {
     }
 
     play() {
-        console.log('AudioPlayer:play()');
+        this.audioElement.play();
         this.playPauseButtonIcon = 'pause';
     }
 
     pause() {
-        console.log('AudioPlayer:pause()');
-        this.playPauseButtonIcon = 'play';
-        // this.sourceNode.disconnect();
-    }
-    
-    resume() {
-        console.log('AudioPlayer:resume()');
-        // this.sourceNode.connect(destination)
-    }
-    
-    stop() {
-        console.log('AudioPlayer:stop()');
+        this.audioElement.pause();
         this.playPauseButtonIcon = 'play';
     }
 
@@ -63,31 +65,33 @@ export class AudioPlayer implements OnChanges {
         console.log('onClickPlayPauseButton()');
 
         if (this.playPauseButtonIcon === 'play') {
-            this.playPauseButtonIcon = 'pause';
+            this.play();
         }
         else {
-            this.playPauseButtonIcon = 'play';
+            this.pause();
         }
     }
 
     onClickCloseButton() {
-        this.stop();
+        this.url = '';
         this.hide();
     }
 
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
         console.log('AudioPlayer:ngOnChanges() title: ' + this.title);
         if (changeRecord['title']) {
+            console.log('AudioPlayer:ngOnChanges(): title: ' + this.title);
             if (this.title !== undefined) {
                 this.show();
             }
         }
         if (changeRecord['url']) {
-            if (!changeRecord['title']) {
-                console.error('url but no title');
-                alert('url but no title');
-                throw Error('url but no title');
-            }            
+            console.log('AudioPlayer:ngOnChanges(): url: ' + this.url);
+            if (this.url !== undefined) {
+                this.audioElement.addEventListener('canplay', () => {
+                    this.play();
+                });
+            }
         }
     }
 }

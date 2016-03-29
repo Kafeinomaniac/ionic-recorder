@@ -14,7 +14,7 @@
     </ion-buttons>
 </ion-navbar>
 
-<audio-player [title]="playerTitle"></audio-player>
+<audio-player [title]="playerTitle" [url]="playerUrl"></audio-player>
 
 <span *ngIf="folderNode" class="library-page-path-message">
     Viewing: &nbsp;<span>{{getPath()}}</span>

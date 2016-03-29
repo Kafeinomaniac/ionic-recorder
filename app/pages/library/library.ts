@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Page, NavController, Platform, Modal, Alert} from 'ionic-angular';
-import {LocalDB, TreeNode, ParentChild, DB_NO_KEY, DB_KEY_PATH}
+import {LocalDB, TreeNode, DataNode, ParentChild, DB_NO_KEY, DB_KEY_PATH}
 from '../../providers/local-db/local-db';
 import {AppState, ROOT_FOLDER_NAME} from '../../providers/app-state/app-state';
 import {AddFolderPage} from '../add-folder/add-folder';
@@ -17,17 +17,12 @@ export class LibraryPage {
     private folderNode: TreeNode = null;
     private folderItems: { [id: string]: TreeNode; } = {};
     private selectedNodes: { [id: string]: TreeNode; } = {};
-
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
-
     private totalSelectedCounter: number = 0;
-
     private unfiledFolderKey: number;
-
     private playerTitle: string;
-    // private playerTime: string = '0:00';
-    // private playerDuration: string = '0:00';
+    private playerUrl: string;
 
     /**
      * @constructor
@@ -418,6 +413,7 @@ export class LibraryPage {
         else {
             // TODO: here's where we initiate the player`
 
+            /*
             // the following if-statement is how we trigger 
             // audio-player change detection even if the title 
             // did not change since last time we clicked on it
@@ -427,7 +423,20 @@ export class LibraryPage {
             else {
                 this.playerTitle = node.name;
             }
-        }
+            */
+            this.playerTitle = node.name;
+
+            this.localDB.readNodeData(node).subscribe(
+                (dataNode: DataNode) => {
+                    // revoke previous URL
+                    window.URL.revokeObjectURL(this.playerUrl);
+                    let blob: Blob = dataNode.data,
+                        url: string = window.URL.createObjectURL(blob);
+                    console.log('Setting URL for player to ' + url);
+                    this.playerUrl = url;
+                }
+            ); // readNodeData(node).subscribe(
+        } // if (this.localDB.isFolderNode(node)) { .. else { ..
     }
 
     onClickParentButton() {
