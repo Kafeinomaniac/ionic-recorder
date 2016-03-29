@@ -241,13 +241,14 @@ interface MediaRecorder {
     pause(): void;
     resume(): void;
     stop(): void;
+
     isTypeSupported(type: string): boolean;
     
     state: any;
 
     // ondataavailable: MediaRecorderCallbackType;
-    ondataavailable: (event: BlobEvent) => void;
-    onstop: (event: Event) => void;
+    ondataavailable(event: BlobEvent): void;
+    onstop(event: Event): void;
 }
 
 interface MediaRecorderOptions {

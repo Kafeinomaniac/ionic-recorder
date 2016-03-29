@@ -1,5 +1,7 @@
 # TODO.md
 
+* Turn time monitor into a singleton class, use in record.ts, then use in 
+  audio-player.ts - so that we are using the same clock, no extra events.
 * NOT SURE IF TO DO THIS:
   Do not allow an invalid parentKey anymore in local-db - validate the
   parentKey in any high-level function that gets it in its args.  To make

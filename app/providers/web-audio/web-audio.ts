@@ -61,6 +61,7 @@ export class WebAudio {
             alert('MediaRecorder not available!');
             throw Error('MediaRecorder not available!');
         }
+        /*
         if (MediaRecorder.isTypeSupported('audio/wav')) {
             console.log('audio/wav SUPPORTED!!!!!!!');
         }
@@ -81,6 +82,7 @@ export class WebAudio {
             console.dir(MediaRecorder.isTypeSupported);
             console.log(MediaRecorder.isTypeSupported);
         }
+        */
         this.mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'audio/webm'
         });
