@@ -2,6 +2,7 @@
 
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
+import {msec2time} from '../../providers/utils/utils';
 
 
 /**
@@ -37,6 +38,18 @@ export class AudioPlayer implements OnChanges {
             console.log('AUDIO ENDED');
             this.onAudioEnded();
         });
+    }
+
+    getCurrentTime() {
+        setTimeout(() => {
+            if (this.audioElement) {
+                this.time = msec2time(this.audioElement.currentTime * 1000.0);
+            }
+            else {
+                this.time = '0:00';
+            }
+        }, 0);
+        return this.time;
     }
 
     onAudioEnded() {

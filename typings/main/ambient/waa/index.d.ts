@@ -241,6 +241,7 @@ interface MediaRecorder {
     pause(): void;
     resume(): void;
     stop(): void;
+    isTypeSupported(type: string): boolean;
     
     state: any;
 
