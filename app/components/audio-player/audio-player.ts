@@ -33,11 +33,12 @@ export class AudioPlayer implements OnChanges {
         this.audioElement = <HTMLAudioElement>(
             document.getElementById('audio-player-audio-tag')
         );
-
+/*
         this.audioElement.addEventListener('ended', () => {
             console.log('AUDIO ENDED');
             this.onAudioEnded();
         });
+        */
     }
 
     getCurrentTime() {
@@ -97,7 +98,6 @@ export class AudioPlayer implements OnChanges {
     }
 
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
-        console.log('AudioPlayer:ngOnChanges() title: ' + this.title);
         if (changeRecord['title']) {
             console.log('AudioPlayer:ngOnChanges(): title: ' + this.title);
             if (this.title !== undefined) {
