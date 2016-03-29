@@ -53,6 +53,8 @@ export class AudioPlayer implements OnChanges {
 
     play() {
         this.audioElement.play();
+        console.log('audioElement.duration: ' + this.audioElement.duration);
+
         this.playPauseButtonIcon = 'pause';
     }
 
@@ -73,7 +75,11 @@ export class AudioPlayer implements OnChanges {
     }
 
     onClickCloseButton() {
+        // next line is the trick discussed here
+        // https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/ ...
+        //     ... Using_HTML5_audio_and_video
         this.url = '';
+        this.audioElement.src = '';
         this.hide();
     }
 
