@@ -49,19 +49,17 @@ export class RecordPage {
      */
     constructor(private platform: Platform) {
         console.log('constructor():RecordPage');
-
         // function that gets called with a newly created blob when
         // we hit the stop button - saves blob to local db
-
         this.webAudio.onStop = (blob: Blob) => {
             let now: Date = new Date(),
-            itemCount: number = 0,
-            month: number = now.getMonth() + 1,
-            name: string =
-                now.getFullYear() + '-' +
-                month + '-' +
-                now.getDate() + ' -- ' +
-                now.toLocaleTimeString();
+                itemCount: number = 0,
+                month: number = now.getMonth() + 1,
+                name: string =
+                    now.getFullYear() + '-' +
+                    month + '-' +
+                    now.getDate() + ' -- ' +
+                    now.toLocaleTimeString();
             console.dir(blob);
 
             this.appState.getProperty('unfiledFolderKey').subscribe(
@@ -69,19 +67,18 @@ export class RecordPage {
                     this.localDB.createDataNode(
                         name,
                         unfiledFolderKey,
-                        { blob: blob,
-                          duration: this.recordingDuration }
+                        { blob: blob, duration: this.recordingDuration }
                     ).subscribe(
                         () => { },
                         (error: any) => {
                             alert('create data node error: ' + error);
                         }
-                    );
+                        );
                 },
                 (getError: any) => {
                     console.error('getProperty error: ' + getError);
                 }
-            ); // getProperty().subscribe(
+            ); // getProperty('unfiledFolderKey').subscribe(
         }; // webAudio.onStop = (blob: Blob) => { ...
     }
 
@@ -137,7 +134,7 @@ export class RecordPage {
             return '0.0';
         }
         return num2str(Math.floor(
-            1000.0*this.peaksAtMax/this.peakMeasurements)/10.0, 1);
+            1000.0 * this.peaksAtMax / this.peakMeasurements) / 10.0, 1);
     }
 
     resetPeaksAtMax() {
