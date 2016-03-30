@@ -6,13 +6,14 @@ import {WebAudio} from './providers/web-audio/web-audio';
 import {LocalDB, DB_NAME, MAX_DB_INIT_TIME} from './providers/local-db/local-db';
 import {AppState} from './providers/app-state/app-state';
 import {TabsPage} from './pages/tabs/tabs';
+import {MasterClock} from './providers/master-clock/master-clock';
 
 
 const IMPOSSIBLE_TAB_INDEX = -1;
 
 @App({
     templateUrl: 'build/app.html',
-    providers: [WebAudio, LocalDB, AppState],
+    providers: [WebAudio, LocalDB, AppState, MasterClock],
     config: {
         backButtonText: ''
     }
@@ -21,6 +22,7 @@ export class TracktunesApp {
     private webAudio: WebAudio = WebAudio.Instance;
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
+    private masterClock: MasterClock = MasterClock.Instance;
     private rootPage: Type = TabsPage;
 
     // make selectedTab not a real number so that it gets set

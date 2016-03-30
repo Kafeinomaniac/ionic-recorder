@@ -98,7 +98,7 @@ export class RecordPage {
         }; // webAudio.onStop = (blob: Blob) => { ...
 
         // start volume/time monitoring infinite loop
-        this.monitorVolumeAndTimeInfiniteLoop();
+        // this.monitorVolumeAndTimeInfiniteLoop();
     }
 
     monitorVolumeAndTimeInfiniteLoop() {
