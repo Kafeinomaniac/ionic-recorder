@@ -102,8 +102,7 @@ export class RecordPage {
                     this.totalPauseTime;
                 this.recordingTime = msec2time(this.recordingDuration);
             }
-        }
-                                    );
+        });
     }
 
     toggleMonitor() {
