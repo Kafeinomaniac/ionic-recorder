@@ -77,7 +77,8 @@ export class RecordPage {
                     this.localDB.createDataNode(
                         name,
                         unfiledFolderKey,
-                        blob
+                        { blob: blob, 
+                          duration: this.recordingDuration }
                     ).subscribe(
                         () => { },
                         (error: any) => {
@@ -141,7 +142,6 @@ export class RecordPage {
         else {
             if (this.webAudio.isInactive()) {
                 this.webAudio.startRecording();
-                this.recordingTime = msec2time(0);
                 this.recordStartTime = Date.now();
             }
             else {

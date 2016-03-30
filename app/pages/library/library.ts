@@ -5,7 +5,7 @@ import {LocalDB, TreeNode, DataNode, ParentChild, DB_NO_KEY, DB_KEY_PATH}
 from '../../providers/local-db/local-db';
 import {AppState, ROOT_FOLDER_NAME} from '../../providers/app-state/app-state';
 import {AddFolderPage} from '../add-folder/add-folder';
-import {prependArray} from '../../providers/utils/utils';
+import {prependArray, msec2time} from '../../providers/utils/utils';
 import {AudioPlayer} from '../../components/audio-player/audio-player';
 
 
@@ -23,6 +23,7 @@ export class LibraryPage {
     private unfiledFolderKey: number;
     private playerTitle: string;
     private playerUrl: string;
+    private playerDuration: string;
 
     /**
      * @constructor
@@ -430,10 +431,18 @@ export class LibraryPage {
                 (dataNode: DataNode) => {
                     // revoke previous URL
                     window.URL.revokeObjectURL(this.playerUrl);
-                    let blob: Blob = dataNode.data,
+
+                    let blob: Blob = dataNode.data.blob,
+                        duration: number = dataNode.data.duration,
                         url: string = window.URL.createObjectURL(blob);
-                    console.log('Setting URL for player to ' + url);
+                    console.log('Setting URL for player to ' + url +
+                        ', duration = ' + duration);
+                    console.dir(dataNode);
+
+                    this.playerDuration = msec2time(duration)
+                        .replace('00:00:', '');
                     this.playerUrl = url;
+
                 }
             ); // readNodeData(node).subscribe(
         } // if (this.localDB.isFolderNode(node)) { .. else { ..

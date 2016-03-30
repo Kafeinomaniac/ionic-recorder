@@ -3,7 +3,7 @@
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
 import {msec2time} from '../../providers/utils/utils';
-
+import {MasterClock} from '../../providers/master-clock/master-clock';
 
 /**
  * @name AudioPlayer
@@ -19,11 +19,12 @@ import {msec2time} from '../../providers/utils/utils';
 export class AudioPlayer implements OnChanges {
     @Input() private title: string = '';
     @Input() private url: string = '';
+    @Input() private duration: string = '';
     private time: string = '0:00';
-    private duration: string = '0:00';
     private hidden: boolean = true;
     private playPauseButtonIcon: string = 'play';
     private audioElement: HTMLAudioElement;
+    private masterClock: MasterClock = MasterClock.Instance;
 
     constructor() {
         console.log('constructor():AudioPlayer');
@@ -33,29 +34,21 @@ export class AudioPlayer implements OnChanges {
         this.audioElement = <HTMLAudioElement>(
             document.getElementById('audio-player-audio-tag')
         );
-/*
+
+        this.masterClock.addFunction(() => {
+            if (this.time !== this.duration) {
+                this.time = msec2time(this.audioElement.currentTime * 1000.0)
+                    .replace('00:00:', '');
+            }
+        });
+
         this.audioElement.addEventListener('ended', () => {
             console.log('AUDIO ENDED');
-            this.onAudioEnded();
+            this.playPauseButtonIcon = 'play';
+            this.time = this.duration;
         });
-        */
     }
 
-    getCurrentTime() {
-        setTimeout(() => {
-            if (this.audioElement) {
-                this.time = msec2time(this.audioElement.currentTime * 1000.0);
-            }
-            else {
-                this.time = '0:00';
-            }
-        }, 0);
-        return this.time;
-    }
-
-    onAudioEnded() {
-        this.playPauseButtonIcon = 'play';
-    }
 
     show() {
         this.hidden = false;
@@ -68,7 +61,7 @@ export class AudioPlayer implements OnChanges {
     play() {
         this.audioElement.play();
         console.log('audioElement.duration: ' + this.audioElement.duration);
-
+        // this.duration = this.audioElement.duration.toString();
         this.playPauseButtonIcon = 'pause';
     }
 

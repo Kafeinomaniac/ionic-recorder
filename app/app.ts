@@ -3,17 +3,18 @@
 import {App, IonicApp, Platform, Nav, NavController} from 'ionic-angular';
 import {Type, enableProdMode, ViewChild} from 'angular2/core';
 import {WebAudio} from './providers/web-audio/web-audio';
-import {LocalDB, DB_NAME, MAX_DB_INIT_TIME} from './providers/local-db/local-db';
+import {LocalDB} from './providers/local-db/local-db';
 import {AppState} from './providers/app-state/app-state';
 import {TabsPage} from './pages/tabs/tabs';
-import {MasterClock} from './providers/master-clock/master-clock';
+// import {MasterClock} from './providers/master-clock/master-clock';
 
 
 const IMPOSSIBLE_TAB_INDEX = -1;
 
 @App({
     templateUrl: 'build/app.html',
-    providers: [WebAudio, LocalDB, AppState, MasterClock],
+    // providers: [WebAudio, LocalDB, AppState, MasterClock],
+    providers: [WebAudio, LocalDB, AppState],
     config: {
         backButtonText: ''
     }
@@ -22,7 +23,7 @@ export class TracktunesApp {
     private webAudio: WebAudio = WebAudio.Instance;
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
-    private masterClock: MasterClock = MasterClock.Instance;
+    // private masterClock: MasterClock = MasterClock.Instance;
     private rootPage: Type = TabsPage;
 
     // make selectedTab not a real number so that it gets set
