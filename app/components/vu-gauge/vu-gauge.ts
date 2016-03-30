@@ -63,7 +63,10 @@ export class VuGauge implements OnChanges {
                 this.leds[i].fill = fill;
                 this.leds[i].strokeWidth = '0';
             }
-            this.leds[Math.floor(this.max / this.valueStep)].strokeWidth = '1';
+            if (this.value) {
+                i = Math.floor(this.max / this.valueStep);
+                this.leds[i].strokeWidth = '1';
+            }
         }
     }
 }

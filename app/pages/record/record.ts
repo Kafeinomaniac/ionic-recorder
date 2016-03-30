@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Page, Platform} from 'ionic-angular';
+import {Page, Platform, IonicApp} from 'ionic-angular';
 import {VuGauge} from '../../components/vu-gauge/vu-gauge';
 import {AppState} from '../../providers/app-state/app-state';
 import {WebAudio} from '../../providers/web-audio/web-audio';

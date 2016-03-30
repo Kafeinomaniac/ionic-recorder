@@ -375,8 +375,6 @@ export class LibraryPage {
     }
 
     onClickTotalSelected() {
-        console.log('onClickTotalSelected(), counter: ' +
-            this.totalSelectedCounter);
         this.totalSelectedCounter++;
     }
 
@@ -407,41 +405,19 @@ export class LibraryPage {
     }
 
     onClickListItem(node: TreeNode) {
-        console.log('onClickListItem(' + node.name + ') ' + node[DB_KEY_PATH]);
         if (this.localDB.isFolderNode(node)) {
             this.switchFolder(node[DB_KEY_PATH], true);
         }
         else {
             // TODO: here's where we initiate the player`
-
-            /*
-            // the following if-statement is how we trigger
-            // audio-player change detection even if the title
-            // did not change since last time we clicked on it
-            if (this.playerTitle === node.name) {
-                this.playerTitle += ' ';
-            }
-            else {
-                this.playerTitle = node.name;
-            }
-            */
             this.playerTitle = node.name;
-
             this.localDB.readNodeData(node).subscribe(
                 (dataNode: DataNode) => {
                     // revoke previous URL
                     window.URL.revokeObjectURL(this.playerUrl);
-
-                    let blob: Blob = dataNode.data.blob,
-                        duration: number = dataNode.data.duration,
-                        url: string = window.URL.createObjectURL(blob);
-                    console.log('Setting URL for player to ' + url +
-                        ', duration = ' + duration);
-                    console.dir(dataNode);
-
-                    this.playerDuration = duration;
-                    this.playerUrl = url;
-
+                    this.playerDuration = dataNode.data.duration;
+                    this.playerUrl =
+                        window.URL.createObjectURL(dataNode.data.blob);
                 }
             ); // readNodeData(node).subscribe(
         } // if (this.localDB.isFolderNode(node)) { .. else { ..
