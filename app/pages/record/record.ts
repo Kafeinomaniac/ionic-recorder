@@ -6,7 +6,6 @@ import {AppState} from '../../providers/app-state/app-state';
 import {WebAudio} from '../../providers/web-audio/web-audio';
 import {LocalDB, DB_NO_KEY} from '../../providers/local-db/local-db';
 import {num2str, msec2time} from '../../providers/utils/utils';
-import {NgZone} from 'angular2/core';
 import {MasterClock} from '../../providers/master-clock/master-clock';
 
 
@@ -20,15 +19,15 @@ const RECORD_PAGE_CLOCK_FUNCTION = 'record-page-clock-function';
     directives: [VuGauge]
 })
 export class RecordPage {
-    private currentVolume: number;
-    private maxVolume: number;
-    private peaksAtMax: number;
-
-    private sliderValue: number;
-    private recordingTime: string;
-    private recordButtonIcon: string;
-    private gain: number;
-    private decibels: string;
+    private currentVolume: number = 0;
+    private maxVolume: number = 0;
+    private peaksAtMax: number = 0;
+    private peakMeasurements: number = 0;
+    private sliderValue: number = 100;
+    private recordingTime: string = msec2time(0);
+    private recordButtonIcon: string = START_RESUME_ICON;
+    private gain: number = 100;
+    private decibels: string = '0.00 dB';
 
     // time related
     private recordStartTime: number = 0;
@@ -47,17 +46,8 @@ export class RecordPage {
      * @param {WebAudio} webAudio
      * @param {IonicApp} app
      */
-    constructor(private platform: Platform, private app: IonicApp,
-        private ngZone: NgZone) {
-
+    constructor(private platform: Platform) {
         console.log('constructor():RecordPage');
-        this.gain = 100;
-        this.decibels = '0.00 dB';
-        this.sliderValue = 100;
-        this.maxVolume = 0;
-        this.peaksAtMax = 1;
-        this.recordingTime = msec2time(0);
-        this.recordButtonIcon = START_RESUME_ICON;
 
         // function that gets called with a newly created blob when
         // we hit the stop button - saves blob to local db
@@ -95,9 +85,9 @@ export class RecordPage {
     }
 
     onPageWillEnter() {
-        this.masterClock.addFunction(
-            RECORD_PAGE_CLOCK_FUNCTION, () => {
+        this.masterClock.addFunction(RECORD_PAGE_CLOCK_FUNCTION, () => {
         this.currentVolume = this.webAudio.getBufferMaxVolume();
+        this.peakMeasurements += 1;
         if (this.currentVolume === this.maxVolume) {
             this.peaksAtMax += 1;
         }
@@ -119,8 +109,13 @@ export class RecordPage {
         this.masterClock.removeFunction(RECORD_PAGE_CLOCK_FUNCTION);
     }
 
-    onClickMaxPeaks() {
-        console.log('onClickMaxPeaks()');
+    percentPeaksAtMax() {
+        return Math.floor(1000.0*this.peaksAtMax/this.peakMeasurements)/10.0;
+    }
+
+    onClickMaxPeaks() { 
+        this.peakMeasurements = 0;
+        this.peaksAtMax = 0;
     }
 
     onSliderDrag(event: Event) {
