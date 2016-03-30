@@ -10,6 +10,6 @@ ion-content ion-list form div.error-message-container {
 }
 
 ion-content p.add-folder-path-message {
-    font-size: 13px;
+    font-size: $toolbar-title-font-size;
     text-align: center;
 }

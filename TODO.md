@@ -1,16 +1,16 @@
 # TODO.md
 
-* 1) Jump to next selection on clicking top right
-* 2) move button
-* 3) info button
-* 4) share button - just to download
-* 5) more button - just play selected
-* 6) item more button1 - rename
-* 7) item more button2 - item info
-* 8) max peaks reset
-* 9) monitor on or off toggle
+* 1) Jump to next selection on clicking top right (library page)
+* 2) move button (library page)
+* 3) info button (library page)
+* 4) share button - just to download (library page)
+* 5) more button - just play selected (library page)
+* 6) item more button1 - rename (library page)
+* 7) item more button2 - item info (library page)
+* 8) max peaks reset (record page)
+* 9) monitor on or off toggle (record page)
 * 10) report on last recorded file and a link to jump to it in record page
-*     also report its duration and filename
+*     also report its duration and filename (record page)
 * 11) settings page
 * 12) about page
 * Turn time monitor into a singleton class, use in record.ts, then use in 
