@@ -78,7 +78,7 @@ export class RecordPage {
                     this.localDB.createDataNode(
                         name,
                         unfiledFolderKey,
-                        { blob: blob, 
+                        { blob: blob,
                           duration: this.recordingDuration }
                     ).subscribe(
                         () => { },

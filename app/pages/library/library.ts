@@ -415,8 +415,8 @@ export class LibraryPage {
             // TODO: here's where we initiate the player`
 
             /*
-            // the following if-statement is how we trigger 
-            // audio-player change detection even if the title 
+            // the following if-statement is how we trigger
+            // audio-player change detection even if the title
             // did not change since last time we clicked on it
             if (this.playerTitle === node.name) {
                 this.playerTitle += ' ';

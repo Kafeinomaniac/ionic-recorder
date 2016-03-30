@@ -31,6 +31,7 @@ export class AudioPlayer implements OnChanges {
     private masterClock: MasterClock = MasterClock.Instance;
     private progressMax: number = 0;
     private progressValue: number = 0;
+
     constructor() {
         console.log('constructor():AudioPlayer');
     }
@@ -57,10 +58,10 @@ export class AudioPlayer implements OnChanges {
     hide() {
         this.hidden = true;
     }
-    
+
     formatTime(time: number) {
         if (time === undefined) {
-            return '00:00'; 
+            return '00:00';
         }
         return msec2time(time).replace('00:00:', '');
     }

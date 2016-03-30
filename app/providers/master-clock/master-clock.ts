@@ -46,7 +46,7 @@ export class MasterClock {
     addFunction(id: string, fun: Function) {
         this.functions[id] = fun;
     }
-    
+
     removeFunction(id: string) {
         delete this.functions[id];
     }
