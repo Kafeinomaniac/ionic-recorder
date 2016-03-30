@@ -15,12 +15,13 @@ div.audio-player ion-row {
             word-wrap: break-word;
             color: map-get($colors, logo-orange);
         }
+
     span.player-title-prefix {
             padding-top: 0.5em;
             font-size: $toolbar-title-font-size;
         }
     
-    
+
     ion-col {
         padding: 0;
         

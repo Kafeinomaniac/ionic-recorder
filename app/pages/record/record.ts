@@ -3,7 +3,7 @@
 import {Page, Platform, IonicApp} from 'ionic-angular';
 import {VuGauge} from '../../components/vu-gauge/vu-gauge';
 import {AppState} from '../../providers/app-state/app-state';
-//import {WebAudio} from '../../providers/web-audio/web-audio';
+import {WebAudio} from '../../providers/web-audio/web-audio';
 import {LocalDB, DB_NO_KEY} from '../../providers/local-db/local-db';
 import {num2str, msec2time} from '../../providers/utils/utils';
 import {NgZone} from 'angular2/core';
@@ -44,7 +44,7 @@ export class RecordPage {
 
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
-    // private webAudio: WebAudio = WebAudio.Instance;
+    private webAudio: WebAudio = WebAudio.Instance;
 
     /**
      * @constructor
@@ -54,6 +54,7 @@ export class RecordPage {
      */
     constructor(private platform: Platform, private app: IonicApp,
         private ngZone: NgZone) {
+
         console.log('constructor():RecordPage');
         this.gain = 100;
         this.decibels = '0.00 dB';
@@ -65,55 +66,55 @@ export class RecordPage {
 
         // function that gets called with a newly created blob when
         // we hit the stop button - saves blob to local db
-        /*
-                this.webAudio.onStop = (blob: Blob) => {
-                    let now: Date = new Date(),
-                        itemCount: number = 0,
-                        month: number = now.getMonth() + 1,
-                        name: string =
-                            now.getFullYear() + '-' +
-                            month + '-' +
-                            now.getDate() + ' -- ' +
-                            now.toLocaleTimeString();
-                    console.dir(blob);
-        
-                    this.appState.getProperty('unfiledFolderKey').subscribe(
-                        (unfiledFolderKey: number) => {
-                            this.localDB.createDataNode(
-                                name,
-                                unfiledFolderKey,
-                                blob
-                            ).subscribe(
-                                () => { },
-                                (error: any) => {
-                                    alert('create data node error: ' + error);
-                                }
-                                );
-                        },
-                        (getError: any) => {
-                            console.error('getProperty error: ' + getError);
+
+        this.webAudio.onStop = (blob: Blob) => {
+            let now: Date = new Date(),
+                itemCount: number = 0,
+                month: number = now.getMonth() + 1,
+                name: string =
+                    now.getFullYear() + '-' +
+                    month + '-' +
+                    now.getDate() + ' -- ' +
+                    now.toLocaleTimeString();
+            console.dir(blob);
+
+            this.appState.getProperty('unfiledFolderKey').subscribe(
+                (unfiledFolderKey: number) => {
+                    this.localDB.createDataNode(
+                        name,
+                        unfiledFolderKey,
+                        blob
+                    ).subscribe(
+                        () => { },
+                        (error: any) => {
+                            alert('create data node error: ' + error);
                         }
-                    ); // getProperty().subscribe(
-                }; // webAudio.onStop = (blob: Blob) => { ...
-        */
+                        );
+                },
+                (getError: any) => {
+                    console.error('getProperty error: ' + getError);
+                }
+            ); // getProperty().subscribe(
+        }; // webAudio.onStop = (blob: Blob) => { ...
+
         // start volume/time monitoring infinite loop
         this.monitorVolumeAndTimeInfiniteLoop();
     }
 
     monitorVolumeAndTimeInfiniteLoop() {
+        // the following usage of NgZone improves on memory leak problems
         // https://angular.io/docs/js/latest/api/core/NgZone-class.html
         this.ngZone.runOutsideAngular(() => {
             this.totalPauseTime = this.monitorTotalTime = this.lastPauseTime = 0;
             this.monitorStartTime = Date.now();
 
             let timeNow: number,
-                timeoutError: number = 0,
+                timeoutError: number,
                 bufferMax: number,
                 repeat: Function = () => {
                     this.monitorTotalTime += MONITOR_TIMEOUT_MSEC;
 
-                    // bufferMax = this.webAudio.getBufferMaxVolume();
-                    bufferMax = 0;
+                    bufferMax = this.webAudio.getBufferMaxVolume();
                     if (bufferMax === this.maxVolume) {
                         this.peaksAtMax += 1;
                     }
@@ -121,23 +122,24 @@ export class RecordPage {
                         this.peaksAtMax = 1;
                         this.maxVolume = bufferMax;
                     }
-                    this.currentVolume = bufferMax;
-
+                    this.ngZone.run(() => {
+                        this.currentVolume = bufferMax;
+                    });
                     timeNow = Date.now();
                     timeoutError = timeNow - this.monitorStartTime -
                         this.monitorTotalTime;
-                    /*
-                        if (this.webAudio.isRecording()) {
-                            this.recordingDuration = timeNow - this.recordStartTime -
+
+                    if (this.webAudio.isRecording()) {
+                        this.recordingDuration = timeNow - this.recordStartTime -
                             this.totalPauseTime;
-                            this.recordingTime = msec2time(this.recordingDuration);
-                        }
-                    */
+                        this.recordingTime = msec2time(this.recordingDuration);
+                    }
+
                     setTimeout(repeat, MONITOR_TIMEOUT_MSEC - timeoutError);
 
                 };
             setTimeout(repeat, MONITOR_TIMEOUT_MSEC);
-        });
+        }); // this.ngZone.runOutsideAngular(() => {
     }
 
     onSliderDrag(event: Event) {
@@ -155,42 +157,37 @@ export class RecordPage {
             // convert factor (a number in [0, 1]) to decibels
             this.decibels = num2str(10.0 * Math.log10(factor), 2) + ' dB';
         }
-        //      this.webAudio.setGainFactor(factor);
+        this.webAudio.setGainFactor(factor);
     }
 
     onClickStartPauseButton() {
         this.currentVolume += Math.abs(Math.random() * 10);
-        /*
-                if (this.webAudio.isRecording()) {
-                    this.webAudio.pauseRecording();
-                    this.lastPauseTime = Date.now();
-                    this.recordButtonIcon = START_RESUME_ICON;
-                }
-                else {
-                    if (this.webAudio.isInactive()) {
-                        this.webAudio.startRecording();
-                        this.recordStartTime = Date.now();
-                    }
-                    else {
-                        this.webAudio.resumeRecording();
-                        this.totalPauseTime += Date.now() - this.lastPauseTime;
-                    }
-                    this.recordButtonIcon = PAUSE_ICON;
-                }
-        */
+        if (this.webAudio.isRecording()) {
+            this.webAudio.pauseRecording();
+            this.lastPauseTime = Date.now();
+            this.recordButtonIcon = START_RESUME_ICON;
+        }
+        else {
+            if (this.webAudio.isInactive()) {
+                this.webAudio.startRecording();
+                this.recordStartTime = Date.now();
+            }
+            else {
+                this.webAudio.resumeRecording();
+                this.totalPauseTime += Date.now() - this.lastPauseTime;
+            }
+            this.recordButtonIcon = PAUSE_ICON;
+        }
     }
 
     stopButtonDisabled() {
-        // return this.webAudio.isInactive();
-        return true;
+        return this.webAudio.isInactive();
     }
 
     onClickStopButton() {
-        /*
-                this.webAudio.stopRecording();
-                this.totalPauseTime = 0;
-                this.recordingTime = msec2time(0);
-                this.recordButtonIcon = START_RESUME_ICON;
-        */
+        this.webAudio.stopRecording();
+        this.totalPauseTime = 0;
+        this.recordingTime = msec2time(0);
+        this.recordButtonIcon = START_RESUME_ICON;
     }
 }

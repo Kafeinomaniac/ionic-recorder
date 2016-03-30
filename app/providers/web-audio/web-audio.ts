@@ -140,6 +140,7 @@ export class WebAudio {
                 bufferMax = absValue;
             }
         }
+        // console.log('WebAudio:getBufferMaxVolume(): ' + bufferMax);
         return bufferMax;
     }
 
