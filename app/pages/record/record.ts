@@ -10,15 +10,8 @@ import {NgZone} from 'angular2/core';
 import {MasterClock} from '../../providers/master-clock/master-clock';
 
 
-// the volume monitor frequency, in Hz
-const MONITOR_FREQUENCY_HZ: number = 40;
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
-
-// derived constants, please do not touch the constants below:
-const MONITOR_TIMEOUT_MSEC: number = 1000.0 / MONITOR_FREQUENCY_HZ;
-// max amount of time we expect the db to take to initialize
-const OPEN_DB_MAX_TIMEOUT: number = 50;
 
 
 @Page({
@@ -37,8 +30,6 @@ export class RecordPage {
     private decibels: string;
 
     // time related
-    private monitorStartTime: number;
-    private monitorTotalTime: number;
     private recordStartTime: number = 0;
     private lastPauseTime: number;
     private totalPauseTime: number;
@@ -100,8 +91,7 @@ export class RecordPage {
             ); // getProperty().subscribe(
         }; // webAudio.onStop = (blob: Blob) => { ...
 
-        // start volume/time monitoring infinite loop
-        // this.monitorVolumeAndTimeInfiniteLoop();
+        // add to master-clock loop
         this.totalPauseTime = this.lastPauseTime = 0;
         let bufferMax: number;
         this.masterClock.addFunction(() => {
@@ -121,47 +111,6 @@ export class RecordPage {
                 this.recordingTime = msec2time(this.recordingDuration);
             }
         });
-    }
-
-    monitorVolumeAndTimeInfiniteLoop() {
-        // the following usage of NgZone improves on memory leak problems
-        // https://angular.io/docs/js/latest/api/core/NgZone-class.html
-        this.ngZone.runOutsideAngular(() => {
-            this.totalPauseTime = this.monitorTotalTime = this.lastPauseTime = 0;
-            this.monitorStartTime = Date.now();
-
-            let timeNow: number,
-                timeoutError: number,
-                bufferMax: number,
-                repeat: Function = () => {
-                    this.monitorTotalTime += MONITOR_TIMEOUT_MSEC;
-
-                    bufferMax = this.webAudio.getBufferMaxVolume();
-                    if (bufferMax === this.maxVolume) {
-                        this.peaksAtMax += 1;
-                    }
-                    else if (bufferMax > this.maxVolume) {
-                        this.peaksAtMax = 1;
-                        this.maxVolume = bufferMax;
-                    }
-                    this.ngZone.run(() => {
-                        this.currentVolume = bufferMax;
-                    });
-                    timeNow = Date.now();
-                    timeoutError = timeNow - this.monitorStartTime -
-                        this.monitorTotalTime;
-
-                    if (this.webAudio.isRecording()) {
-                        this.recordingDuration = timeNow - this.recordStartTime -
-                            this.totalPauseTime;
-                        this.recordingTime = msec2time(this.recordingDuration);
-                    }
-
-                    setTimeout(repeat, MONITOR_TIMEOUT_MSEC - timeoutError);
-
-                };
-            setTimeout(repeat, MONITOR_TIMEOUT_MSEC);
-        }); // this.ngZone.runOutsideAngular(() => {
     }
 
     onSliderDrag(event: Event) {
