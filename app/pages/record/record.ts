@@ -7,15 +7,17 @@ import {WebAudio} from '../../providers/web-audio/web-audio';
 import {LocalDB, DB_NO_KEY} from '../../providers/local-db/local-db';
 import {num2str, msec2time} from '../../providers/utils/utils';
 import {NgZone} from 'angular2/core';
+import {MasterClock} from '../../providers/master-clock/master-clock';
 
 
 // the volume monitor frequency, in Hz
 const MONITOR_FREQUENCY_HZ: number = 40;
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
+
 // derived constants, please do not touch the constants below:
 const MONITOR_TIMEOUT_MSEC: number = 1000.0 / MONITOR_FREQUENCY_HZ;
-// the max amount of time we expect the db to finish initialization
+// max amount of time we expect the db to take to initialize
 const OPEN_DB_MAX_TIMEOUT: number = 50;
 
 
@@ -37,7 +39,7 @@ export class RecordPage {
     // time related
     private monitorStartTime: number;
     private monitorTotalTime: number;
-    private recordStartTime: number;
+    private recordStartTime: number = 0;
     private lastPauseTime: number;
     private totalPauseTime: number;
     private recordingDuration: number;
@@ -45,6 +47,7 @@ export class RecordPage {
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
     private webAudio: WebAudio = WebAudio.Instance;
+    private masterClock: MasterClock = MasterClock.Instance;
 
     /**
      * @constructor
@@ -99,6 +102,25 @@ export class RecordPage {
 
         // start volume/time monitoring infinite loop
         // this.monitorVolumeAndTimeInfiniteLoop();
+        this.totalPauseTime = this.lastPauseTime = 0;
+        let bufferMax: number;
+        this.masterClock.addFunction(() => {
+            bufferMax = this.webAudio.getBufferMaxVolume();
+            if (bufferMax === this.maxVolume) {
+                this.peaksAtMax += 1;
+            }
+            else if (bufferMax > this.maxVolume) {
+                this.peaksAtMax = 1;
+                this.maxVolume = bufferMax;
+            }
+            this.currentVolume = bufferMax;
+
+            if (this.webAudio.isRecording()) {
+                this.recordingDuration = Date.now() - this.recordStartTime -
+                    this.totalPauseTime;
+                this.recordingTime = msec2time(this.recordingDuration);
+            }
+        });
     }
 
     monitorVolumeAndTimeInfiniteLoop() {
@@ -170,6 +192,7 @@ export class RecordPage {
         else {
             if (this.webAudio.isInactive()) {
                 this.webAudio.startRecording();
+                this.recordingTime = msec2time(0);
                 this.recordStartTime = Date.now();
             }
             else {

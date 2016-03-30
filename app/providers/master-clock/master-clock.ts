@@ -23,9 +23,7 @@ export class MasterClock {
         console.log('constructor():MasterClock');
         this.ngZone.runOutsideAngular(() => {
             let startTime: number = Date.now(),
-                timeNow: number,
                 timeoutError: number,
-                bufferMax: number,
                 i: any,
                 repeat: Function = () => {
                     this.nTicks++;
@@ -36,8 +34,7 @@ export class MasterClock {
                         }
                     });
 
-                    timeNow = Date.now();
-                    timeoutError = timeNow - startTime -
+                    timeoutError = Date.now() - startTime -
                         this.nTicks * CLOCK_TIMEOUT_MSEC;
 
                     setTimeout(repeat, CLOCK_TIMEOUT_MSEC - timeoutError);
