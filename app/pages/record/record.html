@@ -5,7 +5,7 @@
         <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Record</ion-title>
-    <ion-buttons end>
+    <ion-buttons end *ngIf="currentVolume">
         <button small (click)="resetPeaksAtMax()">
             <ion-badge darkest-gray item-right>
                 {{percentPeaksAtMax()}}% peaks@max
@@ -15,19 +15,13 @@
 </ion-navbar>
 
 <ion-content padding [class]="platform.platforms()">
-    <ion-item class="monitor-on-off-toggle">
+    <ion-item class="monitor-switch">
         <ion-label>
             Monitor on/off
         </ion-label>
-        <ion-toggle>
+        <ion-toggle [checked]="monitorSwitchState" (click)="toggleMonitor()">
         </ion-toggle>
     </ion-item>
-    <!--p class="item-label">Mic Volume:              -->
-    <!--span *ngIf="maxVolume > 1">{{peaksAtMax}} peaks at max</span-->
-    <!--span>
-            {{peaksAtMax}} peaks at max
-        </span>
-    </p-->
     <vu-gauge height="2.5em" nbars="55" [max]="maxVolume" [value]="currentVolume">
     </vu-gauge>
     <p class="gain-item-label">Gain: {{gain}}% ({{decibels}})

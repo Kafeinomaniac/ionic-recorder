@@ -28,6 +28,7 @@ export class RecordPage {
     private recordButtonIcon: string = START_RESUME_ICON;
     private gain: number = 100;
     private decibels: string = '0.00 dB';
+    private monitorSwitchState: boolean = true;
 
     // time related
     private recordStartTime: number = 0;
@@ -54,13 +55,13 @@ export class RecordPage {
 
         this.webAudio.onStop = (blob: Blob) => {
             let now: Date = new Date(),
-                itemCount: number = 0,
-                month: number = now.getMonth() + 1,
-                name: string =
-                    now.getFullYear() + '-' +
-                    month + '-' +
-                    now.getDate() + ' -- ' +
-                    now.toLocaleTimeString();
+            itemCount: number = 0,
+            month: number = now.getMonth() + 1,
+            name: string =
+                now.getFullYear() + '-' +
+                month + '-' +
+                now.getDate() + ' -- ' +
+                now.toLocaleTimeString();
             console.dir(blob);
 
             this.appState.getProperty('unfiledFolderKey').subscribe(
@@ -75,7 +76,7 @@ export class RecordPage {
                         (error: any) => {
                             alert('create data node error: ' + error);
                         }
-                        );
+                    );
                 },
                 (getError: any) => {
                     console.error('getProperty error: ' + getError);
@@ -86,23 +87,46 @@ export class RecordPage {
 
     onPageWillEnter() {
         this.masterClock.addFunction(RECORD_PAGE_CLOCK_FUNCTION, () => {
-        this.currentVolume = this.webAudio.getBufferMaxVolume();
-        this.peakMeasurements += 1;
-        if (this.currentVolume === this.maxVolume) {
-            this.peaksAtMax += 1;
-        }
-        else if (this.currentVolume > this.maxVolume) {
-            this.peaksAtMax = 1;
-            this.maxVolume = this.currentVolume;
-        }
-
-        if (this.webAudio.isRecording()) {
-            this.recordingDuration = Date.now() - this.recordStartTime -
-                this.totalPauseTime;
-            this.recordingTime = msec2time(this.recordingDuration);
-        }
+            this.currentVolume = this.webAudio.getBufferMaxVolume();
+            this.peakMeasurements += 1;
+            if (this.currentVolume === this.maxVolume) {
+                this.peaksAtMax += 1;
             }
-        );
+            else if (this.currentVolume > this.maxVolume) {
+                this.peaksAtMax = 1;
+                this.maxVolume = this.currentVolume;
+            }
+
+            if (this.webAudio.isRecording()) {
+                this.recordingDuration = Date.now() - this.recordStartTime -
+                    this.totalPauseTime;
+                this.recordingTime = msec2time(this.recordingDuration);
+            }
+        }
+                                    );
+    }
+
+    toggleMonitor() {
+        if (this.monitorSwitchState) {
+            this.monitorSwitchState = false;
+
+            // remove old monitoring function
+            this.masterClock.removeFunction(RECORD_PAGE_CLOCK_FUNCTION);
+
+            this.masterClock.addFunction(RECORD_PAGE_CLOCK_FUNCTION, () => {
+                this.currentVolume = 0;
+                this.resetPeaksAtMax();
+            });
+            setTimeout(() => {
+                // we need a little delay here to make sure things visually
+                // reset before we remove this new resetting function
+                this.masterClock.removeFunction(RECORD_PAGE_CLOCK_FUNCTION);
+            }, 200);
+        }
+        else {
+            this.monitorSwitchState = true;
+            this.onPageWillEnter();
+        }
     }
 
     onPageWillLeave() {
@@ -117,7 +141,7 @@ export class RecordPage {
             1000.0*this.peaksAtMax/this.peakMeasurements)/10.0, 1);
     }
 
-    resetPeaksAtMax() { 
+    resetPeaksAtMax() {
         this.maxVolume = 0;
         this.peakMeasurements = 0;
         this.peaksAtMax = 0;
