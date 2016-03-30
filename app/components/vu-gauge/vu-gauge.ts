@@ -16,31 +16,28 @@ import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
 export class VuGauge implements OnChanges {
     @Input() private height: string;
     @Input() private nbars: number;
-    @Input() private min: number;
-    @Input() private max: number;
     @Input() private value: number;
+    @Input() private max: number;
+    private maxIndex: number;
     private ledWidth: string;
     private leds: { x: string, fill: string, strokeWidth: string }[];
     private hStep: number;
     private valueStep: number;
-    private maxValue: number;
-    private maxValueIndex: number;
 
     constructor() {
         console.log('constructor():VuGauge');
         this.leds = [];
-        this.maxValue = 0;
-        this.maxValueIndex = 0;
+        this.maxIndex = 0;
     }
 
     fillColor(ledIndex: number, lightness: string) {
         return ['hsl(', 120.0 - ledIndex * this.hStep,
-                ',100%,', lightness, ')'].join('');
+            ',100%,', lightness, ')'].join('');
     }
 
     ngOnInit() {
         let percentWidth: number = 100.0 / (2 * this.nbars - 1),
-        xStep: number = 2.0 * percentWidth, i: number;
+            xStep: number = 2.0 * percentWidth, i: number;
         this.ledWidth = percentWidth + '%';
         this.hStep = 120.0 / (this.nbars - 1.0);
         for (i = 0; i < this.nbars; i++) {
@@ -50,14 +47,14 @@ export class VuGauge implements OnChanges {
                 strokeWidth: '0'
             });
         }
-        this.valueStep = (this.max - this.min) / (this.nbars - 1.0);
+        this.valueStep = 128.0 / (this.nbars - 1.0);
     }
 
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
-        if ((this.leds.length > 0) && (changeRecord['value'])) {
+        if (this.leds.length > 0) {
             let fill: string, i: number;
             for (i = 0; i < this.nbars; i++) {
-                if (this.min + this.valueStep * i < this.value) {
+                if (this.valueStep * i < this.value) {
                     fill = this.fillColor(i, '50%');
                 }
                 else {
@@ -66,12 +63,7 @@ export class VuGauge implements OnChanges {
                 this.leds[i].fill = fill;
                 this.leds[i].strokeWidth = '0';
             }
-            if (this.value >= this.maxValue) {
-                this.maxValue = this.value;
-                this.maxValueIndex = Math.floor(
-                    (this.value - this.min) / this.valueStep);
-            }
-            this.leds[this.maxValueIndex].strokeWidth = '1';
+            this.leds[Math.floor(this.max / this.valueStep)].strokeWidth = '1';
         }
     }
 }

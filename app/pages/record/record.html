@@ -6,7 +6,7 @@
     </button>
     <ion-title>Record</ion-title>
     <ion-buttons end>
-        <button small (click)="onClickMaxPeaks()">
+        <button small (click)="resetPeaksAtMax()">
             <ion-badge darkest-gray item-right>
                 {{percentPeaksAtMax()}}% peaks@max
             </ion-badge>
@@ -28,7 +28,7 @@
             {{peaksAtMax}} peaks at max
         </span>
     </p-->
-    <vu-gauge height="2.5em" nbars="55" min="0" max="128" rate="20" [value]="currentVolume">
+    <vu-gauge height="2.5em" nbars="55" [max]="maxVolume" [value]="currentVolume">
     </vu-gauge>
     <p class="gain-item-label">Gain: {{gain}}% ({{decibels}})
     </p>

@@ -110,10 +110,15 @@ export class RecordPage {
     }
 
     percentPeaksAtMax() {
-        return Math.floor(1000.0*this.peaksAtMax/this.peakMeasurements)/10.0;
+        if (!this.peakMeasurements) {
+            return '0.0';
+        }
+        return num2str(Math.floor(
+            1000.0*this.peaksAtMax/this.peakMeasurements)/10.0, 1);
     }
 
-    onClickMaxPeaks() { 
+    resetPeaksAtMax() { 
+        this.maxVolume = 0;
         this.peakMeasurements = 0;
         this.peaksAtMax = 0;
     }
@@ -147,6 +152,7 @@ export class RecordPage {
             if (this.webAudio.isInactive()) {
                 this.webAudio.startRecording();
                 this.recordStartTime = Date.now();
+                this.resetPeaksAtMax();
             }
             else {
                 this.webAudio.resumeRecording();

@@ -48,7 +48,7 @@ $list-border-color: map-get($colors, dark-gray);
 $list-text-color: $text-color;
 
 $toggle-md-track-background-color-on: map-get($colors, dark-gray);
-$toggle-md-track-background-color-off: map-get($colors, dark-gray);
+$toggle-md-track-background-color-off: map-get($colors, darkest-gray);
 $toggle-md-handle-background-color-on:  green;
 $toggle-md-handle-background-color-off: map-get($colors, logo-red);
 
