@@ -5,29 +5,46 @@
         <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Record</ion-title>
+    <ion-buttons end>
+        <button small (click)="onClickMaxPeaks()">
+            <ion-badge darkest-gray item-right>
+                {{peaksAtMax}} peaks@max
+            </ion-badge>
+        </button>
+    </ion-buttons>
 </ion-navbar>
 
 <ion-content padding [class]="platform.platforms()">
-    <p class="item-label">Mic Volume:
-        <!--span *ngIf="maxVolume > 1">{{peaksAtMax}} peaks at max</span-->
-        <span>{{peaksAtMax}} peaks at max</span>
+    <ion-item class="monitor-on-off-toggle">
+        <ion-label>
+            Monitor on/off
+        </ion-label>
+        <ion-toggle>
+        </ion-toggle>
+    </ion-item>
+    <!--p class="item-label">Mic Volume:              -->
+    <!--span *ngIf="maxVolume > 1">{{peaksAtMax}} peaks at max</span-->
+    <!--span>
+            {{peaksAtMax}} peaks at max
+        </span>
+    </p-->
+    <vu-gauge height="2.5em" nbars="55" min="0" max="128" rate="20" [value]="currentVolume">
+    </vu-gauge>
+    <p class="gain-item-label">Gain: {{gain}}% ({{decibels}})
     </p>
-    <vu-gauge height="2.5em" nbars="55" min="0" max="128" rate="20"
-              [value]="currentVolume"></vu-gauge>
-    <p class="item-label">Gain: {{gain}}% ({{decibels}})</p>
-    <input type="range" min="0" max="200"
-           [value]="sliderValue"
-           (input)="onSliderChange($event)"
-           (touchstart)="onSliderDrag($event)"
-           (mousedown)="onSliderDrag($event)">
-    <div class="recording-time">{{recordingTime}}</div>
+    <input type="range" min="0" max="200" [value]="sliderValue" (input)="onSliderChange($event)" (touchstart)="onSliderDrag($event)"
+    (mousedown)="onSliderDrag($event)">
+    <div class="recording-time">
+        {{recordingTime}}
+    </div>
     <div class="record-upload-buttons">
         <button logo-red (click)="onClickStartPauseButton()">
-            <ion-icon [name]="recordButtonIcon"></ion-icon>
+            <ion-icon [name]="recordButtonIcon">
+            </ion-icon>
         </button>
-        <button logo-orange [disabled]="stopButtonDisabled()"
-                (click)="onClickStopButton()">
-            <ion-icon name="square"></ion-icon>
+        <button logo-orange [disabled]="stopButtonDisabled()" (click)="onClickStopButton()">
+            <ion-icon name="square">
+            </ion-icon>
         </button>
     </div>
 </ion-content>

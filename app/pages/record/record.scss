@@ -1,7 +1,8 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-p.item-label {
+p.gain-item-label {
     margin-bottom: 0.2em;
+    font-size: 1.2em;
     color: map-get($colors, medium-gray);
 }
 
@@ -23,5 +24,15 @@ div.record-upload-buttons {
         font-size: 1.3em;
         width: 5.8em;
         height: 5.8em;
+    }
+}
+
+ion-item.monitor-on-off-toggle {
+    color: map-get($colors, medium-gray);
+    padding: 0;
+    margin-bottom: 0.5em;
+    div.item-inner {
+        font-size: 1    em;
+        border-bottom: 0;
     }
 }

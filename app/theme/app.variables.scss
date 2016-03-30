@@ -38,8 +38,26 @@ $colors: (
     logo-orange:        #f27321
 ) !default;
 
+// overrides:
+
 $text-color: map-get($colors, light) !default;
 $background-color: map-get($colors, dark) !default;
+
+$list-background-color: map-get($colors, dark);
+$list-border-color: map-get($colors, dark-gray);
+$list-text-color: $text-color;
+
+$toggle-md-track-background-color-on: map-get($colors, dark-gray);
+$toggle-md-track-background-color-off: map-get($colors, dark-gray);
+$toggle-md-handle-background-color-on:  green;
+$toggle-md-handle-background-color-off: map-get($colors, logo-red);
+
+$toggle-ios-background-color-off: map-get($colors, darkest-gray);
+$toggle-ios-border-color-off: map-get($colors, darkest-gray);
+$toggle-ios-background-color-on: green;
+$toggle-ios-background-color-off: map-get($colors, logo-red);
+$toggle-ios-handle-background-color: map-get($colors, darkest-gray);
+
 
 // some globals shared between files
 
@@ -47,3 +65,5 @@ $background-color: map-get($colors, dark) !default;
 // 'Playing ...' line
 
 $toolbar-title-font-size: 13px;
+
+

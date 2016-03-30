@@ -1,5 +1,18 @@
 # TODO.md
 
+* 1) Jump to next selection on clicking top right
+* 2) move button
+* 3) info button
+* 4) share button - just to download
+* 5) more button - just play selected
+* 6) item more button1 - rename
+* 7) item more button2 - item info
+* 8) max peaks reset
+* 9) monitor on or off toggle
+* 10) report on last recorded file and a link to jump to it in record page
+*     also report its duration and filename
+* 11) settings page
+* 12) about page
 * Turn time monitor into a singleton class, use in record.ts, then use in 
   audio-player.ts - so that we are using the same clock, no extra events.
 * NOT SURE IF TO DO THIS:

@@ -119,6 +119,10 @@ export class RecordPage {
         this.masterClock.removeFunction(RECORD_PAGE_CLOCK_FUNCTION);
     }
 
+    onClickMaxPeaks() {
+        console.log('onClickMaxPeaks()');
+    }
+
     onSliderDrag(event: Event) {
         // Fixes slider not dragging in Firefox, as described in wiki
         event.stopPropagation();
