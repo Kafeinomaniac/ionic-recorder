@@ -23,7 +23,7 @@ export class LibraryPage {
     private unfiledFolderKey: number;
     private playerTitle: string;
     private playerUrl: string;
-    private playerDuration: string;
+    private playerDuration: number;
 
     /**
      * @constructor
@@ -439,8 +439,7 @@ export class LibraryPage {
                         ', duration = ' + duration);
                     console.dir(dataNode);
 
-                    this.playerDuration = msec2time(duration)
-                        .replace('00:00:', '');
+                    this.playerDuration = duration;
                     this.playerUrl = url;
 
                 }

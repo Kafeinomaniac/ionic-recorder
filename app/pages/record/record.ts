@@ -12,6 +12,7 @@ import {MasterClock} from '../../providers/master-clock/master-clock';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
+const RECORD_PAGE_CLOCK_FUNCTION = 'record-page-clock-function';
 
 
 @Page({
@@ -31,9 +32,9 @@ export class RecordPage {
 
     // time related
     private recordStartTime: number = 0;
-    private lastPauseTime: number;
-    private totalPauseTime: number;
-    private recordingDuration: number;
+    private lastPauseTime: number = 0;
+    private totalPauseTime: number = 0;
+    private recordingDuration: number = 0;
 
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
@@ -91,27 +92,31 @@ export class RecordPage {
                 }
             ); // getProperty().subscribe(
         }; // webAudio.onStop = (blob: Blob) => { ...
+    }
 
-        // add to master-clock loop
-        this.totalPauseTime = this.lastPauseTime = 0;
-        let bufferMax: number;
-        this.masterClock.addFunction(() => {
-            bufferMax = this.webAudio.getBufferMaxVolume();
-            if (bufferMax === this.maxVolume) {
-                this.peaksAtMax += 1;
-            }
-            else if (bufferMax > this.maxVolume) {
-                this.peaksAtMax = 1;
-                this.maxVolume = bufferMax;
-            }
-            this.currentVolume = bufferMax;
+    onPageWillEnter() {
+        this.masterClock.addFunction(
+            RECORD_PAGE_CLOCK_FUNCTION, () => {
+        this.currentVolume = this.webAudio.getBufferMaxVolume();
+        if (this.currentVolume === this.maxVolume) {
+            this.peaksAtMax += 1;
+        }
+        else if (this.currentVolume > this.maxVolume) {
+            this.peaksAtMax = 1;
+            this.maxVolume = this.currentVolume;
+        }
 
-            if (this.webAudio.isRecording()) {
-                this.recordingDuration = Date.now() - this.recordStartTime -
-                    this.totalPauseTime;
-                this.recordingTime = msec2time(this.recordingDuration);
+        if (this.webAudio.isRecording()) {
+            this.recordingDuration = Date.now() - this.recordStartTime -
+                this.totalPauseTime;
+            this.recordingTime = msec2time(this.recordingDuration);
+        }
             }
-        });
+        );
+    }
+
+    onPageWillLeave() {
+        this.masterClock.removeFunction(RECORD_PAGE_CLOCK_FUNCTION);
     }
 
     onSliderDrag(event: Event) {

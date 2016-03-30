@@ -17,20 +17,20 @@ export class MasterClock {
     private static instance: MasterClock = null;
     private nTicks: number = 0;
     private ngZone: NgZone = new NgZone({ enableLongStackTrace: false });
-    private functions: Array<Function> = [];
+    private functions: { [id: string]: Function } = {};
 
     constructor() {
         console.log('constructor():MasterClock');
         this.ngZone.runOutsideAngular(() => {
             let startTime: number = Date.now(),
                 timeoutError: number,
-                i: any,
+                id: string,
                 repeat: Function = () => {
                     this.nTicks++;
 
                     this.ngZone.run(() => {
-                        for (i in this.functions) {
-                            this.functions[i]();
+                        for (id in this.functions) {
+                            this.functions[id]();
                         }
                     });
 
@@ -43,8 +43,12 @@ export class MasterClock {
         }); // this.ngZone.runOutsideAngular(() => {
     }
 
-    addFunction(addedFunction: Function) {
-        this.functions.push(addedFunction);
+    addFunction(id: string, fun: Function) {
+        this.functions[id] = fun;
+    }
+    
+    removeFunction(id: string) {
+        delete this.functions[id];
     }
 
     getTicks() {

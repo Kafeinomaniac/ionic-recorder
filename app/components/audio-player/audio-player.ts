@@ -5,6 +5,10 @@ import {IONIC_DIRECTIVES} from 'ionic-angular';
 import {msec2time} from '../../providers/utils/utils';
 import {MasterClock} from '../../providers/master-clock/master-clock';
 
+
+const AUDIO_PLAYER_CLOCK_FUNCTION = 'audio-player-clock-function';
+
+
 /**
  * @name AudioPlayer
  * @description
@@ -17,15 +21,16 @@ import {MasterClock} from '../../providers/master-clock/master-clock';
     directives: [IONIC_DIRECTIVES]
 })
 export class AudioPlayer implements OnChanges {
-    @Input() private title: string = '';
-    @Input() private url: string = '';
-    @Input() private duration: string = '';
-    private time: string = '0:00';
+    @Input() private title: string;
+    @Input() private url: string;
+    @Input() private duration: number;
+    private time: number;
     private hidden: boolean = true;
     private playPauseButtonIcon: string = 'play';
     private audioElement: HTMLAudioElement;
     private masterClock: MasterClock = MasterClock.Instance;
-
+    private progressMax: number = 0;
+    private progressValue: number = 0;
     constructor() {
         console.log('constructor():AudioPlayer');
     }
@@ -35,17 +40,12 @@ export class AudioPlayer implements OnChanges {
             document.getElementById('audio-player-audio-tag')
         );
 
-        this.masterClock.addFunction(() => {
-            if (this.time !== this.duration) {
-                this.time = msec2time(this.audioElement.currentTime * 1000.0)
-                    .replace('00:00:', '');
-            }
-        });
-
         this.audioElement.addEventListener('ended', () => {
             console.log('AUDIO ENDED');
             this.playPauseButtonIcon = 'play';
+            this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
             this.time = this.duration;
+            this.progressValue = this.time;
         });
     }
 
@@ -57,16 +57,26 @@ export class AudioPlayer implements OnChanges {
     hide() {
         this.hidden = true;
     }
+    
+    formatTime(time: number) {
+        return msec2time(time).replace('00:00:', '');
+    }
 
     play() {
         this.audioElement.play();
         console.log('audioElement.duration: ' + this.audioElement.duration);
-        // this.duration = this.audioElement.duration.toString();
+
+        this.masterClock.addFunction(AUDIO_PLAYER_CLOCK_FUNCTION, () => {
+            this.time = this.audioElement.currentTime * 1000.0;
+            this.progressValue = this.time;
+        });
+
         this.playPauseButtonIcon = 'pause';
     }
 
     pause() {
         this.audioElement.pause();
+        this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
         this.playPauseButtonIcon = 'play';
     }
 
@@ -85,6 +95,7 @@ export class AudioPlayer implements OnChanges {
         // next line is the trick discussed here
         // https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/ ...
         //     ... Using_HTML5_audio_and_video
+        this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
         this.url = '';
         this.audioElement.src = '';
         this.hide();
@@ -103,6 +114,12 @@ export class AudioPlayer implements OnChanges {
                 this.audioElement.addEventListener('canplay', () => {
                     this.play();
                 });
+            }
+        }
+        if (changeRecord['duration']) {
+            console.log('AudioPlayer:ngOnChanges(): duration: ' + this.duration);
+            if (this.duration !== undefined) {
+                this.progressMax = this.duration;
             }
         }
     }
