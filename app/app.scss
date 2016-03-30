@@ -12,12 +12,12 @@ ion-content {
     scroll-content {
         overflow-y: auto;
     }
-}       
+}
 
 // app left (navigation) menu
 ion-menu {
     ion-content {
-        // background of entire menu area plus background of 
+        // background of entire menu area plus background of
         // any items that are not active or selected
         scroll-content, ion-list .item {
             background: map-get($colors, darkest-gray);
