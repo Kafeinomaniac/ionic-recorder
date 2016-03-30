@@ -59,6 +59,9 @@ export class AudioPlayer implements OnChanges {
     }
     
     formatTime(time: number) {
+        if (time === undefined) {
+            return '00:00'; 
+        }
         return msec2time(time).replace('00:00:', '');
     }
 
