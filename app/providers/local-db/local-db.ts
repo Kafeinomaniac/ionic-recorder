@@ -545,8 +545,9 @@ export class LocalDB {
             this.readNodesByName(name).subscribe(
                 (nodes: TreeNode[]) => {
                     let nodeFound: TreeNode = null,
-                        nFound: number = 0;
-                    for (let i in nodes) {
+                        nFound: number = 0, 
+                        i: number;
+                    for (i = 0; i < nodes.length; i++) {
                         if (nodes[i].parentKey === parentKey) {
                             nodeFound = nodes[i];
                             nFound++;

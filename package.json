@@ -29,6 +29,7 @@
     "ionic-gulp-scripts-copy": "^1.0.0",
     "ionic-gulp-webpack-build": "^1.0.0",
     "jasmine-core": "^2.4.1",
+    "jasmine-spec-reporter": "^2.4.0",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.3",
     "karma-coverage": "^0.5.5",
@@ -36,6 +37,7 @@
     "karma-mocha-reporter": "^2.0.0",
     "karma-phantomjs-launcher": "^1.0.0",
     "phantomjs-prebuilt": "^2.1.6",
+    "protractor": "^3.2.2",
     "run-sequence": "^1.1.5",
     "strip-sourcemap-loader": "0.0.1",
     "systemjs": "^0.19.24",
@@ -54,13 +56,12 @@
     "url": "https://github.com/tracktunes/ionic-recorder.git"
   },
   "scripts": {
-    "build": "gulp --gulpfile test/gulpfile.ts --cwd ./ ionic.build",
-    "e2e": "gulp --gulpfile test/gulpfile.ts --cwd ./ test.build.e2e && ./node_modules/protractor/bin/protractor test/protractor.conf.js",
-    "karma": "gulp --gulpfile test/gulpfile.ts --cwd ./ test.karma.debug",
-    "postinstall": "typings install",
+    "build": "bin/gulp --gulpfile test/gulpfile.ts --cwd ./ ionic.build",
+    "e2e": "bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test.build.e2e && ./node_modules/protractor/bin/protractor test/protractor.conf.js",
+    "karma": "bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test.karma.debug",
     "start": "ionic serve --browser chromium-browser",
-    "test": "find ./app -type f | xargs sed -i 's/[ \t]*$//' ; gulp --gulpfile test/gulpfile.ts --cwd ./ test",
-    "test.watch": "gulp --gulpfile test/gulpfile.ts --cwd ./ test.watch.build",
+    "test": "find ./app -type f | xargs sed -i 's/[ \t]*$//' ; bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test",
+    "test.watch": "bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test.watch.build",
     "webdriver-update": "webdriver-manager update"
   }
 }

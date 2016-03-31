@@ -20,12 +20,12 @@ cat << EOF >> $TMPFILE
     "url": "https://github.com/tracktunes/ionic-recorder.git"
   },
   "scripts": {
-    "build": "gulp --gulpfile test/gulpfile.ts --cwd ./ ionic.build",
-    "e2e": "gulp --gulpfile test/gulpfile.ts --cwd ./ test.build.e2e && ./node_modules/protractor/bin/protractor test/protractor.conf.js",
-    "karma": "gulp --gulpfile test/gulpfile.ts --cwd ./ test.karma.debug",
+    "build": "bin/gulp --gulpfile test/gulpfile.ts --cwd ./ ionic.build",
+    "e2e": "bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test.build.e2e && ./node_modules/protractor/bin/protractor test/protractor.conf.js",
+    "karma": "bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test.karma.debug",
     "start": "ionic serve --browser chromium-browser",
-    "test": "find ./app -type f | xargs sed -i 's/[ \t]*$//' ; gulp --gulpfile test/gulpfile.ts --cwd ./ test",
-    "test.watch": "gulp --gulpfile test/gulpfile.ts --cwd ./ test.watch.build",
+    "test": "find ./app -type f | xargs sed -i 's/[ \t]*$//' ; bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test",
+    "test.watch": "bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test.watch.build",
     "webdriver-update": "webdriver-manager update"
   }
 }

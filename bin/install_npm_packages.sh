@@ -23,6 +23,7 @@ npm install --save-dev awesome-typescript-loader \
     ionic-gulp-sass-build \
     ionic-gulp-webpack-build \
     jasmine-core \
+    jasmine-spec-reporter \
     karma \
     karma-chrome-launcher \
     karma-coverage \
@@ -30,6 +31,7 @@ npm install --save-dev awesome-typescript-loader \
     karma-mocha-reporter \
     karma-phantomjs-launcher \
     phantomjs-prebuilt \
+    protractor \
     run-sequence \
     strip-sourcemap-loader \
     systemjs \
