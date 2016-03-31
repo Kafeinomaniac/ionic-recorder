@@ -18,7 +18,7 @@ export class TabsPage {
 
     /**
      * @constructor
-     * @param {IonicApp} app
+     * @param {IonicApp} used to get the tabs component
      */
     constructor(private app: IonicApp) {
         console.log('constructor():TabsPage');

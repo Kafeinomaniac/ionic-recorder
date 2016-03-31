@@ -32,10 +32,17 @@ export class AudioPlayer implements OnChanges {
     private progressMax: number = 0;
     private progressValue: number = 0;
 
+    /**
+     * @constructor
+     */
     constructor() {
         console.log('constructor():AudioPlayer');
     }
 
+    /**
+     * Setup when component first loaded into DOM
+     * @returns {void}
+     */
     ngOnInit() {
         this.audioElement = <HTMLAudioElement>(
             document.getElementById('audio-player-audio-tag')
@@ -50,15 +57,26 @@ export class AudioPlayer implements OnChanges {
         });
     }
 
-
+    /**
+     * Show audio player
+     * @returns {void}
+     */
     show() {
         this.hidden = false;
     }
 
+    /**
+     * Hide audio player
+     * @returns {void}
+     */
     hide() {
         this.hidden = true;
     }
 
+    /**
+     * Formats time, given as a number in miliseconds, to a string
+     * @returns {string} the formatted time
+     */
     formatTime(time: number) {
         if (time === undefined) {
             return '00:00';
@@ -66,6 +84,10 @@ export class AudioPlayer implements OnChanges {
         return msec2time(time).replace('00:00:', '');
     }
 
+    /**
+     * Start playing audio
+     * @returns {void}
+     */
     play() {
         this.audioElement.play();
         console.log('audioElement.duration: ' + this.audioElement.duration);
@@ -78,12 +100,20 @@ export class AudioPlayer implements OnChanges {
         this.playPauseButtonIcon = 'pause';
     }
 
+    /**
+     * Pause playback
+     * @returns {void}
+     */
     pause() {
         this.audioElement.pause();
         this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
         this.playPauseButtonIcon = 'play';
     }
 
+    /**
+     * UI callback: either play or pause audio on button click
+     * @returns {void}
+     */
     onClickPlayPauseButton() {
         console.log('onClickPlayPauseButton()');
 
@@ -95,6 +125,10 @@ export class AudioPlayer implements OnChanges {
         }
     }
 
+    /**
+     * Stops playback and hides audio player
+     * @returns {void}
+     */
     onClickCloseButton() {
         // next line is the trick discussed here
         // https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/ ...
@@ -105,6 +139,10 @@ export class AudioPlayer implements OnChanges {
         this.hide();
     }
 
+    /**
+     * Handle changes (play new song) when a new song (url) is loaded
+     * @returns {void}
+     */
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
         if (changeRecord['title']) {
             console.log('AudioPlayer:ngOnChanges(): title: ' + this.title);

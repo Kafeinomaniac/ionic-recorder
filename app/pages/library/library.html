@@ -8,7 +8,7 @@
     <ion-buttons end *ngIf="nSelectedNodes()">
         <button small (click)="onClickTotalSelected()">
             <ion-badge darkest-gray item-right>
-                Total selected: {{nSelectedNodes()}}
+                {{nSelectedNodes()}} selected
             </ion-badge>
         </button>
     </ion-buttons>
@@ -74,7 +74,7 @@
 </ion-content>
 
 <div class="buttonbar5" *ngIf="nSelectedNodes()">
-    <button almost-dark (click)="onClickShareButton()" ion-row center>
+    <button almost-dark (click)="onClickInfoButton()" ion-row center>
         <ion-col>
             <ion-icon name="information-circle"></ion-icon>
             <br> Info
@@ -103,7 +103,7 @@
             <br>
         </ion-col>
     </button>
-    <button almost-dark (click)="onClickDownButton()" [disabled]="downButtonDisabled()" ion-row center>
+    <button almost-dark (click)="onClickMoreButton()" ion-row center>
         <ion-col>
             <ion-icon name="more"></ion-icon>
             <br> More

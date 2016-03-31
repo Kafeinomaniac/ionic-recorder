@@ -542,26 +542,27 @@ export class LocalDB {
     // not exist the TreeNode object returned is null.
     getNodeByNameInParent(name: string, parentKey: number) {
         let source: Observable<TreeNode> = Observable.create((observer) => {
-            this.readNodesByName(name).subscribe((nodes: TreeNode[]) => {
-                let nodeFound: TreeNode = null,
-                    nFound: number = 0;
-                for (let i in nodes) {
-                    if (nodes[i].parentKey === parentKey) {
-                        nodeFound = nodes[i];
-                        nFound++;
-                        if (nFound > 1) {
-                            break;
+            this.readNodesByName(name).subscribe(
+                (nodes: TreeNode[]) => {
+                    let nodeFound: TreeNode = null,
+                        nFound: number = 0;
+                    for (let i in nodes) {
+                        if (nodes[i].parentKey === parentKey) {
+                            nodeFound = nodes[i];
+                            nFound++;
+                            if (nFound > 1) {
+                                break;
+                            }
                         }
                     }
-                }
-                if (nFound > 1) {
-                    observer.error('unique name violation 1');
-                }
-                else {
-                    observer.next(nodeFound);
-                    observer.complete();
-                }
-            },
+                    if (nFound > 1) {
+                        observer.error('unique name violation 1');
+                    }
+                    else {
+                        observer.next(nodeFound);
+                        observer.complete();
+                    }
+                },
                 (error) => {
                     observer.error('in readNodesByname: ' + error);
                 }

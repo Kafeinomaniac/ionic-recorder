@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Rx';
 import {LocalDB, TreeNode, DataNode, DB_NO_KEY, DB_KEY_PATH, MAX_DB_INIT_TIME}
 from '../local-db/local-db';
 
+
 interface State {
     lastSelectedTab: number;
     lastViewedFolderKey: number;
@@ -12,6 +13,7 @@ interface State {
     unfiledFolderKey: number;
     selectedNodes: { [id: string]: boolean };
 }
+
 
 // make sure APP_STATE_ITEM_NAME will never be entered by a user
 export const STATE_NODE_NAME: string =
@@ -33,6 +35,7 @@ const DEFAULT_STATE: State = {
 export class AppState {
     // 'instance' is used to implement this class as a Singleton
     private static instance: AppState = null;
+
     private localDB: LocalDB = LocalDB.Instance;
 
     // treeNode contains the node in the tree where we store the
@@ -44,6 +47,9 @@ export class AppState {
 
     private state: State = null;
 
+    /**
+     * @constructor
+     */
     constructor() {
         console.log('constructor():AppState');
 
@@ -79,15 +85,19 @@ export class AppState {
                     (error: any) => {
                         throw new Error(error);
                     }
-                    ); // readOrCreateFolderNode().su ...
+                    ); // readOrCreateFolderNode().subscribe(
             },
             (error: any) => {
                 throw new Error(error);
             }
-            ); // readOrCreateFolderNode().su ...
+            ); // readOrCreateFolderNode().subscribe(
     }
 
     // Singleton pattern implementation
+
+    /**
+     * Returns the singleton instance of this class
+     */
     static get Instance() {
         if (!this.instance) {
             this.instance = new AppState();
@@ -95,6 +105,10 @@ export class AppState {
         return this.instance;
     }
 
+    /**
+     * Get the key of the last viewed folder from the local DB
+     * @returns {Observable<number>} Observable of last viewed folder's key
+     */
     getLastViewedFolderKey() {
         let source: Observable<number> = Observable.create((observer) => {
             this.getProperty('lastViewedFolderKey').subscribe(
@@ -135,20 +149,24 @@ export class AppState {
         });
         return source;
     }
-    // this creates the following folders in a newly initialized app:
-    // 1) root folder '/'
-    // 2) unfiled folder 'Unfiled', under root
-    // 3) favorites folder 'Favorites', under root
-    // 4) recent folder 'Recent',under root
-    private createInitialFolderStructure() {
 
-    }
+    // Creates the following folders in a newly initialized app:
+    //   1) root folder '/'
+    //   2) unfiled folder 'Unfiled', under root
+    //   3) favorites folder 'Favorites', under root
+    //   4) recent folder 'Recent',under root
+    // private createInitialFolderStructure() {
+    // }
 
+    /**
+     * Returns an observable that emits when this class is ready for use
+     * @returns {Observable<void>} Observable, emits after this class is ready
+     */
     waitForAppState() {
-        let source: Observable<boolean> = Observable.create((observer) => {
+        let source: Observable<void> = Observable.create((observer) => {
             let repeat = () => {
                 if (this.treeNode && this.dataNode) {
-                    observer.next(true);
+                    observer.next();
                     observer.complete();
                 }
                 else {
@@ -161,7 +179,10 @@ export class AppState {
         return source;
     }
 
-    // returns an Observable<any> of the value
+    /**
+     * Gets a state property (from DB if necessary)
+     * @returns {Observable<any>} Observable of value of property obtained
+     */
     getProperty(propertyName) {
         let source: Observable<any> = Observable.create((observer) => {
             this.waitForAppState().subscribe(
@@ -183,8 +204,12 @@ export class AppState {
         return source;
     }
 
-    // NOTE: we don't need the waitForDB() observable here because
-    // it happens inside updateNodeData()
+    /**
+     * Sets a state property (in DB if necessary)
+     * @returns {Observable<boolean>} Emits after either we establish that
+     * there is no need for an update (emits false in that case) or after we
+     * have made the update in the DB (emits true in that case)
+     */
     updateProperty(propertyName: string, propertyValue: any) {
         let source: Observable<boolean> = Observable.create((observer) => {
             this.waitForAppState().subscribe(
@@ -205,13 +230,14 @@ export class AppState {
                         // before calling update, which sets this.treeNode
                         observer.error('state has no tree node in update');
                     }
-                    else if (this.getProperty(propertyName) !== propertyValue) {
-                        // only not update if propertyValue is different
+                    else if (
+                        this.getProperty(propertyName) !== propertyValue) {
+                        // only update if propertyValue is different
                         // update in memory:
                         this.dataNode.data[propertyName] = propertyValue;
                         // update in DB:
-                        this.localDB.updateNodeData(this.treeNode, this.dataNode.data)
-                            .subscribe(
+                        this.localDB.updateNodeData(
+                            this.treeNode, this.dataNode.data).subscribe(
                             (success: boolean) => {
                                 observer.next(true);
                                 observer.complete();

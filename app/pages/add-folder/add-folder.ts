@@ -9,6 +9,7 @@ interface ValidationResult {
     [key: string]: boolean;
 }
 
+
 @Page({
     templateUrl: 'build/pages/add-folder/add-folder.html'
 })
@@ -18,12 +19,10 @@ export class AddFolderPage {
     private form: ControlGroup;
 
     /**
-     * The Add-Folder modal
-     * @param {NavParams} contains data passed from the caller (under
-     * navParams.data.parentItems).
-     * @param {viewController} used to dismiss this modal with data to
-     * return to the caller.
-     * @param {FormBuilder} used to build the form of this modal.
+     * Add-Folder modal constructor
+     * @param {NavParams} contains data passed from the caller
+     * @param {viewController} used to dismiss this modal with return data
+     * @param {FormBuilder} used to build the form of this modal
      */
     constructor(
         private navParams: NavParams,
@@ -85,16 +84,25 @@ export class AddFolderPage {
         });
     }
 
+    /**
+     * UI callback handling cancellation of this modal
+     * @returns {void}
+     */
     onClickCancel() {
         console.log('onClickCancel()');
         this.viewController.dismiss('');
     }
 
+    /**
+     * UI callback dismisses modal passing new name back to caller
+     * @returns{void}
+     */
     onClickAdd() {
         console.log('onClickAdd()');
         let result: string = this.form.value.nameControl;
         // trim the result before returning it
-        result = result.replace(/^\s+|\s+$/g, '');
+        // result = result.replace(/^\s+|\s+$/g, '');
+        result = result.replace(/^\s+|\s+$/, '');
         this.viewController.dismiss(result);
     }
 

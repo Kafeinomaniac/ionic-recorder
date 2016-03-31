@@ -5,7 +5,6 @@ import {LocalDB, TreeNode, DataNode, ParentChild, DB_NO_KEY, DB_KEY_PATH}
 from '../../providers/local-db/local-db';
 import {AppState, ROOT_FOLDER_NAME} from '../../providers/app-state/app-state';
 import {AddFolderPage} from '../add-folder/add-folder';
-import {prependArray, msec2time} from '../../providers/utils/utils';
 import {AudioPlayer} from '../../components/audio-player/audio-player';
 
 
@@ -37,14 +36,11 @@ export class LibraryPage {
     }
 
     /**
-     * @constructor
-     * @description
-     * @returns {void}
-     * @description called first time the graphics are initialized.
+     * Called first time the graphics are initialized
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
+     * @returns {void}
      */
     onPageDidEnter() {
-        console.warn('ngOnInit() --------------------');
         // switch folders, via AppState
         this.appState.getLastViewedFolderKey().subscribe(
             (lastViewedFolderKey: number) => {
@@ -77,6 +73,10 @@ export class LibraryPage {
         ); // getProperty().subscbribe(
     }
 
+    /**
+     * Computes a string representation of folder path (tree node path)
+     * @returns {string} folder path, represented as a string
+     */
     getPath() {
         let path: string = this.folderNode.path + '/' + this.folderNode.name,
             rootPath: string = '/' + ROOT_FOLDER_NAME;
@@ -88,24 +88,22 @@ export class LibraryPage {
         }
     }
 
+    /**
+     * Tells UI if the go to parent button should be disabled
+     * @returns {boolean} whether goToParent button should be disabled
+     */
     parentButtonDisabled() {
         return !this.folderNode || this.folderNode.path === '';
     }
 
-    onClickUpButton() {
-
-    }
-
-    onClickDownButton() {
-
-    }
-
     /**
+     * Helper function to pop up questions and act upon user choice
      * @param {string} question
      * @param {string} button1Text
      * @param {()=>void} action1
      * @param {string} button2Text
      * @param {()=>void} action2
+     * @returns {void}
      */
     alertAndDo(
         question: string,
@@ -142,15 +140,32 @@ export class LibraryPage {
         this.nav.present(alert).then();
     }
 
+    /**
+     * Moves items in DB and in UI when move button is clicked
+     * @returns {void}
+     */
     onClickMoveButton() {
-
     }
 
-    // we use this function in library.html
+    /**
+     * Moves items in DB and in UI when more button is clicked
+     * @returns {void}
+     */
+    onClickMoreButton() {
+    }
+
+    /**
+     * Used to tell UI the number of currently selected nodes
+     * @returns {number} number of currently selected nodes
+     */
     nSelectedNodes() {
         return Object.keys(this.selectedNodes).length;
     }
 
+    /**
+     * Returns dictionary of nodes selected in current folder
+     * @returns {{ [id: string]: TreeNode; }} dictionary of nodes selected here
+     */
     selectedNodesHere(): { [id: string]: TreeNode; } {
         let key: string,
             i: number,
@@ -167,6 +182,11 @@ export class LibraryPage {
         return keyDict;
     }
 
+    /**
+     * Delete nodes from  UI and from local DB
+     * @param {{ [id: string]: TreeNode; }} dictionary of nodes to delete
+     * @returns {void}
+     */
     deleteNodes(keyDict: { [id: string]: TreeNode; }) {
         let keys: string[] = Object.keys(keyDict),
             nNodes: number = keys.length;
@@ -220,6 +240,11 @@ export class LibraryPage {
             });
     }
 
+    /**
+     * Checks if selected nodes are only in current folder, if not prompts user
+     * for which nodes s/he wants to delete and proceedes with deletion
+     * @returns {void}
+     */
     checkIfDeletingInOtherFolders() {
         let nSelectedNodes = Object.keys(this.selectedNodes).length,
             selectedNodesHere: { [id: string]: TreeNode; } =
@@ -269,6 +294,10 @@ export class LibraryPage {
         }
     }
 
+    /**
+     * Deletes selected nodes when delete button gets clicked
+     * @returns {void}
+     */
     onClickDeleteButton() {
         if (this.selectedNodes[this.unfiledFolderKey]) {
 
@@ -288,26 +317,45 @@ export class LibraryPage {
         }
     }
 
+    /**
+     * Initiates sharing selected items when share button gets clicked
+     * @returns {void}
+     */
+    moreButtonDisabled() {
+        return false;
+    }
+
+    /**
+     * UI callback for sharing the selected items when share button is clicked 
+     * @returns{void}
+     */
     onClickSharebutton() {
 
     }
 
-    upButtonDisabled() {
-        return false;
-    }
-
-    downButtonDisabled() {
-        return false;
-    }
-
+    /**
+     * Determine whether the move button should be disabled in the UI
+     * @returns {void}
+     */
     moveButtonDisabled() {
         return false;
     }
 
+    /**
+     * Determine whether the delete button should be disabled in the UI
+     * @returns {void}
+     */
     deleteButtonDisabled() {
         // return this.selectedNodes[this.unfiledFolderKey];
         return false;
     }
+
+    /**
+     * Switch to a new folder
+     * @param {number} key of treenode corresponding to folder to switch to
+     * @param {boolean} whether to update app state 'lastFolderViewed' property
+     * @returns {void}
+     */
 
     // switch to folder whose key is 'key'
     // if updateState is true, update the app state
@@ -370,14 +418,28 @@ export class LibraryPage {
         }
     }
 
+    /**
+     * Used by UI to determine whether 'node' is selected
+     * @param {TreeNode} node about which we ask if it's selected
+     * @returns {boolean} whether 'node' is selected
+     */
     isSelected(node: TreeNode) {
         return this.selectedNodes[node[DB_KEY_PATH]];
     }
 
+    /**
+     * UI calls this when the # of selected items badge is clicked
+     * @returns {void}
+     */
     onClickTotalSelected() {
         this.totalSelectedCounter++;
     }
 
+    /**
+     * UI calls this when a UI item gets checked
+     * @param {TreeNode} node corresponding to UI item that just got checked
+     * @returns {void}
+     */
     onClickCheckbox(node: TreeNode) {
         // reset the counter for flipping through selected nodes
         this.totalSelectedCounter = 0;
@@ -404,6 +466,10 @@ export class LibraryPage {
             ); // updateProperty().subscribe
     }
 
+    /**
+     * UI calls this when a list item (name) is clicked
+     * @returns {void}
+     */
     onClickListItem(node: TreeNode) {
         if (this.localDB.isFolderNode(node)) {
             this.switchFolder(node[DB_KEY_PATH], true);
@@ -423,12 +489,20 @@ export class LibraryPage {
         } // if (this.localDB.isFolderNode(node)) { .. else { ..
     }
 
+    /**
+     * UI calls this when the goToParent button is clicked
+     * @returns {void}
+     */
     onClickParentButton() {
         if (this.folderNode) {
             this.switchFolder(this.folderNode.parentKey, true);
         }
     }
 
+    /**
+     * UI calls this when the new folder button is clicked
+     * @returns {void}
+     */
     onClickAddButton() {
         // note we consider the current folder (this.folderNode) the parent
         let addFolderModal = Modal.create(AddFolderPage, {
@@ -468,9 +542,18 @@ export class LibraryPage {
         });
     }
 
+    /**
+     * UI calls this when the info button (of selected items) clicked
+     * @returns {void}
+     */
     onClickInfoButton() {
     }
 
+    /**
+     * Select all or no items in current folder, depending on 'all; argument
+     * @params {boolean} if true, select all, if false, select none
+     * @returns {void}
+     */
     selectAllOrNoneInFolder(all: boolean) {
         // go through all folderItems
         // for each one, ask if it's in selectedNodes
@@ -511,14 +594,26 @@ export class LibraryPage {
         }
     }
 
+    /**
+     * Select all items in current folder
+     * @returns {void}
+     */
     selectAllInFolder() {
         this.selectAllOrNoneInFolder(true);
     }
 
+    /**
+     * Get rid of selection on all nodes in current folder
+     * @returns {void}
+     */
     selectNoneInFolder() {
         this.selectAllOrNoneInFolder(false);
     }
 
+    /**
+     * Initiates select button action when that button is clicked
+     * @returns {void}
+     */
     onClickSelectButton() {
         this.alertAndDo(
             'Select which, in<br> ' + this.folderNode.name,

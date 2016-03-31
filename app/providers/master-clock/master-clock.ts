@@ -19,6 +19,9 @@ export class MasterClock {
     private ngZone: NgZone = new NgZone({ enableLongStackTrace: false });
     private functions: { [id: string]: Function } = {};
 
+    /**
+     * constructor
+     */
     constructor() {
         console.log('constructor():MasterClock');
         this.ngZone.runOutsideAngular(() => {
@@ -43,28 +46,34 @@ export class MasterClock {
         }); // this.ngZone.runOutsideAngular(() => {
     }
 
-    addFunction(id: string, fun: Function) {
-        this.functions[id] = fun;
-    }
-
-    removeFunction(id: string) {
-        delete this.functions[id];
-    }
-
-    getTicks() {
-        return this.nTicks;
-    }
-
-    getTotalTime() {
-        return this.nTicks * CLOCK_TIMEOUT_MSEC;
-    }
-
-    // Singleton pattern implementation
+    /**
+     * Access the singleton class instance via MasterClock.Instance
+     * @returns {MasterClock} the singleton instance of this MasterClock class
+     */
     static get Instance() {
         if (!this.instance) {
             this.instance = new MasterClock();
         }
         return this.instance;
+    }
+
+    /**
+     * Add a function to execute on each clock loop
+     * @param {string} id used as handle to added function, for later removal
+     * @param {Function} function to execute in the clock's loop
+     * @returns {void}
+     */
+    addFunction(id: string, fun: Function) {
+        this.functions[id] = fun;
+    }
+
+    /**
+     * Remove a function to execute on each clock loop, via its id
+     * @param {string} id of function to remove
+     * @returns {void}
+     */
+    removeFunction(id: string) {
+        delete this.functions[id];
     }
 
 }

@@ -44,8 +44,6 @@ export class RecordPage {
     /**
      * @constructor
      * @param {Platform} platform
-     * @param {WebAudio} webAudio
-     * @param {IonicApp} app
      */
     constructor(private platform: Platform) {
         console.log('constructor():RecordPage');
@@ -73,7 +71,7 @@ export class RecordPage {
                         (error: any) => {
                             alert('create data node error: ' + error);
                         }
-                        );
+                        ); // localDB.createDataNode().subscribe(
                 },
                 (getError: any) => {
                     console.error('getProperty error: ' + getError);
@@ -82,6 +80,10 @@ export class RecordPage {
         }; // webAudio.onStop = (blob: Blob) => { ...
     }
 
+    /**
+     * Setup for real-time monitoring every time we're about  to enter the page
+     * @returns {void}
+     */
     onPageWillEnter() {
         this.masterClock.addFunction(RECORD_PAGE_CLOCK_FUNCTION, () => {
             this.currentVolume = this.webAudio.getBufferMaxVolume();
@@ -102,6 +104,10 @@ export class RecordPage {
         });
     }
 
+    /**
+     * Template monitor on/off toggle (click) callback.
+     * @returns {void}
+     */
     toggleMonitor() {
         if (this.monitorSwitchState) {
             this.monitorSwitchState = false;
@@ -125,10 +131,18 @@ export class RecordPage {
         }
     }
 
+    /**
+     * Cleanup operations just before leaving page for another
+     * @returns {void}
+     */
     onPageWillLeave() {
         this.masterClock.removeFunction(RECORD_PAGE_CLOCK_FUNCTION);
     }
 
+    /**
+     * Compute and return the % of peaks that hit max since start or last reset
+     * @returns {string} a string representing the % of peaks that hit max
+     */
     percentPeaksAtMax() {
         if (!this.peakMeasurements) {
             return '0.0';
@@ -137,17 +151,31 @@ export class RecordPage {
             1000.0 * this.peaksAtMax / this.peakMeasurements) / 10.0, 1);
     }
 
+    /**
+     * Resets template indicator of max peaks to zero, restarts counting
+     * @returns {void}
+     */
     resetPeaksAtMax() {
         this.maxVolume = 0;
         this.peakMeasurements = 0;
         this.peaksAtMax = 0;
     }
 
+    /**
+     * Called when the template's slider is being dragged
+     * @param {Event} drag event
+     * @returns {void}
+     */
     onSliderDrag(event: Event) {
         // Fixes slider not dragging in Firefox, as described in wiki
         event.stopPropagation();
     }
 
+    /**
+     * Called every time there's a change in the template's slider
+     * @param {Event} event representing the new changed slider state
+     * @returns {void}
+     */
     onSliderChange(event: Event) {
         this.gain = (<RangeInputEventTarget>event.target).value;
         let factor: number = this.gain / 100.0;
@@ -161,6 +189,10 @@ export class RecordPage {
         this.webAudio.setGainFactor(factor);
     }
 
+    /**
+     * Start/pause recording - template button click callback
+     * @returns {void}
+     */
     onClickStartPauseButton() {
         this.currentVolume += Math.abs(Math.random() * 10);
         if (this.webAudio.isRecording()) {
@@ -182,10 +214,18 @@ export class RecordPage {
         }
     }
 
+    /**
+     * Determines whether to disable UI stop button
+     * @returns {boolean} used by template to disable stop button in UI
+     */
     stopButtonDisabled() {
         return this.webAudio.isInactive();
     }
 
+    /**
+     * Stop button - template button click callback
+     * @returns {void}
+     */
     onClickStopButton() {
         this.webAudio.stopRecording();
         this.totalPauseTime = 0;

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2015, 2016 Tracktunes Inc
+# Copyright (C) 2016 Tracktunes Inc
 
 # Originally based on package.json at:
 #     https://github.com/lathonez/clicker/blob/master/package.json

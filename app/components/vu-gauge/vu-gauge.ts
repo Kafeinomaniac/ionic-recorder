@@ -24,17 +24,29 @@ export class VuGauge implements OnChanges {
     private hStep: number;
     private valueStep: number;
 
+    /**
+     * @constructor
+     */
     constructor() {
         console.log('constructor():VuGauge');
         this.leds = [];
         this.maxIndex = 0;
     }
 
+    /**
+     * Helper function computes an LED fill color string
+     * @param {number} index of LED whose color we're computing
+     * @param {string} percentage (eg. '15%') of lightness to use
+     */
     fillColor(ledIndex: number, lightness: string) {
         return ['hsl(', 120.0 - ledIndex * this.hStep,
             ',100%,', lightness, ')'].join('');
     }
 
+    /** 
+     * Sets up UI on init once elements have been rendered
+     * @returns {void}
+     */
     ngOnInit() {
         let percentWidth: number = 100.0 / (2 * this.nbars - 1),
             xStep: number = 2.0 * percentWidth, i: number;
@@ -50,6 +62,10 @@ export class VuGauge implements OnChanges {
         this.valueStep = 128.0 / (this.nbars - 1.0);
     }
 
+    /**
+     * Updates the UI when value changes
+     * @returns {void}
+     */
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
         if (this.leds.length > 0) {
             let fill: string, i: number;
