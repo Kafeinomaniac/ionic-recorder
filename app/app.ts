@@ -8,6 +8,7 @@ import {AppState} from './providers/app-state/app-state';
 import {TabsPage} from './pages/tabs/tabs';
 // import {MasterClock} from './providers/master-clock/master-clock';
 
+enableProdMode();
 
 const IMPOSSIBLE_TAB_INDEX = -1;
 
