@@ -57,10 +57,6 @@ export class AudioPlayer implements OnChanges {
                 alert('infinite duration detected!')
             }
             this.progressValue = this.duration;
-
-        });
-        this.audioElement.addEventListener('durationchange', () => {
-            console.log('durationchange - duration: ' + this.audioElement.duration);
             this.progressMax = this.duration;
         });
     }
