@@ -19,13 +19,19 @@ export class WebAudio {
 
     onStop: (blob: Blob) => void;
 
+    /**
+     * constructor
+     */
     constructor() {
         console.log('constructor():WebAudio');
         this.blobChunks = [];
         this.initAudio();
     }
 
-    // Singleton pattern implementation
+    /**
+     * Access the singleton class instance via WebAudio.Instance
+     * @returns {WebAudio} the singleton instance of this class
+     */
     static get Instance() {
         if (!this.instance) {
             this.instance = new WebAudio();

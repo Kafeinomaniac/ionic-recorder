@@ -96,7 +96,8 @@ export class AppState {
     // Singleton pattern implementation
 
     /**
-     * Returns the singleton instance of this class
+     * Access the singleton class instance via AppState.Instance
+     * @returns {AppState} singleton instance of this class
      */
     static get Instance() {
         if (!this.instance) {

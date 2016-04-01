@@ -326,7 +326,7 @@ export class LibraryPage {
     }
 
     /**
-     * UI callback for sharing the selected items when share button is clicked 
+     * UI callback for sharing the selected items when share button is clicked
      * @returns{void}
      */
     onClickSharebutton() {

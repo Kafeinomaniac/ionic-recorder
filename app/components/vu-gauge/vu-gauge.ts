@@ -43,7 +43,7 @@ export class VuGauge implements OnChanges {
             ',100%,', lightness, ')'].join('');
     }
 
-    /** 
+    /**
      * Sets up UI on init once elements have been rendered
      * @returns {void}
      */

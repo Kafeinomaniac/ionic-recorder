@@ -48,7 +48,7 @@ export class MasterClock {
 
     /**
      * Access the singleton class instance via MasterClock.Instance
-     * @returns {MasterClock} the singleton instance of this MasterClock class
+     * @returns {MasterClock} the singleton instance of this class
      */
     static get Instance() {
         if (!this.instance) {
