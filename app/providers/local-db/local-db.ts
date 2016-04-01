@@ -98,24 +98,6 @@ export class LocalDB {
     }
 
     /**
-     * Checks whether a given TreeNode is a data node
-     * @param {TreeNode} node to check
-     * @returns {boolean} whether the argument is a data node
-     */
-    isDataNode(node: TreeNode) {
-        return this.validateKey(node.dataKey);
-    }
-
-    /**
-     * Checks whether a given TreeNode is a folder node
-     * @param {TreeNode} node to check
-     * @returns {boolean} whether the argument is a folder node
-     */
-    isFolderNode(node: TreeNode) {
-        return !this.isDataNode(node);
-    }
-
-    /**
      * Creates a DataNode (only make new DataNodes via this function)
      * NB: there are two kinds of "data node" in thise code - one is in the
      * data store (this one) and is of type DataNode and is what we refer to
@@ -1108,6 +1090,61 @@ export class LocalDB {
     }
 
     /**
+     * Delete a collection of unique TreeNodes provided as a dictionary
+     * @param {[id: string]: TreeNode} keyDict - collection of unique TreeNodes
+     * @returns {Observable<void>} - observable that emits after deletion has
+     * completed successfully
+     */
+    deleteNodes(keyDict: { [id: string]: TreeNode; }) {
+        let source: Observable<void> = Observable.create((observer) => {
+            this.detachForDeleteNodes(keyDict).subscribe(
+                (keyDict: Object) => {
+                    let i: number,
+                        keys: string[] = Object.keys(keyDict),
+                        nNodes: number = keys.length,
+                        node: TreeNode,
+                        nDeleted: number = 0;
+                    // delete
+                    for (i = 0; i < nNodes; i++) {
+                        node = keyDict[keys[i]];
+                        this.deleteNode(node).subscribe(
+                            () => {
+                                nDeleted++;
+                                if (nDeleted === nNodes) {
+                                    observer.next();
+                                    observer.complete();
+                                }
+                            },
+                            (error: any) => {
+                                observer.error(error);
+                            }
+                        );
+                    }
+                }
+            );
+        });
+        return source;
+    }
+
+    /**
+     * Checks whether a given TreeNode is a data node
+     * @param {TreeNode} node to check
+     * @returns {boolean} whether the argument is a data node
+     */
+    isDataNode(node: TreeNode) {
+        return this.validateKey(node.dataKey);
+    }
+
+    /**
+     * Checks whether a given TreeNode is a folder node
+     * @param {TreeNode} node to check
+     * @returns {boolean} whether the argument is a folder node
+     */
+    isFolderNode(node: TreeNode) {
+        return !this.isDataNode(node);
+    }
+
+    /**
      * Reads a node into memory from db, by key
      * @param {number} key - the key of the node to read from db
      * @returns {Observable<TreeNode>} an observable that emits the
@@ -1421,43 +1458,6 @@ export class LocalDB {
                             observer.error(error);
                         }
                     ); // detachNodesFromParents().subscribe(
-                }
-            );
-        });
-        return source;
-    }
-
-    /**
-     * Delete a collection of unique TreeNodes provided as a dictionary
-     * @param {[id: string]: TreeNode} keyDict - collection of unique TreeNodes
-     * @returns {Observable<void>} - observable that emits after deletion has
-     * completed successfully
-     */
-    deleteNodes(keyDict: { [id: string]: TreeNode; }) {
-        let source: Observable<void> = Observable.create((observer) => {
-            this.detachForDeleteNodes(keyDict).subscribe(
-                (keyDict: Object) => {
-                    let i: number,
-                        keys: string[] = Object.keys(keyDict),
-                        nNodes: number = keys.length,
-                        node: TreeNode,
-                        nDeleted: number = 0;
-                    // delete
-                    for (i = 0; i < nNodes; i++) {
-                        node = keyDict[keys[i]];
-                        this.deleteNode(node).subscribe(
-                            () => {
-                                nDeleted++;
-                                if (nDeleted === nNodes) {
-                                    observer.next();
-                                    observer.complete();
-                                }
-                            },
-                            (error: any) => {
-                                observer.error(error);
-                            }
-                        );
-                    }
                 }
             );
         });
