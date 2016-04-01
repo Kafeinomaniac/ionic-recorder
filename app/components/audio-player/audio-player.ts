@@ -167,6 +167,9 @@ export class AudioPlayer implements OnChanges {
             if (this.duration !== undefined) {
                 this.progressMax = this.duration;
             }
+            else {
+                this.progressMax = 0;
+            }
         }
     }
 }
