@@ -49,11 +49,19 @@ export class AudioPlayer implements OnChanges {
         );
 
         this.audioElement.addEventListener('ended', () => {
-            console.log('AUDIO ENDED');
             this.playPauseButtonIcon = 'play';
             this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
-            this.time = this.duration;
-            this.progressValue = this.time;
+            this.time = this.audioElement.duration * 1000;
+            this.duration = this.audioElement.duration * 1000;
+            if (!isFinite(this.duration)) {
+                alert('infinite duration detected!')
+            }
+            this.progressValue = this.duration;
+
+        });
+        this.audioElement.addEventListener('durationchange', () => {
+            console.log('durationchange - duration: ' + this.audioElement.duration);
+            this.progressMax = this.duration;
         });
     }
 
