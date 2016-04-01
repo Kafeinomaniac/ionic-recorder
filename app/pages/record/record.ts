@@ -62,6 +62,9 @@ export class RecordPage {
 
             this.appState.getProperty('unfiledFolderKey').subscribe(
                 (unfiledFolderKey: number) => {
+                    console.log('this.recordingDuration: ' + this.recordingDuration + 
+                        ' vs now: ' + (Date.now() - this.recordStartTime - this.totalPauseTime));
+
                     this.localDB.createDataNode(
                         name,
                         unfiledFolderKey,
@@ -196,17 +199,21 @@ export class RecordPage {
     onClickStartPauseButton() {
         this.currentVolume += Math.abs(Math.random() * 10);
         if (this.webAudio.isRecording()) {
+            // we're recording (when clicked, to stop recording)
             this.webAudio.pauseRecording();
             this.lastPauseTime = Date.now();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
+            // we're not recording (when clicked, to start recording)
             if (this.webAudio.isInactive()) {
+                // inactive, we're stopped, so start
                 this.webAudio.startRecording();
                 this.recordStartTime = Date.now();
                 this.resetPeaksAtMax();
             }
             else {
+                // it's active, we're just paused, so resume
                 this.webAudio.resumeRecording();
                 this.totalPauseTime += Date.now() - this.lastPauseTime;
             }

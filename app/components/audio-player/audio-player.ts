@@ -49,11 +49,15 @@ export class AudioPlayer implements OnChanges {
         );
 
         this.audioElement.addEventListener('ended', () => {
-            console.log('AUDIO ENDED');
             this.playPauseButtonIcon = 'play';
             this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
-            this.time = this.duration;
-            this.progressValue = this.time;
+            this.time = this.audioElement.duration * 1000;
+            this.duration = this.audioElement.duration * 1000;
+            if (!isFinite(this.duration)) {
+                alert('infinite duration detected!')
+            }
+            this.progressValue = this.duration;
+            this.progressMax = this.duration;
         });
     }
 
@@ -81,7 +85,7 @@ export class AudioPlayer implements OnChanges {
         if (time === undefined) {
             return '00:00';
         }
-        return msec2time(time).replace('00:00:', '');
+        return msec2time(time).replace('00:00:', '').replace('00:', '');
     }
 
     /**
@@ -162,6 +166,9 @@ export class AudioPlayer implements OnChanges {
             console.log('AudioPlayer:ngOnChanges(): duration: ' + this.duration);
             if (this.duration !== undefined) {
                 this.progressMax = this.duration;
+            }
+            else {
+                this.progressMax = 0;
             }
         }
     }
