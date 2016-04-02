@@ -43,14 +43,18 @@ export class WebAudio {
         // this.audioContext = new OfflineAudioContext(1, 1024, 44100);
         // OfflineAudioContext unfortunately doesn't work with MediaRecorder
         this.audioContext = new AudioContext();
+
         if (!this.audioContext) {
             throw Error('AudioContext not available!');
         }
+
+        console.log('SAMPLE RATE: ' + this.audioContext.sampleRate);
 
         if (!navigator.mediaDevices ||
             !navigator.mediaDevices.getUserMedia) {
             throw Error('mediaDevices.getUserMedia not available!');
         }
+
         navigator.mediaDevices.getUserMedia({ video: false, audio: true })
             .then((stream: MediaStream) => {
                 this.initAndConnectNodes(stream);
