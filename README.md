@@ -20,9 +20,8 @@ to build
 ## Live demo
 A live demo, though completely unoptimized (this code is still in alpha so anything goes!) [exists on https://tracktunes.org/ionic-recorder/](https://tracktunes.org/ionic-recorder/)
 
-NOTE: This has only been tested to run (record, save, load, play) on
-* Chrome >= 49 on Android
-* Firefox >= 45 on Ubuntu
+The only browser on which we successfully tested the above link is
+* Chrome 49.0.2623.105 running on Android 6.0.1
 
 ## Requirements for running the app
 * This apps runs only in browsers that implement
