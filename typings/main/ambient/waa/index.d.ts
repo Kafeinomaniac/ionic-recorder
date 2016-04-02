@@ -235,8 +235,6 @@ interface MediaRecorder {
     pause(): void;
     resume(): void;
     stop(): void;
-
-    isTypeSupported(type: string): boolean;
     
     state: any;
 
@@ -252,6 +250,8 @@ interface MediaRecorderOptions {
 declare var MediaRecorder: {
     new (stream: MediaStream, options?: MediaRecorderOptions): MediaRecorder;
     prototype: MediaRecorder;
+
+    isTypeSupported(type: string): boolean;
 }
 
 interface BlobEvent extends Event {
