@@ -42,6 +42,10 @@ export class WebAudio {
         return this.instance;
     }
 
+    /**
+     * Initialize audio, get it ready to record
+     * @returns {void}
+     */
     initAudio() {
         // this.audioContext = new OfflineAudioContext(1, 1024, 44100);
         // OfflineAudioContext unfortunately doesn't work with MediaRecorder
@@ -68,12 +72,17 @@ export class WebAudio {
             });
     }
 
+    /**
+     * Create new MediaRecorder and set up its callbacks
+     * @param {MediaStream} stream the stream obtained by getUserMedia
+     * @returns {void}
+     */
     initMediaRecorder(stream: MediaStream) {
         if (!MediaRecorder) {
             alert('MediaRecorder not available!');
             throw Error('MediaRecorder not available!');
         }
-        /*
+
         if (MediaRecorder.isTypeSupported('audio/wav')) {
             console.log('audio/wav SUPPORTED!!!!!!!');
         }
@@ -94,12 +103,7 @@ export class WebAudio {
             console.dir(MediaRecorder.isTypeSupported);
             console.log(MediaRecorder.isTypeSupported);
         }
-        */
-        /*
-        this.mediaRecorder = new MediaRecorder(stream, {
-            mimeType: 'audio/webm'
-        });
-        */
+
         this.mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'audio/webm'
         });
@@ -125,6 +129,12 @@ export class WebAudio {
         };
     }
 
+    /**
+     * Create Analyser and Gain nodes and connect them to a 
+     * MediaStreamDestination node, which is fed to MediaRecorder
+     * @param {MediaStream} stream the stream obtained by getUserMedia
+     * @returns {void}
+     */
     initAndConnectNodes(stream: MediaStream) {
         console.log('WebAudio:initAndConnectNodes()');
 
@@ -153,9 +163,13 @@ export class WebAudio {
         this.audioGainNode.connect(this.analyserNode);
 
         // this.initMediaRecorder(stream);
-        this.initMediaRecorder(dest.stream);                
+        this.initMediaRecorder(dest.stream);
     }
 
+    /**
+     * Compute the current latest buffer frame max volume and return it
+     * @returns {number} max volume in range of [0,128]
+     */
     getBufferMaxVolume() {
         if (!this.analyserNode) {
             return 0;
@@ -173,6 +187,11 @@ export class WebAudio {
         return bufferMax;
     }
 
+    /**
+     * Set the multiplier on input volume (gain) effectively changing volume
+     * @param {number} factor fraction of volume, where 1.0 is no change
+     * @returns {void}
+     */
     setGainFactor(factor: number) {
         if (!this.audioGainNode) {
             throw Error('GainNode not initialized!');
@@ -180,16 +199,28 @@ export class WebAudio {
         this.audioGainNode.gain.value = factor;
     }
 
+    /**
+     * Are we recording right now?
+     * @returns {boolean} whether we are recording right now
+     */
     isRecording() {
         return this.mediaRecorder &&
             (this.mediaRecorder.state === 'recording');
     }
 
+    /**
+     * Is MediaRecorder state inactive now?
+     * @returns {boolean} whether MediaRecorder is inactive now
+     */
     isInactive() {
         return !this.mediaRecorder ||
             this.mediaRecorder.state === 'inactive';
     }
 
+    /**
+     * Start recording
+     * @returns {void}
+     */
     startRecording() {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (1)');
@@ -197,6 +228,10 @@ export class WebAudio {
         this.mediaRecorder.start();
     }
 
+    /**
+     * Pause recording
+     * @returns {void}
+     */
     pauseRecording() {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (2)');
@@ -204,6 +239,10 @@ export class WebAudio {
         this.mediaRecorder.pause();
     }
 
+    /**
+     * Resume recording
+     * @returns {void}
+     */
     resumeRecording() {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (3)');
@@ -211,6 +250,10 @@ export class WebAudio {
         this.mediaRecorder.resume();
     }
 
+    /**
+     * Stop recording
+     * @returns {void}
+     */
     stopRecording() {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (4)');
