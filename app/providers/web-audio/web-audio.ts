@@ -47,6 +47,7 @@ export class WebAudio {
             throw Error('AudioContext not available!');
         }
         this.audioGainNode = this.audioContext.createGain();
+        /*
         if (!navigator.mediaDevices ||
             !navigator.mediaDevices.getUserMedia) {
             throw Error('mediaDevices.getUserMedia not available!');
@@ -60,6 +61,29 @@ export class WebAudio {
                 // alert('getUserMedia() - ' + error.name + ' - ' + error.message);
                 throw Error('getUserMedia() - ' + error.name + ' - ' + error.message);
             });
+        */
+        try {
+            let dest = this.audioContext.createMediaStreamDestination(),
+                stream: MediaStream = dest.stream;
+            // this.connectNodes(stream);
+            this.initMediaRecorder(stream);
+
+            this.analyserNode = this.audioContext.createAnalyser();
+            this.analyserNode.fftSize = 2048;
+            this.analyserBufferLength = this.analyserNode.frequencyBinCount;
+            this.analyserBuffer = new Uint8Array(this.analyserBufferLength);
+
+            // stream -> sourceNode -> gainNode -> analyserNode
+            this.sourceNode = this.audioContext.createMediaStreamSource(stream);
+            this.sourceNode.connect(this.audioGainNode);
+            this.audioGainNode.connect(this.analyserNode);
+
+            // gainNode -> destination
+            this.audioGainNode.connect(dest);
+        }
+        catch (error) {
+            alert('error in stream setup: ' + error);
+        }
     }
 
     initMediaRecorder(stream: MediaStream) {

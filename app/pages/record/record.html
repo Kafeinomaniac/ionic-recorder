@@ -24,9 +24,9 @@
     </ion-item>
     <vu-gauge height="2.5em" nbars="55" [max]="maxVolume" [value]="currentVolume">
     </vu-gauge>
-    <p hidden="true" class="gain-item-label">Gain: {{gain}}% ({{decibels}})
+    <p class="gain-item-label">Gain: {{gain}}% ({{decibels}})
     </p>
-    <input hidden="true" type="range" min="0" max="200" [value]="sliderValue" (input)="onSliderChange($event)" (touchstart)="onSliderDrag($event)"
+    <input type="range" min="0" max="200" [value]="sliderValue" (input)="onSliderChange($event)" (touchstart)="onSliderDrag($event)"
     (mousedown)="onSliderDrag($event)">
     <div class="recording-time">
         {{recordingTime}}

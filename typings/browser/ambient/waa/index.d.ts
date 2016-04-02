@@ -200,8 +200,14 @@ interface Window {
     webkitAudioContext?: webkitAudioContextConstructor;
 }
 
+interface MediaStreamAudioDestinationNode extends AudioDestinationNode
+{
+	stream:MediaStream; //  readonly
+}
+
 interface AudioContext {
     createMediaStreamSource(stream: MediaStream): MediaStreamAudioSourceNode;
+    createMediaStreamDestination(): MediaStreamAudioDestinationNode;
     createAnalyzer(stream: MediaStream): AnalyserNode;
 }
 
