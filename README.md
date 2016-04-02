@@ -20,7 +20,7 @@ to build
 ## Live demo
 A live demo, though completely unoptimized (this code is still in alpha so anything goes!) exists on 
 
-[https://tracktunes.org/ionic-recorder/](https://tracktunes.org/ionic-recorder/)
+[https://tracktunes.org/ionic-recorder/](https://tracktunes.org/ionic-recorder)
 
 The only browsers on which we successfully tested the above link is
 * Chrome 49.0.2623.105 running on Android 6.0.1
