@@ -93,8 +93,6 @@ export class AppState {
             ); // readOrCreateFolderNode().subscribe(
     }
 
-    // Singleton pattern implementation
-
     /**
      * Access the singleton class instance via AppState.Instance
      * @returns {AppState} singleton instance of this class
