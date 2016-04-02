@@ -84,30 +84,33 @@ export class WebAudio {
             throw Error('MediaRecorder not available!');
         }
 
-        if (MediaRecorder.isTypeSupported('audio/wav')) {
-            console.log('audio/wav SUPPORTED!!!!!!!');
-        }
-        else if (MediaRecorder.isTypeSupported('audio/ogg')) {
-            console.log('audio/ogg SUPPORTED!!!!!!!');
-        }
-        else if (MediaRecorder.isTypeSupported('audio/mp3')) {
-            console.log('audio/mp3 SUPPORTED!!!!!!!');
-        }
-        else if (MediaRecorder.isTypeSupported('audio/m4a')) {
-            console.log('audio/m4a SUPPORTED!!!!!!!');
-        }
-        else if (MediaRecorder.isTypeSupported('audio/webm')) {
-            console.log('audio/webm SUPPORTED!!!!!!!');
-        }
-        else {
-            console.log('UNSUPPORTED !!!!!!!!!!!');
-            console.dir(MediaRecorder.isTypeSupported);
-            console.log(MediaRecorder.isTypeSupported);
-        }
-
         this.mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'audio/webm'
         });
+
+        if (MediaRecorder.isTypeSupported === undefined) {
+            console.warn('MediaRecorder.isTypeSupported() is undefined!');
+        }
+        else {
+            if (MediaRecorder.isTypeSupported('audio/wav')) {
+                console.log('audio/wav SUPPORTED');
+            }
+            else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+                console.log('audio/ogg SUPPORTED');
+            }
+            else if (MediaRecorder.isTypeSupported('audio/mp3')) {
+                console.log('audio/mp3 SUPPORTED');
+            }
+            else if (MediaRecorder.isTypeSupported('audio/m4a')) {
+                console.log('audio/m4a SUPPORTED');
+            }
+            else if (MediaRecorder.isTypeSupported('audio/webm')) {
+                console.log('audio/webm SUPPORTED');
+            }
+            else {
+                console.warn('Could not find supported type');
+            }
+        }
 
         this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
             // console.log('ondataavailable()');
@@ -115,7 +118,9 @@ export class WebAudio {
         };
 
         this.mediaRecorder.onstop = (event: Event) => {
-            console.log('mediaRecorder.onStop() Got ' + this.blobChunks.length + 'chunks');
+            console.log('mediaRecorder.onStop() Got ' +
+                this.blobChunks.length + ' chunks');
+
             if (!this.onStop) {
                 throw Error('WebAudio:onStop() not set!');
             }
