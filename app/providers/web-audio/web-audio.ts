@@ -152,7 +152,8 @@ export class WebAudio {
         this.sourceNode = this.audioContext.createMediaStreamSource(stream);
 
         // create a destination node
-        let dest = this.audioContext.createMediaStreamDestination();
+        let dest: MediaStreamAudioDestinationNode =
+            this.audioContext.createMediaStreamDestination();
 
         // sourceNode (microphone) -> gainNode
         this.sourceNode.connect(this.audioGainNode);
