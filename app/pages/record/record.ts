@@ -88,6 +88,7 @@ export class RecordPage {
      * @returns {void}
      */
     onPageWillEnter() {
+        //this.webAudio.waitForWebAudio().subscribe(() => {
         this.masterClock.addFunction(RECORD_PAGE_CLOCK_FUNCTION, () => {
             this.currentVolume = this.webAudio.getBufferMaxVolume();
             this.peakMeasurements += 1;
@@ -105,6 +106,11 @@ export class RecordPage {
                 this.recordingTime = msec2time(this.recordingDuration);
             }
         });
+        //},
+        //    (error: any) => {
+        //        console.warn('ERROR: in web audio: ' + error);
+        //    }
+        //); // waitForWebAudio().subscribe(
     }
 
     /**

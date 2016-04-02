@@ -1,5 +1,9 @@
 import {Injectable} from 'angular2/core';
+import {Observable} from 'rxjs';
 
+
+// amount of time we wait between checks to see if web audio is ready
+const WEB_AUDIO_WAIT_MSEC: number = 50;
 
 // NOTE: currently this only works in the latest versions of Firefox
 // because Chrome/Chromium cannot handle AudioDestinationNode streams yet
@@ -20,6 +24,8 @@ export class WebAudio {
     private blobChunks: Blob[];
 
     private playbackSource: AudioBufferSourceNode;
+
+    private ready: boolean = false;
 
     onStop: (blob: Blob) => void;
 
@@ -43,6 +49,33 @@ export class WebAudio {
         return this.instance;
     }
 
+    /**
+     * Wait indefinitely until web audio is ready for use, then emit Observable
+     * @returns {Observable<void>} Observable that emits only 
+     * after web audio is ready
+     */
+    /*
+    waitForWebAudio() {
+        // NOTE: MAX_DB_INIT_TIME / 10
+        // Check in the console how many times we loop here -
+        // it shouldn't be much more than a handful
+        let source: Observable<void> = Observable.create((observer) => {
+            let repeat = () => {
+                if (this.ready) {
+                    observer.next();
+                    observer.complete();
+                }
+                else {
+                    console.warn('... no WEB AUDIO yet ...');
+                    setTimeout(repeat, WEB_AUDIO_WAIT_MSEC);
+                }
+            };
+            repeat();
+        });
+        return source;
+    }
+    */
+    
     /**
      * Initialize audio, get it ready to record
      * @returns {void}
@@ -133,6 +166,9 @@ export class WebAudio {
 
             this.blobChunks = [];
         };
+        
+        // finally let users of this class know it's ready
+        this.ready = true;
     }
 
     /**

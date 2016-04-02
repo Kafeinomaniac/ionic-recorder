@@ -7,6 +7,7 @@ import {MasterClock} from '../../providers/master-clock/master-clock';
 
 
 const AUDIO_PLAYER_CLOCK_FUNCTION = 'audio-player-clock-function';
+const EMPTY_WAV_URL = 'empty.wav';
 
 
 /**
@@ -22,7 +23,7 @@ const AUDIO_PLAYER_CLOCK_FUNCTION = 'audio-player-clock-function';
 })
 export class AudioPlayer implements OnChanges {
     @Input() private title: string;
-    @Input() private url: string;
+    @Input() private url: string = EMPTY_WAV_URL;
     @Input() private duration: number;
     private time: number;
     private hidden: boolean = true;
@@ -160,6 +161,9 @@ export class AudioPlayer implements OnChanges {
                 this.audioElement.addEventListener('canplay', () => {
                     this.play();
                 });
+            }
+            else {
+                this.url = EMPTY_WAV_URL;
             }
         }
         if (changeRecord['duration']) {
