@@ -17,12 +17,19 @@ to build
 * Useful real-time visualizations, stats and data-analysis of the recorded 
   audio signal
 
-## Requirements
+## Live demo
+A live demo, though completely unoptimized (this code is still in alpha so anything goes!) [exists on https://tracktunes.org/ionic-recorder/](https://tracktunes.org/ionic-recorder/)
+
+NOTE: This has only been tested to run (record, save, load, play) on
+* Chrome >= 49 on Android
+* Firefox >= 45 on Ubuntu
+
+## Requirements for running the app
 * This apps runs only in browsers that implement
   [MediaRecorder](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder_API).
   and a late version of IndexedDB that supports the `onupgradeended` event.
   
-## Installation and getting started
+## For developers: installing the development environment and getting started
 * Get the latest versions of npm and nodejs (we use 'n' to manage nodejs version):
 
         sudo npm install -g npm
