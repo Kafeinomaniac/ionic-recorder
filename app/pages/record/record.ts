@@ -62,7 +62,7 @@ export class RecordPage {
 
             this.appState.getProperty('unfiledFolderKey').subscribe(
                 (unfiledFolderKey: number) => {
-                    console.log('this.recordingDuration: ' + this.recordingDuration + 
+                    console.log('this.recordingDuration: ' + this.recordingDuration +
                         ' vs now: ' + (Date.now() - this.recordStartTime - this.totalPauseTime));
 
                     this.localDB.createDataNode(
