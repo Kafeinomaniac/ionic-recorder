@@ -1,6 +1,9 @@
 import {Injectable} from 'angular2/core';
 
 
+// NOTE: currently this only works in the latest versions of Firefox
+// because Chrome/Chromium cannot handle AudioDestinationNode streams yet
+
 @Injectable()
 export class WebAudio {
     // 'instance' is used as part of Singleton pattern implementation
@@ -149,14 +152,8 @@ export class WebAudio {
         // gainNode -> analyserNode
         this.audioGainNode.connect(this.analyserNode);
 
-        // this.analyserNode.connect(dest);
-
-        // this.connectNodes(stream);
-        this.initMediaRecorder(dest.stream);
-
-        // Both of these print [object MediaStream] in chromium
-        // console.log('stream: ' + stream);
-        // console.log('dest.stream: ' + dest.stream);                
+        // this.initMediaRecorder(stream);
+        this.initMediaRecorder(dest.stream);                
     }
 
     getBufferMaxVolume() {
