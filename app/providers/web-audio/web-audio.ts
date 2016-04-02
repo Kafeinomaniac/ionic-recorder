@@ -4,6 +4,7 @@ import {Injectable} from 'angular2/core';
 // NOTE: currently this only works in the latest versions of Firefox
 // because Chrome/Chromium cannot handle AudioDestinationNode streams yet
 
+
 @Injectable()
 export class WebAudio {
     // 'instance' is used as part of Singleton pattern implementation
