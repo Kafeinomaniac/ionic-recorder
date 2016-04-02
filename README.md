@@ -35,7 +35,7 @@ and a late version of IndexedDB that supports the `onupgradeended` event.
 
 The only browsers on which we successfully tested the above link is
 * Chrome 49.0.2623.105 running on Android 6.0.1
-* Firefox 45 on Ubuntu
+* Firefox 45.0 on Ubuntu
   
 ## For developers: installing the development environment and getting started
 * Get the latest versions of npm and nodejs (we use 'n' to manage nodejs version):
