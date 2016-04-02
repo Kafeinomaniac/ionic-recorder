@@ -4,9 +4,11 @@ import {App, IonicApp, Platform} from 'ionic-angular';
 import {Type, enableProdMode} from 'angular2/core';
 import {AppState} from './providers/app-state/app-state';
 import {TabsPage} from './pages/tabs/tabs';
+import {DB_NAME} from './providers/local-db/local-db';
 
 
 enableProdMode();
+
 
 @App({
     templateUrl: 'build/app.html',
@@ -29,9 +31,29 @@ export class TracktunesApp {
     constructor(private app: IonicApp, private platform: Platform) {
         console.log('constructor():TracktunesApp');
         // NB: you can delete the DB here to get rid of it easily in Firefox
-
+        // this.resetDB();
         // this.platform.ready().then(() => {
         // });
+    }
+
+    /**
+     * Completely delete the DB and recreate it from scratch!
+     * @returns {void}
+     */
+    resetDB() {
+        let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
+
+        request.onsuccess = function() {
+            console.log('deleteDatabase: SUCCESS');
+        };
+
+        request.onerror = function() {
+            console.log('deleteDatabase: ERROR');
+        };
+
+        request.onblocked = function() {
+            console.log('deleteDatabase: BLOCKED');
+        };
     }
 
     /**

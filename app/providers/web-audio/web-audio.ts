@@ -46,44 +46,19 @@ export class WebAudio {
         if (!this.audioContext) {
             throw Error('AudioContext not available!');
         }
-        this.audioGainNode = this.audioContext.createGain();
-        /*
+
         if (!navigator.mediaDevices ||
             !navigator.mediaDevices.getUserMedia) {
             throw Error('mediaDevices.getUserMedia not available!');
         }
-        navigator.mediaDevices.getUserMedia({ audio: true })
+        navigator.mediaDevices.getUserMedia({ video: false, audio: true })
             .then((stream: MediaStream) => {
-                this.connectNodes(stream);
-                this.initMediaRecorder(stream);
+                this.initAndConnectNodes(stream);
             })
             .catch((error: any) => {
                 // alert('getUserMedia() - ' + error.name + ' - ' + error.message);
                 throw Error('getUserMedia() - ' + error.name + ' - ' + error.message);
             });
-        */
-        try {
-            let dest = this.audioContext.createMediaStreamDestination(),
-                stream: MediaStream = dest.stream;
-            // this.connectNodes(stream);
-            this.initMediaRecorder(stream);
-
-            this.analyserNode = this.audioContext.createAnalyser();
-            this.analyserNode.fftSize = 2048;
-            this.analyserBufferLength = this.analyserNode.frequencyBinCount;
-            this.analyserBuffer = new Uint8Array(this.analyserBufferLength);
-
-            // stream -> sourceNode -> gainNode -> analyserNode
-            this.sourceNode = this.audioContext.createMediaStreamSource(stream);
-            this.sourceNode.connect(this.audioGainNode);
-            this.audioGainNode.connect(this.analyserNode);
-
-            // gainNode -> destination
-            this.audioGainNode.connect(dest);
-        }
-        catch (error) {
-            alert('error in stream setup: ' + error);
-        }
     }
 
     initMediaRecorder(stream: MediaStream) {
@@ -113,6 +88,11 @@ export class WebAudio {
             console.log(MediaRecorder.isTypeSupported);
         }
         */
+        /*
+        this.mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'audio/webm'
+        });
+        */
         this.mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'audio/webm'
         });
@@ -138,23 +118,41 @@ export class WebAudio {
         };
     }
 
-    connectNodes(stream: MediaStream) {
-        console.log('WebAudio:connectNodes()');
-        this.sourceNode = this.audioContext.createMediaStreamSource(stream);
+    initAndConnectNodes(stream: MediaStream) {
+        console.log('WebAudio:initAndConnectNodes()');
+
+        // create the gainNode
+        this.audioGainNode = this.audioContext.createGain();
+
+        // create and configure the analyserNode
         this.analyserNode = this.audioContext.createAnalyser();
         this.analyserNode.fftSize = 2048;
         this.analyserBufferLength = this.analyserNode.frequencyBinCount;
         this.analyserBuffer = new Uint8Array(this.analyserBufferLength);
 
-        // source --> gain-node
-        this.sourceNode.connect(this.audioGainNode);
-        // gain-node --> destination
+        // create a source node out of the audio media stream
+        this.sourceNode = this.audioContext.createMediaStreamSource(stream);
 
-        // NOTE: uncommenting the line below and placing the mic next
-        // to an ongoing speaker can create some awesome feedback effects
-        // This next line repeats microphone input to speaker output
-        // this.audioGainNode.connect(this.audioContext.destination);
+        // create a destination node
+        let dest = this.audioContext.createMediaStreamDestination();
+
+        // sourceNode (microphone) -> gainNode
+        this.sourceNode.connect(this.audioGainNode);
+
+        // gainNode -> destination
+        this.audioGainNode.connect(dest);
+
+        // gainNode -> analyserNode
         this.audioGainNode.connect(this.analyserNode);
+
+        // this.analyserNode.connect(dest);
+
+        // this.connectNodes(stream);
+        this.initMediaRecorder(dest.stream);
+
+        // Both of these print [object MediaStream] in chromium
+        // console.log('stream: ' + stream);
+        // console.log('dest.stream: ' + dest.stream);                
     }
 
     getBufferMaxVolume() {
