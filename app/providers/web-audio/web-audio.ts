@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 
 
 // amount of time we wait between checks to see if web audio is ready
-const WEB_AUDIO_WAIT_MSEC: number = 50;
+// const WEB_AUDIO_WAIT_MSEC: number = 50;
 
 // NOTE: currently this only works in the latest versions of Firefox
 // because Chrome/Chromium cannot handle AudioDestinationNode streams yet

@@ -149,31 +149,21 @@ export class AudioPlayer implements OnChanges {
      * @returns {void}
      */
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
-        if (changeRecord['title']) {
-            console.log('AudioPlayer:ngOnChanges(): title: ' + this.title);
-            if (this.title !== undefined) {
-                this.show();
-            }
+        if (this.title === undefined ||
+            this.url === undefined ||
+            this.duration === undefined) {
+            // we do this so that the audio tag doesn't complain
+            // while we haven't yet loaded a song to play
+            this.url = EMPTY_WAV_URL;
+            this.progressMax = 0;
         }
-        if (changeRecord['url']) {
-            console.log('AudioPlayer:ngOnChanges(): url: ' + this.url);
-            if (this.url !== undefined) {
-                this.audioElement.addEventListener('canplay', () => {
-                    this.play();
-                });
-            }
-            else {
-                this.url = EMPTY_WAV_URL;
-            }
-        }
-        if (changeRecord['duration']) {
-            console.log('AudioPlayer:ngOnChanges(): duration: ' + this.duration);
-            if (this.duration !== undefined) {
-                this.progressMax = this.duration;
-            }
-            else {
-                this.progressMax = 0;
-            }
+        else {
+            this.progressMax = this.duration;
+            this.show();
+
+            this.audioElement.addEventListener('canplay', () => {
+                this.play();
+            });
         }
     }
 }
