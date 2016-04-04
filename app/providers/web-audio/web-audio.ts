@@ -51,7 +51,7 @@ export class WebAudio {
 
     /**
      * Wait indefinitely until web audio is ready for use, then emit Observable
-     * @returns {Observable<void>} Observable that emits only 
+     * @returns {Observable<void>} Observable that emits only
      * after web audio is ready
      */
     /*
@@ -75,7 +75,7 @@ export class WebAudio {
         return source;
     }
     */
-    
+
     /**
      * Initialize audio, get it ready to record
      * @returns {void}
@@ -166,13 +166,13 @@ export class WebAudio {
 
             this.blobChunks = [];
         };
-        
+
         // finally let users of this class know it's ready
         this.ready = true;
     }
 
     /**
-     * Create Analyser and Gain nodes and connect them to a 
+     * Create Analyser and Gain nodes and connect them to a
      * MediaStreamDestination node, which is fed to MediaRecorder
      * @param {MediaStream} stream the stream obtained by getUserMedia
      * @returns {void}
