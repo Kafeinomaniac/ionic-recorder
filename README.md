@@ -17,6 +17,7 @@ to build
 * Useful real-time visualizations, stats and data-analysis of the recorded 
   audio signal
 
+<!--
 ## Live demo
 A live demo, though completely unoptimized (this code is still in alpha so anything goes!) exists on 
 
@@ -27,6 +28,7 @@ This app asks for permission to use  your microphone (obviously).
 This app runs 100% locally - nothing (no information about you, no audio) gets transmitted over the internet with this app. 
 It is only for you to record from your device's microphone audio tht goes onto your device in an internal database only
 accessible when you use this app, unles you use the app's share button (not yet implemented).
+-->
 
 ## Requirements for running the app
 This apps runs only in browsers that implement
