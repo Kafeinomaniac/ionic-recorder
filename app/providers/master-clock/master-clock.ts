@@ -64,6 +64,9 @@ export class MasterClock {
      * @returns {void}
      */
     addFunction(id: string, fun: Function) {
+        if (Object.keys(this.functions).length > 2) {
+            alert('MasterClock:addFunction(): too many functions!');
+        }
         this.functions[id] = fun;
     }
 

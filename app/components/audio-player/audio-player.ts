@@ -1,6 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
+import {BrowserDomAdapter} from 'angular2/platform/browser';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
 import {msec2time} from '../../providers/utils/utils';
 import {MasterClock} from '../../providers/master-clock/master-clock';
@@ -33,11 +34,14 @@ export class AudioPlayer implements OnChanges {
     private progressMax: number = 0;
     private progressValue: number = 0;
 
+    private DOM;
+
     /**
      * @constructor
      */
     constructor() {
         console.log('constructor():AudioPlayer');
+        this.DOM = new BrowserDomAdapter();
     }
 
     /**
@@ -45,21 +49,9 @@ export class AudioPlayer implements OnChanges {
      * @returns {void}
      */
     ngOnInit() {
-        this.audioElement = <HTMLAudioElement>(
-            document.getElementById('audio-player-audio-tag')
-        );
-
-        this.audioElement.addEventListener('ended', () => {
-            this.playPauseButtonIcon = 'play';
-            this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
-            this.time = this.audioElement.duration * 1000;
-            this.duration = this.audioElement.duration * 1000;
-            if (!isFinite(this.duration)) {
-                alert('infinite duration detected!');
-            }
-            this.progressValue = this.duration;
-            this.progressMax = this.duration;
-        });
+        this.audioElement = this.DOM.query('#audio-player-audio-tag');
+        console.log('ngOnInit() this.audioElement = ' + this.audioElement);
+        this.audioElement.autoplay = true;
     }
 
     /**
@@ -77,7 +69,7 @@ export class AudioPlayer implements OnChanges {
     hide() {
         this.hidden = true;
     }
-
+    
     /**
      * Formats time, given as a number in miliseconds, to a string
      * @returns {string} the formatted time
@@ -89,7 +81,39 @@ export class AudioPlayer implements OnChanges {
         return msec2time(time).replace('00:00:', '').replace('00:', '');
     }
 
+    onAudioEnded() {
+        alert('onAudioEnded~!');
+        this.playPauseButtonIcon = 'play';
+        this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
+        this.time = this.audioElement.duration * 1000;
+        this.duration = this.audioElement.duration * 1000;
+        this.progressValue = this.duration;
+        this.progressMax = this.duration;
+
+        if (!isFinite(this.duration)) {
+            alert('infinite duration detected!');
+        }
+
+        if (isNaN(this.duration)) {
+            alert('NaN duration!');
+        }
+    }
+
+    onAudioCanPlay() {
+        alert('onCanPlay(' + this.url + ')');
+        this.audioElement.play();
+        console.log('audioElement.duration: ' + this.audioElement.duration);
+
+        this.masterClock.addFunction(AUDIO_PLAYER_CLOCK_FUNCTION, () => {
+            this.time = this.audioElement.currentTime * 1000.0;
+            this.progressValue = this.time;
+        });
+
+        this.playPauseButtonIcon = 'pause';
+    }
+
     /**
+     * 
      * Start playing audio
      * @returns {void}
      */
@@ -163,9 +187,9 @@ export class AudioPlayer implements OnChanges {
             console.log('AudioPlayer:ngOnChanges(): url: ' + this.url);
             if (this.url !== undefined) {
                 if (this.audioElement !== undefined) {
-                    this.audioElement.addEventListener('canplay', () => {
-                        this.play();
-                    });
+                    this.audioElement.src = this.url;
+                    this.audioElement.load();
+                    // this.audioElement.play();
                 }
             }
             else {

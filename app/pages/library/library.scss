@@ -108,3 +108,8 @@ ion-content ion-list.file-folder-list {
         color: map-get($colors, logo-orange);
     }
 }
+
+#audio-player-audio-tag {
+    padding: 1em;
+    width: 100%;
+}

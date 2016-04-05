@@ -6,6 +6,7 @@ from '../../providers/local-db/local-db';
 import {AppState, ROOT_FOLDER_NAME} from '../../providers/app-state/app-state';
 import {AddFolderPage} from '../add-folder/add-folder';
 import {AudioPlayer} from '../../components/audio-player/audio-player';
+import {BrowserDomAdapter} from 'angular2/platform/browser';
 
 
 @Page({
@@ -24,6 +25,8 @@ export class LibraryPage {
     private playerUrl: string;
     private playerDuration: number;
 
+    private DOM;
+    private audioElement: HTMLAudioElement;
     /**
      * @constructor
      * @param {NavController} nav
@@ -33,8 +36,13 @@ export class LibraryPage {
         private nav: NavController,
         private platform: Platform) {
         console.log('constructor():LibraryPage');
+        this.DOM = new BrowserDomAdapter();
     }
 
+    ngOnInit() {
+        this.audioElement = this.DOM.query('#audio-player-audio-tag');
+        console.dir(this.audioElement);
+    }
     /**
      * Called first time the graphics are initialized
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
@@ -479,11 +487,14 @@ export class LibraryPage {
             this.playerTitle = node.name;
             this.localDB.readNodeData(node).subscribe(
                 (dataNode: DataNode) => {
+                    let blob: Blob = dataNode.data.blob;
                     // revoke previous URL
                     window.URL.revokeObjectURL(this.playerUrl);
                     this.playerDuration = dataNode.data.duration;
                     this.playerUrl =
-                        window.URL.createObjectURL(dataNode.data.blob);
+                        window.URL.createObjectURL(blob);
+                    this.audioElement.src = this.playerUrl;
+                    this.audioElement.play();
                 }
             ); // readNodeData(node).subscribe(
         } // if (this.localDB.isFolderNode(node)) { .. else { ..
