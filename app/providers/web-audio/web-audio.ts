@@ -2,6 +2,9 @@ import {Injectable} from 'angular2/core';
 import {Observable} from 'rxjs';
 
 
+const GETUSERMEDIA_OPTIONS: Object = { video: false, audio: true };
+
+
 // amount of time we wait between checks to see if web audio is ready
 // const WEB_AUDIO_WAIT_MSEC: number = 50;
 
@@ -93,17 +96,35 @@ export class WebAudio {
 
         if (!navigator.mediaDevices ||
             !navigator.mediaDevices.getUserMedia) {
-            throw Error('mediaDevices.getUserMedia not available!');
+            navigator.getUserMedia = navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia;
+            if (navigator.getUserMedia) {
+                navigator.getUserMedia(GETUSERMEDIA_OPTIONS,
+                    (stream: MediaStream) => {
+                        this.initAndConnectNodes(stream);
+                    },
+                    (error: any) => {
+                        // alert('getUserMedia() - ' + error.name + ' - ' + error.message);
+                        throw Error('getUserMedia() - ' + error.name + ' - ' + error.message);
+                    });
+            }
+            else {
+                alert('getUserMedia not available!');
+                throw Error('getUserMedia not available!');
+            }
         }
-
-        navigator.mediaDevices.getUserMedia({ video: false, audio: true })
-            .then((stream: MediaStream) => {
-                this.initAndConnectNodes(stream);
-            })
-            .catch((error: any) => {
-                // alert('getUserMedia() - ' + error.name + ' - ' + error.message);
-                throw Error('getUserMedia() - ' + error.name + ' - ' + error.message);
-            });
+        else {
+            navigator.mediaDevices.getUserMedia(GETUSERMEDIA_OPTIONS)
+                .then((stream: MediaStream) => {
+                    this.initAndConnectNodes(stream);
+                })
+                .catch((error: any) => {
+                    // alert('getUserMedia() - ' + error.name + ' - ' + error.message);
+                    throw Error('getUserMedia() - ' + error.name + ' - ' + error.message);
+                });
+        }
     }
 
     /**

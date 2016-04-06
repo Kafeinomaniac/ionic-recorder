@@ -69,7 +69,7 @@ export class AudioPlayer implements OnChanges {
     hide() {
         this.hidden = true;
     }
-    
+
     /**
      * Formats time, given as a number in miliseconds, to a string
      * @returns {string} the formatted time
@@ -113,7 +113,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     /**
-     * 
+     *
      * Start playing audio
      * @returns {void}
      */
