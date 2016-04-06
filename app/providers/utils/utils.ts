@@ -56,3 +56,6 @@ export function removeByAttr(arr: any[], attr: string, value: any): any[] {
     }
     return arr;
 }
+
+// arrayEqual from: http://stackoverflow.com/questions/3115982/how-to-check-javascript-array-equals
+export function arrayEqual(a, b) { return !(a < b || b < a); };

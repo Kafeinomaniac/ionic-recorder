@@ -7,6 +7,7 @@ import {AppState, ROOT_FOLDER_NAME} from '../../providers/app-state/app-state';
 import {AddFolderPage} from '../add-folder/add-folder';
 import {AudioPlayer} from '../../components/audio-player/audio-player';
 import {BrowserDomAdapter} from 'angular2/platform/browser';
+import {WebAudio} from '../../providers/web-audio/web-audio';
 
 
 @Page({
@@ -24,6 +25,8 @@ export class LibraryPage {
     private playerTitle: string;
     private playerUrl: string;
     private playerDuration: number;
+
+    private webAudio: WebAudio = WebAudio.Instance;
 
     private DOM;
     private audioElement: HTMLAudioElement;
@@ -488,11 +491,17 @@ export class LibraryPage {
             this.localDB.readNodeData(node).subscribe(
                 (dataNode: DataNode) => {
                     let blob: Blob = dataNode.data.blob;
+
+                    // this.webAudio.playBlob(dataNode.data.blob,
+                    //                        dataNode.data.duration);
                     // revoke previous URL
                     window.URL.revokeObjectURL(this.playerUrl);
+
                     this.playerDuration = dataNode.data.duration;
-                    this.playerUrl =
-                        window.URL.createObjectURL(blob);
+
+                    // create new URL
+                    this.playerUrl = window.URL.createObjectURL(blob);
+
                     /*
                     this.audioElement.src = this.playerUrl;
                     this.audioElement.play();

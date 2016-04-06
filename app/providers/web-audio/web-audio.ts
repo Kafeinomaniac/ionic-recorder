@@ -26,9 +26,11 @@ export class WebAudio {
     private sourceNode: MediaElementAudioSourceNode;
     private blobChunks: Blob[];
 
-    private playbackSource: AudioBufferSourceNode;
+    private playbackSourceNode: AudioBufferSourceNode;
 
     private ready: boolean = false;
+
+    private fileReader: FileReader;
 
     onStop: (blob: Blob) => void;
 
@@ -203,6 +205,32 @@ export class WebAudio {
     initAndConnectNodes(stream: MediaStream) {
         console.log('WebAudio:initAndConnectNodes()');
 
+        /* 
+             this code goes together with the function playBlob below,
+             which does not work - can't decode audio at all in chrome
+             (we get an exception to that effect) and in Firefox, while
+             it can decode the audio, it cannot play it back, it seems,
+             perhaps because it already has set up the MediaRecorder (?)
+             for now, we comment it out, perhaps it will be useful later...
+             
+        // create playback source node
+        this.playbackSourceNode = this.audioContext.createBufferSource();
+
+        this.fileReader = new FileReader();
+
+        this.fileReader.onload = () => {
+            console.log('fileReader.onload()');
+            let buffer: ArrayBuffer = this.fileReader.result;
+            this.audioContext.decodeAudioData(buffer,
+                (audioBuffer: AudioBuffer) => {
+                    this.playbackSourceNode.buffer = audioBuffer;
+                    this.playbackSourceNode.connect(
+                        this.audioContext.destination);
+                    console.log('blob audio decoded, playing now!');
+                });
+        };
+        */
+
         // create the gainNode
         this.audioGainNode = this.audioContext.createGain();
 
@@ -328,4 +356,11 @@ export class WebAudio {
         }
         this.mediaRecorder.stop();
     }
+    /*
+    // this should work but doesn't
+    playBlob(blob: Blob, duration: number = Infinity) {
+        console.log('playBlob ...');
+        this.fileReader.readAsArrayBuffer(blob);
+    }
+    */
 }

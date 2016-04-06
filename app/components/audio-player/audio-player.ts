@@ -88,7 +88,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     onAudioEnded() {
-        // alert('onAudioEnded~!');
+        alert('onAudioEnded~!');
         this.playPauseButtonIcon = 'play';
         this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
         this.time = this.audioElement.duration * 1000;
@@ -106,7 +106,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     onAudioCanPlay() {
-        // alert('onCanPlay(' + this.url + ')');
+        alert('onCanPlay(' + this.url + ')');
         this.audioElement.play();
         console.log('audioElement.duration: ' + this.audioElement.duration);
 
@@ -128,7 +128,8 @@ export class AudioPlayer implements OnChanges {
             alert('no audio element!');
         }
         this.audioElement.play();
-        console.log('audioElement.duration: ' + this.audioElement.duration);
+        console.log('play() audioElement: ' + this.audioElement);
+        console.dir(this.audioElement);
 
         this.masterClock.addFunction(AUDIO_PLAYER_CLOCK_FUNCTION, () => {
             this.time = this.audioElement.currentTime * 1000.0;
@@ -194,8 +195,8 @@ export class AudioPlayer implements OnChanges {
             if (this.url !== undefined) {
                 if (this.audioElement !== undefined) {
                     this.audioElement.src = this.url;
-                    this.audioElement.load();
-                    this.audioElement.play();
+                    // this.audioElement.load();
+                    // this.audioElement.play();
                 }
             }
             else {
