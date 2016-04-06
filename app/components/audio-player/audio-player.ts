@@ -88,7 +88,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     onAudioEnded() {
-        alert('onAudioEnded~!');
+        // alert('onAudioEnded~!');
         this.playPauseButtonIcon = 'play';
         this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
         this.time = this.audioElement.duration * 1000;
@@ -106,7 +106,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     onAudioCanPlay() {
-        alert('onCanPlay(' + this.url + ')');
+        // alert('onCanPlay(' + this.url + ')');
         this.audioElement.play();
         console.log('audioElement.duration: ' + this.audioElement.duration);
 
