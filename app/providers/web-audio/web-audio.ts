@@ -96,11 +96,13 @@ export class WebAudio {
 
         if (!navigator.mediaDevices ||
             !navigator.mediaDevices.getUserMedia) {
+            // new getUserMedia not there, try the old one 
             navigator.getUserMedia = navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia ||
                 navigator.msGetUserMedia;
             if (navigator.getUserMedia) {
+                // the old getUserMedia
                 navigator.getUserMedia(GETUSERMEDIA_OPTIONS,
                     (stream: MediaStream) => {
                         this.initAndConnectNodes(stream);
@@ -277,6 +279,8 @@ export class WebAudio {
      * @returns {boolean} whether MediaRecorder is inactive now
      */
     isInactive() {
+        // TODO: get rid of !this.mediaRecorder here and everywhere
+        // else
         return !this.mediaRecorder ||
             this.mediaRecorder.state === 'inactive';
     }
