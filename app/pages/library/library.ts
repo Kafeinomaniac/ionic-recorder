@@ -493,8 +493,10 @@ export class LibraryPage {
                     this.playerDuration = dataNode.data.duration;
                     this.playerUrl =
                         window.URL.createObjectURL(blob);
+                    /*
                     this.audioElement.src = this.playerUrl;
                     this.audioElement.play();
+                    */
                 }
             ); // readNodeData(node).subscribe(
         } // if (this.localDB.isFolderNode(node)) { .. else { ..

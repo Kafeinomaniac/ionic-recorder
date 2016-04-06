@@ -51,7 +51,13 @@ export class AudioPlayer implements OnChanges {
     ngOnInit() {
         this.audioElement = this.DOM.query('#audio-player-audio-tag');
         console.log('ngOnInit() this.audioElement = ' + this.audioElement);
-        this.audioElement.autoplay = true;
+        // this.audioElement.autoplay = true;
+        this.audioElement.addEventListener('canplay', () => {
+           this.onAudioCanPlay(); 
+        });
+        this.audioElement.addEventListener('ended', () => {
+           this.onAudioEnded();
+        });
     }
 
     /**
@@ -189,7 +195,7 @@ export class AudioPlayer implements OnChanges {
                 if (this.audioElement !== undefined) {
                     this.audioElement.src = this.url;
                     this.audioElement.load();
-                    // this.audioElement.play();
+                    this.audioElement.play();
                 }
             }
             else {
