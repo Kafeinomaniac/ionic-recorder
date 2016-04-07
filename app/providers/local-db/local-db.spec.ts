@@ -550,7 +550,7 @@ export function main(): void {
             setTimeout(() => {
                 localDB.getSubtreeNodesArray(folder5)
                     .subscribe(
-                    (nodes: number[]) => {
+                    (nodes: TreeNode[]) => {
                         expect(nodes.length).toBe(3);
                         expect(nodes).toContain(item6);
                         expect(nodes).toContain(item7);
@@ -568,7 +568,7 @@ export function main(): void {
             setTimeout(() => {
                 localDB.getSubtreeNodesArray(unfiledFolder)
                     .subscribe(
-                    (nodes: number[]) => {
+                    (nodes: TreeNode[]) => {
                         expect(nodes.length).toBe(8);
                         expect(nodes).toContain(folder1);
                         expect(nodes).toContain(item2);

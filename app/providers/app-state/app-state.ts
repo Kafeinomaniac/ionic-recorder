@@ -185,7 +185,7 @@ export class AppState {
     getProperty(propertyName) {
         let source: Observable<any> = Observable.create((observer) => {
             this.waitForAppState().subscribe(
-                (db: IDBDatabase) => {
+                () => {
                     if (!this.dataNode || !this.dataNode.data) {
                         observer.error('app state not properly read');
                     }
@@ -237,7 +237,7 @@ export class AppState {
                         // update in DB:
                         this.localDB.updateNodeData(
                             this.treeNode, this.dataNode.data).subscribe(
-                            (success: boolean) => {
+                            () => {
                                 observer.next(true);
                                 observer.complete();
                             },
