@@ -53,7 +53,7 @@ export class AudioPlayer implements OnChanges {
         console.log('ngOnInit() this.audioElement = ' + this.audioElement);
         // this.audioElement.autoplay = true;
         this.audioElement.addEventListener('canplay', () => {
-           this.onAudioCanPlay(); 
+           this.onAudioCanPlay();
         });
         this.audioElement.addEventListener('ended', () => {
            this.onAudioEnded();

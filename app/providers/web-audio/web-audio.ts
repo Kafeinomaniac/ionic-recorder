@@ -98,7 +98,7 @@ export class WebAudio {
 
         if (!navigator.mediaDevices ||
             !navigator.mediaDevices.getUserMedia) {
-            // new getUserMedia not there, try the old one 
+            // new getUserMedia not there, try the old one
             navigator.getUserMedia = navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia ||
@@ -205,14 +205,14 @@ export class WebAudio {
     initAndConnectNodes(stream: MediaStream) {
         console.log('WebAudio:initAndConnectNodes()');
 
-        /* 
+        /*
              this code goes together with the function playBlob below,
              which does not work - can't decode audio at all in chrome
              (we get an exception to that effect) and in Firefox, while
              it can decode the audio, it cannot play it back, it seems,
              perhaps because it already has set up the MediaRecorder (?)
              for now, we comment it out, perhaps it will be useful later...
-             
+
         // create playback source node
         this.playbackSourceNode = this.audioContext.createBufferSource();
 
