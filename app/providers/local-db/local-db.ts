@@ -1154,10 +1154,10 @@ export class LocalDB {
         let source: Observable<TreeNode> = Observable.create((observer) => {
             this.readStoreItem(DB_TREE_STORE_NAME, key).subscribe(
                 (treeNode: TreeNode) => {
-                    if (!treeNode) {
+                    if (treeNode === undefined || !treeNode) {
                         observer.error('node does not exist');
                     }
-                    treeNode[DB_KEY_PATH] = key;
+                    // treeNode[DB_KEY_PATH] = key;
                     observer.next(treeNode);
                     observer.complete();
                 },

@@ -619,7 +619,7 @@ export function main(): void {
                     );
                 }, MAX_DB_INIT_TIME);
             });
-/*
+
         it('cannot now read folder5', (done) => {
             setTimeout(() => {
                 localDB.readNode(folder5[DB_KEY_PATH]).subscribe(
@@ -661,7 +661,7 @@ export function main(): void {
                 );
             }, MAX_DB_INIT_TIME);
         });
-*/
+
         it('can delete ' + UNFILED_FOLDER_NAME +
             ' folder (at root) recursively',
             (done) => {
@@ -678,7 +678,7 @@ export function main(): void {
                     );
                 }, MAX_DB_INIT_TIME);
             });
-/*
+
         it('cannot now read ' + UNFILED_FOLDER_NAME +
             ' folder (at root)', (done) => {
                 setTimeout(() => {
@@ -735,6 +735,6 @@ export function main(): void {
                 );
             }, MAX_DB_INIT_TIME);
         });
-*/
+
     }); // describe
 }
