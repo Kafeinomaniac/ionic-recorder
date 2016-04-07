@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {LocalDB, TreeNode, DataNode, ParentChild, DB_NAME, DB_NO_KEY,
-DB_KEY_PATH, MAX_DB_INIT_TIME} from './local-db';
+    DB_KEY_PATH, MAX_DB_INIT_TIME} from './local-db';
 
 
 const RANDOM_WORD_1: string =
