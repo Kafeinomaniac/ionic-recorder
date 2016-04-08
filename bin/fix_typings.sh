@@ -24,6 +24,9 @@ cp "$FILE" "${FILE}.ORIG" > /dev/null 2>&1
 sed -i 's/concurrent:/concurrent?:/' ${FILE}
 sed -i 's/scheduler:/scheduler?:/' ${FILE}
 
+exit 0
+
+
 # fix the warning for promise.d.ts
 PROMISEFILE="node_modules/angular2/src/facade/promise.d.ts"
 FIRST_LINE="declare var Promise: PromiseConstructor;"
