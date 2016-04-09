@@ -1,3 +1,6 @@
+### v0.0.3-alpha.3
+* Minor version cleanup, from this point on all tags pass all tests successfully
+
 ### v0.0.3-alpha.2
 * Catch-all for app errors is in now
 * Playback uses WebAudioApi:decodeAudioData() instead of the <audio> element
