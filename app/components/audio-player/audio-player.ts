@@ -44,9 +44,9 @@ export class AudioPlayer implements OnChanges {
         // this.DOM = new BrowserDomAdapter();
         this.audioElement = document.createElement('audio');
         // this.audioElement.autoplay = true;
-        
+
         this.audioElement.preload = 'metadata';
-        
+
         this.audioElement.addEventListener('canplay', () => {
             console.warn('oncanplay!');
         });
@@ -67,7 +67,7 @@ export class AudioPlayer implements OnChanges {
         });
         this.audioElement.addEventListener('ended', () => {
            this.onAudioEnded();
-        });    
+        });
 }
 
     /**

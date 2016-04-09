@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Page, Platform, IonicApp} from 'ionic-angular';
+import {Page, Platform} from 'ionic-angular';
 import {VuGauge} from '../../components/vu-gauge/vu-gauge';
 import {AppState} from '../../providers/app-state/app-state';
 import {WebAudio} from '../../providers/web-audio/web-audio';
@@ -59,7 +59,7 @@ export class RecordPage {
                     now.getDate() + ' -- ' +
                     now.toLocaleTimeString();
             console.dir(blob);
-            
+
             this.webAudio.playBlob(blob);
 
             this.appState.getProperty('unfiledFolderKey').subscribe(
@@ -90,6 +90,8 @@ export class RecordPage {
      * @returns {void}
      */
     onPageWillEnter() {
+        console.log('on page will enter: record');
+
         // this.webAudio.waitForWebAudio().subscribe(() => {
         this.masterClock.addFunction(RECORD_PAGE_CLOCK_FUNCTION, () => {
             this.currentVolume = this.webAudio.getBufferMaxVolume();

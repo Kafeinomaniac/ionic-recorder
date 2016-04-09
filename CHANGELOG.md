@@ -1,3 +1,7 @@
+### v0.0.3-alpha.2
+* Catch-all for app errors is in now
+* Playback uses WebAudioApi:decodeAudioData() instead of the <audio> element
+
 ### v0.0.3-alpha.1
 * First deployment to https://tracktunes.org/ionic-recorder
 * Only tested successfully in Chrome 29 on Android

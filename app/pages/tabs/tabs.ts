@@ -12,8 +12,10 @@ import {AppState} from '../../providers/app-state/app-state';
 })
 export class TabsPage {
     private appState: AppState = AppState.Instance;
-    private tab1Root: Type = RecordPage;
-    private tab2Root: Type = LibraryPage;
+    // private tab1Root: Type = RecordPage;
+    // private tab2Root: Type = LibraryPage;
+    private tab1Root: Type;
+    private tab2Root: Type;
     private selectedIndex: number;
 
     /**
@@ -24,8 +26,14 @@ export class TabsPage {
         console.log('constructor():TabsPage');
         this.tab1Root = RecordPage;
         this.tab2Root = LibraryPage;
+
+    }
+
+    onPageWillEnter() {
+        console.log('on page will enter - tabs');
         this.appState.getProperty('lastSelectedTab').subscribe(
             (tabIndex: number) => {
+                console.log('tabs setting it to ' + tabIndex);
                 this.app.getComponent('nav-tabs').select(tabIndex);
                 this.selectedIndex = tabIndex;
             },
@@ -33,5 +41,7 @@ export class TabsPage {
                 console.log('getProperty error: ' + getError);
             }
         ); // getProperty('lastSelectedTab').subscribe(
+
     }
+
 }

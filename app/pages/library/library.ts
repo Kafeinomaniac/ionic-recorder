@@ -44,8 +44,9 @@ export class LibraryPage {
 
     ngOnInit() {
         this.audioElement = this.DOM.query('#audio-player-audio-tag');
-        console.dir(this.audioElement);
+        // console.dir(this.audioElement);
     }
+
     /**
      * Called first time the graphics are initialized
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/

@@ -229,8 +229,20 @@ export class WebAudio {
                     this.playbackSourceNode.connect(
                         this.audioContext.destination);
                     this.playbackSourceNode.start(0);
-                    console.log('blob audio decoded, playing now!');
+                    console.log('blob audio decoded, playing now!  duration: ' +
+                        audioBuffer.duration);
+                },
+                () => {
+                    alert([
+                        'Your browser does was able to record the audio ',
+                        'and save it to a local file on your device, but ',
+                        'it cannot decode the audio files which it itself ',
+                        'has saved!  We expect this problem to be solved ',
+                        'in one of the next versions of the browser.  In ',
+                        'the meantime, please use a supported browser '
+                    ].join(''));
                 });
+
         };
 
         // create the gainNode

@@ -12,7 +12,7 @@ enableProdMode();
 
 // finally we have implemented a global catch-all with this
 // AppExceptionHandler class.  NOTE: we use 'extends' instead
-// of the more correct 'implements' here in order to avoid 
+// of the more correct 'implements' here in order to avoid
 // typescript warnings that did not make sense...
 class AppExceptionHandler extends ExceptionHandler {
     call(error, stackTrace = null, reason = null) {
@@ -70,26 +70,13 @@ export class TracktunesApp {
     }
 
     /**
-     * Sets up app by selecting last selected tab when elements in DOM
-     * @returns {void}
-     */
-    ngOnInit() {
-        this.appState.getProperty('lastSelectedTab').subscribe(
-            (tabIndex: number) => {
-                this.selectTab(tabIndex, false);
-            },
-            (getError: any) => {
-                console.log('getProperty error: ' + getError);
-            }
-        ); // getProperty('lastSelectedTab').subscribe(
-    }
-
-    /**
      * Used by template/HTML/UI to select a tab
      * @param {number} index of tab (menu item index, zero-indexed)
      * @param {boolean} whether to update AppState's 'lastSelectedTab' property
      */
     selectTab(tabIndex: number, updateAppState: boolean = true) {
+        console.log('app setting it to ' + tabIndex);
+
         if (tabIndex === this.selectedTab) {
             return;
         }
