@@ -183,9 +183,10 @@ export class WebAudio {
                 throw Error('WebAudio:onStop() not set!');
             }
 
-            let blob: Blob = new Blob(this.blobChunks, {
-                type: 'audio/webm'
-            });
+            // let blob: Blob = new Blob(this.blobChunks, {
+            //     type: 'audio/webm'
+            // });
+            let blob: Blob = new Blob(this.blobChunks);
 
             this.onStop(blob);
 
@@ -212,6 +213,7 @@ export class WebAudio {
              it can decode the audio, it cannot play it back, it seems,
              perhaps because it already has set up the MediaRecorder (?)
              for now, we comment it out, perhaps it will be useful later...
+        */
 
         // create playback source node
         this.playbackSourceNode = this.audioContext.createBufferSource();
@@ -226,10 +228,10 @@ export class WebAudio {
                     this.playbackSourceNode.buffer = audioBuffer;
                     this.playbackSourceNode.connect(
                         this.audioContext.destination);
+                    this.playbackSourceNode.start(0);
                     console.log('blob audio decoded, playing now!');
                 });
         };
-        */
 
         // create the gainNode
         this.audioGainNode = this.audioContext.createGain();
@@ -356,11 +358,11 @@ export class WebAudio {
         }
         this.mediaRecorder.stop();
     }
-    /*
+
     // this should work but doesn't
     playBlob(blob: Blob, duration: number = Infinity) {
-        console.log('playBlob ...');
+        console.log('playBlob ... ' + blob);
         this.fileReader.readAsArrayBuffer(blob);
     }
-    */
+
 }

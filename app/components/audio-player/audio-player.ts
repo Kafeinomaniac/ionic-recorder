@@ -41,14 +41,41 @@ export class AudioPlayer implements OnChanges {
      */
     constructor() {
         console.log('constructor():AudioPlayer');
-        this.DOM = new BrowserDomAdapter();
-    }
+        // this.DOM = new BrowserDomAdapter();
+        this.audioElement = document.createElement('audio');
+        // this.audioElement.autoplay = true;
+        
+        this.audioElement.preload = 'metadata';
+        
+        this.audioElement.addEventListener('canplay', () => {
+            console.warn('oncanplay!');
+        });
+        this.audioElement.addEventListener('loadstart', () => {
+           console.warn('loadstart!');
+        });
+        this.audioElement.addEventListener('error', (error: any) => {
+           console.warn('audio error!');
+           console.dir(error);
+           console.warn('audio src: ' + this.audioElement.src);
+        });
+        this.audioElement.addEventListener('loadedmetadata', () => {
+           console.warn('loadedmetadata! duration = ' + this.audioElement.duration);
+        });
+
+        this.audioElement.addEventListener('canplay', () => {
+           this.onAudioCanPlay();
+        });
+        this.audioElement.addEventListener('ended', () => {
+           this.onAudioEnded();
+        });    
+}
 
     /**
      * Setup when component first loaded into DOM
      * @returns {void}
      */
     ngOnInit() {
+        /*
         this.audioElement = this.DOM.query('#audio-player-audio-tag');
         console.log('ngOnInit() this.audioElement = ' + this.audioElement);
         // this.audioElement.autoplay = true;
@@ -58,6 +85,7 @@ export class AudioPlayer implements OnChanges {
         this.audioElement.addEventListener('ended', () => {
            this.onAudioEnded();
         });
+        */
     }
 
     /**
@@ -88,7 +116,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     onAudioEnded() {
-        alert('onAudioEnded~!');
+        console.warn('onAudioEnded~!');
         this.playPauseButtonIcon = 'play';
         this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
         this.time = this.audioElement.duration * 1000;
@@ -106,7 +134,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     onAudioCanPlay() {
-        alert('onCanPlay(' + this.url + ')');
+        console.warn('onCanPlay(' + this.url + ')');
         this.audioElement.play();
         console.log('audioElement.duration: ' + this.audioElement.duration);
 
@@ -196,7 +224,7 @@ export class AudioPlayer implements OnChanges {
                 if (this.audioElement !== undefined) {
                     this.audioElement.src = this.url;
                     // this.audioElement.load();
-                    // this.audioElement.play();
+                    this.audioElement.play();
                 }
             }
             else {

@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {App, IonicApp, Platform} from 'ionic-angular';
-import {Type, enableProdMode} from 'angular2/core';
+import {Type, enableProdMode, ExceptionHandler, provide} from 'angular2/core';
 import {AppState} from './providers/app-state/app-state';
 import {TabsPage} from './pages/tabs/tabs';
 import {DB_NAME} from './providers/local-db/local-db';
@@ -10,8 +10,21 @@ import {DB_NAME} from './providers/local-db/local-db';
 enableProdMode();
 
 
+// finally we have implemented a global catch-all with this
+// AppExceptionHandler class.  NOTE: we use 'extends' instead
+// of the more correct 'implements' here in order to avoid 
+// typescript warnings that did not make sense...
+class AppExceptionHandler extends ExceptionHandler {
+    call(error, stackTrace = null, reason = null) {
+        // do something with the exception
+        alert('global catch: ' + error);
+    }
+}
+
+
 @App({
     templateUrl: 'build/app.html',
+    providers: [provide(ExceptionHandler, { useClass: AppExceptionHandler })],
     config: { backButtonText: '' }
 })
 export class TracktunesApp {

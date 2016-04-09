@@ -377,13 +377,14 @@ export class LibraryPage {
             return;
         }
         /*
+        TODO: without the alert we may want the return statement here
         if (this.folderNode && this.folderNode[DB_KEY_PATH] === key) {
             // we're already in that folder
             alert('why switch twice in a row to the same folder?');
             return;
         }
         */
-        console.log('switchFolder(' + key + ', ' + updateState + ')');
+        // console.log('switchFolder(' + key + ', ' + updateState + ')');
 
         // for non-root folders, we set this.folderNode here
         this.localDB.readNode(key).subscribe(
@@ -487,20 +488,20 @@ export class LibraryPage {
         }
         else {
             // TODO: here's where we initiate the player`
-            this.playerTitle = node.name;
+            // this.playerTitle = node.name;
             this.localDB.readNodeData(node).subscribe(
                 (dataNode: DataNode) => {
                     let blob: Blob = dataNode.data.blob;
-
-                    // this.webAudio.playBlob(dataNode.data.blob,
-                    //                        dataNode.data.duration);
+                    console.log('blob is: ' + blob);
+                    this.webAudio.playBlob(blob,
+                                           dataNode.data.duration);
                     // revoke previous URL
-                    window.URL.revokeObjectURL(this.playerUrl);
+                    // window.URL.revokeObjectURL(this.playerUrl);
 
-                    this.playerDuration = dataNode.data.duration;
+                    // this.playerDuration = dataNode.data.duration;
 
                     // create new URL
-                    this.playerUrl = window.URL.createObjectURL(blob);
+                    // this.playerUrl = window.URL.createObjectURL(blob);
 
                     /*
                     this.audioElement.src = this.playerUrl;

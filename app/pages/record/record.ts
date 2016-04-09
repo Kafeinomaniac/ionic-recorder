@@ -59,6 +59,8 @@ export class RecordPage {
                     now.getDate() + ' -- ' +
                     now.toLocaleTimeString();
             console.dir(blob);
+            
+            this.webAudio.playBlob(blob);
 
             this.appState.getProperty('unfiledFolderKey').subscribe(
                 (unfiledFolderKey: number) => {
