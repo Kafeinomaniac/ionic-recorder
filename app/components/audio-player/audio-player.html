@@ -1,6 +1,7 @@
 <!-- Copyright (c) 2016 Tracktunes Inc -->
 
-<div class="audio-player" [hidden]="hidden">
+<!--div class="audio-player" [hidden]="hidden"-->
+<div class="audio-player">
     <!-- for preload setting, see http://stackoverflow.com/questions/10235919/the-canplay-canplaythrough-events-for-an-html5-video-are-not-called-on-firefox -->
     <!--audio id="audio-player-audio-tag" src={{url}}>
     </audio-->
@@ -15,10 +16,11 @@
         <ion-col button clear (click)="onClickPlayPauseButton()">
             <ion-icon [name]="playPauseButtonIcon"></ion-icon>
         </ion-col>
-        <ion-col width-75 center>
+        <ion-col width-80 center>
             <ion-row>
                 <span class="time">{{formatTime(time)}}</span>
-                <progress [max]="progressMax" [value]="progressValue"></progress>
+                <!--progress [max]="progressMax" [value]="progressValue"></progress-->
+                <progress-slider></progress-slider>
                 <span class="duration">{{formatTime(duration)}}</span>
             </ion-row>
         </ion-col>

@@ -5,6 +5,7 @@ import {BrowserDomAdapter} from 'angular2/platform/browser';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
 import {msec2time} from '../../providers/utils/utils';
 import {MasterClock} from '../../providers/master-clock/master-clock';
+import {ProgressSlider} from '../progress-slider/progress-slider';
 
 
 const AUDIO_PLAYER_CLOCK_FUNCTION = 'audio-player-clock-function';
@@ -20,7 +21,7 @@ const EMPTY_WAV_URL = 'empty.wav';
 @Component({
     selector: 'audio-player',
     templateUrl: 'build/components/audio-player/audio-player.html',
-    directives: [IONIC_DIRECTIVES]
+    directives: [IONIC_DIRECTIVES, ProgressSlider]
 })
 export class AudioPlayer implements OnChanges {
     @Input() private title: string;

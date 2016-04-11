@@ -1,10 +1,7 @@
-<div class="progress-slider">
-    <span class="track-left">
-    </span>
-    <span class="handle">
-    </span>
-    <span class="track-right">
-    </span>
-+
- 
+<div class="track">
+    <div class="track-inner-left" [style.width]="positionPercent()"></div>
+    <div class="track-inner-right" [style.left]="positionPercent()" [style.width]="remainingPercent()"></div>
+    <div class="track-inner-full">
+        <div class="handle" (click)="onHandleClick($event)" [style.left]="positionPercent()"></div>
+    </div>
 </div>

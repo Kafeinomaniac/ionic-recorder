@@ -489,25 +489,23 @@ export class LibraryPage {
         }
         else {
             // TODO: here's where we initiate the player`
-            // this.playerTitle = node.name;
+            this.playerTitle = node.name;
             this.localDB.readNodeData(node).subscribe(
                 (dataNode: DataNode) => {
                     let blob: Blob = dataNode.data.blob;
                     console.log('blob is: ' + blob);
-                    this.webAudio.playBlob(blob,
-                                           dataNode.data.duration);
+                    // this.webAudio.playBlob(blob,
+                    //                        dataNode.data.duration);
                     // revoke previous URL
-                    // window.URL.revokeObjectURL(this.playerUrl);
+                    window.URL.revokeObjectURL(this.playerUrl);
 
-                    // this.playerDuration = dataNode.data.duration;
+                    this.playerDuration = dataNode.data.duration;
 
                     // create new URL
-                    // this.playerUrl = window.URL.createObjectURL(blob);
+                    this.playerUrl = window.URL.createObjectURL(blob);
 
-                    /*
                     this.audioElement.src = this.playerUrl;
                     this.audioElement.play();
-                    */
                 }
             ); // readNodeData(node).subscribe(
         } // if (this.localDB.isFolderNode(node)) { .. else { ..
