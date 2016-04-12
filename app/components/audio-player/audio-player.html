@@ -19,9 +19,9 @@
         <ion-col width-80 center>
             <ion-row>
                 <span class="time">{{formatTime(time)}}</span>
-                <!--progress [max]="progressMax" [value]="progressValue"></progress-->
-                <progress-slider></progress-slider>
-                <span class="duration">{{formatTime(duration)}}</span>
+                <progress-slider [position]="fractionalTime" (positionChange)="onPositionChange($event)"></progress-slider>
+                <!--span class="duration">{{formatTime(duration)}}</span-->
+                <span class="duration">{{fractionalTime}}</span>
             </ion-row>
         </ion-col>
         <ion-col button clear (click)="onClickCloseButton()">

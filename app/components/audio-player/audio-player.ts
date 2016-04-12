@@ -7,7 +7,6 @@ import {msec2time} from '../../providers/utils/utils';
 import {MasterClock} from '../../providers/master-clock/master-clock';
 import {ProgressSlider} from '../progress-slider/progress-slider';
 
-
 const AUDIO_PLAYER_CLOCK_FUNCTION = 'audio-player-clock-function';
 const EMPTY_WAV_URL = 'empty.wav';
 
@@ -35,6 +34,8 @@ export class AudioPlayer implements OnChanges {
     private progressMax: number = 0;
     private progressValue: number = 0;
 
+    private fractionalTime: number = 0.8;
+
     private DOM;
 
     /**
@@ -52,41 +53,28 @@ export class AudioPlayer implements OnChanges {
             console.warn('oncanplay!');
         });
         this.audioElement.addEventListener('loadstart', () => {
-           console.warn('loadstart!');
+            console.warn('loadstart!');
         });
         this.audioElement.addEventListener('error', (error: any) => {
-           console.warn('audio error!');
-           console.dir(error);
-           console.warn('audio src: ' + this.audioElement.src);
+            console.warn('audio error!');
+            console.dir(error);
+            console.warn('audio src: ' + this.audioElement.src);
         });
         this.audioElement.addEventListener('loadedmetadata', () => {
-           console.warn('loadedmetadata! duration = ' + this.audioElement.duration);
+            console.warn('loadedmetadata! duration = ' + this.audioElement.duration);
         });
 
         this.audioElement.addEventListener('canplay', () => {
-           this.onAudioCanPlay();
+            this.onAudioCanPlay();
         });
         this.audioElement.addEventListener('ended', () => {
-           this.onAudioEnded();
+            this.onAudioEnded();
         });
-}
+    }
 
-    /**
-     * Setup when component first loaded into DOM
-     * @returns {void}
-     */
-    ngOnInit() {
-        /*
-        this.audioElement = this.DOM.query('#audio-player-audio-tag');
-        console.log('ngOnInit() this.audioElement = ' + this.audioElement);
-        // this.audioElement.autoplay = true;
-        this.audioElement.addEventListener('canplay', () => {
-           this.onAudioCanPlay();
-        });
-        this.audioElement.addEventListener('ended', () => {
-           this.onAudioEnded();
-        });
-        */
+    onPositionChange(fractionalTime: number) {
+        console.log('on position change! ' + fractionalTime);
+        this.fractionalTime = fractionalTime;
     }
 
     /**

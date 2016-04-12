@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Component, Input, ElementRef, Renderer} from 'angular2/core';
+import {Component, Input, Output, ElementRef, Renderer, EventEmitter} from 'angular2/core';
 
 
 /**
@@ -15,7 +15,9 @@ import {Component, Input, ElementRef, Renderer} from 'angular2/core';
     templateUrl: 'build/components/progress-slider/progress-slider.html'
 })
 export class ProgressSlider {
-    @Input() private position: number = 0.5;
+    @Input() private position: number = 0;
+    @Output() private positionChange: EventEmitter<any> = new EventEmitter();
+
     private trackClientXRange: { start: number, end: number };
     private mouseUpListener: Function;
     private mouseMoveListener: Function;
@@ -67,6 +69,7 @@ export class ProgressSlider {
         }
 
         this.position = clickRelativeX / rangeX;
+        this.positionChange.emit(this.position);
     }
 
     onSliderMouseDown(event: MouseEvent) {
