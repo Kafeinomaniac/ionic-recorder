@@ -72,11 +72,6 @@ export class AudioPlayer implements OnChanges {
         });
     }
 
-    onPositionChange(fractionalTime: number) {
-        console.log('on position change! ' + fractionalTime);
-        this.fractionalTime = fractionalTime;
-    }
-
     /**
      * Show audio player
      * @returns {void}
@@ -195,6 +190,10 @@ export class AudioPlayer implements OnChanges {
         this.hide();
     }
 
+    onSeek(position: number) {
+        console.log('on seek!!!!!!!!!!!!!!!!!!!! ' + position);
+    }
+    
     /**
      * Handle changes (play new song) when a new song (url) is loaded
      * @returns {void}

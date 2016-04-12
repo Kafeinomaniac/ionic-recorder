@@ -17,6 +17,7 @@ import {Component, Input, Output, ElementRef, Renderer, EventEmitter} from 'angu
 export class ProgressSlider {
     @Input() private position: number = 0;
     @Output() private positionChange: EventEmitter<any> = new EventEmitter();
+    @Output() private seek: EventEmitter<any> = new EventEmitter();
 
     private trackClientXRange: { start: number, end: number };
     private mouseUpListener: Function;
@@ -96,6 +97,7 @@ export class ProgressSlider {
         // until the next time we click on the progress-bar
         this.mouseUpListener();
         this.mouseMoveListener();
+        this.seek.emit(this.position);
     }
 
     onMouseMove(event: MouseEvent) {
@@ -103,7 +105,6 @@ export class ProgressSlider {
     }
 
     onSliderTouchMove(event: TouchEvent) {
-        // alert('on touch move  ' + event.touches[0].clientX);
         this.jumpToPosition(event.touches[0].clientX, this.trackClientXRange);
     }
 
@@ -112,7 +113,6 @@ export class ProgressSlider {
     }
 
     onSliderTouchEnd() {
-        console.log('ontouchend');
-        // TODO: return the position value
+        this.seek.emit(this.position);
     }
 }
