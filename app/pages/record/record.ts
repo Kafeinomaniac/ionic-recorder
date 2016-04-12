@@ -7,16 +7,19 @@ import {WebAudio} from '../../providers/web-audio/web-audio';
 import {LocalDB, DB_NO_KEY} from '../../providers/local-db/local-db';
 import {num2str, msec2time} from '../../providers/utils/utils';
 import {MasterClock} from '../../providers/master-clock/master-clock';
+import {ProgressSlider}
+from '../../components/progress-slider/progress-slider';
 
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
 const RECORD_PAGE_CLOCK_FUNCTION = 'record-page-clock-function';
+const MAX_GAIN_FACTOR: number = 2.0;
 
 
 @Page({
     templateUrl: 'build/pages/record/record.html',
-    directives: [VuGauge]
+    directives: [VuGauge, ProgressSlider]
 })
 export class RecordPage {
     private currentVolume: number = 0;
@@ -26,7 +29,6 @@ export class RecordPage {
     private sliderValue: number = 100;
     private recordingTime: string = msec2time(0);
     private recordButtonIcon: string = START_RESUME_ICON;
-    private gain: number = 100;
     private decibels: string = '0.00 dB';
     private monitorSwitchState: boolean = true;
 
@@ -40,6 +42,8 @@ export class RecordPage {
     private appState: AppState = AppState.Instance;
     private webAudio: WebAudio = WebAudio.Instance;
     private masterClock: MasterClock = MasterClock.Instance;
+
+    private gainFactor: number = 0.33;
 
     /**
      * @constructor
@@ -174,32 +178,20 @@ export class RecordPage {
         this.peaksAtMax = 0;
     }
 
-    /**
-     * Called when the template's slider is being dragged
-     * @param {Event} drag event
-     * @returns {void}
-     */
-    onSliderDrag(event: Event) {
-        // Fixes slider not dragging in Firefox, as described in wiki
-        event.stopPropagation();
-    }
+    onPositionChange(newGainFactor: number) {
+        this.gainFactor = newGainFactor;
+        // convert from [0, 1] to [0, MAX_GAIN_FACTOR]
+        let gainFactor: number = this.gainFactor * MAX_GAIN_FACTOR;
 
-    /**
-     * Called every time there's a change in the template's slider
-     * @param {Event} event representing the new changed slider state
-     * @returns {void}
-     */
-    onSliderChange(event: Event) {
-        this.gain = (<RangeInputEventTarget>event.target).value;
-        let factor: number = this.gain / 100.0;
-        if (factor === 0) {
+        if (gainFactor === 0) {
             this.decibels = 'Muted';
         }
         else {
-            // convert factor (a number in [0, 1]) to decibels
-            this.decibels = num2str(10.0 * Math.log10(factor), 2) + ' dB';
+            // convert to decibels
+            this.decibels = num2str(10.0 * Math.log10(gainFactor), 2) + ' dB';
         }
-        this.webAudio.setGainFactor(factor);
+
+        this.webAudio.setGainFactor(gainFactor);
     }
 
     /**

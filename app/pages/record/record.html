@@ -26,8 +26,9 @@
     </vu-gauge>
     <p class="gain-item-label">Gain: {{gain}}% ({{decibels}})
     </p>
-    <input type="range" min="0" max="200" [value]="sliderValue" (input)="onSliderChange($event)" (touchstart)="onSliderDrag($event)"
-    (mousedown)="onSliderDrag($event)">
+    <!--input type="range" min="0" max="200" [value]="sliderValue" (input)="onSliderChange($event)" (touchstart)="onSliderDrag($event)"
+    (mousedown)="onSliderDrag($event)"-->
+    <progress-slider [position]="gainFactor" (positionChange)="onPositionChange($event)"></progress-slider>
     <div class="recording-time">
         {{recordingTime}}
     </div>

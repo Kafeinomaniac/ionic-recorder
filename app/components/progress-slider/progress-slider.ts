@@ -37,7 +37,7 @@ export class ProgressSlider {
 
     getTrackClientXRange(): { start: number, end: number } {
         let width: number = parseFloat(getComputedStyle(
-            this.element.nativeElement, null)
+            this.element.nativeElement.firstChild, null)
             .getPropertyValue('width').replace('px', '')),
             offsetLeft: number = this.element.nativeElement.offsetLeft,
             paddingLeft: number = parseFloat(getComputedStyle(
