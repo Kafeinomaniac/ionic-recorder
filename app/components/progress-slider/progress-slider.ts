@@ -1,7 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Component, Input, ElementRef, Renderer, OnChanges, SimpleChange} from 'angular2/core';
-import {IONIC_DIRECTIVES} from 'ionic-angular';
+import {Component, Input, ElementRef, Renderer} from 'angular2/core';
 
 
 /**
@@ -14,29 +13,15 @@ import {IONIC_DIRECTIVES} from 'ionic-angular';
 @Component({
     selector: 'progress-slider',
     templateUrl: 'build/components/progress-slider/progress-slider.html'
-    // ,directives: [IONIC_DIRECTIVES]
 })
-export class ProgressSlider implements OnChanges {
-    @Input() private position: number = 0.4;
-
+export class ProgressSlider {
+    @Input() private position: number = 0.5;
     private trackClientXRange: { start: number, end: number };
-
     private mouseUpListener: Function;
     private mouseMoveListener: Function;
 
     constructor(private element: ElementRef, private renderer: Renderer) {
         console.log('constructor():ProgressSlider');
-    }
-
-    ngOnInit() {
-        /*
-        console.log('width is: ' + this.element.nativeElement.style.width);
-        console.dir(this.element.nativeElement);
-        console.dir(this.element.nativeElement.style);
-        console.dir(getComputedStyle(this.element.nativeElement));
-        console.log(getComputedStyle(this.element.nativeElement).getPropertyValue('width'));
-        // this.trackWidth = getComputedStyle(this.element.nativeElement).getPropertyValue('width');
-        */
     }
 
     positionPercent() {
@@ -123,13 +108,8 @@ export class ProgressSlider implements OnChanges {
         this.trackClientXRange = this.getTrackClientXRange();
     }
 
-    onSliderTouchEnd(event: TouchEvent) {
-        
-    }
-
-    /**
-     * Handle changes
-     */
-    ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
+    onSliderTouchEnd() {
+        console.log('ontouchend');
+        // TODO: return the position value
     }
 }

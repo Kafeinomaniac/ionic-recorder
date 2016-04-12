@@ -58,4 +58,27 @@ export function removeByAttr(arr: any[], attr: string, value: any): any[] {
 }
 
 // arrayEqual from: http://stackoverflow.com/questions/3115982/how-to-check-javascript-array-equals
-export function arrayEqual(a, b) { return !(a < b || b < a); };
+export function arrayEqual(a, b) { 'use strict'; return !(a < b || b < a); };
+
+
+/**
+ * objectInspector digs through a Javascript object
+ * to display all its properties
+ *
+ * @param object - a Javascript object to inspect
+ *
+ * @return result - the concatenated description of all object properties
+ */
+export function objectInspector(object: Object) {
+    'use strict';
+    let rows = [], key: string, count = 0;
+    for (key in object) {
+        rows.push([key, typeof object[key]].join(': '));
+        count++;
+    }
+    return [
+        'Type: ' + typeof object,
+        'Length: ' + count,
+        rows.join(' // ')
+    ].join('\n');
+}
