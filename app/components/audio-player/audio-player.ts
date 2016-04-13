@@ -51,9 +51,11 @@ export class AudioPlayer implements OnChanges {
         console.log('constructor():AudioPlayer');
 
         this.webAudio.onStartPlayback = () => {
+            console.log('WebAudio:onStartPlayback()');
             this.duration = this.webAudio.playbackAudioBuffer.duration *
                 1000.0;
             this.sampleRate = this.webAudio.playbackAudioBuffer.sampleRate;
+            this.startTime = Date.now();
             this.masterClock.addFunction(AUDIO_PLAYER_CLOCK_FUNCTION, () => {
                 this.currentTime = Date.now() - this.startTime -
                     this.totalPauseTime;
@@ -62,6 +64,7 @@ export class AudioPlayer implements OnChanges {
         };
 
         this.webAudio.onStopPlayback = () => {
+            console.log('WebAudio:onStopPlayback()');
             this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
             this.currentTime = this.duration;
             this.fractionalTime = 1.0;
@@ -112,6 +115,7 @@ export class AudioPlayer implements OnChanges {
         if (this.lastPauseTime !== 0) {
             // we have already paused before
             this.totalPauseTime += Date.now() - this.lastPauseTime;
+            console.log('new totalPauseTime = ' + this.totalPauseTime);
         }
         else {
             // we have never paused before - first play
