@@ -30,6 +30,10 @@ export class AudioPlayer implements OnChanges {
     private duration: number;
     private startTime: number;
     private currentTime: number;
+    // INV: when lastPauseTime is 0 we have not paused yet
+    // after the first time we pause in a single playback lastPauseTime is
+    // the last Date.now() when a pause occurred
+    private lastPauseTime: number = 0;
     private totalPauseTime: number;
     private fractionalTime: number = 0.8;
     private sampleRate: number;
@@ -61,6 +65,7 @@ export class AudioPlayer implements OnChanges {
             this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
             this.currentTime = this.duration;
             this.fractionalTime = 1.0;
+            this.totalPauseTime = 0;
             this.playPauseButtonIcon = 'play';
         }
     }
@@ -99,10 +104,19 @@ export class AudioPlayer implements OnChanges {
      */
     play() {
         console.log('AudioPlayer:play()');
-        if (!this.blob) {
+        if (!this.blob && this.blob !== undefined) {
             alert('no blob!');
         }
+
         this.webAudio.startPlayback(this.blob);
+        if (this.lastPauseTime !== 0) {
+            // we have already paused before
+            this.totalPauseTime += Date.now() - this.lastPauseTime;
+        }
+        else {
+            // we have never paused before - first play
+            this.totalPauseTime = 0;
+        }
         this.playPauseButtonIcon = 'pause';
     }
 
@@ -113,6 +127,7 @@ export class AudioPlayer implements OnChanges {
     pause() {
         this.webAudio.pausePlayback();
         this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
+        this.lastPauseTime = Date.now();
         this.playPauseButtonIcon = 'play';
     }
 

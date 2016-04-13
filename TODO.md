@@ -1,5 +1,9 @@
 # TODO.md
 
+* Improve initialization of web audio - separate init-and-connect into
+  record/playback two functions, run the playback one even when 
+  record is not available (e.g. if you don't have a microphone 
+  connected to your computer)
 * Get rid of `<audio>` element and use web audio to play back
 files and figure out the correct duration of blobs
 * Stop using indexedDB for blobs, use files - the path will 

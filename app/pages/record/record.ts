@@ -201,7 +201,7 @@ export class RecordPage {
     onClickStartPauseButton() {
         this.currentVolume += Math.abs(Math.random() * 10);
         if (this.webAudio.isRecording()) {
-            // we're recording (when clicked, to stop recording)
+            // we're recording (when clicked, to pause recording)
             this.webAudio.pauseRecording();
             this.lastPauseTime = Date.now();
             this.recordButtonIcon = START_RESUME_ICON;
