@@ -53,7 +53,7 @@ export class RecordPage {
         console.log('constructor():RecordPage');
         // function that gets called with a newly created blob when
         // we hit the stop button - saves blob to local db
-        this.webAudio.onStop = (blob: Blob) => {
+        this.webAudio.onStopRecord = (blob: Blob) => {
             let now: Date = new Date(),
                 itemCount: number = 0,
                 month: number = now.getMonth() + 1,
@@ -68,8 +68,10 @@ export class RecordPage {
 
             this.appState.getProperty('unfiledFolderKey').subscribe(
                 (unfiledFolderKey: number) => {
-                    console.log('this.recordingDuration: ' + this.recordingDuration +
-                        ' vs now: ' + (Date.now() - this.recordStartTime - this.totalPauseTime));
+                    console.log('this.recordingDuration: '
+                                + this.recordingDuration +
+                        ' vs now: ' + (Date.now() - this.recordStartTime -
+                                       this.totalPauseTime));
 
                     this.localDB.createDataNode(
                         name,

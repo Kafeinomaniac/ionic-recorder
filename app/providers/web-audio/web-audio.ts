@@ -32,7 +32,18 @@ export class WebAudio {
 
     private fileReader: FileReader;
 
-    onStop: (blob: Blob) => void;
+    // gets called with the recorded blob as soon as we're done recording
+    onStopRecord: (recordedBlob: Blob) => void;
+
+    // this is the last function call just before we start playback
+    onStartPlayback: () => void;
+
+    // gets called as soon as we stop playback or are done playing audio
+    onStopPlayback: () => void;
+
+    // if we're playing, holds current audio buffer being played or paused
+    // if we're done playing, this is back to null
+    playbackAudioBuffer: AudioBuffer = null;
 
     /**
      * constructor
@@ -179,7 +190,7 @@ export class WebAudio {
             console.log('mediaRecorder.onStop() Got ' +
                 this.blobChunks.length + ' chunks');
 
-            if (!this.onStop) {
+            if (!this.onStopRecord) {
                 throw Error('WebAudio:onStop() not set!');
             }
 
@@ -188,7 +199,7 @@ export class WebAudio {
             // });
             let blob: Blob = new Blob(this.blobChunks);
 
-            this.onStop(blob);
+            this.onStopRecord(blob);
 
             this.blobChunks = [];
         };
@@ -215,31 +226,49 @@ export class WebAudio {
              for now, we comment it out, perhaps it will be useful later...
         */
 
-        // create playback source node
-        this.playbackSourceNode = this.audioContext.createBufferSource();
-
         this.fileReader = new FileReader();
 
         this.fileReader.onload = () => {
             console.log('fileReader.onload()');
             let buffer: ArrayBuffer = this.fileReader.result;
+            // create playback source node
+            // it has to be created new for each playback
+            this.playbackSourceNode = this.audioContext.createBufferSource();
+
+            // make sure we call our playback-end callback when
+            // audio ends by hooking into its event handler
+            this.playbackSourceNode.onended = this.onStopPlayback;
+
             this.audioContext.decodeAudioData(buffer,
                 (audioBuffer: AudioBuffer) => {
+
                     this.playbackSourceNode.buffer = audioBuffer;
                     this.playbackSourceNode.connect(
                         this.audioContext.destination);
+
+                    // track currently playing AudioBuffer so that we can
+                    // refer to it from other places, like the onStartPlayback()
+                    // callback directly below
+                    this.playbackAudioBuffer = audioBuffer;
+                    this.onStartPlayback();
+
                     this.playbackSourceNode.start(0);
-                    console.log('blob audio decoded, playing now!  duration: ' +
+                    console.log('blob audio decoded, playing! duration: ' +
                         audioBuffer.duration);
                 },
                 () => {
                     alert([
-                        'Your browser does was able to record the audio ',
-                        'and save it to a local file on your device, but ',
-                        'it cannot decode the audio files which it itself ',
-                        'has saved!  We expect this problem to be solved ',
-                        'in one of the next versions of the browser.  In ',
-                        'the meantime, please use a supported browser '
+                        'Your browser had recorded the audio file you are ',
+                        'playing and then it save it to a local file on ',
+                        'your device, but it now reports that it cannot ',
+                        'play that audio file  We expect this problem to ',
+                        'be fixed soon as more audio file formats get ',
+                        'handled by modern browsers but we are looking for',
+                        'alternative playback solutions. In the meantime, ',
+                        'you can share the fles you want to play to your ',
+                        'device and play them with any music player on your ',
+                        'device. But oops, sorry, we will implement sharing ',
+                        'soon!'
                     ].join(''));
                 });
 
@@ -372,9 +401,34 @@ export class WebAudio {
     }
 
     // this should work but doesn't
-    playBlob(blob: Blob, duration: number = Infinity) {
+    startPlayback(blob: Blob, duration: number = Infinity) {
         console.log('playBlob ... ' + blob);
+        // already set up the onload callback to start playing ...
         this.fileReader.readAsArrayBuffer(blob);
+    }
+
+    pausePlayback() {
+        console.log('pausePlayback');
+        this.playbackSourceNode.disconnect();
+    }
+
+    resumePlayback() {
+        console.log('resumePlayback');
+        this.playbackSourceNode.connect(this.audioContext.destination);
+    }
+
+    stopPlayback() {
+        console.log('resumePlayback');
+        this.playbackSourceNode.stop(0);
+    }
+
+    seekPlayback(seconds: number) {
+        // first set things up
+        this.playbackSourceNode.loopStart = seconds;
+        this.playbackSourceNode.loopEnd = this.playbackAudioBuffer.duration;
+        // stop then restart with the new setup
+        this.playbackSourceNode.stop(0);
+        this.playbackSourceNode.start(0);
     }
 
 }

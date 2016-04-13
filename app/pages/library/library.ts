@@ -1,13 +1,11 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Page, NavController, Platform, Modal, Alert} from 'ionic-angular';
-import {LocalDB, TreeNode, DataNode, ParentChild, DB_NO_KEY, DB_KEY_PATH}
+import {LocalDB, TreeNode, DataNode, ParentChild, DB_KEY_PATH}
 from '../../providers/local-db/local-db';
 import {AppState, ROOT_FOLDER_NAME} from '../../providers/app-state/app-state';
 import {AddFolderPage} from '../add-folder/add-folder';
 import {AudioPlayer} from '../../components/audio-player/audio-player';
-import {BrowserDomAdapter} from 'angular2/platform/browser';
-import {WebAudio} from '../../providers/web-audio/web-audio';
 
 
 @Page({
@@ -23,13 +21,8 @@ export class LibraryPage {
     private totalSelectedCounter: number = 0;
     private unfiledFolderKey: number;
     private playerTitle: string;
-    private playerUrl: string;
-    private playerDuration: number;
+    private playerBlob: Blob;
 
-    private webAudio: WebAudio = WebAudio.Instance;
-
-    private DOM;
-    private audioElement: HTMLAudioElement;
     /**
      * @constructor
      * @param {NavController} nav
@@ -39,12 +32,6 @@ export class LibraryPage {
         private nav: NavController,
         private platform: Platform) {
         console.log('constructor():LibraryPage');
-        this.DOM = new BrowserDomAdapter();
-    }
-
-    ngOnInit() {
-        this.audioElement = this.DOM.query('#audio-player-audio-tag');
-        // console.dir(this.audioElement);
     }
 
     /**
@@ -492,20 +479,7 @@ export class LibraryPage {
             this.playerTitle = node.name;
             this.localDB.readNodeData(node).subscribe(
                 (dataNode: DataNode) => {
-                    let blob: Blob = dataNode.data.blob;
-                    console.log('blob is: ' + blob);
-                    // this.webAudio.playBlob(blob,
-                    //                        dataNode.data.duration);
-                    // revoke previous URL
-                    window.URL.revokeObjectURL(this.playerUrl);
-
-                    this.playerDuration = dataNode.data.duration;
-
-                    // create new URL
-                    this.playerUrl = window.URL.createObjectURL(blob);
-
-                    this.audioElement.src = this.playerUrl;
-                    this.audioElement.play();
+                    this.playerBlob = dataNode.data.blob;
                 }
             ); // readNodeData(node).subscribe(
         } // if (this.localDB.isFolderNode(node)) { .. else { ..

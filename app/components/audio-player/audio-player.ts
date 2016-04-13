@@ -1,14 +1,13 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
-import {BrowserDomAdapter} from 'angular2/platform/browser';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
 import {msec2time} from '../../providers/utils/utils';
 import {MasterClock} from '../../providers/master-clock/master-clock';
 import {ProgressSlider} from '../progress-slider/progress-slider';
 
+
 const AUDIO_PLAYER_CLOCK_FUNCTION = 'audio-player-clock-function';
-const EMPTY_WAV_URL = 'empty.wav';
 
 
 /**
@@ -24,8 +23,7 @@ const EMPTY_WAV_URL = 'empty.wav';
 })
 export class AudioPlayer implements OnChanges {
     @Input() private title: string;
-    @Input() private url: string = EMPTY_WAV_URL;
-    @Input() private duration: number;
+    @Input() private blob: Blob;
     private time: number;
     private hidden: boolean = true;
     private playPauseButtonIcon: string = 'play';
@@ -34,40 +32,11 @@ export class AudioPlayer implements OnChanges {
 
     private fractionalTime: number = 0.8;
 
-    private DOM;
-
     /**
      * @constructor
      */
     constructor() {
         console.log('constructor():AudioPlayer');
-        // this.DOM = new BrowserDomAdapter();
-        this.audioElement = document.createElement('audio');
-        // this.audioElement.autoplay = true;
-
-        this.audioElement.preload = 'metadata';
-
-        this.audioElement.addEventListener('canplay', () => {
-            console.warn('oncanplay!');
-        });
-        this.audioElement.addEventListener('loadstart', () => {
-            console.warn('loadstart!');
-        });
-        this.audioElement.addEventListener('error', (error: any) => {
-            console.warn('audio error!');
-            console.dir(error);
-            console.warn('audio src: ' + this.audioElement.src);
-        });
-        this.audioElement.addEventListener('loadedmetadata', () => {
-            console.warn('loadedmetadata! duration = ' + this.audioElement.duration);
-        });
-
-        this.audioElement.addEventListener('canplay', () => {
-            this.onAudioCanPlay();
-        });
-        this.audioElement.addEventListener('ended', () => {
-            this.onAudioEnded();
-        });
     }
 
     /**
@@ -203,17 +172,10 @@ export class AudioPlayer implements OnChanges {
                 this.show();
             }
         }
-        if (changeRecord['url']) {
-            console.log('AudioPlayer:ngOnChanges(): url: ' + this.url);
-            if (this.url !== undefined) {
-                if (this.audioElement !== undefined) {
-                    this.audioElement.src = this.url;
-                    // this.audioElement.load();
-                    this.audioElement.play();
-                }
-            }
-            else {
-                this.url = EMPTY_WAV_URL;
+        if (changeRecord['blob']) {
+            console.log('AudioPlayer:ngOnChanges(): blob: ' + this.blob);
+            if (this.blob !== undefined) {
+                this.play();
             }
         }
     }
