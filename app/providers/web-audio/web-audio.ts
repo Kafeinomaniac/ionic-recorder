@@ -401,7 +401,7 @@ export class WebAudio {
     }
 
     // this should work but doesn't
-    startPlayback(blob: Blob, duration: number = Infinity) {
+    startPlayback(blob: Blob) {
         console.log('playBlob ... ' + blob);
         // already set up the onload callback to start playing ...
         this.fileReader.readAsArrayBuffer(blob);

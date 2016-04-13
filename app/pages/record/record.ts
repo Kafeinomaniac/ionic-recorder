@@ -4,7 +4,7 @@ import {Page, Platform} from 'ionic-angular';
 import {VuGauge} from '../../components/vu-gauge/vu-gauge';
 import {AppState} from '../../providers/app-state/app-state';
 import {WebAudio} from '../../providers/web-audio/web-audio';
-import {LocalDB, DB_NO_KEY} from '../../providers/local-db/local-db';
+import {LocalDB} from '../../providers/local-db/local-db';
 import {num2str, msec2time} from '../../providers/utils/utils';
 import {MasterClock} from '../../providers/master-clock/master-clock';
 import {ProgressSlider}
@@ -64,14 +64,12 @@ export class RecordPage {
                     now.toLocaleTimeString();
             console.dir(blob);
 
-            this.webAudio.playBlob(blob);
-
             this.appState.getProperty('unfiledFolderKey').subscribe(
                 (unfiledFolderKey: number) => {
                     console.log('this.recordingDuration: '
-                                + this.recordingDuration +
+                        + this.recordingDuration +
                         ' vs now: ' + (Date.now() - this.recordStartTime -
-                                       this.totalPauseTime));
+                            this.totalPauseTime));
 
                     this.localDB.createDataNode(
                         name,

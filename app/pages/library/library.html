@@ -14,11 +14,7 @@
     </ion-buttons>
 </ion-navbar>
 
-<!--audio id="audio-player-audio-tag" controls="true" autoplay="true">
-    Your browser does not support the audio element - cannot play audio.
-</audio-->
-<audio-player [title]="playerTitle" [url]="playerUrl" [duration]="playerDuration">
-</audio-player>
+<audio-player [title]="playerTitle" [blob]="playerBlob"></audio-player>
 
 <span *ngIf="folderNode" class="library-page-path-message">
     Viewing:&nbsp;<span>{{getPath()}}</span>
