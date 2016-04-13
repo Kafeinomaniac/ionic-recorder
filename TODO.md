@@ -1,5 +1,9 @@
 # TODO.md
 
+* Get rid of `<audio>` element and use web audio to play back
+files and figure out the correct duration of blobs
+* Stop using indexedDB for blobs, use files - the path will 
+be what you display for them, perhaps.
 * 1) Jump to next selection on clicking top right (library page)
 * 2) move button (library page)
 * 3) info button (library page)

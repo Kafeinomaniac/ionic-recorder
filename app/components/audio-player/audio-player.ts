@@ -31,8 +31,6 @@ export class AudioPlayer implements OnChanges {
     private playPauseButtonIcon: string = 'play';
     private audioElement: HTMLAudioElement;
     private masterClock: MasterClock = MasterClock.Instance;
-    private progressMax: number = 0;
-    private progressValue: number = 0;
 
     private fractionalTime: number = 0.8;
 
@@ -105,8 +103,7 @@ export class AudioPlayer implements OnChanges {
         this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
         this.time = this.audioElement.duration * 1000;
         this.duration = this.audioElement.duration * 1000;
-        this.progressValue = this.duration;
-        this.progressMax = this.duration;
+        this.fractionalTime = 1.0;
 
         if (!isFinite(this.duration)) {
             alert('infinite duration detected!');
@@ -124,7 +121,7 @@ export class AudioPlayer implements OnChanges {
 
         this.masterClock.addFunction(AUDIO_PLAYER_CLOCK_FUNCTION, () => {
             this.time = this.audioElement.currentTime * 1000.0;
-            this.progressValue = this.time;
+            this.fractionalTime = this.time / this.duration;
         });
 
         this.playPauseButtonIcon = 'pause';
@@ -145,7 +142,7 @@ export class AudioPlayer implements OnChanges {
 
         this.masterClock.addFunction(AUDIO_PLAYER_CLOCK_FUNCTION, () => {
             this.time = this.audioElement.currentTime * 1000.0;
-            this.progressValue = this.time;
+            this.fractionalTime = this.time / this.duration;
         });
 
         this.playPauseButtonIcon = 'pause';
@@ -193,7 +190,7 @@ export class AudioPlayer implements OnChanges {
     onSeek(position: number) {
         console.log('on seek!!!!!!!!!!!!!!!!!!!! ' + position);
     }
-    
+
     /**
      * Handle changes (play new song) when a new song (url) is loaded
      * @returns {void}
@@ -217,16 +214,6 @@ export class AudioPlayer implements OnChanges {
             }
             else {
                 this.url = EMPTY_WAV_URL;
-            }
-        }
-        if (changeRecord['duration']) {
-            console.log('AudioPlayer:ngOnChanges(): duration: ' +
-                this.duration);
-            if (this.duration !== undefined) {
-                this.progressMax = this.duration;
-            }
-            else {
-                this.progressMax = 0;
             }
         }
     }
