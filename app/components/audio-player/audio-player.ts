@@ -123,7 +123,6 @@ export class AudioPlayer implements OnChanges {
             // we're not playing (when clicked, so start)
             if (this.webAudio.playbackInactive) {
                 // inactive, we're stopped (not paused), start playing
-                this.startTime = Date.now();
                 this.webAudio.startPlayback(this.blob);
             }
             else {
