@@ -29,13 +29,13 @@ export class AudioPlayer implements OnChanges {
 
     private duration: number;
     private startTime: number;
-    private currentTime: number;
+    private currentTime: number = 0;
     // INV: when lastPauseTime is 0 we have not paused yet
     // after the first time we pause in a single playback lastPauseTime is
     // the last Date.now() when a pause occurred
     private lastPauseTime: number = 0;
-    private totalPauseTime: number;
-    private fractionalTime: number = 0.8;
+    private totalPauseTime: number = 0;
+    private fractionalTime: number = 0;
     private sampleRate: number;
     private playPauseButtonIcon: string = 'play';
     private audioElement: HTMLAudioElement;
@@ -67,7 +67,8 @@ export class AudioPlayer implements OnChanges {
             console.log('WebAudio:onStopPlayback()');
             this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
             this.currentTime = this.duration;
-            this.fractionalTime = 1.0;
+            this.currentTime = 0;
+            this.fractionalTime = 0;
             this.totalPauseTime = 0;
             this.playPauseButtonIcon = 'play';
         }

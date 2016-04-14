@@ -14,7 +14,7 @@
         </ion-col>
         <ion-col width-80 center>
             <ion-row>
-                <span class="time">{{formatTime(time)}}</span>
+                <span class="time">{{formatTime(currentTime)}}</span>
                 <progress-slider [(position)]="fractionalTime" (positionSeek)="onSeek($event)"></progress-slider>
                 <span class="duration">{{formatTime(duration)}}</span>
             </ion-row>

@@ -2,9 +2,6 @@ import {Injectable} from 'angular2/core';
 import {Observable} from 'rxjs';
 
 
-const GETUSERMEDIA_OPTIONS: Object = { video: false, audio: true };
-
-
 // amount of time we wait between checks to see if web audio is ready
 // const WEB_AUDIO_WAIT_MSEC: number = 50;
 
@@ -51,7 +48,8 @@ export class WebAudio {
     constructor() {
         console.log('constructor():WebAudio');
         this.blobChunks = [];
-        this.initAudio();
+        this.setUpPlayback();
+        this.initWebAudio();
     }
 
     /**
@@ -65,11 +63,69 @@ export class WebAudio {
         return this.instance;
     }
 
+    setUpPlayback() {
+        console.log('WebAudio:setUpPlayback()');
+        // this code goes together with the function playBlob below,
+        // which does not work - can't decode audio at all in chrome
+        // (we get an exception to that effect) and in Firefox, while
+        // it can decode the audio, it cannot play it back, it seems,
+        // perhaps because it already has set up the MediaRecorder (?)
+        // for now, we comment it out, perhaps it will be useful later...
+
+        this.fileReader = new FileReader();
+
+        this.fileReader.onload = () => {
+            console.log('fileReader.onload()');
+            let buffer: ArrayBuffer = this.fileReader.result;
+            // create playback source node
+            // it has to be created new for each playback
+            this.playbackSourceNode = this.audioContext.createBufferSource();
+
+            // make sure we call our playback-end callback when
+            // audio ends by hooking into its event handler
+            this.playbackSourceNode.onended = this.onStopPlayback;
+
+            this.audioContext.decodeAudioData(buffer,
+                (audioBuffer: AudioBuffer) => {
+
+                    this.playbackSourceNode.buffer = audioBuffer;
+                    this.playbackSourceNode.connect(
+                        this.audioContext.destination);
+
+                    // track currently playing AudioBuffer so that we
+                    // can refer to it from other places, like the
+                    // onStartPlayback() callback directly below
+                    this.playbackAudioBuffer = audioBuffer;
+                    this.onStartPlayback();
+
+                    this.playbackSourceNode.start(0);
+                    console.log('blob audio decoded, playing! duration: ' +
+                        audioBuffer.duration);
+                },
+                () => {
+                    alert([
+                        'Your browser had recorded the audio file you are ',
+                        'playing and then it save it to a local file on ',
+                        'your device, but it now reports that it cannot ',
+                        'play that audio file  We expect this problem to ',
+                        'be fixed soon as more audio file formats get ',
+                        'handled by modern browsers but we are looking for ',
+                        'alternative playback solutions. In the meantime, ',
+                        'you can share the fles you want to play to your ',
+                        'device and play them with any music player on your ',
+                        'device. But oops, sorry, we will implement sharing ',
+                        'soon!'
+                    ].join(''));
+                });
+
+        };
+    }
+
     /**
      * Initialize audio, get it ready to record
      * @returns {void}
      */
-    initAudio() {
+    initWebAudio() {
         // this.audioContext = new OfflineAudioContext(1, 1024, 44100);
         // OfflineAudioContext unfortunately doesn't work with MediaRecorder
         this.audioContext = new AudioContext();
@@ -80,39 +136,77 @@ export class WebAudio {
 
         console.log('SAMPLE RATE: ' + this.audioContext.sampleRate);
 
-        if (!navigator.mediaDevices ||
-            !navigator.mediaDevices.getUserMedia) {
+        let getUserMediaOptions = { video: false, audio: true };
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            // new getUserMedia is available, use it to get microphone stream
+            console.log('Using NEW navigator.mediaDevices.getUserMedia');
+            navigator.mediaDevices.getUserMedia(getUserMediaOptions)
+                .then((stream: MediaStream) => {
+                    this.setUpNodes(stream);
+                })
+                .catch((error: any) => {
+                    this.noMicrophoneAlert(error);
+                    throw Error('getUserMedia() - ' + error.name + ' - ' +
+                        error.message);
+                });
+        }
+        else {
+            console.log('Using OLD navigator.getUserMedia (new not there)');
             // new getUserMedia not there, try the old one
             navigator.getUserMedia = navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia ||
                 navigator.msGetUserMedia;
             if (navigator.getUserMedia) {
-                // the old getUserMedia
-                navigator.getUserMedia(GETUSERMEDIA_OPTIONS,
-                    (stream: MediaStream) => {
-                        this.initAndConnectNodes(stream);
-                    },
-                    (error: any) => {
-                        alert('getUserMedia() - ' + error.name + ' - ' + error.message);
-                        throw Error('getUserMedia() - ' + error.name + ' - ' + error.message);
-                    });
+                // old getUserMedia is available, use it
+                try {
+                    navigator.getUserMedia(
+                        getUserMediaOptions,
+                        (stream: MediaStream) => {
+                            // ok we got a microphone
+                            this.setUpNodes(stream);
+                        },
+                        (error: any) => {
+                            this.noMicrophoneAlert(error);
+                        });
+                }
+                catch (error) {
+                    alert('eyah!');
+                }
             }
             else {
-                alert('getUserMedia not available!');
-                throw Error('getUserMedia not available!');
+                // neither old nor new getUserMedia are available
+                alert([
+                    'Your browser does not support the function ',
+                    'getUserMedia(), please upgrade to one of the ',
+                    'browsers supported by this app'
+                ].join(''));
+                throw Error('getUserMedia() not available!');
             }
         }
-        else {
-            navigator.mediaDevices.getUserMedia(GETUSERMEDIA_OPTIONS)
-                .then((stream: MediaStream) => {
-                    this.initAndConnectNodes(stream);
-                })
-                .catch((error: any) => {
-                    // alert('getUserMedia() - ' + error.name + ' - ' + error.message);
-                    throw Error('getUserMedia() - ' + error.name + ' - ' + error.message);
-                });
+    }
+
+    noMicrophoneAlert(error: any) {
+        let msg = [
+            'Your browser got no access to your microphone - ',
+            'if you are running this app on a desktop, perhaps ',
+            'your microphone is not connected? If so, please ',
+            'connect your microphone and reload this page.',
+            '\n\nNOTE: this app needs the microphone for recording ',
+            'audio, but none of that audio ever gets transmitted ',
+            'over the Internet unless you have specifically requested ',
+            'to share the audio. In fact, once loaded, this app does ',
+            'not need any Internet connectivity at all to run.'
+        ].join('');
+        if (error.name !== 'DevicesNotFoundError') {
+            msg += [
+                '\n\nError: ', error,
+                '\nError name: ', error.name,
+                '\nError message: ', error.message
+            ].join('');
         }
+        alert(msg);
     }
 
     /**
@@ -187,65 +281,8 @@ export class WebAudio {
      * @param {MediaStream} stream the stream obtained by getUserMedia
      * @returns {void}
      */
-    initAndConnectNodes(stream: MediaStream) {
-        console.log('WebAudio:initAndConnectNodes()');
-
-        /*
-             this code goes together with the function playBlob below,
-             which does not work - can't decode audio at all in chrome
-             (we get an exception to that effect) and in Firefox, while
-             it can decode the audio, it cannot play it back, it seems,
-             perhaps because it already has set up the MediaRecorder (?)
-             for now, we comment it out, perhaps it will be useful later...
-        */
-
-        this.fileReader = new FileReader();
-
-        this.fileReader.onload = () => {
-            console.log('fileReader.onload()');
-            let buffer: ArrayBuffer = this.fileReader.result;
-            // create playback source node
-            // it has to be created new for each playback
-            this.playbackSourceNode = this.audioContext.createBufferSource();
-
-            // make sure we call our playback-end callback when
-            // audio ends by hooking into its event handler
-            this.playbackSourceNode.onended = this.onStopPlayback;
-
-            this.audioContext.decodeAudioData(buffer,
-                (audioBuffer: AudioBuffer) => {
-
-                    this.playbackSourceNode.buffer = audioBuffer;
-                    this.playbackSourceNode.connect(
-                        this.audioContext.destination);
-
-                    // track currently playing AudioBuffer so that we can
-                    // refer to it from other places, like the onStartPlayback()
-                    // callback directly below
-                    this.playbackAudioBuffer = audioBuffer;
-                    this.onStartPlayback();
-
-                    this.playbackSourceNode.start(0);
-                    console.log('blob audio decoded, playing! duration: ' +
-                        audioBuffer.duration);
-                },
-                () => {
-                    alert([
-                        'Your browser had recorded the audio file you are ',
-                        'playing and then it save it to a local file on ',
-                        'your device, but it now reports that it cannot ',
-                        'play that audio file  We expect this problem to ',
-                        'be fixed soon as more audio file formats get ',
-                        'handled by modern browsers but we are looking for',
-                        'alternative playback solutions. In the meantime, ',
-                        'you can share the fles you want to play to your ',
-                        'device and play them with any music player on your ',
-                        'device. But oops, sorry, we will implement sharing ',
-                        'soon!'
-                    ].join(''));
-                });
-
-        };
+    setUpNodes(stream: MediaStream) {
+        console.log('WebAudio:setUpRecording()');
 
         // create the gainNode
         this.audioGainNode = this.audioContext.createGain();
