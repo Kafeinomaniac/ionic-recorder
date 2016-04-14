@@ -201,15 +201,15 @@ export class RecordPage {
     onClickStartPauseButton() {
         this.currentVolume += Math.abs(Math.random() * 10);
         if (this.webAudio.isRecording()) {
-            // we're recording (when clicked, to pause recording)
+            // we're recording (when clicked, so pause recording)
             this.webAudio.pauseRecording();
             this.lastPauseTime = Date.now();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
-            // we're not recording (when clicked, to start recording)
-            if (this.webAudio.isInactive()) {
-                // inactive, we're stopped, so start
+            // we're not recording (when clicked, so start/resume recording)
+            if (this.webAudio.recordingInactive()) {
+                // inactive, we're stopped (rather than paused) so start
                 this.webAudio.startRecording();
                 this.recordStartTime = Date.now();
                 this.resetPeaksAtMax();
@@ -228,7 +228,7 @@ export class RecordPage {
      * @returns {boolean} used by template to disable stop button in UI
      */
     stopButtonDisabled() {
-        return this.webAudio.isInactive();
+        return this.webAudio.recordingInactive();
     }
 
     /**

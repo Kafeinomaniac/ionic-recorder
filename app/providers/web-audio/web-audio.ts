@@ -22,11 +22,8 @@ export class WebAudio {
     private analyserBufferLength: number;
     private sourceNode: MediaElementAudioSourceNode;
     private blobChunks: Blob[];
-
     private playbackSourceNode: AudioBufferSourceNode;
-
     private ready: boolean = false;
-
     private fileReader: FileReader;
 
     // gets called with the recorded blob as soon as we're done recording
@@ -41,6 +38,10 @@ export class WebAudio {
     // if we're playing, holds current audio buffer being played or paused
     // if we're done playing, this is back to null
     playbackAudioBuffer: AudioBuffer = null;
+
+    isPlaying: boolean = false;
+
+    playbackInactive: boolean = true;
 
     /**
      * constructor
@@ -83,7 +84,11 @@ export class WebAudio {
 
             // make sure we call our playback-end callback when
             // audio ends by hooking into its event handler
-            this.playbackSourceNode.onended = this.onStopPlayback;
+            this.playbackSourceNode.onended = () => {
+                this.isPlaying = false;
+                this.playbackInactive = true;
+                this.onStopPlayback();
+            }
 
             this.audioContext.decodeAudioData(buffer,
                 (audioBuffer: AudioBuffer) => {
@@ -359,7 +364,7 @@ export class WebAudio {
      * Is MediaRecorder state inactive now?
      * @returns {boolean} whether MediaRecorder is inactive now
      */
-    isInactive() {
+    recordingInactive() {
         // TODO: get rid of !this.mediaRecorder here and everywhere
         // else
         return !this.mediaRecorder ||
@@ -415,21 +420,26 @@ export class WebAudio {
         console.log('playBlob ... ' + blob);
         // already set up the onload callback to start playing ...
         this.fileReader.readAsArrayBuffer(blob);
+        this.isPlaying = true;
+        this.playbackInactive = false;
     }
 
     pausePlayback() {
         console.log('pausePlayback');
+        this.isPlaying = false;
         this.playbackSourceNode.disconnect();
     }
 
     resumePlayback() {
         console.log('resumePlayback');
+        this.isPlaying = true;
         this.playbackSourceNode.connect(this.audioContext.destination);
     }
 
     stopPlayback() {
         console.log('resumePlayback');
         this.playbackSourceNode.stop(0);
+        this.playbackInactive = true;
     }
 
     seekPlayback(seconds: number) {

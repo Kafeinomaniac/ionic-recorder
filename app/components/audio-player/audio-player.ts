@@ -7,7 +7,8 @@ import {WebAudio} from '../../providers/web-audio/web-audio';
 import {msec2time} from '../../providers/utils/utils';
 import {ProgressSlider} from '../progress-slider/progress-slider';
 
-
+const START_RESUME_ICON: string = 'play';
+const PAUSE_ICON: string = 'pause';
 const AUDIO_PLAYER_CLOCK_FUNCTION = 'audio-player-clock-function';
 
 
@@ -37,7 +38,7 @@ export class AudioPlayer implements OnChanges {
     private totalPauseTime: number = 0;
     private fractionalTime: number = 0;
     private sampleRate: number;
-    private playPauseButtonIcon: string = 'play';
+    private playPauseButtonIcon: string = START_RESUME_ICON;
     private audioElement: HTMLAudioElement;
 
 
@@ -57,9 +58,11 @@ export class AudioPlayer implements OnChanges {
             this.sampleRate = this.webAudio.playbackAudioBuffer.sampleRate;
             this.startTime = Date.now();
             this.masterClock.addFunction(AUDIO_PLAYER_CLOCK_FUNCTION, () => {
-                this.currentTime = Date.now() - this.startTime -
-                    this.totalPauseTime;
-                this.fractionalTime = this.currentTime / this.duration;
+                if (this.webAudio.isPlaying) {
+                    this.currentTime = Date.now() - this.startTime -
+                        this.totalPauseTime;
+                    this.fractionalTime = this.currentTime / this.duration;
+                }
             });
         };
 
@@ -70,7 +73,7 @@ export class AudioPlayer implements OnChanges {
             this.currentTime = 0;
             this.fractionalTime = 0;
             this.totalPauseTime = 0;
-            this.playPauseButtonIcon = 'play';
+            this.playPauseButtonIcon = START_RESUME_ICON;
         }
     }
 
@@ -102,52 +105,33 @@ export class AudioPlayer implements OnChanges {
     }
 
     /**
-     *
-     * Start playing audio
-     * @returns {void}
-     */
-    play() {
-        console.log('AudioPlayer:play()');
-        if (!this.blob && this.blob !== undefined) {
-            alert('no blob!');
-        }
-
-        this.webAudio.startPlayback(this.blob);
-        if (this.lastPauseTime !== 0) {
-            // we have already paused before
-            this.totalPauseTime += Date.now() - this.lastPauseTime;
-            console.log('new totalPauseTime = ' + this.totalPauseTime);
-        }
-        else {
-            // we have never paused before - first play
-            this.totalPauseTime = 0;
-        }
-        this.playPauseButtonIcon = 'pause';
-    }
-
-    /**
-     * Pause playback
-     * @returns {void}
-     */
-    pause() {
-        this.webAudio.pausePlayback();
-        this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
-        this.lastPauseTime = Date.now();
-        this.playPauseButtonIcon = 'play';
-    }
-
-    /**
      * UI callback: either play or pause audio on button click
+     * (similar to record.ts pattern for the same button)
      * @returns {void}
      */
     onClickPlayPauseButton() {
         console.log('onClickPlayPauseButton()');
 
-        if (this.playPauseButtonIcon === 'play') {
-            this.play();
+        if (this.webAudio.isPlaying) {
+            // we're playing (when clicked, so pause)
+            // check icon is pause
+            this.lastPauseTime = Date.now();
+            this.webAudio.pausePlayback();
+            this.playPauseButtonIcon = START_RESUME_ICON;
         }
         else {
-            this.pause();
+            // we're not playing (when clicked, so start)
+            if (this.webAudio.playbackInactive) {
+                // inactive, we're stopped (not paused), start playing
+                this.startTime = Date.now();
+                this.webAudio.startPlayback(this.blob);
+            }
+            else {
+                // active & not playing, which means paused, resume
+                this.webAudio.resumePlayback();
+                this.totalPauseTime += Date.now() - this.lastPauseTime;
+            }
+            this.playPauseButtonIcon = PAUSE_ICON;
         }
     }
 
@@ -183,7 +167,12 @@ export class AudioPlayer implements OnChanges {
         if (changeRecord['blob']) {
             console.log('AudioPlayer:ngOnChanges(): blob: ' + this.blob);
             if (this.blob !== undefined) {
-                this.play();
+                // initiate playback
+                console.log('webAudio.isPlaying: ' +
+                    this.webAudio.isPlaying);
+                console.log('webAudio.playbackInactive: ' +
+                    this.webAudio.playbackInactive);
+                this.onClickPlayPauseButton();
             }
         }
     }
