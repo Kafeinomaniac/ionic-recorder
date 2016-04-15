@@ -11,12 +11,12 @@
   - getPlaybackTime()
   - isRecording()
   - isPlaying()
-  ... then in record.ts and in audio-player.ts
-  - remove all time-related variables except for what you have to display
-  - use seconds (double value) instead of msec (integers) for display time
-  ... then in record.ts and audio-player.ts and vu-gauge.ts and master-clock.ts
-  - remove master-clock.ts entirely!!! carefully!  start with a small experiment
-  using audio-player as the first removal attempt
+    - ... then in record.ts and in audio-player.ts:
+    - remove all time-related variables except for what you have to display
+    - use seconds (double value) instead of msec (integers) for display time
+    - ... then in record.ts and audio-player.ts and vu-gauge.ts and master-clock.ts:
+    - remove master-clock.ts entirely!!! carefully!  start with a small experiment
+    using audio-player as the first removal attempt
 * Improve initialization of web audio - separate init-and-connect into
   record/playback two functions, run the playback one even when 
   record is not available (e.g. if you don't have a microphone 
