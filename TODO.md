@@ -1,8 +1,8 @@
 # TODO.md
 
 * in web-audio.ts: relegate all trime tracking to its code and away from its 
-callers - this is more DRY and more accurate. the others use javascript audio, 
-this new iteration will use the WebAudio stuff
+callers - this is more DRY and more accurate. the others use javascript clock, 
+this new iteration will use the WebAudio clock, which is much more accurate...
   - recordingStartTime
   - recordingTotalPauseTime
   - recordingLastPauseTime
