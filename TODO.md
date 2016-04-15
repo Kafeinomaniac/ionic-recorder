@@ -3,6 +3,11 @@
 * in web-audio.ts: relegate all trime tracking to its code and away from its 
 callers - this is more DRY and more accurate. the others use javascript clock, 
 this new iteration will use the WebAudio clock, which is much more accurate...
+this will eliminate a ton of code and make the masterClock redundant.  when 
+we do all the fixes of this bullet, the program will be much better in terms
+of having less event listeners, faster graphics, lighter memory overload, 
+and much reduced CPU usage, the code will be smaller (no more timing code 
+replicated in each web-audio caller) and more readable - this is a must!
   - recordingStartTime
   - recordingTotalPauseTime
   - recordingLastPauseTime
