@@ -2,7 +2,6 @@
 
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
-import {MasterClock} from '../../providers/master-clock/master-clock';
 import {WebAudio} from '../../providers/web-audio/web-audio';
 import {msec2time} from '../../providers/utils/utils';
 import {ProgressSlider} from '../progress-slider/progress-slider';
@@ -42,7 +41,6 @@ export class AudioPlayer implements OnChanges {
     private audioElement: HTMLAudioElement;
 
     private webAudio: WebAudio = WebAudio.Instance;
-    private masterClock: MasterClock = MasterClock.Instance;
 
     /**
      * @constructor
@@ -57,20 +55,10 @@ export class AudioPlayer implements OnChanges {
             this.duration = this.webAudio.playbackAudioBuffer.duration;
             this.sampleRate = this.webAudio.playbackAudioBuffer.sampleRate;
             this.startTime = Date.now();
-            /*
-            this.masterClock.addFunction(AUDIO_PLAYER_CLOCK_FUNCTION, () => {
-                if (this.webAudio.isPlaying) {
-                    this.currentTime = Date.now() - this.startTime -
-                        this.totalPauseTime;
-                    this.fractionalTime = this.currentTime / this.duration;
-                }
-            });
-            */
         };
 
         this.webAudio.onStopPlayback = () => {
             console.log('WebAudio:onStopPlayback()');
-            // this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
             this.currentTime = this.duration;
             this.currentTime = 0;
             this.fractionalTime = 0;
@@ -151,7 +139,6 @@ export class AudioPlayer implements OnChanges {
         // next line is the trick discussed here
         // https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/ ...
         //     ... Using_HTML5_audio_and_video
-        // this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
         this.audioElement.src = '';
         this.hide();
     }
