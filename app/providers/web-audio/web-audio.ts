@@ -26,6 +26,32 @@ export class WebAudio {
     private ready: boolean = false;
     private fileReader: FileReader;
 
+    // time related
+    private recordStartTime: number = 0;
+    private recordLastPauseTime: number = 0;
+    private recordTotalPauseTime: number = 0;
+
+    getRecordingTime() {
+        return this.audioContext.currentTime -
+            this.recordStartTime -
+            this.recordTotalPauseTime;
+    }
+
+    private playbackStartTime: number = 0;
+    private playbackLastPauseTime: number = 0;
+    private playbackTotalPauseTime: number = 0;
+
+    getPlaybackTime() {
+        if (this.isPlaying) {
+            return this.audioContext.currentTime -
+                this.playbackStartTime -
+                this.playbackTotalPauseTime;
+        }
+        else {
+            return 0;
+        }
+    }
+
     // gets called with the recorded blob as soon as we're done recording
     onStopRecord: (recordedBlob: Blob) => void;
 
@@ -103,6 +129,10 @@ export class WebAudio {
                     this.playbackAudioBuffer = audioBuffer;
                     this.onStartPlayback();
 
+                    // TODO: play around with putting the next line
+                    // either immediately below or immediately above the
+                    // start() call
+                    this.playbackStartTime = this.audioContext.currentTime;
                     this.playbackSourceNode.start(0);
                     console.log('blob audio decoded, playing! duration: ' +
                         audioBuffer.duration);
@@ -380,6 +410,10 @@ export class WebAudio {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (1)');
         }
+        // TODO: play around with putting the next line
+        // either immediately below or immediately above the
+        // start() call
+        this.recordStartTime = this.audioContext.currentTime;
         this.mediaRecorder.start();
     }
 
@@ -391,6 +425,10 @@ export class WebAudio {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (2)');
         }
+        // TODO: play around with putting the next line
+        // either immediately below or immediately above the
+        // pause() call
+        this.recordLastPauseTime = this.audioContext.currentTime;
         this.mediaRecorder.pause();
     }
 
@@ -402,6 +440,11 @@ export class WebAudio {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (3)');
         }
+        // TODO: play around with putting the next line
+        // either immediately below or immediately above the
+        // resume() call
+        this.recordTotalPauseTime +=
+            this.audioContext.currentTime + this.recordLastPauseTime;
         this.mediaRecorder.resume();
     }
 
@@ -413,6 +456,7 @@ export class WebAudio {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (4)');
         }
+        this.recordTotalPauseTime = 0;
         this.mediaRecorder.stop();
     }
 
@@ -428,17 +472,28 @@ export class WebAudio {
     pausePlayback() {
         console.log('pausePlayback');
         this.isPlaying = false;
+
+        // TODO: play around with putting the next line
+        // either immediately below or immediately above the
+        // disconnect() call
+        this.playbackLastPauseTime = this.audioContext.currentTime;
         this.playbackSourceNode.disconnect();
     }
 
     resumePlayback() {
         console.log('resumePlayback');
         this.isPlaying = true;
+        // TODO: play around with putting the next line
+        // either immediately below or immediately above the
+        // connect() call
+        this.playbackTotalPauseTime +=
+            this.audioContext.currentTime + this.playbackLastPauseTime;
         this.playbackSourceNode.connect(this.audioContext.destination);
     }
 
     stopPlayback() {
         console.log('resumePlayback');
+        this.playbackTotalPauseTime = 0;
         this.playbackSourceNode.stop(0);
         this.playbackInactive = true;
     }

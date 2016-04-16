@@ -41,7 +41,6 @@ export class AudioPlayer implements OnChanges {
     private playPauseButtonIcon: string = START_RESUME_ICON;
     private audioElement: HTMLAudioElement;
 
-
     private webAudio: WebAudio = WebAudio.Instance;
     private masterClock: MasterClock = MasterClock.Instance;
 
@@ -53,10 +52,12 @@ export class AudioPlayer implements OnChanges {
 
         this.webAudio.onStartPlayback = () => {
             console.log('WebAudio:onStartPlayback()');
-            this.duration = this.webAudio.playbackAudioBuffer.duration *
-                1000.0;
+            // this.duration = this.webAudio.playbackAudioBuffer.duration *
+            //    1000.0;
+            this.duration = this.webAudio.playbackAudioBuffer.duration;
             this.sampleRate = this.webAudio.playbackAudioBuffer.sampleRate;
             this.startTime = Date.now();
+            /*
             this.masterClock.addFunction(AUDIO_PLAYER_CLOCK_FUNCTION, () => {
                 if (this.webAudio.isPlaying) {
                     this.currentTime = Date.now() - this.startTime -
@@ -64,17 +65,24 @@ export class AudioPlayer implements OnChanges {
                     this.fractionalTime = this.currentTime / this.duration;
                 }
             });
+            */
         };
 
         this.webAudio.onStopPlayback = () => {
             console.log('WebAudio:onStopPlayback()');
-            this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
+            // this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
             this.currentTime = this.duration;
             this.currentTime = 0;
             this.fractionalTime = 0;
             this.totalPauseTime = 0;
             this.playPauseButtonIcon = START_RESUME_ICON;
         }
+    }
+
+    getPlaybackTime() {
+        let currentTime = this.webAudio.getPlaybackTime();
+        this.fractionalTime = currentTime / this.duration;
+        return currentTime;
     }
 
     /**
@@ -101,7 +109,8 @@ export class AudioPlayer implements OnChanges {
         if (time === undefined) {
             return '00:00';
         }
-        return msec2time(time).replace('00:00:', '').replace('00:', '');
+        return msec2time(time * 1000.0)
+            .replace('00:00:', '').replace('00:', '');
     }
 
     /**
@@ -142,7 +151,7 @@ export class AudioPlayer implements OnChanges {
         // next line is the trick discussed here
         // https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/ ...
         //     ... Using_HTML5_audio_and_video
-        this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
+        // this.masterClock.removeFunction(AUDIO_PLAYER_CLOCK_FUNCTION);
         this.audioElement.src = '';
         this.hide();
     }
