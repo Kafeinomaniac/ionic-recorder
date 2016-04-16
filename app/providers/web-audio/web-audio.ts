@@ -152,8 +152,6 @@ export class WebAudio {
                 })
                 .catch((error: any) => {
                     this.noMicrophoneAlert(error);
-                    throw Error('getUserMedia() - ' + error.name + ' - ' +
-                        error.message);
                 });
         }
         else {
@@ -185,24 +183,21 @@ export class WebAudio {
                 alert([
                     'Your browser does not support the function ',
                     'getUserMedia(), please upgrade to one of the ',
-                    'browsers supported by this app'
+                    'browsers supported by this app. Until you do so ',
+                    'you will not be able to use the recording part of ',
+                    'this app, but you will be able to play back audio.'
                 ].join(''));
-                throw Error('getUserMedia() not available!');
             }
         }
     }
 
     noMicrophoneAlert(error: any) {
         let msg = [
+            'This app needs the microphone to record audio with.',
             'Your browser got no access to your microphone - ',
             'if you are running this app on a desktop, perhaps ',
             'your microphone is not connected? If so, please ',
-            'connect your microphone and reload this page.',
-            '\n\nNOTE: this app needs the microphone for recording ',
-            'audio, but none of that audio ever gets transmitted ',
-            'over the Internet unless you have specifically requested ',
-            'to share the audio. In fact, once loaded, this app does ',
-            'not need any Internet connectivity at all to run.'
+            'connect your microphone and reload this page.'
         ].join('');
         if (error.name !== 'DevicesNotFoundError') {
             msg += [
@@ -222,7 +217,13 @@ export class WebAudio {
     initMediaRecorder(stream: MediaStream) {
         if (!MediaRecorder) {
             alert('MediaRecorder not available!');
-            throw Error('MediaRecorder not available!');
+            let msg = [
+                'Your browser does not support the MediaRecorder object ',
+                'used for recording audio, please upgrade to one of the ',
+                'browsers supported by this app. Until you do so ',
+                'you will not be able to use the recording part of ',
+                'this app, but you will be able to play back audio.'
+            ].join('');
         }
 
         this.mediaRecorder = new MediaRecorder(stream, {

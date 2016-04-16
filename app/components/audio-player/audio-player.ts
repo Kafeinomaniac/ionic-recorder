@@ -156,7 +156,6 @@ export class AudioPlayer implements OnChanges {
      * @returns {void}
      */
     ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
-
         if (changeRecord['title']) {
             console.log('AudioPlayer:ngOnChanges(): title: ' + this.title);
             if (this.title !== undefined) {
