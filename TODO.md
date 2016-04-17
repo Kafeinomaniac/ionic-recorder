@@ -5,6 +5,14 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* transfer record.ts to web-audio.ts stuff
+* get rid of master clock, benchmark cpu & memory before you do that
+* get rid of monitor on/off toggle switch, because after we get rid
+of the master clock it will be cheap enough - but test it.  test to
+see if (a) memory is less loaded, (b) cpu is less loaded after 
+the step above
+* first return-to-library feature to implement is share-to-device
+* next is rename-file
 * in web-audio.ts: relegate all time tracking to its code and away from its 
 callers - this is more DRY and more accurate. the others use javascript clock, 
 this new iteration will use the WebAudio clock, which is much more accurate...
