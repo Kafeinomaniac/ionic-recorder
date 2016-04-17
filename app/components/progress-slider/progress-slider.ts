@@ -52,13 +52,16 @@ export class ProgressSlider {
         }
     }
 
-    jumpToPosition(clientX: number, range: { start: number, end: number }) {
+    computeProgress(
+        clientX: number,
+        range: { start: number, end: number }
+    ): number {
         // the next if-statement fixes a quirk observed in desktop Chrome
         // where the ondrag event always ends up with a clientX value of 0
         // as its last emitted value, even when that's clearly not the last
         // location of dragging
         if (clientX === 0) {
-            return;
+            return 0;
         }
 
         let rangeX: number = range.end - range.start,
@@ -71,16 +74,19 @@ export class ProgressSlider {
         if (clickRelativeX > rangeX) {
             clickRelativeX = rangeX;
         }
+        return clickRelativeX / rangeX;
+    }
 
-        this.progress = clickRelativeX / rangeX;
+    jumpToPosition(clientX: number, range: { start: number, end: number }) {
+        this.progress = this.computeProgress(clientX, this.trackWidthRange);
         this.progressChange.emit(this.progress);
     }
 
     onSliderMouseDown(event: MouseEvent) {
         console.log('onSliderMouseDown ' + this.element.nativeElement);
-        
+
         this.trackWidthRange = this.getTrackWidthRange();
-        
+
         this.jumpToPosition(event.clientX, this.trackWidthRange);
 
         this.mouseUpListener =
@@ -96,11 +102,12 @@ export class ProgressSlider {
     }
 
     onMouseUp(event: MouseEvent) {
-        console.log('onMouseUp');
         // free up the listening to mouse up from <body> now that it happened
         // until the next time we click on the progress-bar
         this.mouseUpListener();
         this.mouseMoveListener();
+        this.progress =
+            this.computeProgress(event.clientX, this.trackWidthRange);
         this.seek.emit(this.progress);
     }
 

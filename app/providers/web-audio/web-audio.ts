@@ -426,13 +426,13 @@ export class WebAudioPlayer {
         this.startedAt = CONTEXT.currentTime - offset;
         this.pausedAt = 0;
         this.isPlaying = true;
-    };
+    }
 
     pause() {
         let elapsed: number = CONTEXT.currentTime - this.startedAt;
         this.stop();
         this.pausedAt = elapsed;
-    };
+    }
 
     stop() {
         if (this.sourceNode) {
@@ -440,8 +440,27 @@ export class WebAudioPlayer {
             this.sourceNode.stop(0);
             this.sourceNode = null;
         }
-        this.pausedAt = 0;
         this.startedAt = 0;
+        this.pausedAt = 0;
         this.isPlaying = false;
-    };
+    }
+
+    seek(time: number) {
+        let isPlaying: boolean = this.isPlaying;
+        this.isPlaying = false;
+        if (this.sourceNode) {
+            this.sourceNode.disconnect();
+            this.sourceNode.stop(0);
+            this.sourceNode = null;
+        }
+        this.sourceNode = CONTEXT.createBufferSource();
+        this.sourceNode.connect(CONTEXT.destination);
+        this.sourceNode.buffer = this.audioBuffer;
+        if (isPlaying) {
+            this.sourceNode.start(0, time);
+            this.startedAt = CONTEXT.currentTime - time;
+            this.pausedAt = 0;
+        }
+        this.isPlaying = isPlaying;
+    }
 }

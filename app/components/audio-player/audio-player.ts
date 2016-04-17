@@ -93,7 +93,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     onSeek(progress: number) {
-        console.log('on seek!!!!!!!!!!!!!!!!!!!! ' + progress);
+        this.webAudioPlayer.seek(progress * this.duration);
     }
 
     /**
