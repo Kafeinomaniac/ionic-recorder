@@ -17,7 +17,7 @@ export class WebAudioRecorder {
     private analyserBuffer: Uint8Array;
     private analyserBufferLength: number;
     private sourceNode: MediaElementAudioSourceNode;
-    private blobChunks: Blob[];
+    private blobChunks: Blob[] = [];
     private playbackSourceNode: AudioBufferSourceNode;
     private ready: boolean = false;
     private fileReader: FileReader;
