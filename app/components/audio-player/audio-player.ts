@@ -121,7 +121,7 @@ export class AudioPlayer implements OnChanges {
                     () => {
                         alert([
                             'Your browser had recorded the audio file you are ',
-                            'playing and then it save it to a local file on ',
+                            'playing and then it saved it to a local file on ',
                             'your device, but it now reports that it cannot ',
                             'play that audio file  We expect this problem to ',
                             'be fixed soon as more audio file formats get ',
