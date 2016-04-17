@@ -1,6 +1,11 @@
 # TODO.md
 
-* in web-audio.ts: relegate all trime tracking to its code and away from its 
+**NOTE:** This file is cryptical.  It's just used as a scrapbook for 
+adding TODO items such that only the programmer who added the item
+needs to understand it... i.e, do not attempt to try and understand 
+anything written here, unless you wrote it.
+
+* in web-audio.ts: relegate all time tracking to its code and away from its 
 callers - this is more DRY and more accurate. the others use javascript clock, 
 this new iteration will use the WebAudio clock, which is much more accurate...
 this will eliminate a ton of code and make the masterClock redundant.  when 

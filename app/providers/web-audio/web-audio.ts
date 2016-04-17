@@ -1,20 +1,16 @@
-import {Injectable} from 'angular2/core';
-import {Observable} from 'rxjs';
+// Copyright (c) 2016 Tracktunes Inc
 
 
-// amount of time we wait between checks to see if web audio is ready
-// const WEB_AUDIO_WAIT_MSEC: number = 50;
-
-// NOTE: currently this only works in the latest versions of Firefox
-// because Chrome/Chromium cannot handle AudioDestinationNode streams yet
+const CONTEXT = new (AudioContext || webkitAudioContext)();
 
 
-@Injectable()
-export class WebAudio {
+/*****************************************************************************
+ * RECORDER
+ *****************************************************************************/
+
+export class WebAudioRecorder {
     // 'instance' is used as part of Singleton pattern implementation
-    private static instance: WebAudio = null;
-
-    private audioContext: AudioContext;
+    private static instance: WebAudioRecorder = null;
     private audioGainNode: AudioGainNode;
     private mediaRecorder: MediaRecorder;
     private analyserNode: AnalyserNode;
@@ -32,128 +28,29 @@ export class WebAudio {
     private recordTotalPauseTime: number = 0;
 
     getRecordingTime() {
-        return this.audioContext.currentTime -
+        return CONTEXT.currentTime -
             this.recordStartTime -
             this.recordTotalPauseTime;
-    }
-
-    private playbackStartTime: number = 0;
-    private playbackLastPauseTime: number = 0;
-    private playbackTotalPauseTime: number = 0;
-
-    getPlaybackTime() {
-        if (this.isPlaying) {
-            return this.audioContext.currentTime -
-                this.playbackStartTime -
-                this.playbackTotalPauseTime;
-        }
-        else {
-            return 0;
-        }
     }
 
     // gets called with the recorded blob as soon as we're done recording
     onStopRecord: (recordedBlob: Blob) => void;
 
-    // this is the last function call just before we start playback
-    onStartPlayback: () => void;
-
-    // gets called as soon as we stop playback or are done playing audio
-    onStopPlayback: () => void;
-
-    // if we're playing, holds current audio buffer being played or paused
-    // if we're done playing, this is back to null
-    playbackAudioBuffer: AudioBuffer = null;
-
-    isPlaying: boolean = false;
-
-    playbackInactive: boolean = true;
-
-    /**
-     * constructor
-     */
+    // 'instance' is used as part of Singleton pattern implementation
     constructor() {
-        console.log('constructor():WebAudio');
-        this.blobChunks = [];
-        this.setUpPlayback();
+        console.log('constructor():WebAudioPlayer');
         this.initWebAudio();
     }
 
     /**
-     * Access the singleton class instance via WebAudio.Instance
-     * @returns {WebAudio} the singleton instance of this class
+     * Access the singleton class instance via Singleton.Instance
+     * @returns {Singleton} the single instance of this class
      */
     static get Instance() {
         if (!this.instance) {
-            this.instance = new WebAudio();
+            this.instance = new WebAudioRecorder();
         }
         return this.instance;
-    }
-
-    setUpPlayback() {
-        console.log('WebAudio:setUpPlayback()');
-        // this code goes together with the function playBlob below,
-        // which does not work - can't decode audio at all in chrome
-        // (we get an exception to that effect) and in Firefox, while
-        // it can decode the audio, it cannot play it back, it seems,
-        // perhaps because it already has set up the MediaRecorder (?)
-        // for now, we comment it out, perhaps it will be useful later...
-
-        this.fileReader = new FileReader();
-
-        this.fileReader.onload = () => {
-            console.log('fileReader.onload()');
-            let buffer: ArrayBuffer = this.fileReader.result;
-            // create playback source node
-            // it has to be created new for each playback
-            this.playbackSourceNode = this.audioContext.createBufferSource();
-
-            // make sure we call our playback-end callback when
-            // audio ends by hooking into its event handler
-            this.playbackSourceNode.onended = () => {
-                this.isPlaying = false;
-                this.playbackInactive = true;
-                this.onStopPlayback();
-            }
-
-            this.audioContext.decodeAudioData(buffer,
-                (audioBuffer: AudioBuffer) => {
-
-                    this.playbackSourceNode.buffer = audioBuffer;
-                    this.playbackSourceNode.connect(
-                        this.audioContext.destination);
-
-                    // track currently playing AudioBuffer so that we
-                    // can refer to it from other places, like the
-                    // onStartPlayback() callback directly below
-                    this.playbackAudioBuffer = audioBuffer;
-                    this.onStartPlayback();
-
-                    // TODO: play around with putting the next line
-                    // either immediately below or immediately above the
-                    // start() call
-                    this.playbackStartTime = this.audioContext.currentTime;
-                    this.playbackSourceNode.start(0);
-                    console.log('blob audio decoded, playing! duration: ' +
-                        audioBuffer.duration);
-                },
-                () => {
-                    alert([
-                        'Your browser had recorded the audio file you are ',
-                        'playing and then it save it to a local file on ',
-                        'your device, but it now reports that it cannot ',
-                        'play that audio file  We expect this problem to ',
-                        'be fixed soon as more audio file formats get ',
-                        'handled by modern browsers but we are looking for ',
-                        'alternative playback solutions. In the meantime, ',
-                        'you can share the fles you want to play to your ',
-                        'device and play them with any music player on your ',
-                        'device. But oops, sorry, we will implement sharing ',
-                        'soon!'
-                    ].join(''));
-                });
-
-        };
     }
 
     /**
@@ -161,15 +58,11 @@ export class WebAudio {
      * @returns {void}
      */
     initWebAudio() {
-        // this.audioContext = new OfflineAudioContext(1, 1024, 44100);
-        // OfflineAudioContext unfortunately doesn't work with MediaRecorder
-        this.audioContext = new AudioContext();
-
-        if (!this.audioContext) {
+        if (!CONTEXT) {
             throw Error('AudioContext not available!');
         }
 
-        console.log('SAMPLE RATE: ' + this.audioContext.sampleRate);
+        console.log('SAMPLE RATE: ' + CONTEXT.sampleRate);
 
         let getUserMediaOptions = { video: false, audio: true };
 
@@ -294,7 +187,7 @@ export class WebAudio {
                 this.blobChunks.length + ' chunks');
 
             if (!this.onStopRecord) {
-                throw Error('WebAudio:onStop() not set!');
+                throw Error('WebAudioRecorder:onStop() not set!');
             }
 
             // let blob: Blob = new Blob(this.blobChunks, {
@@ -318,23 +211,23 @@ export class WebAudio {
      * @returns {void}
      */
     setUpNodes(stream: MediaStream) {
-        console.log('WebAudio:setUpRecording()');
+        console.log('WebAudioRecorder:setUpRecording()');
 
         // create the gainNode
-        this.audioGainNode = this.audioContext.createGain();
+        this.audioGainNode = CONTEXT.createGain();
 
         // create and configure the analyserNode
-        this.analyserNode = this.audioContext.createAnalyser();
+        this.analyserNode = CONTEXT.createAnalyser();
         this.analyserNode.fftSize = 2048;
         this.analyserBufferLength = this.analyserNode.frequencyBinCount;
         this.analyserBuffer = new Uint8Array(this.analyserBufferLength);
 
         // create a source node out of the audio media stream
-        this.sourceNode = this.audioContext.createMediaStreamSource(stream);
+        this.sourceNode = CONTEXT.createMediaStreamSource(stream);
 
         // create a destination node
         let dest: MediaStreamAudioDestinationNode =
-            this.audioContext.createMediaStreamDestination();
+            CONTEXT.createMediaStreamDestination();
 
         // sourceNode (microphone) -> gainNode
         this.sourceNode.connect(this.audioGainNode);
@@ -366,7 +259,6 @@ export class WebAudio {
                 bufferMax = absValue;
             }
         }
-        // console.log('WebAudio:getBufferMaxVolume(): ' + bufferMax);
         return bufferMax;
     }
 
@@ -413,7 +305,7 @@ export class WebAudio {
         // TODO: play around with putting the next line
         // either immediately below or immediately above the
         // start() call
-        this.recordStartTime = this.audioContext.currentTime;
+        this.recordStartTime = CONTEXT.currentTime;
         this.mediaRecorder.start();
     }
 
@@ -428,8 +320,8 @@ export class WebAudio {
         // TODO: play around with putting the next line
         // either immediately below or immediately above the
         // pause() call
-        this.recordLastPauseTime = this.audioContext.currentTime;
         this.mediaRecorder.pause();
+        this.recordLastPauseTime = CONTEXT.currentTime;
     }
 
     /**
@@ -443,9 +335,9 @@ export class WebAudio {
         // TODO: play around with putting the next line
         // either immediately below or immediately above the
         // resume() call
-        this.recordTotalPauseTime +=
-            this.audioContext.currentTime + this.recordLastPauseTime;
         this.mediaRecorder.resume();
+        this.recordTotalPauseTime +=
+            CONTEXT.currentTime - this.recordLastPauseTime;
     }
 
     /**
@@ -459,52 +351,97 @@ export class WebAudio {
         this.recordTotalPauseTime = 0;
         this.mediaRecorder.stop();
     }
+}
 
-    // this should work but doesn't
-    startPlayback(blob: Blob) {
-        console.log('playBlob ... ' + blob);
-        // already set up the onload callback to start playing ...
+/*****************************************************************************
+ * PLAYER
+ * Based on code by Ian McGregor: http://codepen.io/ianmcgregor/pen/EjdJZZ
+ *****************************************************************************/
+
+export class WebAudioPlayer {
+    // 'instance' is used as part of Singleton pattern implementation
+    private static instance: WebAudioPlayer = null;
+    private fileReader: FileReader = new FileReader();
+    private audioBuffer: AudioBuffer;
+    private sourceNode: AudioBufferSourceNode = null;
+    private startedAt: number = 0;
+    private pausedAt: number = 0;
+    isPlaying: boolean = false;
+
+    constructor() {
+        console.log('constructor():WebAudioPlayer');
+    }
+
+    /**
+     * Access the singleton class instance via Singleton.Instance
+     * @returns {Singleton} the single instance of this class
+     */
+    static get Instance() {
+        if (!this.instance) {
+            this.instance = new WebAudioPlayer();
+        }
+        return this.instance;
+    }
+
+    getTime() {
+        if (this.pausedAt) {
+            return this.pausedAt;
+        }
+        if (this.startedAt) {
+            return CONTEXT.currentTime - this.startedAt;
+        }
+        return 0;
+    }
+
+    getDuration() {
+        return this.audioBuffer.duration;
+    }
+
+    loadAndDecode(
+        blob: Blob,
+        successCB: (duration: number) => void,
+        loadErrorCB: () => void,
+        decodeErrorCB: () => void
+    ) {
+        this.fileReader.onerror = loadErrorCB;
+        this.fileReader.onload = () => {
+            console.log('fileReader.onload()');
+            CONTEXT.decodeAudioData(this.fileReader.result,
+                (audioBuffer: AudioBuffer) => {
+                    this.audioBuffer = audioBuffer;
+                    successCB(audioBuffer.duration);
+                }, decodeErrorCB);
+        };
         this.fileReader.readAsArrayBuffer(blob);
-        this.isPlaying = true;
-        this.playbackInactive = false;
     }
 
-    pausePlayback() {
-        console.log('pausePlayback');
+    play() {
+        let offset = this.pausedAt;
+
+        this.sourceNode = CONTEXT.createBufferSource();
+        this.sourceNode.connect(CONTEXT.destination);
+        this.sourceNode.buffer = this.audioBuffer;
+        this.sourceNode.start(0, offset);
+
+        this.startedAt = CONTEXT.currentTime - offset;
+        this.pausedAt = 0;
+        this.isPlaying = true;
+    };
+
+    pause() {
+        let elapsed: number = CONTEXT.currentTime - this.startedAt;
+        this.stop();
+        this.pausedAt = elapsed;
+    };
+
+    stop() {
+        if (this.sourceNode) {
+            this.sourceNode.disconnect();
+            this.sourceNode.stop(0);
+            this.sourceNode = null;
+        }
+        this.pausedAt = 0;
+        this.startedAt = 0;
         this.isPlaying = false;
-
-        // TODO: play around with putting the next line
-        // either immediately below or immediately above the
-        // disconnect() call
-        this.playbackLastPauseTime = this.audioContext.currentTime;
-        this.playbackSourceNode.disconnect();
-    }
-
-    resumePlayback() {
-        console.log('resumePlayback');
-        this.isPlaying = true;
-        // TODO: play around with putting the next line
-        // either immediately below or immediately above the
-        // connect() call
-        this.playbackTotalPauseTime +=
-            this.audioContext.currentTime + this.playbackLastPauseTime;
-        this.playbackSourceNode.connect(this.audioContext.destination);
-    }
-
-    stopPlayback() {
-        console.log('resumePlayback');
-        this.playbackTotalPauseTime = 0;
-        this.playbackSourceNode.stop(0);
-        this.playbackInactive = true;
-    }
-
-    seekPlayback(seconds: number) {
-        // first set things up
-        this.playbackSourceNode.loopStart = seconds;
-        this.playbackSourceNode.loopEnd = this.playbackAudioBuffer.duration;
-        // stop then restart with the new setup
-        this.playbackSourceNode.stop(0);
-        this.playbackSourceNode.start(0);
-    }
-
+    };
 }

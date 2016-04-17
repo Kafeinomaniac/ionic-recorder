@@ -16,9 +16,9 @@ from 'angular2/core';
     templateUrl: 'build/components/progress-slider/progress-slider.html'
 })
 export class ProgressSlider {
-    @Input() private position: number = 0;
-    @Output() private positionChange: EventEmitter<any> = new EventEmitter();
-    @Output() private positionSeek: EventEmitter<any> = new EventEmitter();
+    @Input() private progress: number = 0;
+    @Output() private progressChange: EventEmitter<any> = new EventEmitter();
+    @Output() private seek: EventEmitter<any> = new EventEmitter();
 
     private trackWidthRange: { start: number, end: number };
     private mouseUpListener: Function;
@@ -30,12 +30,12 @@ export class ProgressSlider {
         console.log('constructor():ProgressSlider');
     }
 
-    positionPercent() {
-        return (100.0 * this.position).toString() + '%';
+    progressPercent() {
+        return (100.0 * this.progress).toString() + '%';
     }
 
     remainingPercent() {
-        return (100.0 - 100.0 * this.position).toString() + '%';
+        return (100.0 - 100.0 * this.progress).toString() + '%';
     }
 
     getTrackWidthRange(): { start: number, end: number } {
@@ -72,8 +72,8 @@ export class ProgressSlider {
             clickRelativeX = rangeX;
         }
 
-        this.position = clickRelativeX / rangeX;
-        this.positionChange.emit(this.position);
+        this.progress = clickRelativeX / rangeX;
+        this.progressChange.emit(this.progress);
     }
 
     onSliderMouseDown(event: MouseEvent) {
@@ -101,7 +101,7 @@ export class ProgressSlider {
         // until the next time we click on the progress-bar
         this.mouseUpListener();
         this.mouseMoveListener();
-        this.positionSeek.emit(this.position);
+        this.seek.emit(this.progress);
     }
 
     onMouseMove(event: MouseEvent) {
@@ -117,6 +117,6 @@ export class ProgressSlider {
     }
 
     onSliderTouchEnd() {
-        this.positionSeek.emit(this.position);
+        this.seek.emit(this.progress);
     }
 }

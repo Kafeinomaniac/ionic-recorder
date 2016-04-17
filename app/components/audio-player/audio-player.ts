@@ -2,13 +2,13 @@
 
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
-import {WebAudio} from '../../providers/web-audio/web-audio';
-import {msec2time} from '../../providers/utils/utils';
+import {WebAudioPlayer} from '../../providers/web-audio/web-audio';
+import {formatTime} from '../../providers/utils/format-time';
 import {ProgressSlider} from '../progress-slider/progress-slider';
 
-const START_RESUME_ICON: string = 'play';
+
+const PLAY_ICON: string = 'play';
 const PAUSE_ICON: string = 'pause';
-const AUDIO_PLAYER_CLOCK_FUNCTION = 'audio-player-clock-function';
 
 
 /**
@@ -25,52 +25,19 @@ const AUDIO_PLAYER_CLOCK_FUNCTION = 'audio-player-clock-function';
 export class AudioPlayer implements OnChanges {
     @Input() private title: string;
     @Input() private blob: Blob;
+    private webAudioPlayer: WebAudioPlayer = WebAudioPlayer.Instance;
     private hidden: boolean = true;
-
-    private duration: number;
-    private startTime: number;
-    private currentTime: number = 0;
-    // INV: when lastPauseTime is 0 we have not paused yet
-    // after the first time we pause in a single playback lastPauseTime is
-    // the last Date.now() when a pause occurred
-    private lastPauseTime: number = 0;
-    private totalPauseTime: number = 0;
-    private fractionalTime: number = 0;
-    private sampleRate: number;
-    private playPauseButtonIcon: string = START_RESUME_ICON;
-    private audioElement: HTMLAudioElement;
-
-    private webAudio: WebAudio = WebAudio.Instance;
+    // referred-to in the template
+    private playPauseIcon: string = PLAY_ICON;
+    private duration: number = 0;
+    private displayDuration: string = formatTime(0, 0);
+    private progress: number = 0;
 
     /**
      * @constructor
      */
     constructor() {
         console.log('constructor():AudioPlayer');
-
-        this.webAudio.onStartPlayback = () => {
-            console.log('WebAudio:onStartPlayback()');
-            // this.duration = this.webAudio.playbackAudioBuffer.duration *
-            //    1000.0;
-            this.duration = this.webAudio.playbackAudioBuffer.duration;
-            this.sampleRate = this.webAudio.playbackAudioBuffer.sampleRate;
-            this.startTime = Date.now();
-        };
-
-        this.webAudio.onStopPlayback = () => {
-            console.log('WebAudio:onStopPlayback()');
-            this.currentTime = this.duration;
-            this.currentTime = 0;
-            this.fractionalTime = 0;
-            this.totalPauseTime = 0;
-            this.playPauseButtonIcon = START_RESUME_ICON;
-        }
-    }
-
-    getPlaybackTime() {
-        let currentTime = this.webAudio.getPlaybackTime();
-        this.fractionalTime = currentTime / this.duration;
-        return currentTime;
     }
 
     /**
@@ -90,44 +57,19 @@ export class AudioPlayer implements OnChanges {
     }
 
     /**
-     * Formats time, given as a number in miliseconds, to a string
-     * @returns {string} the formatted time
-     */
-    formatTime(time: number) {
-        if (time === undefined) {
-            return '00:00';
-        }
-        return msec2time(time * 1000.0)
-            .replace('00:00:', '').replace('00:', '');
-    }
-
-    /**
      * UI callback: either play or pause audio on button click
      * (similar to record.ts pattern for the same button)
      * @returns {void}
      */
     onClickPlayPauseButton() {
         console.log('onClickPlayPauseButton()');
-
-        if (this.webAudio.isPlaying) {
-            // we're playing (when clicked, so pause)
-            // check icon is pause
-            this.lastPauseTime = Date.now();
-            this.webAudio.pausePlayback();
-            this.playPauseButtonIcon = START_RESUME_ICON;
+        if (this.webAudioPlayer.isPlaying) {
+            this.webAudioPlayer.pause();
+            this.playPauseIcon = PLAY_ICON;
         }
         else {
-            // we're not playing (when clicked, so start)
-            if (this.webAudio.playbackInactive) {
-                // inactive, we're stopped (not paused), start playing
-                this.webAudio.startPlayback(this.blob);
-            }
-            else {
-                // active & not playing, which means paused, resume
-                this.webAudio.resumePlayback();
-                this.totalPauseTime += Date.now() - this.lastPauseTime;
-            }
-            this.playPauseButtonIcon = PAUSE_ICON;
+            this.webAudioPlayer.play();
+            this.playPauseIcon = PAUSE_ICON;
         }
     }
 
@@ -136,15 +78,22 @@ export class AudioPlayer implements OnChanges {
      * @returns {void}
      */
     onClickCloseButton() {
-        // next line is the trick discussed here
-        // https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/ ...
-        //     ... Using_HTML5_audio_and_video
-        this.audioElement.src = '';
         this.hide();
     }
 
-    onSeek(position: number) {
-        console.log('on seek!!!!!!!!!!!!!!!!!!!! ' + position);
+    getTime() {
+        let time: number = this.webAudioPlayer.getTime();
+        if (time > this.duration) {
+            this.webAudioPlayer.stop();
+            this.playPauseIcon = PLAY_ICON;
+            time = 0;
+        }
+        this.progress = time / this.duration;
+        return formatTime(time, this.duration);
+    }
+
+    onSeek(progress: number) {
+        console.log('on seek!!!!!!!!!!!!!!!!!!!! ' + progress);
     }
 
     /**
@@ -161,12 +110,29 @@ export class AudioPlayer implements OnChanges {
         if (changeRecord['blob']) {
             console.log('AudioPlayer:ngOnChanges(): blob: ' + this.blob);
             if (this.blob !== undefined) {
-                // initiate playback
-                console.log('webAudio.isPlaying: ' +
-                    this.webAudio.isPlaying);
-                console.log('webAudio.playbackInactive: ' +
-                    this.webAudio.playbackInactive);
-                this.onClickPlayPauseButton();
+                this.webAudioPlayer.loadAndDecode(this.blob,
+                    (duration: number) => {
+                        this.duration = duration;
+                        this.displayDuration = formatTime(duration, duration);
+                    },
+                    () => {
+                        alert('FileReader error: could not load blob');
+                    },
+                    () => {
+                        alert([
+                            'Your browser had recorded the audio file you are ',
+                            'playing and then it save it to a local file on ',
+                            'your device, but it now reports that it cannot ',
+                            'play that audio file  We expect this problem to ',
+                            'be fixed soon as more audio file formats get ',
+                            'handled by modern browsers but we are looking for ',
+                            'alternative playback solutions. In the meantime, ',
+                            'you can share the fles you want to play to your ',
+                            'device and play them with any music player on your ',
+                            'device. But oops, sorry, we will implement sharing ',
+                            'soon!'
+                        ].join(''));
+                    });
             }
         }
     }

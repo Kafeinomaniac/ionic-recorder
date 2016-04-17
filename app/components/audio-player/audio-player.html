@@ -10,13 +10,13 @@
     </ion-row>
     <ion-row>
         <ion-col button clear (click)="onClickPlayPauseButton()">
-            <ion-icon [name]="playPauseButtonIcon"></ion-icon>
+            <ion-icon [name]="playPauseIcon"></ion-icon>
         </ion-col>
         <ion-col width-80 center>
             <ion-row>
-                <span class="time" >{{formatTime(getPlaybackTime())}}</span>
-                <progress-slider [position]="fractionalTime" (positionSeek)="onSeek($event)"></progress-slider>
-                <span class="duration">{{formatTime(duration)}}</span>
+                <span class="time" >{{getTime()}}</span>
+                <progress-slider [progress]="progress" (seek)="onSeek($event)"></progress-slider>
+                <span class="duration">{{displayDuration}}</span>
             </ion-row>
             </ion-col>
         <ion-col button clear (click)="onClickCloseButton()">

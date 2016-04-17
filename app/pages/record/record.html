@@ -28,7 +28,7 @@
     </p>
     <!--input type="range" min="0" max="200" [value]="sliderValue" (input)="onSliderChange($event)" (touchstart)="onSliderDrag($event)"
     (mousedown)="onSliderDrag($event)"-->
-    <progress-slider [position]="gainFactor" (positionChange)="onPositionChange($event)"></progress-slider>
+    <progress-slider [progress]="gainFactor" (progressChange)="onPositionChange($event)"></progress-slider>
     <div class="recording-time">
         {{recordingTime}}
     </div>
