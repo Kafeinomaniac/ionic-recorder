@@ -81,7 +81,8 @@ export class AudioPlayer implements OnChanges {
         this.hide();
     }
 
-    getTime() {
+    getTime(): string {
+        console.log('AudioPlayer:getTime()');
         let time: number = this.webAudioPlayer.getTime();
         if (time > this.duration) {
             this.webAudioPlayer.stop();

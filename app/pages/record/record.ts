@@ -12,7 +12,6 @@ from '../../components/progress-slider/progress-slider';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
-const MAX_GAIN_FACTOR: number = 2.0;
 
 
 @Page({
@@ -25,9 +24,13 @@ export class RecordPage {
     private recorder: WebAudioRecorder = WebAudioRecorder.Instance;
     private sliderValue: number = 100;
     private recordButtonIcon: string = START_RESUME_ICON;
-    private formatTime: (number) => string = formatTime;
-    private decibels: string;
-    private percentGain: string;
+    private decibels: string = '0.0';
+    private percentGain: string = '100';
+    private maxGainFactor: number = 2.0;
+    private gainFactor: number = 1.0;
+    private currentVolume: number = 0;
+    private maxVolume: number = 0;
+    private percentPeaksAtMax: string = '0.0';
 
     /**
      * @constructor
@@ -61,17 +64,26 @@ export class RecordPage {
         }; // recorder.onStop = (blob: Blob) => { ...
     }
 
+    getTime(): string {
+        console.log('RecordPage:getTime()');
+        this.currentVolume = this.recorder.getCurrentVolume();
+        this.maxVolume = this.recorder.maxVolumeSinceReset;
+        this.percentPeaksAtMax = this.recorder.percentPeaksAtMax;
+        return formatTime(this.recorder.getTime());
+    }
+
     onGainChange(position: number) {
-        // convert fro position in [0, 1] to [0, MAX_GAIN_FACTOR]
-        let gainFactor: number = position * MAX_GAIN_FACTOR;
-        this.recorder.setGainFactor(gainFactor);
+        // convert fro position in [0, 1] to [0, this.maxGainFactor]
+        this.gainFactor = position * this.maxGainFactor;
+        this.recorder.setGainFactor(this.gainFactor);
         if (position === 0) {
             this.decibels = 'Muted';
         }
         else {
-            this.decibels = (10.0 * Math.log10(gainFactor)).toFixed(2) + ' dB';
+            this.decibels =
+                (10.0 * Math.log10(this.gainFactor)).toFixed(2) + ' dB';
         }
-        this.percentGain = (position * 100.0).toFixed(1);
+        this.percentGain = (this.gainFactor * 100.0).toFixed(1);
     }
 
     /**

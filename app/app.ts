@@ -13,6 +13,10 @@ import 'es6-shim';
 enableProdMode();
 
 
+const GRAPHICS_REFRESH_RATE_HZ: number = 24;
+// derived:
+const GRAPHICS_REFRESH_INTERVAL: number = 1000.0 / GRAPHICS_REFRESH_RATE_HZ;
+
 // finally we have implemented a global catch-all with this
 // AppExceptionHandler class.  NOTE: we use 'extends' instead
 // of the more correct 'implements' here in order to avoid
@@ -50,6 +54,9 @@ export class TracktunesApp {
         // this.resetDB();
         // this.platform.ready().then(() => {
         // });
+
+        // this ensures change detection every GRAPHICS_REFRESH_INTERVAL
+        setInterval(() => { }, GRAPHICS_REFRESH_INTERVAL);
     }
 
     /**

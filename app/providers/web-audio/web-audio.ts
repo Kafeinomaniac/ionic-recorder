@@ -31,6 +31,8 @@ export class WebAudioRecorder {
     // gain state
     percentGain: string;
     decibels: string;
+    // gets called with the recorded blob as soon as we're done recording
+    onStopRecord: (recordedBlob: Blob) => void;
 
     // 'instance' is used as part of Singleton pattern implementation
     constructor() {
@@ -49,26 +51,6 @@ export class WebAudioRecorder {
         }
         return this.instance;
     }
-
-    /*
-    getTime() {
-        return CONTEXT.currentTime -
-            this.startedAt -
-            this.recordTotalPauseTime;
-    }
-    */
-    getTime() {
-        if (this.pausedAt) {
-            return this.pausedAt;
-        }
-        if (this.startedAt) {
-            return CONTEXT.currentTime - this.startedAt;
-        }
-        return 0;
-    }
-
-    // gets called with the recorded blob as soon as we're done recording
-    onStopRecord: (recordedBlob: Blob) => void;
 
     /**
      * Initialize audio, get it ready to record
@@ -207,18 +189,14 @@ export class WebAudioRecorder {
                 throw Error('WebAudioRecorder:onStop() not set!');
             }
 
-            // let blob: Blob = new Blob(this.blobChunks, {
+            // this.onStopRecord(new Blob(this.blobChunks, {
             //     type: 'audio/webm'
-            // });
-            let blob: Blob = new Blob(this.blobChunks);
-
-            this.onStopRecord(blob);
-
+            // }));
+            this.onStopRecord(new Blob(this.blobChunks));
             this.blobChunks = [];
         };
 
         // finally let users of this class know it's ready
-        console.log('hi - ready');
         this.isReady = true;
     }
 
@@ -312,11 +290,33 @@ export class WebAudioRecorder {
         this.audioGainNode.gain.value = factor;
     }
 
+    /*
+    getTime() {
+        return CONTEXT.currentTime -
+            this.startedAt -
+            this.recordTotalPauseTime;
+    }
+    */
+    getTime() {
+        if (this.pausedAt) {
+            console.log('getTime(): ' + this.pausedAt);
+            return this.pausedAt;
+        }
+        if (this.startedAt) {
+            console.log('getTime(): ' +
+                (CONTEXT.currentTime - this.startedAt));
+            return CONTEXT.currentTime - this.startedAt;
+        }
+        console.log('getTime(): 0');
+        return 0;
+    }
+
     /**
      * Start recording
      * @returns {void}
      */
     start() {
+        console.log('record:start');
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (1)');
         }
@@ -333,6 +333,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     pause() {
+        console.log('record:pause');
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (2)');
         }
@@ -345,6 +346,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     resume() {
+        console.log('record:resume');
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (3)');
         }
@@ -357,6 +359,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     stop() {
+        console.log('record:stop');
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (4)');
         }
@@ -425,6 +428,7 @@ export class WebAudioPlayer {
                     successCB(audioBuffer.duration);
                 }, decodeErrorCB);
         };
+        console.log('blob is: ' + blob);
         this.fileReader.readAsArrayBuffer(blob);
     }
 

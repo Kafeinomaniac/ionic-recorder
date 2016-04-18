@@ -8,26 +8,26 @@
     <ion-buttons end *ngIf="recorder.isReady">
         <button small (click)="recorder.resetPeaks()">
             <ion-badge darkest-gray item-right>
-                {{recorder.percentPeaksAtMax}}% peaks@max
+                {{percentPeaksAtMax}}% peaks@max
             </ion-badge>
         </button>
     </ion-buttons>
 </ion-navbar>
 
-<ion-content padding *ngIf="recorder.isReady" [class]="platform.platforms()">
+<ion-content padding [class]="platform.platforms()">
     <vu-gauge height="2.5em" nbars="55"
-        [max]="recorder.maxVolumeSinceReset"
-        [value]="recorder.getCurrentVolume()">
+        [value]="currentVolume"
+        [max]="maxVolume">
     </vu-gauge>
     <p class="gain-item-label">Gain:
         {{percentGain}}% ({{decibels}})
     </p>
     <progress-slider
-        [progress]="recorder.gainFactor"
+        [progress]="gainFactor/maxGainFactor"
         (progressChange)="onGainChange($event)">
     </progress-slider>
     <div class="recording-time">
-        {{formatTime(recorder.getTime())}}
+        {{getTime()}}
     </div>
     <div class="record-upload-buttons">
         <button logo-red (click)="onClickStartPauseButton()">
@@ -35,7 +35,7 @@
             </ion-icon>
         </button>
         <button logo-orange
-            [disabled]="recorder.mediaRecorder.state === 'inactive'"
+            [disabled]="recorder.isReady && recorder.mediaRecorder.state === 'inactive'"
             (click)="onClickStopButton()">
             <ion-icon name="square">
             </ion-icon>
