@@ -21,6 +21,7 @@ module.exports = function(config) {
       'node_modules/traceur/bin/traceur.js',
       'node_modules/systemjs/dist/system.src.js',
       'node_modules/reflect-metadata/Reflect.js',
+      'node_modules/es6-shim/es6-shim.js',
 
       { pattern: 'test/ionic-angular.js', included: false, watched: false },
       { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
@@ -68,7 +69,8 @@ module.exports = function(config) {
     proxies: {
       // allows us to keep test code separate from app code and still have the references work
       '/base/node_modules/ionic-angular/decorators/app.js': '/base/www/build/test/app.stub.js', // stub out Ionic's @App decorator
-      '/base/ionic-angular.js': '/base/test/ionic-angular.js'
+      '/base/ionic-angular.js': '/base/test/ionic-angular.js',
+      '/base/es6-shim.js': '/base/node_modules/es6-shim/es6-shim.js'
     },
 
     // level of logging
