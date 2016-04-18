@@ -65,7 +65,6 @@ export class RecordPage {
     }
 
     getTime(): string {
-        console.log('RecordPage:getTime()');
         this.currentVolume = this.recorder.getCurrentVolume();
         this.maxVolume = this.recorder.maxVolumeSinceReset;
         this.percentPeaksAtMax = this.recorder.percentPeaksAtMax;

@@ -266,8 +266,8 @@ export class WebAudioRecorder {
         // update some properties based on new value of bufferMax
         this.nPeakMeasurements += 1;
         if (this.maxVolumeSinceReset < bufferMax) {
-            this.maxVolumeSinceReset = bufferMax;
             this.resetPeaks();
+            this.maxVolumeSinceReset = bufferMax;
         }
         else if (this.maxVolumeSinceReset === bufferMax) {
             this.nPeaksAtMax += 1;
@@ -299,15 +299,11 @@ export class WebAudioRecorder {
     */
     getTime() {
         if (this.pausedAt) {
-            console.log('getTime(): ' + this.pausedAt);
             return this.pausedAt;
         }
         if (this.startedAt) {
-            console.log('getTime(): ' +
-                (CONTEXT.currentTime - this.startedAt));
             return CONTEXT.currentTime - this.startedAt;
         }
-        console.log('getTime(): 0');
         return 0;
     }
 
