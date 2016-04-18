@@ -55,7 +55,6 @@ The only browsers on which we successfully tested the above link is
 
         git clone https://github.com/tracktunes/ionic-recorder
         cd ionic-recorder
-
 * Install the npm packages needed by this project
 
         npm install
