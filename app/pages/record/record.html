@@ -5,45 +5,37 @@
         <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Record</ion-title>
-    <ion-buttons end *ngIf="currentVolume">
-        <button small (click)="resetPeaksAtMax()">
+    <ion-buttons end *ngIf="!recorder.isInactive">
+        <button small (click)="recorder.resetPeaksAtMax()">
             <ion-badge darkest-gray item-right>
-                {{percentPeaksAtMax()}}% peaks@max
+                {{recorder.percentPeaksAtMax}}% peaks@max
             </ion-badge>
         </button>
     </ion-buttons>
 </ion-navbar>
 
 <ion-content padding [class]="platform.platforms()">
-    <ion-item class="monitor-switch">
-        <ion-label>
-            Monitor on/off
-        </ion-label>
-        <ion-toggle [checked]="monitorSwitchState" (click)="toggleMonitor()">
-        </ion-toggle>
-    </ion-item>
     <vu-gauge height="2.5em" nbars="55" 
-        [max]="maxVolume" 
-        [value]="currentVolume">
+        [max]="recorder.maxVolumeSinceReset" 
+        [value]="recorder.getCurrentMaxVolume()">
     </vu-gauge>
-    <p class="gain-item-label">Gain: {{gain}}% ({{decibels}})
+    <p class="gain-item-label">Gain:
+        {{recorder.percentGain}}% ({{recorder.decibels}})
     </p>
-    <!--input type="range" min="0" max="200" [value]="sliderValue" (input)="onSliderChange($event)" (touchstart)="onSliderDrag($event)"
-    (mousedown)="onSliderDrag($event)"-->
     <progress-slider 
-        [progress]="gainFactor" 
-        (progressChange)="onPositionChange($event)">
+        [progress]="recorder.gainFactor"
+        (progressChange)="recorder.setGainFactor($event)">
     </progress-slider>
     <div class="recording-time">
-        {{recordingTime}}
+        {{formatTime(recorder.getTime())}}
     </div>
     <div class="record-upload-buttons">
         <button logo-red (click)="onClickStartPauseButton()">
             <ion-icon [name]="recordButtonIcon">
             </ion-icon>
         </button>
-        <button logo-orange 
-            [disabled]="stopButtonDisabled()" 
+        <button logo-orange
+            [disabled]="recorder.isInactive"
             (click)="onClickStopButton()">
             <ion-icon name="square">
             </ion-icon>

@@ -12,8 +12,8 @@ from '../../components/progress-slider/progress-slider';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
-const RECORD_PAGE_CLOCK_FUNCTION = 'record-page-clock-function';
 const MAX_GAIN_FACTOR: number = 2.0;
+const INITIAL_GAIN_FACTOR: number = 1.0;
 
 
 @Page({
@@ -23,17 +23,10 @@ const MAX_GAIN_FACTOR: number = 2.0;
 export class RecordPage {
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
-    private currentVolume: number = 0;
-    private maxVolume: number = 0;
-    private peaksAtMax: number = 0;
-    private peakMeasurements: number = 0;
+    private recorder: WebAudioRecorder = WebAudioRecorder.Instance;
     private sliderValue: number = 100;
-    private recordingTime: string = formatTime(0);
     private recordButtonIcon: string = START_RESUME_ICON;
-    private decibels: string = '0.00 dB';
-    private monitorSwitchState: boolean = true;
-    private webAudioRecorder: WebAudioRecorder = WebAudioRecorder.Instance;
-    private gainFactor: number = 0.5;
+    private formatTime: (number) => string = formatTime;
 
     /**
      * @constructor
@@ -43,12 +36,10 @@ export class RecordPage {
         console.log('constructor():RecordPage');
         // function that gets called with a newly created blob when
         // we hit the stop button - saves blob to local db
-        this.webAudioRecorder.onStopRecord = (blob: Blob) => {
+        this.recorder.onStopRecord = (blob: Blob) => {
             let now: Date = new Date(),
-                itemCount: number = 0,
-                month: number = now.getMonth() + 1,
                 name: string = now.getFullYear() + '-' +
-                    month + '-' +
+                    (now.getMonth() + 1) + '-' +
                     now.getDate() + ' -- ' +
                     now.toLocaleTimeString();
             // this console.dir is here in order to monitor when Chrome is
@@ -66,107 +57,11 @@ export class RecordPage {
                     console.error('getProperty error: ' + getError);
                 }
             ); // getProperty('unfiledFolderKey').subscribe(
-        }; // webAudioRecorder.onStop = (blob: Blob) => { ...
-    }
+        }; // recorder.onStop = (blob: Blob) => { ...
 
-    /**
-     * Setup for real-time monitoring every time we're about  to enter the page
-     * @returns {void}
-     */
-    onPageWillEnter() {
-        console.log('on page will enter: record');
-
-        // this.webAudioRecorder.waitForWebAudio().subscribe(() => {
-        this.masterClock.addFunction(RECORD_PAGE_CLOCK_FUNCTION, () => {
-            this.currentVolume = this.webAudioRecorder.getBufferMaxVolume();
-            this.peakMeasurements += 1;
-            if (this.currentVolume === this.maxVolume) {
-                this.peaksAtMax += 1;
-            }
-            else if (this.currentVolume > this.maxVolume) {
-                this.peaksAtMax = 1;
-                this.maxVolume = this.currentVolume;
-            }
-
-            if (this.webAudioRecorder.isRecording()) {
-                this.recordingDuration = Date.now() - this.recordStartTime -
-                    this.totalPauseTime;
-                this.recordingTime =
-                    formatTime(this.recordingDuration / 1000.0);
-            }
-        });
-    }
-
-    /**
-     * Template monitor on/off toggle (click) callback.
-     * @returns {void}
-     */
-    toggleMonitor() {
-        if (this.monitorSwitchState) {
-            this.monitorSwitchState = false;
-
-            // remove old monitoring function
-            this.masterClock.removeFunction(RECORD_PAGE_CLOCK_FUNCTION);
-
-            this.masterClock.addFunction(RECORD_PAGE_CLOCK_FUNCTION, () => {
-                this.currentVolume = 0;
-                this.resetPeaksAtMax();
-            });
-            setTimeout(() => {
-                // we need a little delay here to make sure things visually
-                // reset before we remove this new resetting function
-                this.masterClock.removeFunction(RECORD_PAGE_CLOCK_FUNCTION);
-            }, 200);
-        }
-        else {
-            this.monitorSwitchState = true;
-            this.onPageWillEnter();
-        }
-    }
-
-    /**
-     * Cleanup operations just before leaving page for another
-     * @returns {void}
-     */
-    onPageWillLeave() {
-        this.masterClock.removeFunction(RECORD_PAGE_CLOCK_FUNCTION);
-    }
-
-    /**
-     * Compute and return the % of peaks that hit max since start or last reset
-     * @returns {string} a string representing the % of peaks that hit max
-     */
-    percentPeaksAtMax() {
-        if (!this.peakMeasurements) {
-            return '0.0';
-        }
-        return (100.0 * this.peaksAtMax / this.peakMeasurements).toFixed(1);
-    }
-
-    /**
-     * Resets template indicator of max peaks to zero, restarts counting
-     * @returns {void}
-     */
-    resetPeaksAtMax() {
-        this.maxVolume = 0;
-        this.peakMeasurements = 0;
-        this.peaksAtMax = 0;
-    }
-
-    onPositionChange(newGainFactor: number) {
-        this.gainFactor = newGainFactor;
-        // convert from [0, 1] to [0, MAX_GAIN_FACTOR]
-        let gainFactor: number = this.gainFactor * MAX_GAIN_FACTOR;
-
-        if (gainFactor === 0) {
-            this.decibels = 'Muted';
-        }
-        else {
-            // convert to decibels
-            this.decibels = (10.0 * Math.log10(gainFactor)).toFixed(2) + ' dB';
-        }
-
-        this.webAudioRecorder.setGainFactor(gainFactor);
+        // set recorder.gainFactor, recorder.percentGain and recorder.decibels 
+        // by calling setGainFactor() and initialize recorder's gainFactor
+        this.recorder.setGainFactor(INITIAL_GAIN_FACTOR / MAX_GAIN_FACTOR);
     }
 
     /**
@@ -174,34 +69,24 @@ export class RecordPage {
      * @returns {void}
      */
     onClickStartPauseButton() {
-        this.currentVolume += Math.abs(Math.random() * 10);
-        if (this.webAudioRecorder.isRecording()) {
+        // this.currentVolume += Math.abs(Math.random() * 10);
+        if (this.recorder.isRecording()) {
             // we're recording (when clicked, so pause recording)
-            this.webAudioRecorder.pauseRecording();
+            this.recorder.pauseRecording();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
             // we're not recording (when clicked, so start/resume recording)
-            if (this.webAudioRecorder.recordingInactive()) {
+            if (this.recorder.recordingInactive()) {
                 // inactive, we're stopped (rather than paused) so start
-                this.webAudioRecorder.startRecording();
-                this.recordStartTime = Date.now();
-                this.resetPeaksAtMax();
+                this.recorder.startRecording();
             }
             else {
                 // it's active, we're just paused, so resume
-                this.webAudioRecorder.resumeRecording();
+                this.recorder.resumeRecording();
             }
             this.recordButtonIcon = PAUSE_ICON;
         }
-    }
-
-    /**
-     * Determines whether to disable UI stop button
-     * @returns {boolean} used by template to disable stop button in UI
-     */
-    stopButtonDisabled() {
-        return this.webAudioRecorder.recordingInactive();
     }
 
     /**
@@ -209,9 +94,7 @@ export class RecordPage {
      * @returns {void}
      */
     onClickStopButton() {
-        this.webAudioRecorder.stopRecording();
-        this.totalPauseTime = 0;
-        this.recordingTime = formatTime(0);
+        this.recorder.stopRecording();
         this.recordButtonIcon = START_RESUME_ICON;
     }
 }
