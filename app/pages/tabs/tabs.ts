@@ -26,7 +26,6 @@ export class TabsPage {
         console.log('constructor():TabsPage');
         this.tab1Root = RecordPage;
         this.tab2Root = LibraryPage;
-
     }
 
     onPageWillEnter() {

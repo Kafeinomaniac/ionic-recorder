@@ -9,7 +9,7 @@ div.audio-player ion-row {
 
     padding-top: 0;
     padding-bottom: 0;
-    
+
     span.player-title-prefix {
             padding-top: 0.4em;
             font-size: $toolbar-title-font-size;
@@ -21,11 +21,11 @@ div.audio-player ion-row {
             word-wrap: break-word;
             color: map-get($colors, logo-orange);
         }
-    
+
 
     ion-col {
         padding: 0;
-        
+
     height: $audio-player-height;
     line-height: $audio-player-height;
     vertical-align: middle;

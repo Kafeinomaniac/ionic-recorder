@@ -49,7 +49,7 @@ export class ProgressSlider {
         return {
             start: offsetLeft + paddingLeft,
             end: offsetLeft + width - paddingLeft
-        }
+        };
     }
 
     computeProgress(

@@ -11,25 +11,32 @@ const CONTEXT = new (AudioContext || webkitAudioContext)();
 export class WebAudioRecorder {
     // 'instance' is used as part of Singleton pattern implementation
     private static instance: WebAudioRecorder = null;
+    mediaRecorder: MediaRecorder;
+    private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
-    private mediaRecorder: MediaRecorder;
     private analyserNode: AnalyserNode;
     private analyserBuffer: Uint8Array;
     private analyserBufferLength: number;
-    private sourceNode: MediaElementAudioSourceNode;
     private blobChunks: Blob[] = [];
-    private playbackSourceNode: AudioBufferSourceNode;
-    private ready: boolean = false;
-    private fileReader: FileReader;
-
+    // is ready means ready to record
+    isReady: boolean = false;
     // time related
     private startedAt: number = 0;
     private pausedAt: number = 0;
+    // volume and max-volume and peak stats tracking
+    maxVolumeSinceReset: number;
+    private nPeaksAtMax: number;
+    private nPeakMeasurements: number;
+    percentPeaksAtMax: string;
+    // gain state
+    percentGain: string;
+    decibels: string;
 
     // 'instance' is used as part of Singleton pattern implementation
     constructor() {
         console.log('constructor():WebAudioPlayer');
         this.initWebAudio();
+        this.resetPeaks();
     }
 
     /**
@@ -211,7 +218,8 @@ export class WebAudioRecorder {
         };
 
         // finally let users of this class know it's ready
-        this.ready = true;
+        console.log('hi - ready');
+        this.isReady = true;
     }
 
     /**
@@ -252,11 +260,18 @@ export class WebAudioRecorder {
         this.initMediaRecorder(dest.stream);
     }
 
+    resetPeaks() {
+        this.maxVolumeSinceReset = 0;
+        this.nPeakMeasurements = 0;
+        this.nPeaksAtMax = 0;
+        this.percentPeaksAtMax = '0.0';
+    }
+
     /**
      * Compute the current latest buffer frame max volume and return it
      * @returns {number} max volume in range of [0,128]
      */
-    getBufferMaxVolume() {
+    getCurrentVolume() {
         if (!this.analyserNode) {
             return 0;
         }
@@ -269,6 +284,19 @@ export class WebAudioRecorder {
                 bufferMax = absValue;
             }
         }
+        // we use bufferMax to represent current volume
+        // update some properties based on new value of bufferMax
+        this.nPeakMeasurements += 1;
+        if (this.maxVolumeSinceReset < bufferMax) {
+            this.maxVolumeSinceReset = bufferMax;
+            this.resetPeaks();
+        }
+        else if (this.maxVolumeSinceReset === bufferMax) {
+            this.nPeaksAtMax += 1;
+            this.percentPeaksAtMax =
+                (this.nPeaksAtMax / this.nPeakMeasurements).toFixed(1);
+        }
+
         return bufferMax;
     }
 
@@ -285,81 +313,56 @@ export class WebAudioRecorder {
     }
 
     /**
-     * Are we recording right now?
-     * @returns {boolean} whether we are recording right now
-     */
-    isRecording() {
-        return this.mediaRecorder &&
-            (this.mediaRecorder.state === 'recording');
-    }
-
-    /**
-     * Is MediaRecorder state inactive now?
-     * @returns {boolean} whether MediaRecorder is inactive now
-     */
-    recordingInactive() {
-        // TODO: get rid of !this.mediaRecorder here and everywhere
-        // else
-        return !this.mediaRecorder ||
-            this.mediaRecorder.state === 'inactive';
-    }
-
-    /**
      * Start recording
      * @returns {void}
      */
-    startRecording() {
+    start() {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (1)');
         }
         // TODO: play around with putting the next line
         // either immediately below or immediately above the
         // start() call
-        this.startedAt = CONTEXT.currentTime;
         this.mediaRecorder.start();
+        this.startedAt = CONTEXT.currentTime;
+        this.pausedAt = 0;
     }
 
     /**
      * Pause recording
      * @returns {void}
      */
-    pauseRecording() {
+    pause() {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (2)');
         }
-        // TODO: play around with putting the next line
-        // either immediately below or immediately above the
-        // pause() call
         this.mediaRecorder.pause();
-        this.pausedAt = CONTEXT.currentTime;
+        this.pausedAt = CONTEXT.currentTime - this.startedAt;
     }
 
     /**
      * Resume recording
      * @returns {void}
      */
-    resumeRecording() {
+    resume() {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (3)');
         }
-        // TODO: play around with putting the next line
-        // either immediately below or immediately above the
-        // resume() call
         this.mediaRecorder.resume();
-        this.recordTotalPauseTime +=
-            CONTEXT.currentTime - this.pausedAt;
+        this.pausedAt = 0;
     }
 
     /**
      * Stop recording
      * @returns {void}
      */
-    stopRecording() {
+    stop() {
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (4)');
         }
-        this.recordTotalPauseTime = 0;
         this.mediaRecorder.stop();
+        this.startedAt = 0;
+        this.pausedAt = 0;
     }
 }
 

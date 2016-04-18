@@ -13,7 +13,6 @@ from '../../components/progress-slider/progress-slider';
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
 const MAX_GAIN_FACTOR: number = 2.0;
-const INITIAL_GAIN_FACTOR: number = 1.0;
 
 
 @Page({
@@ -27,6 +26,8 @@ export class RecordPage {
     private sliderValue: number = 100;
     private recordButtonIcon: string = START_RESUME_ICON;
     private formatTime: (number) => string = formatTime;
+    private decibels: string;
+    private percentGain: string;
 
     /**
      * @constructor
@@ -58,10 +59,19 @@ export class RecordPage {
                 }
             ); // getProperty('unfiledFolderKey').subscribe(
         }; // recorder.onStop = (blob: Blob) => { ...
+    }
 
-        // set recorder.gainFactor, recorder.percentGain and recorder.decibels 
-        // by calling setGainFactor() and initialize recorder's gainFactor
-        this.recorder.setGainFactor(INITIAL_GAIN_FACTOR / MAX_GAIN_FACTOR);
+    onGainChange(position: number) {
+        // convert fro position in [0, 1] to [0, MAX_GAIN_FACTOR]
+        let gainFactor: number = position * MAX_GAIN_FACTOR;
+        this.recorder.setGainFactor(gainFactor);
+        if (position === 0) {
+            this.decibels = 'Muted';
+        }
+        else {
+            this.decibels = (10.0 * Math.log10(gainFactor)).toFixed(2) + ' dB';
+        }
+        this.percentGain = (position * 100.0).toFixed(1);
     }
 
     /**
@@ -70,20 +80,20 @@ export class RecordPage {
      */
     onClickStartPauseButton() {
         // this.currentVolume += Math.abs(Math.random() * 10);
-        if (this.recorder.isRecording()) {
+        if (this.recorder.mediaRecorder.state === 'recording') {
             // we're recording (when clicked, so pause recording)
-            this.recorder.pauseRecording();
+            this.recorder.pause();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
             // we're not recording (when clicked, so start/resume recording)
-            if (this.recorder.recordingInactive()) {
+            if (this.recorder.mediaRecorder.state === 'inactive') {
                 // inactive, we're stopped (rather than paused) so start
-                this.recorder.startRecording();
+                this.recorder.start();
             }
             else {
                 // it's active, we're just paused, so resume
-                this.recorder.resumeRecording();
+                this.recorder.resume();
             }
             this.recordButtonIcon = PAUSE_ICON;
         }
@@ -94,7 +104,7 @@ export class RecordPage {
      * @returns {void}
      */
     onClickStopButton() {
-        this.recorder.stopRecording();
+        this.recorder.stop();
         this.recordButtonIcon = START_RESUME_ICON;
     }
 }
