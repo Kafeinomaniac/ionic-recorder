@@ -12,11 +12,11 @@ import {AppState} from '../../providers/app-state/app-state';
 })
 export class TabsPage {
     private appState: AppState = AppState.Instance;
-    // private tab1Root: Type = RecordPage;
-    // private tab2Root: Type = LibraryPage;
-    private tab1Root: Type;
-    private tab2Root: Type;
-    private selectedIndex: number;
+    private tab1Root: Type = RecordPage;
+    private tab2Root: Type = LibraryPage;
+    // private tab1Root: Type;
+    // private tab2Root: Type;
+    private selectedIndex: number = -1;
 
     /**
      * @constructor
