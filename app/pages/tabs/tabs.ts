@@ -14,8 +14,9 @@ export class TabsPage {
     private appState: AppState = AppState.Instance;
     private tab1Root: Type = RecordPage;
     private tab2Root: Type = LibraryPage;
-    // private tab1Root: Type;
-    // private tab2Root: Type;
+    // making selectedIndex a nonsense index stops the problem of
+    // the first tab showing for a split second before the real tab
+    // displayed via 'lastSelectedTab'
     private selectedIndex: number = -1;
 
     /**
@@ -24,24 +25,14 @@ export class TabsPage {
      */
     constructor(private app: IonicApp) {
         console.log('constructor():TabsPage');
-
         this.appState.getProperty('lastSelectedTab').subscribe(
             (tabIndex: number) => {
                 this.app.getComponent('nav-tabs').select(tabIndex);
                 this.selectedIndex = tabIndex;
-                // we set roots here, when we already know and
-                // have set which tab is selected, otherwise the
-                // first tab always gets selected by default at 
-                // first and in that case it flashes by on the 
-                // screen before the real selected tab page appears
-                // so to prevent that, we only set roots here
-                this.tab1Root = RecordPage;
-                this.tab2Root = LibraryPage;
             },
             (getError: any) => {
                 console.log('getProperty error: ' + getError);
             }
-        ); // getProperty('lastSelectedTab').subscribe(
-
+        );
     }
 }
