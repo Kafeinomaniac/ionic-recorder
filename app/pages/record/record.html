@@ -22,13 +22,18 @@
         <ion-toggle [checked]="monitorSwitchState" (click)="toggleMonitor()">
         </ion-toggle>
     </ion-item>
-    <vu-gauge height="2.5em" nbars="55" [max]="maxVolume" [value]="currentVolume">
+    <vu-gauge height="2.5em" nbars="55" 
+        [max]="maxVolume" 
+        [value]="currentVolume">
     </vu-gauge>
     <p class="gain-item-label">Gain: {{gain}}% ({{decibels}})
     </p>
     <!--input type="range" min="0" max="200" [value]="sliderValue" (input)="onSliderChange($event)" (touchstart)="onSliderDrag($event)"
     (mousedown)="onSliderDrag($event)"-->
-    <progress-slider [progress]="gainFactor" (progressChange)="onPositionChange($event)"></progress-slider>
+    <progress-slider 
+        [progress]="gainFactor" 
+        (progressChange)="onPositionChange($event)">
+    </progress-slider>
     <div class="recording-time">
         {{recordingTime}}
     </div>
@@ -37,7 +42,9 @@
             <ion-icon [name]="recordButtonIcon">
             </ion-icon>
         </button>
-        <button logo-orange [disabled]="stopButtonDisabled()" (click)="onClickStopButton()">
+        <button logo-orange 
+            [disabled]="stopButtonDisabled()" 
+            (click)="onClickStopButton()">
             <ion-icon name="square">
             </ion-icon>
         </button>

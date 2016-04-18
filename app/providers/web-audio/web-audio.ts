@@ -23,18 +23,8 @@ export class WebAudioRecorder {
     private fileReader: FileReader;
 
     // time related
-    private recordStartTime: number = 0;
-    private recordLastPauseTime: number = 0;
-    private recordTotalPauseTime: number = 0;
-
-    getRecordingTime() {
-        return CONTEXT.currentTime -
-            this.recordStartTime -
-            this.recordTotalPauseTime;
-    }
-
-    // gets called with the recorded blob as soon as we're done recording
-    onStopRecord: (recordedBlob: Blob) => void;
+    private startedAt: number = 0;
+    private pausedAt: number = 0;
 
     // 'instance' is used as part of Singleton pattern implementation
     constructor() {
@@ -52,6 +42,26 @@ export class WebAudioRecorder {
         }
         return this.instance;
     }
+
+    /*
+    getTime() {
+        return CONTEXT.currentTime -
+            this.startedAt -
+            this.recordTotalPauseTime;
+    }
+    */
+    getTime() {
+        if (this.pausedAt) {
+            return this.pausedAt;
+        }
+        if (this.startedAt) {
+            return CONTEXT.currentTime - this.startedAt;
+        }
+        return 0;
+    }
+
+    // gets called with the recorded blob as soon as we're done recording
+    onStopRecord: (recordedBlob: Blob) => void;
 
     /**
      * Initialize audio, get it ready to record
@@ -305,7 +315,7 @@ export class WebAudioRecorder {
         // TODO: play around with putting the next line
         // either immediately below or immediately above the
         // start() call
-        this.recordStartTime = CONTEXT.currentTime;
+        this.startedAt = CONTEXT.currentTime;
         this.mediaRecorder.start();
     }
 
@@ -321,7 +331,7 @@ export class WebAudioRecorder {
         // either immediately below or immediately above the
         // pause() call
         this.mediaRecorder.pause();
-        this.recordLastPauseTime = CONTEXT.currentTime;
+        this.pausedAt = CONTEXT.currentTime;
     }
 
     /**
@@ -337,7 +347,7 @@ export class WebAudioRecorder {
         // resume() call
         this.mediaRecorder.resume();
         this.recordTotalPauseTime +=
-            CONTEXT.currentTime - this.recordLastPauseTime;
+            CONTEXT.currentTime - this.pausedAt;
     }
 
     /**

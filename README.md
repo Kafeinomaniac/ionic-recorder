@@ -38,8 +38,9 @@ and a late version of IndexedDB that supports the `onupgradeended` event.
 
 The only browsers on which we successfully tested the above link is
 * Firefox 45.0 on Ubuntu Linux
-* That's it for now: most other browsers, esp. Chrome, have a problem in `decodeAudioData()`: they cannot decode the same blob that the browser's `MediaRecorder()` produced... Go figure: probably the recording (encoding) part and the decoding part were implemented by completely different groups at Google and they are not aware that they cannot close the record-->playback loop...  Hopefully this will be solved in future versions of Chrome!
-      
+* That's it for now: Chrome has a problem in `decodeAudioData()`: it cannot
+  decode the same blob that the it used to save the file via `MediaRecorder()`!
+
 ## For developers: installing the development environment and getting started
 * Get the latest versions of npm and nodejs (we use 'n' to manage nodejs version):
 

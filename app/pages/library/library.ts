@@ -472,14 +472,21 @@ export class LibraryPage {
      */
     onClickListItem(node: TreeNode) {
         if (this.localDB.isFolderNode(node)) {
+            // it's a folder! switch to it
             this.switchFolder(node[DB_KEY_PATH], true);
         }
         else {
-            // TODO: here's where we initiate the player`
+            // it's not a folder, it's a blob!
+            // here's where we initiate the player.
+            // setting this.playerTitle triggers the audio
+            // player to make itself visible
             this.playerTitle = node.name;
             this.localDB.readNodeData(node).subscribe(
                 (dataNode: DataNode) => {
-                    this.playerBlob = dataNode.data.blob;
+                    // dataNode.data is the Blob object to play
+                    // setting this.playerBlob triggers the audio
+                    // player ngOnChanges to load/play the blob
+                    this.playerBlob = dataNode.data;
                 }
             ); // readNodeData(node).subscribe(
         } // if (this.localDB.isFolderNode(node)) { .. else { ..

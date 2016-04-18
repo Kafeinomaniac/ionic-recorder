@@ -5,7 +5,6 @@ import {VuGauge} from '../../components/vu-gauge/vu-gauge';
 import {AppState} from '../../providers/app-state/app-state';
 import {WebAudioRecorder} from '../../providers/web-audio/web-audio';
 import {LocalDB} from '../../providers/local-db/local-db';
-import {MasterClock} from '../../providers/master-clock/master-clock';
 import {formatTime} from '../../providers/utils/format-time';
 import {ProgressSlider}
 from '../../components/progress-slider/progress-slider';
@@ -22,6 +21,8 @@ const MAX_GAIN_FACTOR: number = 2.0;
     directives: [VuGauge, ProgressSlider]
 })
 export class RecordPage {
+    private localDB: LocalDB = LocalDB.Instance;
+    private appState: AppState = AppState.Instance;
     private currentVolume: number = 0;
     private maxVolume: number = 0;
     private peaksAtMax: number = 0;
@@ -31,19 +32,8 @@ export class RecordPage {
     private recordButtonIcon: string = START_RESUME_ICON;
     private decibels: string = '0.00 dB';
     private monitorSwitchState: boolean = true;
-
-    // time related
-    private recordStartTime: number = 0;
-    private lastPauseTime: number = 0;
-    private totalPauseTime: number = 0;
-    private recordingDuration: number = 0;
-
-    private localDB: LocalDB = LocalDB.Instance;
-    private appState: AppState = AppState.Instance;
     private webAudioRecorder: WebAudioRecorder = WebAudioRecorder.Instance;
-    private masterClock: MasterClock = MasterClock.Instance;
-
-    private gainFactor: number = 0.33;
+    private gainFactor: number = 0.5;
 
     /**
      * @constructor
@@ -57,30 +47,20 @@ export class RecordPage {
             let now: Date = new Date(),
                 itemCount: number = 0,
                 month: number = now.getMonth() + 1,
-                name: string =
-                    now.getFullYear() + '-' +
+                name: string = now.getFullYear() + '-' +
                     month + '-' +
                     now.getDate() + ' -- ' +
                     now.toLocaleTimeString();
+            // this console.dir is here in order to monitor when Chrome is
+            // finally going to report some info in the string representation
+            // of Blob that it shows, which currently always says size == 0
             console.dir(blob);
-
             this.appState.getProperty('unfiledFolderKey').subscribe(
                 (unfiledFolderKey: number) => {
-                    console.log('this.recordingDuration: '
-                        + this.recordingDuration +
-                        ' vs now: ' + (Date.now() - this.recordStartTime -
-                            this.totalPauseTime));
-
-                    this.localDB.createDataNode(
-                        name,
-                        unfiledFolderKey,
-                        { blob: blob, duration: this.recordingDuration }
-                    ).subscribe(
-                        () => { },
-                        (error: any) => {
+                    this.localDB.createDataNode(name, unfiledFolderKey, blob)
+                        .subscribe(() => { }, (error: any) => {
                             alert('create data node error: ' + error);
-                        }
-                        ); // localDB.createDataNode().subscribe(
+                        }); // localDB.createDataNode().subscribe(
                 },
                 (getError: any) => {
                     console.error('getProperty error: ' + getError);
@@ -198,7 +178,6 @@ export class RecordPage {
         if (this.webAudioRecorder.isRecording()) {
             // we're recording (when clicked, so pause recording)
             this.webAudioRecorder.pauseRecording();
-            this.lastPauseTime = Date.now();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
@@ -212,7 +191,6 @@ export class RecordPage {
             else {
                 // it's active, we're just paused, so resume
                 this.webAudioRecorder.resumeRecording();
-                this.totalPauseTime += Date.now() - this.lastPauseTime;
             }
             this.recordButtonIcon = PAUSE_ICON;
         }
