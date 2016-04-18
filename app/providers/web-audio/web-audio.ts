@@ -37,7 +37,7 @@ export class WebAudioRecorder {
     // 'instance' is used as part of Singleton pattern implementation
     constructor() {
         console.log('constructor():WebAudioPlayer');
-        this.initWebAudio();
+        this.initAudio();
         this.resetPeaks();
     }
 
@@ -56,7 +56,7 @@ export class WebAudioRecorder {
      * Initialize audio, get it ready to record
      * @returns {void}
      */
-    initWebAudio() {
+    initAudio() {
         if (!CONTEXT) {
             throw Error('AudioContext not available!');
         }
@@ -237,6 +237,10 @@ export class WebAudioRecorder {
         // this.initMediaRecorder(stream);
         this.initMediaRecorder(dest.stream);
     }
+
+    /*************************************************************************
+     * PUBLIC API METHODS
+     *************************************************************************/
 
     resetPeaks() {
         this.maxVolumeSinceReset = 0;
