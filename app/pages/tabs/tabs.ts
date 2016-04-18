@@ -24,17 +24,19 @@ export class TabsPage {
      */
     constructor(private app: IonicApp) {
         console.log('constructor():TabsPage');
-        this.tab1Root = RecordPage;
-        this.tab2Root = LibraryPage;
-    }
 
-    onPageWillEnter() {
-        console.log('on page will enter - tabs');
         this.appState.getProperty('lastSelectedTab').subscribe(
             (tabIndex: number) => {
-                console.log('tabs setting it to ' + tabIndex);
                 this.app.getComponent('nav-tabs').select(tabIndex);
                 this.selectedIndex = tabIndex;
+                // we set roots here, when we already know and
+                // have set which tab is selected, otherwise the
+                // first tab always gets selected by default at 
+                // first and in that case it flashes by on the 
+                // screen before the real selected tab page appears
+                // so to prevent that, we only set roots here
+                this.tab1Root = RecordPage;
+                this.tab2Root = LibraryPage;
             },
             (getError: any) => {
                 console.log('getProperty error: ' + getError);
@@ -42,5 +44,4 @@ export class TabsPage {
         ); // getProperty('lastSelectedTab').subscribe(
 
     }
-
 }
