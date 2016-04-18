@@ -5,6 +5,10 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* for new release: 0.0.5-alpha, we need:
+  * intro slide show
+  * incorporate the version file info into the app
+  * release notes: new ionic2 build system (refer to forum)
 * transfer record.ts to web-audio.ts stuff
 * get rid of master clock, benchmark cpu & memory before you do that
 * get rid of monitor on/off toggle switch, because after we get rid
