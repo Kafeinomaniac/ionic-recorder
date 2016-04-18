@@ -62,7 +62,7 @@ The only browsers on which we successfully tested the above link is
 
         ./bin/fix_typings.sh
 
-* You should be good to go.  Check the Getting Started Coding page or the Getting Started Using page (neither page exists yet). You can open the root directory 'ionic-recorder' in VSCode.  All the code is under subdirectory 'app'.
+* You can develop now.  Check the Getting Started Coding page or the Getting Started Using page (neither page exists yet). You can open the root directory 'ionic-recorder' in VSCode.  All the code is under subdirectory 'app'.
 
 * The 'package.json' file has some useful high level commands at the 'scripts' subsection.  Sample useful commands in there:
 

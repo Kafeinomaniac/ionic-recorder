@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {App, IonicApp, Platform} from 'ionic-angular';
+import {App, IonicApp, Platform, MenuController} from 'ionic-angular';
 import {Type, enableProdMode, ExceptionHandler, provide} from 'angular2/core';
 import {AppState} from './providers/app-state/app-state';
 import {TabsPage} from './pages/tabs/tabs';
@@ -48,12 +48,15 @@ export class TracktunesApp {
      * @param {IonicApp} instance used to get tabs component
      * @param {Platform} used for platform-specific styling
      */
-    constructor(private app: IonicApp, private platform: Platform) {
+    constructor(private app: IonicApp, private platform: Platform,
+        private menuController: MenuController) {
         console.log('constructor():TracktunesApp');
         // NB: you can delete the DB here to get rid of it easily in Firefox
         // this.resetDB();
-        // this.platform.ready().then(() => {
-        // });
+        this.platform.ready().then(() => {
+            this.menuController.swipeEnable(false);
+        });
+
 
         // this ensures change detection every GRAPHICS_REFRESH_INTERVAL
         setInterval(() => { }, GRAPHICS_REFRESH_INTERVAL);
@@ -94,6 +97,7 @@ export class TracktunesApp {
         let oldId: string = 'button' + this.selectedTab,
             newId: string = 'button' + tabIndex;
 
+        // TODO: there must be a better way to do this
         if (this.selectedTab !== null) {
             document.getElementById(oldId).classList.remove('button-selected');
         }
