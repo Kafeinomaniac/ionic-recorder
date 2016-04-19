@@ -69,7 +69,7 @@ export class RecordPage {
         this.appState.getProperty('gain').subscribe(
             (gain: GainState) => {
                 this.maxGainFactor = gain.maxFactor;
-                this.onGainChange(gain.factor / gain.maxFactor, false);
+                this.onGainChange(gain.factor / gain.maxFactor);
             },
             (error: any) => {
                 console.error('AppState:getProperty() error: ' + error);
@@ -94,12 +94,12 @@ export class RecordPage {
         }); // localDB.createDataNode().subscribe(
     }
 
-    onGainChange(position: number, setRecorder: boolean = true) {
+    onGainChange(position: number) {
         // convert fro position in [0, 1] to [0, this.maxGainFactor]
         this.gainFactor = position * this.maxGainFactor;
-        if (setRecorder) {
-            this.recorder.setGainFactor(this.gainFactor);
-        }
+
+        this.recorder.setGainFactor(this.gainFactor);
+
         if (position === 0) {
             this.decibels = 'Muted';
         }

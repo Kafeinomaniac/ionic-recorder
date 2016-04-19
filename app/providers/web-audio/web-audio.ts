@@ -36,7 +36,7 @@ export class WebAudioRecorder {
 
     // 'instance' is used as part of Singleton pattern implementation
     constructor() {
-        console.log('constructor():WebAudioPlayer');
+        console.log('constructor():WebAudioRecorder');
         this.initAudio();
         this.resetPeaks();
     }
