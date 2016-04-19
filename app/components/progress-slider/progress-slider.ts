@@ -17,8 +17,8 @@ from 'angular2/core';
 })
 export class ProgressSlider {
     @Input() private progress: number = 0;
-    @Output() private progressChange: EventEmitter<any> = new EventEmitter();
-    @Output() private seek: EventEmitter<any> = new EventEmitter();
+    @Output() private change: EventEmitter<any> = new EventEmitter();
+    @Output() private changeEnd: EventEmitter<any> = new EventEmitter();
 
     private trackWidthRange: { start: number, end: number };
     private mouseUpListener: Function;
@@ -79,7 +79,7 @@ export class ProgressSlider {
 
     jumpToPosition(clientX: number, range: { start: number, end: number }) {
         this.progress = this.computeProgress(clientX, this.trackWidthRange);
-        this.progressChange.emit(this.progress);
+        this.change.emit(this.progress);
     }
 
     onSliderMouseDown(event: MouseEvent) {
@@ -108,7 +108,7 @@ export class ProgressSlider {
         this.mouseMoveListener();
         this.progress =
             this.computeProgress(event.clientX, this.trackWidthRange);
-        this.seek.emit(this.progress);
+        this.changeEnd.emit(this.progress);
     }
 
     onMouseMove(event: MouseEvent) {
@@ -124,6 +124,6 @@ export class ProgressSlider {
     }
 
     onSliderTouchEnd() {
-        this.seek.emit(this.progress);
+        this.changeEnd.emit(this.progress);
     }
 }

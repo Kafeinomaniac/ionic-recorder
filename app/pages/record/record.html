@@ -15,16 +15,13 @@
 </ion-navbar>
 
 <ion-content padding [class]="platform.platforms()">
-    <vu-gauge height="2.5em" nbars="55"
-        [value]="currentVolume"
-        [max]="maxVolume">
+    <vu-gauge height="2.5em" nbars="55" [value]="currentVolume" [max]="maxVolume">
     </vu-gauge>
-    <p class="gain-item-label">Gain:
-        {{percentGain}}% ({{decibels}})
+    <p class="gain-item-label">
+        Gain: {{percentGain}}% ({{decibels}})
+        <button small almost-dark (click)="onGainChange(0.5)">Reset Gain</button>
     </p>
-    <progress-slider
-        [progress]="gainFactor/maxGainFactor"
-        (progressChange)="onGainChange($event)">
+    <progress-slider [progress]="gainFactor/maxGainFactor" (change)="onGainChange($event)" (changeEnd)="onGainChangeEnd($event)">
     </progress-slider>
     <div class="recording-time">
         {{getTime()}}
@@ -34,9 +31,7 @@
             <ion-icon [name]="recordButtonIcon">
             </ion-icon>
         </button>
-        <button logo-orange
-            [disabled]="recorder.isReady && recorder.mediaRecorder.state === 'inactive'"
-            (click)="onClickStopButton()">
+        <button logo-orange [disabled]="recorder.isReady && recorder.mediaRecorder.state === 'inactive'" (click)="onClickStopButton()">
             <ion-icon name="square">
             </ion-icon>
         </button>

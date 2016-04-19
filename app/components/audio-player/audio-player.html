@@ -14,7 +14,7 @@
         <ion-col width-80 center>
             <ion-row>
                 <span class="time">{{getTime()}}</span>
-                <progress-slider [progress]="progress" (seek)="onSeek($event)"></progress-slider>
+                <progress-slider [progress]="progress" (changeEnd)="onSeek($event)"></progress-slider>
                 <span class="duration">{{displayDuration}}</span>
             </ion-row>
             </ion-col>

@@ -2,7 +2,7 @@
 
 import {Page, Platform} from 'ionic-angular';
 import {VuGauge} from '../../components/vu-gauge/vu-gauge';
-import {AppState} from '../../providers/app-state/app-state';
+import {AppState, GainState} from '../../providers/app-state/app-state';
 import {WebAudioRecorder} from '../../providers/web-audio/web-audio';
 import {LocalDB} from '../../providers/local-db/local-db';
 import {formatTime} from '../../providers/utils/format-time';
@@ -24,10 +24,12 @@ export class RecordPage {
     private recorder: WebAudioRecorder = WebAudioRecorder.Instance;
     private sliderValue: number = 100;
     private recordButtonIcon: string = START_RESUME_ICON;
-    private decibels: string = '0.0';
-    private percentGain: string = '100';
-    private maxGainFactor: number = 2.0;
-    private gainFactor: number = 1.0;
+    // gain variables get initialized in constructor
+    private percentGain: string;
+    private maxGainFactor: number;
+    private gainFactor: number;
+    private decibels: string;
+    // volume related
     private currentVolume: number = 0;
     private maxVolume: number = 0;
     private percentPeaksAtMax: string = '0.0';
@@ -57,11 +59,22 @@ export class RecordPage {
                             alert('create data node error: ' + error);
                         }); // localDB.createDataNode().subscribe(
                 },
-                (getError: any) => {
-                    console.error('getProperty error: ' + getError);
+                (error: any) => {
+                    console.error('AppState:getProperty error: ' + error);
                 }
             ); // getProperty('unfiledFolderKey').subscribe(
         }; // recorder.onStop = (blob: Blob) => { ...
+
+        // initialize with "remembered" gain values
+        this.appState.getProperty('gain').subscribe(
+            (gain: GainState) => {
+                this.maxGainFactor = gain.maxFactor;
+                this.onGainChange(gain.factor / gain.maxFactor, false);
+            },
+            (error: any) => {
+                console.error('AppState:getProperty() error: ' + error);
+            }
+        ); // getProperty('gain').subscribe(
     }
 
     getTime(): string {
@@ -71,10 +84,22 @@ export class RecordPage {
         return formatTime(this.recorder.getTime());
     }
 
-    onGainChange(position: number) {
+    onGainChangeEnd(position: number) {
+        this.onGainChange(position);
+        this.appState.updateProperty('gain', {
+            factor: this.gainFactor,
+            maxFactor: this.maxGainFactor
+        }).subscribe(() => { }, (error: any) => {
+            alert('AppState:updateProperty(): ' + error);
+        }); // localDB.createDataNode().subscribe(
+    }
+
+    onGainChange(position: number, setRecorder: boolean = true) {
         // convert fro position in [0, 1] to [0, this.maxGainFactor]
         this.gainFactor = position * this.maxGainFactor;
-        this.recorder.setGainFactor(this.gainFactor);
+        if (setRecorder) {
+            this.recorder.setGainFactor(this.gainFactor);
+        }
         if (position === 0) {
             this.decibels = 'Muted';
         }
