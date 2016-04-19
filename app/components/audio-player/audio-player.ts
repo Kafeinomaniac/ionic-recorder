@@ -68,6 +68,7 @@ export class AudioPlayer implements OnChanges {
             this.playPauseIcon = PLAY_ICON;
         }
         else {
+            this.hidden = false;
             this.webAudioPlayer.play();
             this.playPauseIcon = PAUSE_ICON;
         }
@@ -114,6 +115,8 @@ export class AudioPlayer implements OnChanges {
                     (duration: number) => {
                         this.duration = duration;
                         this.displayDuration = formatTime(duration, duration);
+                        this.webAudioPlayer.stop();
+                        this.onClickPlayPauseButton();
                     },
                     () => {
                         alert('FileReader error: could not load blob');

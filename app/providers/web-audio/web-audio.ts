@@ -244,9 +244,9 @@ export class WebAudioRecorder {
 
     resetPeaks() {
         this.maxVolumeSinceReset = 0;
-        this.nPeakMeasurements = 0;
-        this.nPeaksAtMax = 0;
-        this.percentPeaksAtMax = '0.0';
+        this.nPeakMeasurements = 1;
+        this.nPeaksAtMax = 1;
+        this.percentPeaksAtMax = '100.0';
     }
 
     /**
@@ -275,9 +275,9 @@ export class WebAudioRecorder {
         }
         else if (this.maxVolumeSinceReset === bufferMax) {
             this.nPeaksAtMax += 1;
-            this.percentPeaksAtMax =
-                (this.nPeaksAtMax / this.nPeakMeasurements).toFixed(1);
         }
+        this.percentPeaksAtMax =
+            (100 * this.nPeaksAtMax / this.nPeakMeasurements).toFixed(1);
 
         return bufferMax;
     }
