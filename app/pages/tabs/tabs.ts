@@ -30,8 +30,8 @@ export class TabsPage {
                 this.app.getComponent('nav-tabs').select(tabIndex);
                 this.selectedIndex = tabIndex;
             },
-            (getError: any) => {
-                console.log('getProperty error: ' + getError);
+            (error: any) => {
+                console.log('getProperty error: ' + error);
             }
         );
     }
