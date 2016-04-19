@@ -10,11 +10,6 @@ div.audio-player ion-row {
     padding-top: 0;
     padding-bottom: 0;
 
-    span.player-title-prefix {
-            padding-top: 0.4em;
-            font-size: $toolbar-title-font-size;
-        }
-
     span.player-title {
             padding-top: 0.4em;
             font-size: $toolbar-title-font-size;
@@ -22,13 +17,11 @@ div.audio-player ion-row {
             color: map-get($colors, logo-orange);
         }
 
-
     ion-col {
         padding: 0;
-
-    height: $audio-player-height;
-    line-height: $audio-player-height;
-    vertical-align: middle;
+        height: $audio-player-height;
+        line-height: $audio-player-height;
+        vertical-align: middle;
 
         ion-row {
             padding: 0;
@@ -44,45 +37,6 @@ div.audio-player ion-row {
                 padding-left: 0.5em;
                 padding-right: 0.3em;
             }
-            /*
-            progress[value] {
-                // Reset the default appearance
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                width: 100%;
-                // the background color here does not affect anything
-                // on android but on iOs it is the color of the right hand
-                // side of the progress bar - the time left part.
-                background: map-get($colors, light-gray);
-                border-radius: 2px;
-                border: 0;
-            }
-
-            progress[value]::-webkit-progress-bar {
-                background-color: map-get($colors, medium-gray);
-                border-radius: 2px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-                // border around entire progress bar in webkit
-                border: 1px solid map-get($colors, dark-gray);
-            }
-
-            // moz-progress-bar is -webkit-progress-value...
-            progress[value]::-moz-progress-bar {
-                // sets only the left hand side part of the progress
-                // bar color
-                background-color: map-get($colors, logo-red);
-                border-radius: 2px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-                // border around entire progress bar in Firefox
-                border: 1px solid map-get($colors, dark-gray);
-            }
-
-            progress[value]::-webkit-progress-value{
-                background-color: map-get($colors, logo-red);
-                border-radius: 2px;
-                background-size: 35px 20px, 100% 100%, 100% 100%;
-            }
-            */
         }
     }
 }
