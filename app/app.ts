@@ -33,8 +33,7 @@ class AppExceptionHandler extends ExceptionHandler {
 
 @App({
     templateUrl: 'build/app.html',
-    providers: [provide(ExceptionHandler, { useClass: AppExceptionHandler })],
-    //config: { backButtonText: '' }
+    providers: [provide(ExceptionHandler, { useClass: AppExceptionHandler })]
 })
 export class TracktunesApp {
     private appState: AppState = AppState.Instance;
