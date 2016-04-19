@@ -20,11 +20,7 @@ interface State {
     gain: GainState;
 }
 
-
-// make sure APP_STATE_ITEM_NAME will never be entered by a user
-export const STATE_NODE_NAME: string =
-    'Kwj7t9X2PTsPwLquD9qvZqaApMP8LGRjPFENUHnvrpmUE25rkrYHhzf9KBEradAU';
-
+export const STATE_NODE_NAME: string = 'app-state';
 export const ROOT_FOLDER_NAME: string = 'root';
 export const UNFILED_FOLDER_NAME: string = 'Unfiled';
 
