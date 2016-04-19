@@ -12,10 +12,12 @@ import 'es6-shim';
 
 enableProdMode();
 
-
+// sets the frame-rate at which either the volume monitor or the progress bar
+// is updated when it changes on the screen.
 const GRAPHICS_REFRESH_RATE_HZ: number = 24;
 // derived:
 const GRAPHICS_REFRESH_INTERVAL: number = 1000.0 / GRAPHICS_REFRESH_RATE_HZ;
+
 
 // finally we have implemented a global catch-all with this
 // AppExceptionHandler class.  NOTE: we use 'extends' instead
@@ -49,12 +51,12 @@ export class TracktunesApp {
      * @param {Platform} used for platform-specific styling
      */
     constructor(private app: IonicApp, private platform: Platform,
-        private menuController: MenuController) {
+        private menu: MenuController) {
         console.log('constructor():TracktunesApp');
         // NB: you can delete the DB here to get rid of it easily in Firefox
         // this.resetDB();
         this.platform.ready().then(() => {
-            this.menuController.swipeEnable(false);
+            this.menu.swipeEnable(false);
         });
 
 
@@ -112,8 +114,7 @@ export class TracktunesApp {
                 () => { },
                 (error: any) => {
                     alert('in update in app: ' + error);
-                }
-                ); // updateProperty('lastSelectedTab').subscribe(
+                });
         }
     }
 }

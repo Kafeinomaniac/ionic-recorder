@@ -428,7 +428,6 @@ export class WebAudioPlayer {
                     successCB(audioBuffer.duration);
                 }, decodeErrorCB);
         };
-        console.log('blob is: ' + blob);
         this.fileReader.readAsArrayBuffer(blob);
     }
 
