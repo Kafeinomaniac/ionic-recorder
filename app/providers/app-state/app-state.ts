@@ -5,6 +5,10 @@ import {Observable} from 'rxjs/Rx';
 import {LocalDB, TreeNode, DataNode, DB_NO_KEY, DB_KEY_PATH, MAX_DB_INIT_TIME}
 from '../local-db/local-db';
 
+export interface GainState {
+    factor: number;
+    maxFactor: number;
+}
 
 interface State {
     lastSelectedTab: number;
@@ -12,6 +16,8 @@ interface State {
     rootFolderKey: number;
     unfiledFolderKey: number;
     selectedNodes: { [id: string]: boolean };
+    startWithIntro: boolean;
+    gain: GainState;
 }
 
 
@@ -27,7 +33,9 @@ const DEFAULT_STATE: State = {
     lastViewedFolderKey: DB_NO_KEY,
     rootFolderKey: DB_NO_KEY,
     unfiledFolderKey: DB_NO_KEY,
-    selectedNodes: {}
+    selectedNodes: {},
+    startWithIntro: true,
+    gain: { factor: 1.0, maxFactor: 2.0 }
 };
 
 
@@ -75,7 +83,6 @@ export class AppState {
                             (result: any) => {
                                 this.treeNode = result.treeNode;
                                 this.dataNode = result.dataNode;
-
                             },
                             (error: any) => {
                                 throw new Error(error);
