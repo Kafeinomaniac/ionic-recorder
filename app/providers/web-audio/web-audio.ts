@@ -244,9 +244,12 @@ export class WebAudioRecorder {
 
     resetPeaks() {
         this.maxVolumeSinceReset = 0;
-        this.nPeakMeasurements = 1;
-        this.nPeaksAtMax = 1;
+        // at first we're always at 100% peax at max
         this.percentPeaksAtMax = '100.0';
+        // make this 1 to avoid NaN when we divide by it
+        this.nPeakMeasurements = 1;
+        // make this 1 to match nPeakMeasurements and get 100% at start
+        this.nPeaksAtMax = 1;
     }
 
     /**
