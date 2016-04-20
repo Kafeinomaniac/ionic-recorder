@@ -1,3 +1,19 @@
+### v0.0.5-alpha.1
+* Returned to alpha.1, etc naming, because we're going to create a commit
+  script that automatically increments that number on each commit
+* Main change: got rid of master clock from record.ts, the app is 50% more 
+  efficient now!
+* Many other changes: got rid of monitor toggle, because now the monitor
+  takes very little resources and can run continously - how cool!
+* Using WebAudio for playback and for recording, no more `<audio>` tag
+* Using no more `<input type="range">` or `<progress>` tag - they were
+  hard to style and limited in functionality and required lots of hacks,
+  so now we have a progress-slider component that does both: (1)
+  displays progress (of audio playback, in player) that can be 
+  modified in real time (with a finger or the mouse, it can be
+  moved); (2) allows for input of a number - input slider functionality 
+  (used in recorder gain adjustment slider)
+
 ### v0.0.4-alpha
 * Dropped '.x' extension on version numbers - the minor version number
   (rightmost) is enough
