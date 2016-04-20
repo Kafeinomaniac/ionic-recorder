@@ -198,6 +198,9 @@ export class WebAudioRecorder {
 
         // finally let users of this class know it's ready
         this.isReady = true;
+        // the next line will cause angular2 to do change-detection
+        setTimeout(()=>{}, 0);
+        console.log('WebAudio: READY');
     }
 
     /**
@@ -207,8 +210,6 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     setUpNodes(stream: MediaStream) {
-        console.log('WebAudioRecorder:setUpRecording()');
-
         // create the gainNode
         this.audioGainNode = CONTEXT.createGain();
 
@@ -257,7 +258,7 @@ export class WebAudioRecorder {
      * @returns {number} max volume in range of [0,128]
      */
     getCurrentVolume() {
-        if (!this.analyserNode) {
+        if (!this.isReady) {
             return 0;
         }
 

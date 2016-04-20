@@ -14,7 +14,7 @@
     </ion-buttons>
 </ion-navbar>
 
-<ion-content padding [class]="platform.platforms()">
+<ion-content padding [class]="platform.platforms()" *ngIf="recorder.isReady">
     <vu-gauge height="2.5em" nbars="55" [value]="currentVolume" [max]="maxVolume">
     </vu-gauge>
     <p class="gain-item-label">

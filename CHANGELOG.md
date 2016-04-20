@@ -1,3 +1,7 @@
+### v0.0.6-alpha.1
+* Got rid of some record page timing / event issues that caused either
+  the navbar to go blank or an error to be thrown
+
 ### v0.0.5-alpha.1
 * Returned to alpha.1, etc naming, because we're going to create a commit
   script that automatically increments that number on each commit
