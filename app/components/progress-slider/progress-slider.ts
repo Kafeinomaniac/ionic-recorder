@@ -39,6 +39,7 @@ export class ProgressSlider {
     }
 
     getTrackWidthRange(): { start: number, end: number } {
+        console.dir(this.element.nativeElement);
         let width: number = parseFloat(getComputedStyle(
             this.element.nativeElement.firstChild, null)
             .getPropertyValue('width').replace('px', '')),

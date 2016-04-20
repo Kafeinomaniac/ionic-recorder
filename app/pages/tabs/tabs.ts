@@ -17,7 +17,7 @@ export class TabsPage {
     // making selectedIndex a nonsense index stops the problem of
     // the first tab showing for a split second before the real tab
     // displayed via 'lastSelectedTab'
-    private selectedIndex: number = -1;
+    private selectedIndex: number = 0;
 
     /**
      * @constructor

@@ -3,7 +3,8 @@
 
 const CONTEXT = new (AudioContext || webkitAudioContext)();
 
-
+// TODO: just like in LocalDB, have initAudio return an observable
+// instead of .db we'll use .isReady here.  call 
 /*****************************************************************************
  * RECORDER
  *****************************************************************************/
@@ -37,8 +38,8 @@ export class WebAudioRecorder {
     // 'instance' is used as part of Singleton pattern implementation
     constructor() {
         console.log('constructor():WebAudioRecorder');
-        this.initAudio();
         this.resetPeaks();
+        this.initAudio();
     }
 
     /**
@@ -152,6 +153,8 @@ export class WebAudioRecorder {
             mimeType: 'audio/webm'
         });
 
+        /*
+        // feature surveying code
         if (MediaRecorder.isTypeSupported === undefined) {
             console.warn('MediaRecorder.isTypeSupported() is undefined!');
         }
@@ -175,6 +178,7 @@ export class WebAudioRecorder {
                 console.warn('Could not find supported type');
             }
         }
+        */
 
         this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
             // console.log('ondataavailable()');
@@ -198,9 +202,7 @@ export class WebAudioRecorder {
 
         // finally let users of this class know it's ready
         this.isReady = true;
-        // the next line will cause angular2 to do change-detection
-        setTimeout(()=>{}, 0);
-        console.log('WebAudio: READY');
+        console.log('WebAudioRecorder: READY');
     }
 
     /**
@@ -244,6 +246,7 @@ export class WebAudioRecorder {
      *************************************************************************/
 
     resetPeaks() {
+        // console.log('WebAudioRecorder:resetPeaks()');
         this.maxVolumeSinceReset = 0;
         // at first we're always at 100% peax at max
         this.percentPeaksAtMax = '100.0';
@@ -292,6 +295,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     setGainFactor(factor: number) {
+        // console.log('WebAudioRecorder:setGainFactor()');
         if (!this.audioGainNode) {
             throw Error('GainNode not initialized!');
         }

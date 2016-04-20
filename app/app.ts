@@ -10,8 +10,8 @@ import {DB_NAME} from './providers/local-db/local-db';
 import 'es6-shim';
 // Note: the above import broke PhantomJS: see test/karma.config.js.
 
-enableProdMode();
-
+// check into doing this via ionic's way, the following is angular2 way:
+// enableProdMode();
 
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.

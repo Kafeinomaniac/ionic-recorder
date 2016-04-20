@@ -5,7 +5,7 @@
         <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Record</ion-title>
-    <ion-buttons end *ngIf="recorder.isReady">
+    <ion-buttons end *ngIf="recorder && recorder.isReady">
         <button small (click)="recorder.resetPeaks()">
             <ion-badge darkest-gray item-right>
                 {{percentPeaksAtMax}}% peaks@max
@@ -14,7 +14,7 @@
     </ion-buttons>
 </ion-navbar>
 
-<ion-content padding [class]="platform.platforms()" *ngIf="recorder.isReady">
+<ion-content padding [class]="platform.platforms()">
     <vu-gauge height="2.5em" nbars="55" [value]="currentVolume" [max]="maxVolume">
     </vu-gauge>
     <p class="gain-item-label">
