@@ -33,6 +33,8 @@ export class RecordPage {
     private currentVolume: number = 0;
     private maxVolume: number = 0;
     private percentPeaksAtMax: string = '0.0';
+    // private audioReady: boolean = false;
+    private formatTime: (number) => string = formatTime;
 
     /**
      * @constructor
@@ -69,7 +71,12 @@ export class RecordPage {
         this.appState.getProperty('gain').subscribe(
             (gain: GainState) => {
                 this.maxGainFactor = gain.maxFactor;
-                this.onGainChange(gain.factor / gain.maxFactor);
+                // this.recorder.waitForAudio().subscribe(
+                //     () => {
+                         this.onGainChange(gain.factor / gain.maxFactor);   
+                //         // this.audioReady = true;             
+                //     }
+                // );
             },
             (error: any) => {
                 console.error('AppState:getProperty() error: ' + error);

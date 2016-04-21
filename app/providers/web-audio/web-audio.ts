@@ -1,7 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
+import {Observable} from 'rxjs/Rx';
+
 
 const CONTEXT = new (AudioContext || webkitAudioContext)();
+
 
 // TODO: just like in LocalDB, have initAudio return an observable
 // instead of .db we'll use .isReady here.  call 
@@ -25,13 +28,11 @@ export class WebAudioRecorder {
     private startedAt: number = 0;
     private pausedAt: number = 0;
     // volume and max-volume and peak stats tracking
+    currentVolume: number = 0;
     maxVolumeSinceReset: number;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
     percentPeaksAtMax: string;
-    // gain state
-    percentGain: string;
-    decibels: string;
     // gets called with the recorded blob as soon as we're done recording
     onStopRecord: (recordedBlob: Blob) => void;
 
@@ -53,6 +54,26 @@ export class WebAudioRecorder {
         return this.instance;
     }
 
+    waitForAudio() {
+        // NOTE: MAX_DB_INIT_TIME / 10
+        // Check in the console how many times we loop here -
+        // it shouldn't be much more than a handful
+        let source: Observable<void> = Observable.create((observer) => {
+            let repeat = () => {
+                if (this.isReady) {
+                    observer.next();
+                    observer.complete();
+                }
+                else {
+                    console.warn('... no Audio yet ...');
+                    setTimeout(repeat, 50);
+                }
+            };
+            repeat();
+        });
+        return source;
+    }
+
     /**
      * Initialize audio, get it ready to record
      * @returns {void}
@@ -72,6 +93,7 @@ export class WebAudioRecorder {
             navigator.mediaDevices.getUserMedia(getUserMediaOptions)
                 .then((stream: MediaStream) => {
                     this.setUpNodes(stream);
+                    this.initMediaRecorder(stream);
                 })
                 .catch((error: any) => {
                     this.noMicrophoneAlert(error);
@@ -236,9 +258,6 @@ export class WebAudioRecorder {
 
         // gainNode -> analyserNode
         this.audioGainNode.connect(this.analyserNode);
-
-        // this.initMediaRecorder(stream);
-        this.initMediaRecorder(dest.stream);
     }
 
     /*************************************************************************
@@ -286,7 +305,7 @@ export class WebAudioRecorder {
         this.percentPeaksAtMax =
             (100 * this.nPeaksAtMax / this.nPeakMeasurements).toFixed(1);
 
-        return bufferMax;
+        this.currentVolume = bufferMax;
     }
 
     /**
@@ -302,13 +321,6 @@ export class WebAudioRecorder {
         this.audioGainNode.gain.value = factor;
     }
 
-    /*
-    getTime() {
-        return CONTEXT.currentTime -
-            this.startedAt -
-            this.recordTotalPauseTime;
-    }
-    */
     getTime() {
         if (this.pausedAt) {
             return this.pausedAt;

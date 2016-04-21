@@ -58,8 +58,6 @@ export class TracktunesApp {
         this.platform.ready().then(() => {
             this.menu.swipeEnable(false);
         });
-
-
         // this ensures change detection every GRAPHICS_REFRESH_INTERVAL
         setInterval(() => { }, GRAPHICS_REFRESH_INTERVAL);
     }
