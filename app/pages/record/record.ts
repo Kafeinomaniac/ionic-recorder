@@ -71,12 +71,12 @@ export class RecordPage {
         this.appState.getProperty('gain').subscribe(
             (gain: GainState) => {
                 this.maxGainFactor = gain.maxFactor;
-                // this.recorder.waitForAudio().subscribe(
-                //     () => {
-                         this.onGainChange(gain.factor / gain.maxFactor);   
-                //         // this.audioReady = true;             
-                //     }
-                // );
+                this.recorder.waitForAudio().subscribe(
+                    () => {
+                        this.onGainChange(gain.factor / gain.maxFactor);
+                        // this.audioReady = true;             
+                    }
+                );
             },
             (error: any) => {
                 console.error('AppState:getProperty() error: ' + error);
