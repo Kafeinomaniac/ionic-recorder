@@ -76,19 +76,12 @@ export class RecordPage {
                         this.onGainChange(gain.factor / gain.maxFactor);
                         // this.audioReady = true;             
                     }
-                );
+                ); // recorder.waitForAudio().subscribe(
             },
             (error: any) => {
                 console.error('AppState:getProperty() error: ' + error);
             }
         ); // getProperty('gain').subscribe(
-    }
-
-    getTime(): string {
-        this.currentVolume = this.recorder.getCurrentVolume();
-        this.maxVolume = this.recorder.maxVolumeSinceReset;
-        this.percentPeaksAtMax = this.recorder.percentPeaksAtMax;
-        return formatTime(this.recorder.getTime());
     }
 
     onGainChangeEnd(position: number) {

@@ -7,19 +7,22 @@
     <ion-title>Record</ion-title>
     <ion-buttons end *ngIf="recorder && recorder.isReady">
         <button small (click)="recorder.resetPeaks()">
+            <!--ion-badge darkest-gray item-right>
+                {{recorder.getPercentPeaksAtMax()}}% peaks @ max
+            </ion-badge-->
             <ion-badge darkest-gray item-right>
-                {{recorder.getCurrentVolume() && recorder.percentPeaksAtMax}}% peaks@max
+                {{recorder.percentPeaksAtMax}}% peaks @ max
             </ion-badge>
         </button>
     </ion-buttons>
 </ion-navbar>
 
 <ion-content padding [class]="platform.platforms()">
-    <vu-gauge height="2.5em" nbars="55" [value]="recorder.getCurrentVolume() && recorder.currentVolume" [max]="recorder.getCurrentVolume() && recorder.maxVolumeSinceReset">
+    <vu-gauge height="2.5em" nbars="55" [value]="recorder.currentVolume" [max]="recorder.maxVolumeSinceReset">
     </vu-gauge>
     <p class="gain-item-label">
         Gain: {{percentGain}}% ({{decibels}})
-        <button small almost-dark (click)="onGainChange(0.5)">Gain->100%</button>
+        <button small almost-dark (click)="onGainChange(0.5)">Reset Gain</button>
     </p>
     <progress-slider [progress]="gainFactor/maxGainFactor" (change)="onGainChange($event)" (changeEnd)="onGainChangeEnd($event)">
     </progress-slider>

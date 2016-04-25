@@ -3,6 +3,11 @@
 import {Observable} from 'rxjs/Rx';
 
 
+// sets the frame-rate at which either the volume monitor or the progress bar
+// is updated when it changes on the screen.
+const MONITOR_REFRESH_RATE_HZ: number = 24;
+// derived:
+const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 const CONTEXT = new (AudioContext || webkitAudioContext)();
 
 
@@ -36,11 +41,15 @@ export class WebAudioRecorder {
     // gets called with the recorded blob as soon as we're done recording
     onStopRecord: (recordedBlob: Blob) => void;
 
+
     // 'instance' is used as part of Singleton pattern implementation
     constructor() {
         console.log('constructor():WebAudioRecorder');
         this.resetPeaks();
         this.initAudio();
+        this.waitForAudio().subscribe(() => {
+            this.startMonitoring();
+        });
     }
 
     /**
@@ -263,6 +272,14 @@ export class WebAudioRecorder {
     /*************************************************************************
      * PUBLIC API METHODS
      *************************************************************************/
+    // this ensures change detection every GRAPHICS_REFRESH_INTERVAL
+    // setInterval(() => { }, GRAPHICS_REFRESH_INTERVAL);
+
+    startMonitoring() {
+        setInterval(() => {
+            this.analyzeVolume();
+        }, MONITOR_REFRESH_RATE_HZ);
+    }
 
     resetPeaks() {
         // console.log('WebAudioRecorder:resetPeaks()');
@@ -279,11 +296,10 @@ export class WebAudioRecorder {
      * Compute the current latest buffer frame max volume and return it
      * @returns {number} max volume in range of [0,128]
      */
-    getCurrentVolume() {
-        if (!this.isReady) {
-            return 0;
-        }
-
+    analyzeVolume(): boolean {
+        // for some reason this setTimeout(() => { ... }, 0) fixes all our 
+        // update angular2 problems (in devMode we get a million exceptions
+        // without this setTimeout)
         let i: number, bufferMax: number = 0, absValue: number;
         this.analyserNode.getByteTimeDomainData(this.analyserBuffer);
         for (i = 0; i < this.analyserBufferLength; i++) {
@@ -292,9 +308,18 @@ export class WebAudioRecorder {
                 bufferMax = absValue;
             }
         }
+
         // we use bufferMax to represent current volume
         // update some properties based on new value of bufferMax
         this.nPeakMeasurements += 1;
+
+        if (bufferMax === this.currentVolume) {
+            // no change
+            return;
+        }
+
+        this.currentVolume = bufferMax;
+
         if (this.maxVolumeSinceReset < bufferMax) {
             this.resetPeaks();
             this.maxVolumeSinceReset = bufferMax;
@@ -302,10 +327,12 @@ export class WebAudioRecorder {
         else if (this.maxVolumeSinceReset === bufferMax) {
             this.nPeaksAtMax += 1;
         }
+
         this.percentPeaksAtMax =
             (100 * this.nPeaksAtMax / this.nPeakMeasurements).toFixed(1);
 
         this.currentVolume = bufferMax;
+        // console.log('WebAudioRecorder:getCurrentVolume(): ' + bufferMax);
     }
 
     /**

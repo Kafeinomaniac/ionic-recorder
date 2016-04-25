@@ -13,14 +13,8 @@ import 'es6-shim';
 // check into doing this via ionic's way, the following is angular2 way:
 // enableProdMode();
 
-// sets the frame-rate at which either the volume monitor or the progress bar
-// is updated when it changes on the screen.
-const GRAPHICS_REFRESH_RATE_HZ: number = 24;
-// derived:
-const GRAPHICS_REFRESH_INTERVAL: number = 1000.0 / GRAPHICS_REFRESH_RATE_HZ;
 
-
-// finally we have implemented a global catch-all with this
+// Global catch-all with this
 // AppExceptionHandler class.  NOTE: we use 'extends' instead
 // of the more correct 'implements' here in order to avoid
 // typescript warnings that did not make sense...
@@ -58,8 +52,6 @@ export class TracktunesApp {
         this.platform.ready().then(() => {
             this.menu.swipeEnable(false);
         });
-        // this ensures change detection every GRAPHICS_REFRESH_INTERVAL
-        setInterval(() => { }, GRAPHICS_REFRESH_INTERVAL);
     }
 
     /**
