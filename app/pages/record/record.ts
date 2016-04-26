@@ -5,8 +5,7 @@ import {VuGauge} from '../../components/vu-gauge/vu-gauge';
 import {AppState, GainState} from '../../providers/app-state/app-state';
 import {WebAudioRecorder} from '../../providers/web-audio/web-audio';
 import {LocalDB} from '../../providers/local-db/local-db';
-import {formatTime} from '../../providers/utils/format-time';
-import {ProgressSlider}
+import {ProgressSlider} 
 from '../../components/progress-slider/progress-slider';
 
 
@@ -29,12 +28,6 @@ export class RecordPage {
     private maxGainFactor: number;
     private gainFactor: number;
     private decibels: string;
-    // volume related
-    // private currentVolume: number = 0;
-    // private maxVolume: number = 0;
-    // private percentPeaksAtMax: string = '0.0';
-    // private audioReady: boolean = false;
-    private formatTime: (number) => string = formatTime;
 
     /**
      * @constructor
@@ -84,6 +77,12 @@ export class RecordPage {
         ); // getProperty('gain').subscribe(
     }
 
+    /**
+     * Gets called with gain position (in [0, 1]) when we end sliding gain
+     * slider around, at the end of a drag / slide action, with the finally
+     * gain value released.
+     * @returns {void}
+     */
     onGainChangeEnd(position: number) {
         this.onGainChange(position);
         this.appState.updateProperty('gain', {
@@ -94,6 +93,11 @@ export class RecordPage {
         }); // localDB.createDataNode().subscribe(
     }
 
+    /**
+     * Gets called with gain position (in [0, 1]) as we slide the gain
+     * slider around, during a drag, during the slide.
+     * @returns {void}
+     */
     onGainChange(position: number) {
         // convert fro position in [0, 1] to [0, this.maxGainFactor]
         this.gainFactor = position * this.maxGainFactor;

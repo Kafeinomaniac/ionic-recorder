@@ -432,6 +432,8 @@ export class WebAudioPlayer {
     private sourceNode: AudioBufferSourceNode = null;
     private startedAt: number = 0;
     private pausedAt: number = 0;
+    duration: number;
+    displayDuration: string;
     isPlaying: boolean = false;
 
     constructor() {
@@ -450,21 +452,31 @@ export class WebAudioPlayer {
     }
 
     getTime(): number {
+        let res: number = 0;
         if (this.pausedAt) {
-            return this.pausedAt;
+            res = this.pausedAt;
         }
         if (this.startedAt) {
-            return CONTEXT.currentTime - this.startedAt;
+            res = CONTEXT.currentTime - this.startedAt;
         }
-        return 0;
+        if (res >= this.duration) {
+            this.stop();
+        }
+        return res;
     }
 
-    getDuration(): number {
-        return this.audioBuffer.duration;
+    getDisplayTime(): string {
+        return formatTime(this.getTime(), this.duration);
+    }
+
+    getProgress(): number {
+        // console.log(this.getTime() / this.duration);
+        return this.getTime() / this.duration;
     }
 
     loadAndDecode(
         blob: Blob,
+        playOnLoad: boolean,
         successCB: (duration: number) => void,
         loadErrorCB: () => void,
         decodeErrorCB: () => void
@@ -475,7 +487,15 @@ export class WebAudioPlayer {
             CONTEXT.decodeAudioData(this.fileReader.result,
                 (audioBuffer: AudioBuffer) => {
                     this.audioBuffer = audioBuffer;
+                    this.duration = audioBuffer.duration;
+                    this.displayDuration = formatTime(this.duration,
+                        this.duration);
+                    console.log('loaded and duration is: ' + this.duration);
                     successCB(audioBuffer.duration);
+                    if (playOnLoad) {
+                        this.stop();
+                        this.play();
+                    }
                 }, decodeErrorCB);
         };
         this.fileReader.readAsArrayBuffer(blob);
@@ -487,6 +507,17 @@ export class WebAudioPlayer {
         this.sourceNode = CONTEXT.createBufferSource();
         this.sourceNode.connect(CONTEXT.destination);
         this.sourceNode.buffer = this.audioBuffer;
+        /*
+        this.sourceNode.onended = () => {
+            if (this.getTime() >= this.duration) {
+                // we've really reached the end
+                this.stop();
+            }
+            else {
+                // we haven't reached the end, we're just pausing
+            }
+        };
+        */
         this.sourceNode.start(0, offset);
 
         this.startedAt = CONTEXT.currentTime - offset;
@@ -500,6 +531,17 @@ export class WebAudioPlayer {
         this.pausedAt = elapsed;
     }
 
+    togglePlayPause() {
+        // play if !isPlaying or (isPlaying && pausedAt)
+        if (!this.isPlaying || this.pausedAt) {
+            this.play();
+        }
+        else {
+            this.pause();
+            console.log('hhhhhh ' + this.pausedAt + ', p: ' + this.getProgress());
+        }
+    }
+
     stop() {
         if (this.sourceNode) {
             this.sourceNode.disconnect();
@@ -511,7 +553,7 @@ export class WebAudioPlayer {
         this.isPlaying = false;
     }
 
-    seek(time: number) {
+    timeSeek(time: number) {
         let isPlaying: boolean = this.isPlaying;
         this.isPlaying = false;
         if (this.sourceNode) {
@@ -528,5 +570,9 @@ export class WebAudioPlayer {
             this.pausedAt = 0;
         }
         this.isPlaying = isPlaying;
+    }
+
+    positionSeek(position: number) {
+        this.timeSeek(position * this.duration);
     }
 }
