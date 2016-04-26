@@ -1,6 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Observable} from 'rxjs/Rx';
+import {formatTime} from '../utils/format-time';
 
 
 // sets the frame-rate at which either the volume monitor or the progress bar
@@ -34,7 +35,7 @@ export class WebAudioRecorder {
     private pausedAt: number = 0;
     // volume and max-volume and peak stats tracking
     currentVolume: number = 0;
-    currentTime: number = 0;
+    currentTime: string = formatTime(0);
     maxVolumeSinceReset: number;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
@@ -279,7 +280,7 @@ export class WebAudioRecorder {
     startMonitoring() {
         setInterval(() => {
             this.analyzeVolume();
-            this.getTime();
+            this.currentTime = formatTime(this.getTime());
         }, MONITOR_REFRESH_RATE_HZ);
     }
 
@@ -352,15 +353,12 @@ export class WebAudioRecorder {
 
     getTime(): number {
         if (this.pausedAt) {
-            this.currentTime = this.pausedAt;
+            return this.pausedAt;
         }
-        else if (this.startedAt) {
-            this.currentTime = CONTEXT.currentTime - this.startedAt;
+        if (this.startedAt) {
+            return CONTEXT.currentTime - this.startedAt;
         }
-        else {
-            this.currentTime = 0;
-        }
-        return this.currentTime;
+        return 0;
     }
 
     /**
@@ -444,14 +442,14 @@ export class WebAudioPlayer {
      * Access the singleton class instance via Singleton.Instance
      * @returns {Singleton} the single instance of this class
      */
-    static get Instance() {
+    static get Instance(): WebAudioPlayer {
         if (!this.instance) {
             this.instance = new WebAudioPlayer();
         }
         return this.instance;
     }
 
-    getTime() {
+    getTime(): number {
         if (this.pausedAt) {
             return this.pausedAt;
         }
@@ -461,7 +459,7 @@ export class WebAudioPlayer {
         return 0;
     }
 
-    getDuration() {
+    getDuration(): number {
         return this.audioBuffer.duration;
     }
 
