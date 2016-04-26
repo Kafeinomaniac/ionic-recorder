@@ -34,6 +34,7 @@ export class WebAudioRecorder {
     private pausedAt: number = 0;
     // volume and max-volume and peak stats tracking
     currentVolume: number = 0;
+    currentTime: number = 0;
     maxVolumeSinceReset: number;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
@@ -56,14 +57,14 @@ export class WebAudioRecorder {
      * Access the singleton class instance via Singleton.Instance
      * @returns {Singleton} the single instance of this class
      */
-    static get Instance() {
+    static get Instance(): WebAudioRecorder {
         if (!this.instance) {
             this.instance = new WebAudioRecorder();
         }
         return this.instance;
     }
 
-    waitForAudio() {
+    waitForAudio(): Observable<void> {
         // NOTE: MAX_DB_INIT_TIME / 10
         // Check in the console how many times we loop here -
         // it shouldn't be much more than a handful
@@ -278,6 +279,7 @@ export class WebAudioRecorder {
     startMonitoring() {
         setInterval(() => {
             this.analyzeVolume();
+            this.getTime();
         }, MONITOR_REFRESH_RATE_HZ);
     }
 
@@ -294,7 +296,7 @@ export class WebAudioRecorder {
 
     /**
      * Compute the current latest buffer frame max volume and return it
-     * @returns {number} max volume in range of [0,128]
+     * @returns {void}
      */
     analyzeVolume(): boolean {
         // for some reason this setTimeout(() => { ... }, 0) fixes all our 
@@ -348,14 +350,17 @@ export class WebAudioRecorder {
         this.audioGainNode.gain.value = factor;
     }
 
-    getTime() {
+    getTime(): number {
         if (this.pausedAt) {
-            return this.pausedAt;
+            this.currentTime = this.pausedAt;
         }
-        if (this.startedAt) {
-            return CONTEXT.currentTime - this.startedAt;
+        else if (this.startedAt) {
+            this.currentTime = CONTEXT.currentTime - this.startedAt;
         }
-        return 0;
+        else {
+            this.currentTime = 0;
+        }
+        return this.currentTime;
     }
 
     /**

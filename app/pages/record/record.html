@@ -27,7 +27,7 @@
     <progress-slider [progress]="gainFactor/maxGainFactor" (change)="onGainChange($event)" (changeEnd)="onGainChangeEnd($event)">
     </progress-slider>
     <div class="recording-time">
-        {{formatTime(recorder.getTime())}}
+        {{recorder.isReady && formatTime(recorder.currentTime) || formatTime(0)}}
     </div>
     <div class="record-upload-buttons">
         <button logo-red (click)="onClickStartPauseButton()">

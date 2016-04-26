@@ -30,9 +30,9 @@ export class RecordPage {
     private gainFactor: number;
     private decibels: string;
     // volume related
-    private currentVolume: number = 0;
-    private maxVolume: number = 0;
-    private percentPeaksAtMax: string = '0.0';
+    // private currentVolume: number = 0;
+    // private maxVolume: number = 0;
+    // private percentPeaksAtMax: string = '0.0';
     // private audioReady: boolean = false;
     private formatTime: (number) => string = formatTime;
 
