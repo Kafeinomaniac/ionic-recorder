@@ -1,15 +1,15 @@
-### v0.0.7-alpha.1
+### v0.0.7-alpha
 * Both in `audio-player` and in `record`, the html now refers to `web-audio`
   functions directly.  This makes things simpler and makes `web-audio` more
   useful as a standalone module.  More separation of graphics & action.
 * Got rid of many timing bugs.  Running in dev mode with no exceptions
   thrown.  More stable.
 
-### v0.0.6-alpha.1
+### v0.0.6-alpha
 * Got rid of some record page timing / event issues that caused either
   the navbar to go blank or an error to be thrown
 
-### v0.0.5-alpha.1
+### v0.0.5-alpha
 * Returned to alpha.1, etc naming, because we're going to create a commit
   script that automatically increments that number on each commit
 * Main change: got rid of master clock from record.ts, the app is 50% more 
@@ -39,10 +39,8 @@
   as a progress indicator or both, used everywhere for a uniform feel
   and look, running smoothly and efficiently.
 
-### v0.0.3-alpha.3
+### v0.0.3-alpha
 * Minor version cleanup, from this point on all tags pass all tests successfully
-
-### v0.0.3-alpha.2
 * Started tagging and started this ChangeLog
 * Catch-all for app errors is in now
 * Playback uses WebAudioApi:decodeAudioData() instead of the <audio> element
