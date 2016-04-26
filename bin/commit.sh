@@ -32,6 +32,6 @@ git push
 
 # now change VERSION and commit
 echo $NEWVERSION > VERSION
-
+git add VERSION
 git commit -m "$NEWVERSION"
 git push
