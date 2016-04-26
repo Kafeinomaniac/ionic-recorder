@@ -37,5 +37,5 @@ git commit -m "$NEWVERSION"
 git push
 
 # now tag all with that version
-git tag -a "$NEWVERSION"
+git tag -a "$NEWVERSION" -m "See CHANGELOG.md for major version tag changes"
 git push --tags
