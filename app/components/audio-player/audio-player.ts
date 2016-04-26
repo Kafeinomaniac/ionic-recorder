@@ -3,7 +3,6 @@
 import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
 import {WebAudioPlayer} from '../../providers/web-audio/web-audio';
-import {formatTime} from '../../providers/utils/format-time';
 import {ProgressSlider} from '../progress-slider/progress-slider';
 
 
