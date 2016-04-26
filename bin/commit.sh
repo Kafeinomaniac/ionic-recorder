@@ -17,7 +17,7 @@ VERSION="`cat VERSION`"
 NUM="`echo $VERSION | sed 's/.*\.//'`"
 
 NEWNUM="`echo $NUM "+1" | bc`"
-NEWVERSION="`echo $VERSION | perl -pe 's/(.*)\d+$/$1/'`$NEWNUM"
+NEWVERSION="`echo $VERSION | perl -pe 's/(.*)\.\d+$/$1/'`.$NEWNUM"
 
 echo "$VERSION -> $NEWVERSION"
 
