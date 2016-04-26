@@ -27,7 +27,7 @@ git status
 echo -e "\n\nCommitting with comment:\n\n" $MESSAGE "\n\n"
 
 git add -A
-git commit -m $MESSAGE
+git commit -m "$MESSAGE"
 git push
 
 # now change VERSION and commit
