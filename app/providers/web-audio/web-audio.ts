@@ -451,6 +451,10 @@ export class WebAudioPlayer {
         return this.instance;
     }
 
+    /**
+     * Returns current playback time - position in song
+     * @returns {number}
+     */
     getTime(): number {
         let res: number = 0;
         if (this.pausedAt) {
@@ -460,24 +464,39 @@ export class WebAudioPlayer {
             res = CONTEXT.currentTime - this.startedAt;
         }
         if (res >= this.duration) {
+            console.log('res: ' + res + ', dur: ' + this.duration);
+            // res = this.duration;
             this.stop();
+            res = 0;
         }
         return res;
     }
 
+    /**
+     * Returns a string representation of current time no longer than the
+     * string representation of current duration.
+     * @returns {string}
+     */
     getDisplayTime(): string {
         return formatTime(this.getTime(), this.duration);
     }
 
+    /**
+     * Returns a number in [0, 1] denoting relative location in song
+     * @returns {number}
+     */
     getProgress(): number {
         // console.log(this.getTime() / this.duration);
         return this.getTime() / this.duration;
     }
 
+    /**
+     * Load a blob and decode data in it, optionally playing it.
+     * @returns {void}
+     */
     loadAndDecode(
         blob: Blob,
         playOnLoad: boolean,
-        successCB: (duration: number) => void,
         loadErrorCB: () => void,
         decodeErrorCB: () => void
     ) {
@@ -491,7 +510,6 @@ export class WebAudioPlayer {
                     this.displayDuration = formatTime(this.duration,
                         this.duration);
                     console.log('loaded and duration is: ' + this.duration);
-                    successCB(audioBuffer.duration);
                     if (playOnLoad) {
                         this.stop();
                         this.play();
@@ -501,39 +519,51 @@ export class WebAudioPlayer {
         this.fileReader.readAsArrayBuffer(blob);
     }
 
+    /**
+     * Set this.isPlaying and force-fire angular2 change detection (a hack)
+     * @returns {void}
+     */
+    setPlaying(state: boolean) {
+        // TODO: the setTimeout() call below is a terrible hack that prevents
+        // angular change detection errors
+        setTimeout(() => { this.isPlaying = state; }, 1);
+    }
+
+    /**
+     * Play
+     * @returns {void}
+     */
     play() {
         let offset = this.pausedAt;
-
         this.sourceNode = CONTEXT.createBufferSource();
         this.sourceNode.connect(CONTEXT.destination);
         this.sourceNode.buffer = this.audioBuffer;
-        /*
-        this.sourceNode.onended = () => {
-            if (this.getTime() >= this.duration) {
-                // we've really reached the end
-                this.stop();
-            }
-            else {
-                // we haven't reached the end, we're just pausing
-            }
-        };
-        */
+        // this.sourceNode.onended = () => {
+        //     console.log('onended!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        // }
         this.sourceNode.start(0, offset);
-
         this.startedAt = CONTEXT.currentTime - offset;
         this.pausedAt = 0;
-        this.isPlaying = true;
+        this.setPlaying(true);
     }
 
+    /**
+     * Pause
+     * @returns {void}
+     */
     pause() {
         let elapsed: number = CONTEXT.currentTime - this.startedAt;
         this.stop();
         this.pausedAt = elapsed;
     }
 
+    /**
+     * Toggle state between play and pause
+     * @returns {void}
+     */
     togglePlayPause() {
         // play if !isPlaying or (isPlaying && pausedAt)
-        if (!this.isPlaying || this.pausedAt) {
+        if (!this.isPlaying) {
             this.play();
         }
         else {
@@ -542,6 +572,10 @@ export class WebAudioPlayer {
         }
     }
 
+    /**
+     * Stop playback
+     * @returns {void}
+     */
     stop() {
         if (this.sourceNode) {
             this.sourceNode.disconnect();
@@ -550,12 +584,16 @@ export class WebAudioPlayer {
         }
         this.startedAt = 0;
         this.pausedAt = 0;
-        this.isPlaying = false;
+        this.setPlaying(false);
     }
 
+    /**
+     * Seek playback to a specific time, retaining playing state (or not)
+     * @returns {void}
+     */
     timeSeek(time: number) {
         let isPlaying: boolean = this.isPlaying;
-        this.isPlaying = false;
+        this.setPlaying(false);
         if (this.sourceNode) {
             this.sourceNode.disconnect();
             this.sourceNode.stop(0);
@@ -569,9 +607,13 @@ export class WebAudioPlayer {
             this.startedAt = CONTEXT.currentTime - time;
             this.pausedAt = 0;
         }
-        this.isPlaying = isPlaying;
+        this.setPlaying(isPlaying);
     }
 
+    /**
+     * Seek playback to a relative position, retaining playing state (or not) 
+     * @returns {void}
+     */
     positionSeek(position: number) {
         this.timeSeek(position * this.duration);
     }

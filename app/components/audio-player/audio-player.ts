@@ -62,7 +62,6 @@ export class AudioPlayer implements OnChanges {
             console.log('AudioPlayer:ngOnChanges(): blob: ' + this.blob);
             if (this.blob !== undefined) {
                 this.player.loadAndDecode(this.blob, true,
-                    (duration: number) => { },
                     () => {
                         alert('FileReader error: could not load blob');
                     },
