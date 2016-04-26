@@ -35,3 +35,7 @@ echo $NEWVERSION > VERSION
 git add VERSION
 git commit -m "$NEWVERSION"
 git push
+
+# now tag all with that version
+git tag -a "$NEWVERSION"
+git push --tags
