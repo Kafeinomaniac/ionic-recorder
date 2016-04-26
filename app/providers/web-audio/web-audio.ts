@@ -186,8 +186,8 @@ export class WebAudioRecorder {
             mimeType: 'audio/webm'
         });
 
-        /*
-        // feature surveying code
+        // feature surveying code - turn this on to discover if new formats
+        // become available upon browser upgrades
         if (MediaRecorder.isTypeSupported === undefined) {
             console.warn('MediaRecorder.isTypeSupported() is undefined!');
         }
@@ -195,23 +195,19 @@ export class WebAudioRecorder {
             if (MediaRecorder.isTypeSupported('audio/wav')) {
                 console.log('audio/wav SUPPORTED');
             }
-            else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+            if (MediaRecorder.isTypeSupported('audio/ogg')) {
                 console.log('audio/ogg SUPPORTED');
             }
-            else if (MediaRecorder.isTypeSupported('audio/mp3')) {
+            if (MediaRecorder.isTypeSupported('audio/mp3')) {
                 console.log('audio/mp3 SUPPORTED');
             }
-            else if (MediaRecorder.isTypeSupported('audio/m4a')) {
+            if (MediaRecorder.isTypeSupported('audio/m4a')) {
                 console.log('audio/m4a SUPPORTED');
             }
-            else if (MediaRecorder.isTypeSupported('audio/webm')) {
+            if (MediaRecorder.isTypeSupported('audio/webm')) {
                 console.log('audio/webm SUPPORTED');
             }
-            else {
-                console.warn('Could not find supported type');
-            }
         }
-        */
 
         this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
             // console.log('ondataavailable()');
