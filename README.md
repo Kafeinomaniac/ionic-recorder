@@ -41,7 +41,13 @@ The only browsers on which we successfully tested the above link is
 * That's it for now: Chrome has a problem in `decodeAudioData()`: it cannot
   decode the same blob that the it used to save the file via `MediaRecorder()`!
 
-## For developers: installing the development environment and getting started
+## DEVELOPMENT
+
+### Roadmap
+We will set up a separate page for that.  In the meantime the main high-level goal is 
+to make this simple app as stable as possible and not add any features.
+
+## Installing the development environment and getting started
 * Get the latest versions of npm and nodejs (we use 'n' to manage nodejs version):
 
         sudo npm install -g npm

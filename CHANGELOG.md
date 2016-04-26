@@ -1,3 +1,10 @@
+### v0.0.7-alpha.1
+* Both in `audio-player` and in `record`, the html now refers to `web-audio`
+  functions directly.  This makes things simpler and makes `web-audio` more
+  useful as a standalone module.  More separation of graphics & action.
+* Got rid of many timing bugs.  Running in dev mode with no exceptions
+  thrown.  More stable.
+
 ### v0.0.6-alpha.1
 * Got rid of some record page timing / event issues that caused either
   the navbar to go blank or an error to be thrown
