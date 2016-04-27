@@ -22,7 +22,7 @@
     </vu-gauge>
     <p class="gain-item-label">
         Gain: {{percentGain}}% ({{decibels}})
-        <button small almost-dark (click)="onGainChange(0.5)">Reset Gain</button>
+        <button small almost-dark (click)="onGainChangeEnd(0.5)">Reset Gain</button>
     </p>
     <progress-slider [progress]="gainFactor/maxGainFactor" (change)="onGainChange($event)" (changeEnd)="onGainChangeEnd($event)">
     </progress-slider>

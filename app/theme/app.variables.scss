@@ -28,14 +28,16 @@ $colors: (
     almost-dark:        #222,
     darkest-gray:       #333,
     dark-gray:          #666,
-    medium-gray:        gray,
+    medium-gray:        #7f7f7f,
     light-gray:         #999,
     lightest-gray:      #ccc,
     almost-light:       #ddd,
     light:              #FFF,
 
     logo-red:           #b92025,
-    logo-orange:        #f27321
+    logo-orange:        #f27321,
+    medium-green:       #2bc253,
+    light-green:        #54f054
 ) !default;
 
 // overrides:
@@ -49,12 +51,12 @@ $list-text-color: $text-color;
 
 $toggle-md-track-background-color-on: map-get($colors, dark-gray);
 $toggle-md-track-background-color-off: map-get($colors, darkest-gray);
-$toggle-md-handle-background-color-on:  green;
+$toggle-md-handle-background-color-on: map-get($colors, medium-green);
 $toggle-md-handle-background-color-off: map-get($colors, logo-red);
 
 $toggle-ios-background-color-off: map-get($colors, darkest-gray);
 $toggle-ios-border-color-off: map-get($colors, darkest-gray);
-$toggle-ios-background-color-on: green;
+$toggle-ios-background-color-on: map-get($colors, medium-green);
 $toggle-ios-background-color-off: map-get($colors, dark);
 $toggle-ios-handle-background-color: map-get($colors, darkest-gray);
 
