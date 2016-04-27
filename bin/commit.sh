@@ -4,7 +4,6 @@
 # it automatically increments version numbers and automatically
 # tags each time.
 
-
 read MESSAGE
 
 if [ ! -e VERSION ]; then
