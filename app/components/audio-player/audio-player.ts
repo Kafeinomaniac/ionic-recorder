@@ -9,8 +9,8 @@ import {ProgressSlider} from '../progress-slider/progress-slider';
 /**
  * @name AudioPlayer
  * @description
- * An LED lights display. LEDs are displayed either dark (off) or lit up
- * (on), depending on where 'value' is in the interval ['min', 'max'].
+ * An toolbar-like (row on the screen) audio player for controlling
+ * blob playback.
  */
 @Component({
     selector: 'audio-player',

@@ -7,6 +7,11 @@ import {LibraryPage} from '../library/library';
 import {AppState} from '../../providers/app-state/app-state';
 
 
+/**
+ * @name TabsPage
+ * @description
+ * Tabs page is linked to sidemenu.
+ */
 @Page({
     templateUrl: 'build/pages/tabs/tabs.html'
 })

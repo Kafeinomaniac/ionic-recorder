@@ -9,7 +9,11 @@ interface ValidationResult {
     [key: string]: boolean;
 }
 
-
+/**
+ * @name AddFolderPage
+ * @description
+ * A modal page for entering a new folder's name and validating it.
+ */
 @Page({
     templateUrl: 'build/pages/add-folder/add-folder.html'
 })

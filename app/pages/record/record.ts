@@ -13,6 +13,11 @@ const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
 
 
+/**
+ * @name RecordPage
+ * @description
+ * The page from which we record audio and monitor microphone sound volume.
+ */
 @Page({
     templateUrl: 'build/pages/record/record.html',
     directives: [VuGauge, ProgressSlider]

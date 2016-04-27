@@ -47,6 +47,12 @@ export interface ParentChild {
     data?: DataNode;
 }
 
+/**
+ * @name LocalDB
+ * @description
+ * A tree data structure for storage and traversal and file/folder like 
+ * functionality (CRUD functions) based on IndexedDB.
+ */
 @Injectable()
 export class LocalDB {
     // 'instance' is used as part of Singleton pattern implementation

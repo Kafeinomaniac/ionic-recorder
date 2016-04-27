@@ -8,6 +8,12 @@ import {AddFolderPage} from '../add-folder/add-folder';
 import {AudioPlayer} from '../../components/audio-player/audio-player';
 
 
+/**
+ * @name LibraryPage
+ * @description
+ * The page with a file/folder interface to all your recorded files. AddFolderPage
+ * music organizer.
+ */
 @Page({
     templateUrl: 'build/pages/library/library.html',
     directives: [AudioPlayer]

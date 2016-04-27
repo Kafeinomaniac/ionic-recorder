@@ -1,11 +1,15 @@
 import {Page, NavController, MenuController} from 'ionic-angular';
 import {TabsPage} from '../tabs/tabs';
 
-
+/**
+ * @name IntroPage
+ * @description
+ * A slide show with an introduction to this app.
+ */
 @Page({
     templateUrl: 'build/pages/intro/intro.html'
 })
-export class TutorialPage {
+export class IntrolPage {
     private showSkipButton: boolean = true;
     private slides: Array<{ title: string, description: string, image: string }>;
     static get parameters() {

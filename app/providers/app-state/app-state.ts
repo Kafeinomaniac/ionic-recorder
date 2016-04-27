@@ -34,7 +34,12 @@ const DEFAULT_STATE: State = {
     gain: { factor: 1.0, maxFactor: 2.0 }
 };
 
-
+/**
+ * @name AppState
+ * @description
+ * Track the state of the app using IndexedDB so that we can start where
+ * we left off the last time we used this app.
+ */
 @Injectable()
 export class AppState {
     // 'instance' is used to implement this class as a Singleton

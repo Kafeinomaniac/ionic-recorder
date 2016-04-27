@@ -18,6 +18,11 @@ const CONTEXT = new (AudioContext || webkitAudioContext)();
  * RECORDER
  *****************************************************************************/
 
+/**
+ * @name WebAudioRecorder
+ * @description
+ * Audio Recorder functions based on WebAudio.
+ */
 export class WebAudioRecorder {
     // 'instance' is used as part of Singleton pattern implementation
     private static instance: WebAudioRecorder = null;
@@ -417,9 +422,14 @@ export class WebAudioRecorder {
 
 /*****************************************************************************
  * PLAYER
- * Based on code by Ian McGregor: http://codepen.io/ianmcgregor/pen/EjdJZZ
  *****************************************************************************/
 
+/**
+ * @name WebAudioPlayer
+ * @description
+ * Audio Player functions based on WebAudio. Originally based on
+ * code by Ian McGregor: http://codepen.io/ianmcgregor/pen/EjdJZZ
+ */
 export class WebAudioPlayer {
     // 'instance' is used as part of Singleton pattern implementation
     private static instance: WebAudioPlayer = null;
