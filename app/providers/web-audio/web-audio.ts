@@ -530,8 +530,8 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     setPlaying(state: boolean) {
-        // TODO: the setTimeout() call below is a terrible hack that prevents
-        // angular change detection errors
+        // TODO: the setTimeout() call below is a terrible hack to prevent
+        // angular change detection exceptions - can we do this better?
         setTimeout(() => { this.isPlaying = state; }, 1);
     }
 
