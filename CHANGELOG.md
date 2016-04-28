@@ -24,8 +24,6 @@
   modified in real time (with a finger or the mouse, it can be
   moved); (2) allows for input of a number - input slider functionality 
   (used in recorder gain adjustment slider)
-
-### v0.0.4-alpha
 * Dropped '.x' extension on version numbers - the minor version number
   (rightmost) is enough
 * Using WebAudio for playback now
@@ -38,8 +36,6 @@
 * Custom progress slider that can be used as `<input type="range">` or
   as a progress indicator or both, used everywhere for a uniform feel
   and look, running smoothly and efficiently.
-
-### v0.0.3-alpha
 * Minor version cleanup, from this point on all tags pass all tests successfully
 * Started tagging and started this ChangeLog
 * Catch-all for app errors is in now
