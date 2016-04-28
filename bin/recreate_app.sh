@@ -10,17 +10,16 @@
 APP_NAME="ionic-recorder"
 GITHUB_PATH="tracktunes/$APP_NAME"
 
-# TODO: UNCOMMENT
-# if [ -e $APP_NAME ]; then
-#     echo "ERROR: ./$APP_NAME already exists"
-#     exit 1
-# fi
+if [ -e $APP_NAME ]; then
+    echo "ERROR: ./$APP_NAME already exists"
+    exit 1
+fi
 
-# ionic start $APP_NAME --v2 --ts
+ionic start $APP_NAME --v2 --ts
 
 mkdir -p tmp
 cd tmp
-.git clone https://github.com/$GITHUB_PATH
+git clone https://github.com/$GITHUB_PATH
 cd ..
 
 for copy in \
@@ -46,8 +45,7 @@ cd $APP_NAME
 cp package.json package.json.ORIG
 
 # now that we've modified package.json, change it
-# ./bin/fix_package.json.sh
-./bin/modify_package.json.sh
+./bin/modify_package.json.py
 
 # install npm packages
 ./bin/install_npm_packages.sh

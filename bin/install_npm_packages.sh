@@ -7,12 +7,12 @@
 
 # NOTE: make sure you have latest ionic cli installed
 
-npm install --save \
-    reflect-metadata 
-
-
-npm install --save-dev awesome-typescript-loader \
+npm install --save-dev \
     reflect-metadata \
+    zone
+
+npm install --save-dev \
+    awesome-typescript-loader \
     chalk \
     del \
     es6-module-loader \
@@ -45,4 +45,4 @@ npm install --save-dev awesome-typescript-loader \
     tslint \
     tslint-eslint-rules \
     typescript \
-    typings \
+    typings
