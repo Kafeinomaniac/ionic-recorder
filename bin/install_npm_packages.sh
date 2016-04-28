@@ -9,8 +9,8 @@
 
 npm install --save \
     reflect-metadata \
-    zone
-exit 0
+    zone.js
+
 npm install --save-dev \
     awesome-typescript-loader \
     chalk \
