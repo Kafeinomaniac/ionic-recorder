@@ -7,7 +7,12 @@
 
 # NOTE: make sure you have latest ionic cli installed
 
+npm install --save \
+    reflect-metadata 
+
+
 npm install --save-dev awesome-typescript-loader \
+    reflect-metadata \
     chalk \
     del \
     es6-module-loader \
