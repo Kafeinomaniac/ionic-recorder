@@ -48,6 +48,9 @@ cp package.json package.json.ORIG
 ./bin/modify_package_json.py
 
 # install npm packages
+
+echo "ADDING SOME NPM PACKAGES ..."
+
 ./bin/install_npm_packages.sh
 exit 0
 /bin/rm -fr tslint.json
