@@ -23,8 +23,12 @@ git clone https://github.com/$GITHUB_PATH
 cd ..
 
 for copy in \
+    CHANGELOG.md \
     CONTRIBUTING.md \
     LICENSE \
+    README.md \
+    TODO.md \
+    VERSION \
     www/favicon.ico \
     www/img \
     app \
