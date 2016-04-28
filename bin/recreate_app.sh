@@ -66,7 +66,7 @@ perl -pi -e 's/\"double\"/\"single\"/' tslint.json
 ./bin/fix_typings.sh
 
 # install package.json (ionic) packages
-./npm install
+npm install
 
 # run the main gulp test task, which runs other tasks in order
 # NOTE: seems like we can't run these tasks in order from the

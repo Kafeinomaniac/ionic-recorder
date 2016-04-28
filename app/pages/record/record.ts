@@ -5,7 +5,7 @@ import {VuGauge} from '../../components/vu-gauge/vu-gauge';
 import {AppState, GainState} from '../../providers/app-state/app-state';
 import {WebAudioRecorder} from '../../providers/web-audio/web-audio';
 import {LocalDB} from '../../providers/local-db/local-db';
-import {ProgressSlider} 
+import {ProgressSlider}
 from '../../components/progress-slider/progress-slider';
 
 
@@ -72,7 +72,7 @@ export class RecordPage {
                 this.recorder.waitForAudio().subscribe(
                     () => {
                         this.onGainChange(gain.factor / gain.maxFactor);
-                        // this.audioReady = true;             
+                        // this.audioReady = true;
                     }
                 ); // recorder.waitForAudio().subscribe(
             },

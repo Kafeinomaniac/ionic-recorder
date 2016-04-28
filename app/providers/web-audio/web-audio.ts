@@ -13,7 +13,7 @@ const CONTEXT = new (AudioContext || webkitAudioContext)();
 
 
 // TODO: just like in LocalDB, have initAudio return an observable
-// instead of .db we'll use .isReady here.  call 
+// instead of .db we'll use .isReady here.  call
 /*****************************************************************************
  * RECORDER
  *****************************************************************************/
@@ -301,7 +301,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     analyzeVolume(): boolean {
-        // for some reason this setTimeout(() => { ... }, 0) fixes all our 
+        // for some reason this setTimeout(() => { ... }, 0) fixes all our
         // update angular2 problems (in devMode we get a million exceptions
         // without this setTimeout)
         let i: number, bufferMax: number = 0, absValue: number;
@@ -617,7 +617,7 @@ export class WebAudioPlayer {
     }
 
     /**
-     * Seek playback to a relative position, retaining playing state (or not) 
+     * Seek playback to a relative position, retaining playing state (or not)
      * @returns {void}
      */
     positionSeek(position: number) {

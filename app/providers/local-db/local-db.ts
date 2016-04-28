@@ -50,7 +50,7 @@ export interface ParentChild {
 /**
  * @name LocalDB
  * @description
- * A tree data structure for storage and traversal and file/folder like 
+ * A tree data structure for storage and traversal and file/folder like
  * functionality (CRUD functions) based on IndexedDB.
  */
 @Injectable()
