@@ -63,7 +63,7 @@ perl -pi -e 's/\"double\"/\"single\"/' tslint.json
 ./bin/install_typings.sh
 
 # patches to fix some type complaints by the Typescript compiler
-./bin/fix_typings.sh
+# ./bin/fix_typings.sh
 
 # install package.json (ionic) packages
 npm install

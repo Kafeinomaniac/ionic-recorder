@@ -7,7 +7,7 @@ import {TabsPage} from './pages/tabs/tabs';
 import {DB_NAME} from './providers/local-db/local-db';
 // the reason for the following import 'es6-shim'; line is this:
 // https://forum.ionicframework.com/t/ionic-2-projects-updating-to-beta-4/49054
-import 'es6-shim';
+// import 'es6-shim';
 // Note: the above import broke PhantomJS: see test/karma.config.js.
 
 // check into doing this via ionic's way, the following is angular2 way:
