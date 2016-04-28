@@ -7,10 +7,10 @@
 
 # NOTE: make sure you have latest ionic cli installed
 
-npm install --save-dev \
+npm install --save \
     reflect-metadata \
     zone
-
+exit 0
 npm install --save-dev \
     awesome-typescript-loader \
     chalk \

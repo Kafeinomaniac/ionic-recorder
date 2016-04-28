@@ -45,11 +45,11 @@ cd $APP_NAME
 cp package.json package.json.ORIG
 
 # now that we've modified package.json, change it
-./bin/modify_package.json.py
+./bin/modify_package_json.py
 
 # install npm packages
 ./bin/install_npm_packages.sh
-
+exit 0
 /bin/rm -fr tslint.json
 ./bin/tslint --init
 
