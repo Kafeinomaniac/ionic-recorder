@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Tracktunes Inc
+    // Copyright (c) 2016 Tracktunes Inc
 
 // See http://ionicframework.com/docs/v2/theming/
 
@@ -48,17 +48,6 @@ $background-color: map-get($colors, dark) !default;
 $list-background-color: map-get($colors, dark);
 $list-border-color: map-get($colors, dark-gray);
 $list-text-color: $text-color;
-
-$toggle-md-track-background-color-on: map-get($colors, dark-gray);
-$toggle-md-track-background-color-off: map-get($colors, darkest-gray);
-$toggle-md-handle-background-color-on: map-get($colors, medium-green);
-$toggle-md-handle-background-color-off: map-get($colors, logo-red);
-
-$toggle-ios-background-color-off: map-get($colors, darkest-gray);
-$toggle-ios-border-color-off: map-get($colors, darkest-gray);
-$toggle-ios-background-color-on: map-get($colors, medium-green);
-$toggle-ios-background-color-off: map-get($colors, dark);
-$toggle-ios-handle-background-color: map-get($colors, darkest-gray);
 
 //
 // some globals shared between files

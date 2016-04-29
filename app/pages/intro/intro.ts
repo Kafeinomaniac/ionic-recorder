@@ -9,7 +9,7 @@ import {TabsPage} from '../tabs/tabs';
 @Page({
     templateUrl: 'build/pages/intro/intro.html'
 })
-export class IntrolPage {
+export class IntroPage {
     private showSkipButton: boolean = true;
     private slides: Array<{ title: string, description: string, image: string }>;
     static get parameters() {
@@ -21,7 +21,7 @@ export class IntrolPage {
             {
                 title: 'Ionic Recorder app, by <a href="https://tracktunes.org">Tracktunes Inc</a>',
                 description: 'The <b>Ionic Recorder App</b> is a practical preview of the Ionic Framework in action, and a demonstration of proper code use.',
-                image: 'img/ica-slidebox-img-1.png',
+                image: 'img/tracktunes-logo-text_sml-tm-w.svg',
             },
             {
                 title: 'What is Ionic?',

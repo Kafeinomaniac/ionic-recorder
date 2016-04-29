@@ -5,6 +5,8 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* make intro page a modal popped up from app?  try to pop a modal
+  from app first.
 * for new release: 0.0.5-alpha, we need:
   * intro slide show
   * incorporate the version file info into the app

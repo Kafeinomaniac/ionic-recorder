@@ -4,6 +4,7 @@ import {App, IonicApp, Platform, MenuController} from 'ionic-angular';
 import {Type, enableProdMode, ExceptionHandler, provide} from 'angular2/core';
 import {AppState} from './providers/app-state/app-state';
 import {TabsPage} from './pages/tabs/tabs';
+import {IntroPage} from './pages/intro/intro';
 import {DB_NAME} from './providers/local-db/local-db';
 // the reason for the following import 'es6-shim'; line is this:
 // https://forum.ionicframework.com/t/ionic-2-projects-updating-to-beta-4/49054
@@ -33,6 +34,7 @@ class AppExceptionHandler extends ExceptionHandler {
 export class TracktunesApp {
     private appState: AppState = AppState.Instance;
     private rootPage: Type = TabsPage;
+    // private rootPage: Type = IntroPage;
 
     // make selectedTab not a real number so that it gets set
     // by what we get from app state for the first time. we use
