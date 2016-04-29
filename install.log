@@ -1,8 +1,16 @@
-Script started on Thu 07 Apr 2016 05:30:37 PM EDT
-dtal@thing3: ./bin/recreate_app.sh ; date; exit
+dtal@thing3: ./bin/recreate_app.sh 
+UPGRADING ALL PACKAGES FOR ionic-recorder VERISION: 
+
+
 Creating Ionic app in folder /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder based on tabs project
 Downloading: https://github.com/driftyco/ionic2-app-base/archive/typescript.zip
+[=============================]  100%  0.0s
+Downloading: https://github.com/driftyco/ionic2-starter-tabs/archive/typescript.zip
+[=============================]  100%  0.0s
+Installing npm packages...
+
 Adding initial native plugins
+[=============================]  100%  0.0s
 Saving your Ionic app state of platforms and plugins
 Saved platform
 There was no fetch.json file available to restore plugin information from.
@@ -33,22 +41,49 @@ https://apps.ionic.io/signup
 New to Ionic? Get started here: http://ionicframework.com/docs/v2/getting-started
 
 
+
+
+
+To run on Android:
+  ionic run android
+
+To test your app on a device easily, try Ionic View:
+  http://view.ionic.io
+
+New! Add push notifications, update your app remotely, and package iOS and Android apps with the Ionic Platform!
+https://apps.ionic.io/signup
+
+New to Ionic? Get started here: http://ionicframework.com/docs/v2/getting-started
+
+
+(740) ~/workspace/tracktunes/git/ionic-recorder
+dtal@thing3: ls
+app/  CHANGELOG.md  CONTRIBUTING.md  gulpfile.js  install.log        ionic-recorder/  node_modules/  plugins/   resources/  TODO.md        tslint.json  typings.json  www/
+bin/  config.xml    coverage/        hooks/       ionic.config.json  LICENSE          package.json   README.md  test/       tsconfig.json  typings/     VERSION
+(741) ~/workspace/tracktunes/git/ionic-recorder
+dtal@thing3: ./bin/recreate_app.sh 
 Cloning into 'ionic-recorder'...
-remote: Counting objects: 4338, done.
-remote: Compressing objects: 100% (44/44)   
-remote: Compressing objects: 100% (44/44), done.
-Receiving objects:  99% (4295/4338), 1.65 MiB | 1.08 MiB/s   
-remote: Total 4338 (delta 16), reused 0 (delta 0), pack-reused 4294
-Receiving objects: 100% (4338/4338), 1.65 MiB | 1.08 MiB/s   
-Receiving objects: 100% (4338/4338), 1.79 MiB | 1.08 MiB/s, done.
-Resolving deltas: 100% (2497/2497)   
-Resolving deltas: 100% (2497/2497), done.
+remote: Counting objects: 5290, done.
+remote: Compressing objects: 100% (60/60), done.
+remote: Total 5290 (delta 25), reused 0 (delta 0), pack-reused 5222
+Receiving objects: 100% (5290/5290), 2.04 MiB | 1.76 MiB/s, done.
+Resolving deltas: 100% (3104/3104), done.
 Checking connectivity... done.
+ADDING SOME NPM PACKAGES ...
+ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder
+├── UNMET PEER DEPENDENCY reflect-metadata@0.1.3
+└── zone.js@0.6.12 
+
+npm WARN optional Skipping failed optional dependency /chokidar/fsevents:
+npm WARN notsup Not compatible with your operating system or architecture: fsevents@1.0.12
+npm WARN angular2@2.0.0-beta.15 requires a peer of reflect-metadata@0.1.2 but none was installed.
 npm WARN deprecated ionic-gulp-webpack-build@1.0.0: ionic-gulp-webpack-build has been renamed to ionic-gulp-webpack.
-npm WARN deprecated graceful-fs@3.0.8: graceful-fs version 3 and before will fail on newer node releases. Please update to graceful-fs@^4.0.0 as soon as possible.
+npm WARN deprecated graceful-fs@3.0.8: graceful-fs v3.0.0 and before will fail on node releases >= v6.0. Please update to graceful-fs@^4.0.0 as soon as possible.
 npm WARN deprecated lodash@1.0.2: lodash@<3.0.0 is no longer maintained. Upgrade to lodash@^4.0.0.
-npm WARN deprecated graceful-fs@1.2.3: graceful-fs version 3 and before will fail on newer node releases. Please update to graceful-fs@^4.0.0 as soon as possible.
+npm WARN deprecated graceful-fs@1.2.3: graceful-fs v3.0.0 and before will fail on node releases >= v6.0. Please update to graceful-fs@^4.0.0 as soon as possible.
 npm WARN deprecated npmconf@2.1.2: this package has been reintegrated into npm and is now out of date with respect to npm
+npm WARN prefer global ts-node@0.7.2 should be installed with -g
+
 > phantomjs-prebuilt@2.1.7 install /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder/node_modules/phantomjs-prebuilt
 > node install.js
 
@@ -56,14 +91,15 @@ PhantomJS not found on PATH
 Downloading https://github.com/Medium/phantomjs/releases/download/v2.1.1//phantomjs-2.1.1-linux-x86_64.tar.bz2
 Saving to /tmp/phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2
 Receiving...
+  [=======================================-] 98%
 Received 22866K total.
 Extracting tar contents (via spawned process)
 Removing /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder/node_modules/phantomjs-prebuilt/lib/phantom
-Copying extracted folder /tmp/phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2-extract-1460064832858/phantomjs-2.1.1-linux-x86_64 -> /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder/node_modules/phantomjs-prebuilt/lib/phantom
+Copying extracted folder /tmp/phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2-extract-1461957349689/phantomjs-2.1.1-linux-x86_64 -> /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder/node_modules/phantomjs-prebuilt/lib/phantom
 Writing location.js file
 Done. Phantomjs binary available at /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder/node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs
 ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder
-├─┬awesome-typescript-loader@0.17.0-rc.5
+├─┬ awesome-typescript-loader@0.17.0 
 │ ├─┬ babel-polyfill@6.7.4 
 │ │ ├── babel-regenerator-runtime@6.5.0 
 │ │ └─┬ babel-runtime@5.8.38 
@@ -71,22 +107,21 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │ ├─┬ enhanced-resolve@0.9.1 
 │ │ ├── memory-fs@0.2.0 
 │ │ └── tapable@0.1.10 
-│ ├── es6-promisify@3.0.0 
-│ ├─┬ loader-utils@0.2.13 
+│ ├─┬ es6-promisify@3.0.0 
+│ │ └── es6-promise@3.1.2 
+│ ├─┬ loader-utils@0.2.14 
 │ │ ├── big.js@3.1.3 
-│ │ └── json5@0.4.0 
+│ │ ├── emojis-list@1.0.1 
+│ │ └── json5@0.5.0 
 │ ├── object-assign@2.1.1 
 │ ├─┬ source-map-support@0.4.0 
-│ │ └── source-map@0.1.32 
+│ │ └─┬ source-map@0.1.32 
+│ │   └── amdefine@1.0.0 
 │ ├── strip-json-comments@2.0.1 
 │ └── tsconfig@2.2.0 
-├─┬ del@2.2.0
-│ ├─┬ globby@4.0.0
-│ │ └── object-assign@4.0.1 
-│ └── object-assign@4.0.1 
 ├─┬ es6-module-loader@0.17.11 
 │ └── when@3.7.7 
-├─┬ gulp-inline-ng2-template@1.1.3 
+├─┬ gulp-inline-ng2-template@1.1.4 
 │ ├─┬ es6-templates@0.2.2 
 │ │ └─┬ recast@0.9.18 
 │ │   ├── ast-types@0.6.16 
@@ -94,7 +129,7 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │ │   ├── private@0.1.6 
 │ │   └── source-map@0.1.43 
 │ └── extend@3.0.0 
-├─┬ gulp-load-plugins@1.2.0 
+├─┬ gulp-load-plugins@1.2.2 
 │ ├─┬ findup-sync@0.2.1 
 │ │ └─┬ glob@4.3.5 
 │ │   └── minimatch@2.0.10 
@@ -102,47 +137,54 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │   └── minimatch@2.0.10 
 ├─┬ gulp-tap@0.1.3 
 │ └─┬ event-stream@3.1.7 
+│   ├── duplexer@0.1.1 
 │   ├── from@0.1.3 
 │   ├── pause-stream@0.0.11 
 │   ├── split@0.2.10 
 │   └── stream-combiner@0.0.4 
-├─┬ gulp-tslint@4.3.4 
-│ ├── map-stream@0.1.0 
-│ └─┬ rcloader@0.2.0 
-│   └─┬ rcfinder@0.1.8 
-│     └── lodash@2.4.2 
-├─┬ gulp-typescript@2.12.2 
-│ ├── source-map@0.5.3 
-│ ├── typescript@1.8.7 
-│ └─┬ vinyl-fs@2.2.1 
+├─┬ gulp-tslint@5.0.0 
+│ └── map-stream@0.1.0 
+├─┬ gulp-typescript@2.13.0 
+│ ├── typescript@1.8.9 
+│ └─┬ vinyl-fs@2.4.3 
+│   ├─┬ duplexify@3.4.3 
+│   │ ├── end-of-stream@1.0.0 
+│   │ └─┬ readable-stream@2.1.2 
+│   │   └── isarray@1.0.0 
 │   ├─┬ glob-stream@5.3.2 
 │   │ ├── extend@3.0.0 
 │   │ ├── glob@5.0.15 
-│   │ ├─┬ ordered-read-streams@0.3.0 
-│   │ │ └─┬ readable-stream@2.0.6 
-│   │ │   └── isarray@1.0.0 
+│   │ ├── ordered-read-streams@0.3.0 
 │   │ ├─┬ through2@0.6.5 
-│   │ │ └─┬ readable-stream@1.0.33 
+│   │ │ └─┬ readable-stream@1.0.34 
 │   │ │   └── isarray@0.0.1 
 │   │ ├─┬ to-absolute-glob@0.1.1 
 │   │ │ └── extend-shallow@2.0.1 
 │   │ └─┬ unique-stream@2.2.1 
 │   │   └── json-stable-stringify@1.0.1 
 │   ├── is-valid-glob@0.3.0 
-│   ├── object-assign@4.0.1 
+│   ├─┬ lazystream@1.0.0 
+│   │ └─┬ readable-stream@2.1.2 
+│   │   └── isarray@1.0.0 
+│   ├─┬ lodash.isequal@4.1.4 
+│   │ └── lodash.keys@4.0.6 
+│   ├─┬ merge-stream@1.0.0 
+│   │ └─┬ readable-stream@2.1.2 
+│   │   └── isarray@1.0.0 
+│   ├─┬ readable-stream@2.1.2 
+│   │ └── isarray@1.0.0 
 │   ├── through2-filter@2.0.0 
+│   ├── vali-date@1.0.0 
 │   └── vinyl@1.1.1 
-├─┬ ionic-gulp-sass-build@1.0.0
-│ └─┬ gulp-sass@2.2.0
-│   └── object-assign@4.0.1 
 ├─┬ ionic-gulp-webpack-build@1.0.0 
-│ └─┬ webpack@1.12.14 
-│   ├── esprima@2.7.2 
+│ └─┬ webpack@1.13.0 
+│   ├── acorn@3.1.0 
+│   ├── async@1.5.2 
 │   ├── interpret@0.6.6 
 │   ├─┬ memory-fs@0.3.0 
 │   │ ├─┬ errno@0.1.4 
 │   │ │ └── prr@0.0.0 
-│   │ └─┬ readable-stream@2.0.6 
+│   │ └─┬ readable-stream@2.1.2 
 │   │   └── isarray@1.0.0 
 │   ├─┬ node-libs-browser@0.5.3 
 │   │ ├─┬ buffer@3.6.0 
@@ -160,24 +202,11 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │   │ └─┬ url@0.10.3 
 │   │   └── punycode@1.3.2 
 │   ├── supports-color@3.1.2 
-│   ├─┬ uglify-js@2.6.2 
-│   │ ├── async@0.2.10 
-│   │ ├── source-map@0.5.3 
-│   │ ├── uglify-to-browserify@1.0.2 
-│   │ └─┬ yargs@3.10.0 
-│   │   ├── camelcase@1.2.1 
-│   │   ├─┬ cliui@2.1.0 
-│   │   │ ├─┬ center-align@0.1.3 
-│   │   │ │ ├─┬ align-text@0.1.4 
-│   │   │ │ │ └── longest@1.0.1 
-│   │   │ │ └── lazy-cache@1.0.3 
-│   │   │ ├── right-align@0.1.3 
-│   │   │ └── wordwrap@0.0.2 
-│   │   └── window-size@0.1.0 
 │   ├─┬ watchpack@0.2.9 
 │   │ └── async@0.9.2 
 │   └─┬ webpack-core@0.6.8 
-│     └── source-list-map@0.1.6 
+│     ├── source-list-map@0.1.6 
+│     └── source-map@0.4.4 
 ├── jasmine-core@2.4.1 
 ├── jasmine-spec-reporter@2.4.0 
 ├─┬ karma@0.13.22 
@@ -202,7 +231,7 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │ │ │ └── escape-html@1.0.3 
 │ │ ├── parseurl@1.3.1 
 │ │ └── utils-merge@1.0.0 
-│ ├── core-js@2.2.2 
+│ ├── core-js@2.3.0 
 │ ├── di@0.0.1 
 │ ├─┬ dom-serialize@2.2.1 
 │ │ ├── custom-event@1.0.0 
@@ -220,12 +249,11 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │ │ ├── eventemitter3@1.2.0 
 │ │ └── requires-port@1.0.0 
 │ ├── isbinaryfile@3.0.0 
-│ ├─┬ log4js@0.6.33 
-│ │ └── readable-stream@1.0.33 
+│ ├─┬ log4js@0.6.35 
+│ │ └── readable-stream@1.0.34 
 │ ├── mime@1.3.4 
 │ ├─┬ optimist@0.6.1 
-│ │ ├── minimist@0.0.10 
-│ │ └── wordwrap@0.0.3 
+│ │ └── minimist@0.0.10 
 │ ├─┬ socket.io@1.4.5 
 │ │ ├─┬ engine.io@1.6.8 
 │ │ │ ├─┬ accepts@1.1.4 
@@ -265,47 +293,43 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │ │   ├── benchmark@1.0.0 
 │ │   ├── component-emitter@1.1.2 
 │ │   └── json3@3.3.2 
-│ ├── source-map@0.5.3 
 │ └─┬ useragent@2.1.9 
 │   └── lru-cache@2.2.4 
 ├─┬ karma-chrome-launcher@0.2.3 
 │ └─┬ fs-access@1.0.0 
 │   └── null-check@1.0.0 
 ├─┬ karma-coverage@0.5.5 
-│ ├─┬ dateformat@1.0.12
-│ │ └─┬ meow@3.7.0
-│ │   └── object-assign@4.0.1 
-│ ├─┬ istanbul@0.4.3 
-│ │ ├─┬ escodegen@1.8.0 
-│ │ │ ├── esprima@2.7.2 
-│ │ │ ├── estraverse@1.9.3 
-│ │ │ ├── esutils@2.0.2 
-│ │ │ ├─┬ optionator@0.8.1 
-│ │ │ │ ├── deep-is@0.1.3 
-│ │ │ │ ├── fast-levenshtein@1.1.3 
-│ │ │ │ ├── levn@0.3.0 
-│ │ │ │ ├── prelude-ls@1.1.2 
-│ │ │ │ ├── type-check@0.3.2 
-│ │ │ │ └── wordwrap@1.0.0 
-│ │ │ └── source-map@0.2.0 
-│ │ ├── esprima@2.7.2 
-│ │ ├─┬ fileset@0.2.1 
-│ │ │ ├── glob@5.0.15 
-│ │ │ └── minimatch@2.0.10 
-│ │ ├─┬ handlebars@4.0.5 
-│ │ │ └── source-map@0.4.4 
-│ │ ├─┬ js-yaml@3.5.5 
-│ │ │ ├─┬ argparse@1.0.7 
-│ │ │ │ └── sprintf-js@1.0.3 
-│ │ │ └── esprima@2.7.2 
-│ │ ├── supports-color@3.1.2 
-│ │ └── wordwrap@1.0.0 
-│ └── source-map@0.5.3 
+│ └─┬ istanbul@0.4.3 
+│   ├── async@1.5.2 
+│   ├─┬ escodegen@1.8.0 
+│   │ ├── esprima@2.7.2 
+│   │ ├── estraverse@1.9.3 
+│   │ ├── esutils@2.0.2 
+│   │ ├─┬ optionator@0.8.1 
+│   │ │ ├── deep-is@0.1.3 
+│   │ │ ├── fast-levenshtein@1.1.3 
+│   │ │ ├── levn@0.3.0 
+│   │ │ ├── prelude-ls@1.1.2 
+│   │ │ ├── type-check@0.3.2 
+│   │ │ └── wordwrap@1.0.0 
+│   │ └── source-map@0.2.0 
+│   ├── esprima@2.7.2 
+│   ├─┬ fileset@0.2.1 
+│   │ ├── glob@5.0.15 
+│   │ └── minimatch@2.0.10 
+│   ├─┬ handlebars@4.0.5 
+│   │ ├── async@1.5.2 
+│   │ └── source-map@0.4.4 
+│   ├─┬ js-yaml@3.6.0 
+│   │ ├─┬ argparse@1.0.7 
+│   │ │ └── sprintf-js@1.0.3 
+│   │ └── esprima@2.7.2 
+│   ├── supports-color@3.1.2 
+│   └── wordwrap@1.0.0 
 ├── karma-jasmine@0.3.8 
-├─┬ karma-mocha-reporter@2.0.0 
-│ └── chalk@1.1.1 
+├── karma-mocha-reporter@2.0.2 
 ├─┬ karma-phantomjs-launcher@1.0.0 
-│ └── lodash@4.8.2 
+│ └── lodash@4.11.1 
 ├─┬ phantomjs-prebuilt@2.1.7 
 │ ├─┬ extract-zip@1.5.0 
 │ │ ├─┬ concat-stream@1.5.0 
@@ -318,10 +342,10 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │ │   └─┬ fd-slicer@1.0.1 
 │ │     └── pend@1.2.0 
 │ ├─┬ fs-extra@0.26.7 
-│ │ ├── jsonfile@2.2.3 
-│ │ └── klaw@1.1.3 
+│ │ ├── jsonfile@2.3.0 
+│ │ └── klaw@1.2.0 
 │ ├─┬ hasha@2.2.0 
-│ │ └── is-stream@1.0.1 
+│ │ └── is-stream@1.1.0 
 │ ├── kew@0.7.0 
 │ ├── progress@1.1.8 
 │ ├─┬ request@2.67.0 
@@ -332,13 +356,13 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │ │ └── qs@5.2.0 
 │ └─┬ request-progress@2.0.1 
 │   └── throttleit@1.0.0 
-├─┬ protractor@3.2.2 
+├─┬ protractor@3.3.0 
 │ ├── adm-zip@0.4.7 
 │ ├─┬ jasmine@2.4.1 
 │ │ ├── exit@0.1.2 
 │ │ └─┬ glob@3.2.11 
 │ │   └── minimatch@0.3.0 
-│ ├── jasminewd2@0.0.8 
+│ ├── jasminewd2@0.0.9 
 │ ├─┬ request@2.67.0 
 │ │ ├─┬ bl@1.0.3 
 │ │ │ └─┬ readable-stream@2.0.6 
@@ -359,37 +383,34 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
 │   │ └── ultron@1.0.2 
 │   └─┬ xml2js@0.4.4 
 │     ├── sax@0.6.1 
-│     └── xmlbuilder@8.2.1 
+│     └── xmlbuilder@8.2.2 
+├── UNMET PEER DEPENDENCY reflect-metadata@0.1.3
 ├── strip-sourcemap-loader@0.0.1 
-├── systemjs@0.19.25 
-├─┬ traceur@0.0.106 
+├── systemjs@0.19.27 
+├─┬ traceur@0.0.108 
 │ ├── glob@5.0.15 
 │ ├── rsvp@3.2.1 
 │ └─┬ source-map-support@0.2.10 
 │   └── source-map@0.1.32 
-├─┬ ts-node@0.7.1 
+├─┬ ts-node@0.7.2 
 │ ├── diff@2.2.2 
 │ └── make-error@1.1.1 
-├─┬ tslint@3.7.1 
-│ ├─┬ findup-sync@0.2.1 
-│ │ └─┬ glob@4.3.5 
-│ │   └── minimatch@2.0.10 
+├─┬ tslint@3.8.1 
 │ └── underscore.string@3.1.1 
-├─┬ tslint-eslint-rules@1.2.0 
+├─┬ tslint-eslint-rules@1.3.0 
 │ └─┬ doctrine@0.7.2 
 │   └── esutils@1.1.6 
-└─┬ typings@0.7.12 
+└─┬ typings@0.8.1 
   ├── any-promise@1.1.0 
-  ├── bluebird@3.3.4 
+  ├── bluebird@3.3.5 
   ├─┬ columnify@1.5.4 
   │ └── wcwidth@1.0.0 
   ├── listify@1.0.0 
-  ├─┬ typings-core@0.2.16 
+  ├─┬ typings-core@0.3.1 
   │ ├─┬ configstore@2.0.0 
   │ │ ├─┬ dot-prop@2.4.0 
   │ │ │ └── is-obj@1.0.1 
-  │ │ ├── object-assign@4.0.1 
-  │ │ ├── uuid@2.0.1 
+  │ │ ├── uuid@2.0.2 
   │ │ ├─┬ write-file-atomic@1.1.4 
   │ │ │ ├── imurmurhash@0.1.4 
   │ │ │ └── slide@1.1.6 
@@ -401,7 +422,7 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
   │ ├─┬ is-absolute@0.2.5 
   │ │ ├─┬ is-relative@0.2.1 
   │ │ │ └─┬ is-unc-path@0.1.1 
-  │ │ │   └── unc-path-regex@0.1.1 
+  │ │ │   └── unc-path-regex@0.1.2 
   │ │ └── is-windows@0.1.1 
   │ ├── lockfile@1.0.1 
   │ ├── make-error-cause@1.1.0 
@@ -434,7 +455,7 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
   ├─┬ update-notifier@0.6.3 
   │ ├─┬ boxen@0.3.1 
   │ │ ├── filled-array@1.1.0 
-  │ │ ├── object-assign@4.0.1 
+  │ │ ├── string-width@1.0.1 
   │ │ └── widest-line@1.0.0 
   │ ├── is-npm@1.0.0 
   │ ├─┬ latest-version@2.0.0 
@@ -447,11 +468,10 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
   │ │   │ ├── is-retry-allowed@1.0.0 
   │ │   │ ├── lowercase-keys@1.0.0 
   │ │   │ ├── node-status-codes@1.0.0 
-  │ │   │ ├── object-assign@4.0.1 
   │ │   │ ├─┬ read-all-stream@3.1.0 
-  │ │   │ │ └─┬ readable-stream@2.0.6 
+  │ │   │ │ └─┬ readable-stream@2.1.2 
   │ │   │ │   └── isarray@1.0.0 
-  │ │   │ ├─┬ readable-stream@2.0.6 
+  │ │   │ ├─┬ readable-stream@2.1.2 
   │ │   │ │ └── isarray@1.0.0 
   │ │   │ ├── timed-out@2.0.0 
   │ │   │ ├── unzip-response@1.0.0 
@@ -464,7 +484,8 @@ ionic-recorder@ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorde
   └── wordwrap@1.0.0 
 
 npm WARN optional Skipping failed optional dependency /chokidar/fsevents:
-npm WARN notsup Not compatible with your operating system or architecture: fsevents@1.0.11
+npm WARN notsup Not compatible with your operating system or architecture: fsevents@1.0.12
+npm WARN angular2@2.0.0-beta.15 requires a peer of reflect-metadata@0.1.2 but none was installed.
 typings WARN badlocation "github:tracktunes/ionic-recorder/typings/main/ambient/local/index.d.ts" is a mutable location and may change, consider specifying a commit hash
 local
 └── (No dependencies)
@@ -477,7 +498,7 @@ typings WARN badlocation "github:tracktunes/ionic-recorder/typings/main/ambient/
 MediaStream
 └── (No dependencies)
 
-typings INFO reference Stripped reference "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/7de6c3dd94feaeb21f20054b9f30d5dabc5efabd/selenium-webdriver/selenium-webdriver.d.ts" during installation from "angular-protractor"
+typings INFO reference Stripped reference "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/f9c44651705f574f6d4258fe5e1c335462bdcc19/selenium-webdriver/selenium-webdriver.d.ts" during installation from "angular-protractor"
 angular-protractor
 └── (No dependencies)
 
@@ -579,34 +600,104 @@ vinyl
 └── (No dependencies)
 
 Fixing typings ...
-[17:34:37] Requiring external module ts-node/register
-[17:34:42] sourced Ionic's gulpfile @ /home/dtal/workspace/tracktunes/git/ionic-recorder/gulpfile.js
-[17:34:42] Using gulpfile ~/workspace/tracktunes/git/ionic-recorder/test/gulpfile.ts
-[17:34:42] Starting 'test'...
-[17:34:42] Starting 'test.build'...
-[17:34:42] Starting 'test.lint'...
-[17:34:43] Starting 'test.clean'...
-[17:34:44] Deleted /home/dtal/workspace/tracktunes/git/ionic-recorder/www/build/test
-[17:34:44] Finished 'test.clean' after 548 ms
-[17:34:44] Finished 'test.lint' after 1.54 s
-[17:34:44] Starting 'sass'...
-[17:34:44] Starting 'fonts'...
-[17:34:44] Starting 'html'...
-[17:34:44] Finished 'html' after 34 ms
-[17:34:44] Finished 'fonts' after 252 ms
-[17:34:45] Finished 'sass' after 1.37 s
-[17:34:45] Starting 'test.build.typescript'...
-[17:34:48] Finished 'test.build.typescript' after 3.08 s
-[17:34:48] Finished 'test.build' after 5.99 s
-[17:34:48] Starting 'test.karma'...
+npm WARN optional Skipping failed optional dependency /chokidar/fsevents:
+npm WARN notsup Not compatible with your operating system or architecture: fsevents@1.0.12
+npm WARN angular2@2.0.0-beta.15 requires a peer of reflect-metadata@0.1.2 but none was installed.
+[15:16:46] Requiring external module ts-node/register
+[15:17:00] sourced Ionic's gulpfile @ /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder/gulpfile.js
+[15:17:00] Using gulpfile ~/workspace/tracktunes/git/ionic-recorder/ionic-recorder/test/gulpfile.ts
+[15:17:00] Starting 'test'...
+[15:17:00] Starting 'test.build'...
+[15:17:00] Starting 'test.lint'...
+[15:17:00] Starting 'test.clean'...
+[15:17:00] Deleted -
+[15:17:00] Finished 'test.clean' after 16 ms
+[15:17:01] Finished 'test.lint' after 1.19 s
+[15:17:01] Starting 'sass'...
+[15:17:01] Starting 'fonts'...
+[15:17:01] Starting 'html'...
+[15:17:02] Finished 'html' after 599 ms
+[15:17:02] Finished 'fonts' after 913 ms
+[15:17:06] Finished 'sass' after 4.5 s
+[15:17:06] Starting 'test.build.typescript'...
+[15:17:15] Finished 'test.build.typescript' after 8.99 s
+[15:17:15] Finished 'test.build' after 15 s
+[15:17:15] Starting 'test.karma'...
+
 START:
-09 04 2016 17:34:54.724:INFO [karma]: Karma v0.13.22 server started at http://localhost:9876/
-09 04 2016 17:34:54.742:INFO [launcher]: Starting browser PhantomJS
-09 04 2016 17:34:56.270:INFO [PhantomJS 2.1.1 (Linux 0.0.0)]: Connected on socket /#QDN1DjpJ4rMwnysqAAAA with id 7015658
+29 04 2016 15:17:21.866:INFO [karma]: Karma v0.13.22 server started at http://localhost:9876/
+29 04 2016 15:17:21.891:INFO [launcher]: Starting browser PhantomJS
+29 04 2016 15:17:22.972:INFO [PhantomJS 2.1.1 (Linux 0.0.0)]: Connected on socket /#ILSgdzxr0AIrdG33AAAA with id 40226291
 PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'deleteDatabase: SUCCESS'
-PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'constructor():LocalDB'
-PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'constructor():AppState'
-PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'constructor():TracktunesApp'
+PhantomJS 2.1.1 (Linux 0.0.0) ERROR: Error{stack: null, originalErr: ReferenceError{stack: '
+
+eval code
+eval@[native code]
+__exec@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:1510:18
+execute@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3926:22
+linkDynamicModule@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3252:36
+getModule@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3220:26
+http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3256:25
+require@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3893:34
+
+
+eval code
+eval@[native code]
+__exec@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:1510:18
+execute@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3926:22
+linkDynamicModule@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3252:36
+getModule@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3220:26
+http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3256:25
+require@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3893:34
+
+
+eval code
+eval@[native code]
+__exec@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:1510:18
+execute@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3926:22
+linkDynamicModule@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3252:36
+getModule@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3220:26
+http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3256:25
+require@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3893:34
+
+
+eval code
+eval@[native code]
+__exec@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:1510:18
+execute@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3926:22
+linkDynamicModule@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3252:36
+getModule@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3220:26
+http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3256:25
+require@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3893:34
+
+
+eval code
+eval@[native code]
+__exec@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:1510:18
+execute@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3926:22
+linkDynamicModule@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3252:36
+link@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3095:28
+execute@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:3432:17
+doDynamicExecute@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:798:32
+link@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:1000:36
+doLink@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:652:11
+updateLinkSetOnLoad@http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:700:24
+http://localhost:9876/base/node_modules/systemjs/dist/system.src.js?ce47c157d0451bc324d5039dfc7b04fa1cf0925d:512:30
+promiseReactionJob@http://localhost:9876/base/node_modules/es6-shim/es6-shim.js?1947c45e47467b21797a94f74731cbd036ed9d8d:2171:32
+http://localhost:9876/base/node_modules/es6-shim/es6-shim.js?1947c45e47467b21797a94f74731cbd036ed9d8d:2159:27
+invoke@http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:323:34
+run@http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:216:50
+http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:571:61
+invokeTask@http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:356:43
+runTask@http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:256:58
+drainMicroTaskQueue@http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:474:43
+invoke@http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:426:41
+http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:93:33
+invokeTask@http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:356:43
+runTask@http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:256:58
+invoke@http://localhost:9876/base/node_modules/zone.js/dist/zone.js?8b9c8d0a7e549abe9edec8da5a095f206d206277:423:41', line: 9}, line: 2146, sourceURL: 'http://localhost:9876/base/node_modules/es6-shim/es6-shim.js?1947c45e47467b21797a94f74731cbd036ed9d8d'}
+LOG: 'constructor():LocalDB'
+LOG: 'constructor():AppState'
 LOG: 'openDB:onupgradeended DONE'
   When appState initialized
     ✔ appState is not falsy
@@ -655,41 +746,31 @@ LOG: 'openDB:onupgradeended DONE'
     ✔ cannot now read item2
     ✔ cannot now read folder3
     ✔ cannot now read item4
-  TracktunesApp
-    ✔ initialises with a root page and an app
-    ✔ initialises again with a root page and an app
-Finished in 25.223 secs / 25.1 secs
+
+Finished in 25.073 secs / 24.989 secs
+
 SUMMARY:
-✔ 44 tests completed
--------------------------------|----------|----------|----------|----------|----------------|
-File                           |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
--------------------------------|----------|----------|----------|----------|----------------|
- test/                         |    56.52 |    39.58 |    43.75 |    57.63 |                |
-  app.js                       |    56.52 |    39.58 |    43.75 |    57.63 |... 94,95,96,98 |
- test/components/audio-player/ |    27.27 |    32.08 |    13.04 |     26.5 |                |
-  audio-player.js              |    27.27 |    32.08 |    13.04 |     26.5 |... 210,211,214 |
- test/components/vu-gauge/     |    46.67 |    48.57 |    42.86 |    46.34 |                |
-  vu-gauge.js                  |    46.67 |    48.57 |    42.86 |    46.34 |... 69,71,72,73 |
- test/pages/add-folder/        |    34.69 |    32.56 |     37.5 |    33.33 |                |
-  add-folder.js                |    34.69 |    32.56 |     37.5 |    33.33 |... 82,83,86,87 |
- test/pages/library/           |    22.33 |    15.73 |     4.76 |     21.8 |                |
-  library.js                   |    22.33 |    15.73 |     4.76 |     21.8 |... 517,518,520 |
- test/pages/record/            |    27.27 |    31.11 |    13.64 |     26.5 |                |
-  record.js                    |    27.27 |    31.11 |    13.64 |     26.5 |... 218,219,220 |
- test/pages/tabs/              |    54.55 |    48.28 |    42.86 |    55.17 |                |
-  tabs.js                      |    54.55 |    48.28 |    42.86 |    55.17 |... 32,33,34,36 |
- test/providers/app-state/     |    69.61 |    52.94 |    56.25 |    70.41 |                |
-  app-state.js                 |    69.61 |    52.94 |    56.25 |    70.41 |... 204,205,208 |
- test/providers/local-db/      |     83.2 |    67.18 |    71.74 |    83.43 |                |
-  local-db.js                  |     83.2 |    67.18 |    71.74 |    83.43 |... 3,1209,1280 |
- test/providers/master-clock/  |    46.67 |    42.42 |       30 |    46.34 |                |
-  master-clock.js              |    46.67 |    42.42 |       30 |    46.34 |... 64,65,67,75 |
- test/providers/utils/         |    64.52 |     8.33 |    28.57 |    68.97 |                |
-  utils.js                     |    64.52 |     8.33 |    28.57 |    68.97 |... 39,40,43,46 |
- test/providers/web-audio/     |    21.17 |    17.72 |    11.54 |    20.45 |                |
-  web-audio.js                 |    21.17 |    17.72 |    11.54 |    20.45 |... 319,320,321 |
--------------------------------|----------|----------|----------|----------|----------------|
-All files                      |    52.43 |    39.04 |    45.19 |    52.59 |                |
--------------------------------|----------|----------|----------|----------|----------------|
-exit
-Script done on Thu 07 Apr 2016 05:34:57 PM EDT
+✔ 42 tests completed
+---------------------------|----------|----------|----------|----------|----------------|
+File                       |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+---------------------------|----------|----------|----------|----------|----------------|
+ test/                     |    14.08 |    18.75 |        0 |    16.39 |                |
+  app.js                   |    14.08 |    18.75 |        0 |    16.39 |... 110,117,119 |
+ test/components/vu-gauge/ |    46.67 |    48.57 |    42.86 |    46.34 |                |
+  vu-gauge.js              |    46.67 |    48.57 |    42.86 |    46.34 |... 69,71,72,73 |
+ test/pages/record/        |    10.61 |    17.14 |        0 |    11.29 |                |
+  record.js                |    10.61 |    17.14 |        0 |    11.29 |... 135,142,144 |
+ test/pages/tabs/          |    16.13 |    20.69 |        0 |    18.52 |                |
+  tabs.js                  |    16.13 |    20.69 |        0 |    18.52 |... 41,44,50,52 |
+ test/providers/app-state/ |    69.61 |    52.94 |    56.25 |    70.41 |                |
+  app-state.js             |    69.61 |    52.94 |    56.25 |    70.41 |... 211,212,215 |
+ test/providers/local-db/  |     83.2 |    67.18 |    71.74 |    83.43 |                |
+  local-db.js              |     83.2 |    67.18 |    71.74 |    83.43 |... 9,1215,1286 |
+ test/providers/utils/     |    43.48 |     4.55 |    28.57 |    44.44 |                |
+  format-time.js           |    16.67 |        0 |        0 |    17.65 |... 28,29,30,34 |
+  utils.js                 |    60.71 |       10 |       40 |    60.71 |... 52,53,54,56 |
+ test/providers/web-audio/ |     2.72 |     1.32 |        0 |     2.73 |                |
+  web-audio.js             |     2.72 |     1.32 |        0 |     2.73 |... 556,557,559 |
+---------------------------|----------|----------|----------|----------|----------------|
+All files                  |    50.18 |     36.3 |    49.21 |    51.05 |                |
+---------------------------|----------|----------|----------|----------|----------------|
