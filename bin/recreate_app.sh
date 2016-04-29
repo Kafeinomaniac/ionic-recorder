@@ -9,7 +9,7 @@
 #       (bin/) or anywhere else.
 # NOTE: Make sure you have latest ionic cli installed
 
-echo "FIRST COMMIT (WITH TAG)" && ./bin/commit.sh
+echo "COMMIT FIRST (WITH TAG)" && ./bin/commit.sh
 
 echo "UPGRADING ALL PACKAGES FOR ionic-recorder VERISION: `cat VERSION`"
 
