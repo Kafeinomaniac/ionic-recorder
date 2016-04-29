@@ -12,7 +12,7 @@
 echo "FIRST COMMIT (WITH TAG)" && ./bin/commit.sh
 
 echo "UPGRADING ALL PACKAGES FOR ionic-recorder VERISION: `cat VERSION`"
-exit 0
+
 APP_NAME="ionic-recorder"
 GITHUB_PATH="tracktunes/$APP_NAME"
 
