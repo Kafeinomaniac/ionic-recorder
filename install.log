@@ -1,5 +1,39 @@
 dtal@thing3: ./bin/recreate_app.sh 
-UPGRADING ALL PACKAGES FOR ionic-recorder VERISION: 
+COMMIT FIRST (WITH TAG)
+
+0.0.7-alpha.23 -> 0.0.7-alpha.24
+STATUS:
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+nothing to commit, working directory clean
+
+
+Committing with comment:
+
+ 
+
+
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+nothing to commit, working directory clean
+Everything up-to-date
+[master 87b8668] 0.0.7-alpha.24
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+Counting objects: 5, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 275 bytes | 0 bytes/s, done.
+Total 3 (delta 1), reused 0 (delta 0)
+To https://github.com/tracktunes/ionic-recorder
+   8c65681..87b8668  master -> master
+Counting objects: 1, done.
+Writing objects: 100% (1/1), 202 bytes | 0 bytes/s, done.
+Total 1 (delta 0), reused 0 (delta 0)
+To https://github.com/tracktunes/ionic-recorder
+ * [new tag]         v0.0.7-alpha.24 -> v0.0.7-alpha.24
+UPGRADING ALL PACKAGES FOR ionic-recorder VERISION: 0.0.7-alpha.24
 
 
 Creating Ionic app in folder /home/dtal/workspace/tracktunes/git/ionic-recorder/ionic-recorder based on tabs project

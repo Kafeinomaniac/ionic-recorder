@@ -5,13 +5,7 @@
 # Originally based on package.json at:
 #     https://github.com/lathonez/clicker/blob/master/package.json
 
-# NOTE: Run this from the project home directory, not from where it is
-#       (bin/) or anywhere else.
-# NOTE: Make sure you have latest ionic cli installed
-
-echo "COMMIT FIRST (WITH TAG)" && ./bin/commit.sh
-
-echo "UPGRADING ALL PACKAGES FOR ionic-recorder VERISION: `cat VERSION`"
+# NOTE: make sure you have latest ionic cli installed
 
 APP_NAME="ionic-recorder"
 GITHUB_PATH="tracktunes/$APP_NAME"
@@ -23,8 +17,6 @@ fi
 
 ionic start $APP_NAME --v2 --ts
 
-# copy over some stuff from the current repository to the newly
-# created one, overriding old files
 mkdir -p tmp
 cd tmp
 git clone https://github.com/$GITHUB_PATH
@@ -50,9 +42,9 @@ done
 
 cd $APP_NAME
 
-# change package.json to add some
 cp package.json package.json.ORIG
 
+# now that we've modified package.json, change it
 ./bin/modify_package_json.py
 
 # install npm packages
