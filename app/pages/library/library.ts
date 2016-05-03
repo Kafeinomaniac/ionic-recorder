@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Page, NavController, Platform, Modal, Alert} from 'ionic-angular';
+import {Page, NavController, Modal, Alert} from 'ionic-angular';
 import {LocalDB, TreeNode, DataNode, ParentChild, DB_KEY_PATH}
 from '../../providers/local-db/local-db';
 import {AppState, ROOT_FOLDER_NAME} from '../../providers/app-state/app-state';
@@ -32,11 +32,8 @@ export class LibraryPage {
     /**
      * @constructor
      * @param {NavController} nav
-     * @param {Platform} platform
      */
-    constructor(
-        private nav: NavController,
-        private platform: Platform) {
+    constructor(private nav: NavController) {
         console.log('constructor():LibraryPage');
     }
 
@@ -141,7 +138,7 @@ export class LibraryPage {
             });
             alert.addButton('Cancel');
         }
-
+        // TODO: check if we need the empty call to .then() here
         this.nav.present(alert).then();
     }
 

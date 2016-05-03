@@ -1,4 +1,4 @@
-import {Page, NavController, MenuController} from 'ionic-angular';
+import {Page, MenuController, ViewController} from 'ionic-angular';
 import {TabsPage} from '../tabs/tabs';
 
 /**
@@ -12,11 +12,10 @@ import {TabsPage} from '../tabs/tabs';
 export class IntroPage {
     private showSkipButton: boolean = true;
     private slides: Array<{ title: string, description: string, image: string }>;
-    static get parameters() {
-        return [[NavController], [MenuController]];
-    }
 
-    constructor(private nav: NavController, private menu: MenuController) {
+    constructor(
+        private menuController: MenuController,
+        private viewController: ViewController) {
         this.slides = [
             {
                 title: 'Ionic Recorder app, by <a href="https://tracktunes.org">Tracktunes Inc</a>',
@@ -36,8 +35,8 @@ export class IntroPage {
         ];
     }
 
-    startApp() {
-        this.nav.push(TabsPage);
+    skipIntro() {
+        this.viewController.dismiss();
     }
 
     onSlideChangeStart(slider) {
@@ -46,12 +45,12 @@ export class IntroPage {
 
     onPageDidEnter() {
         // the left menu should be disabled on the tutorial page
-        this.menu.enable(false);
+        this.menuController.enable(false);
     }
 
     onPageDidLeave() {
         // enable the left menu when leaving the tutorial page
-        this.menu.enable(true);
+        this.menuController.enable(true);
     }
 
 }

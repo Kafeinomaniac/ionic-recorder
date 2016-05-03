@@ -47,7 +47,7 @@
     </button>
 </div>
 
-<ion-content [class]="platform.platforms()">
+<ion-content>
     <ion-list *ngIf="folderNode" class="file-folder-list">
         <ion-item clear *ngFor="#i of folderNode.childOrder" class="library-item">
             <ion-label button clear (click)="onClickListItem(folderItems[i])">

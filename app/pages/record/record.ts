@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Page, Platform} from 'ionic-angular';
+import {Page} from 'ionic-angular';
 import {VuGauge} from '../../components/vu-gauge/vu-gauge';
 import {AppState, GainState} from '../../providers/app-state/app-state';
 import {WebAudioRecorder} from '../../providers/web-audio/web-audio';
@@ -36,9 +36,8 @@ export class RecordPage {
 
     /**
      * @constructor
-     * @param {Platform} platform
      */
-    constructor(private platform: Platform) {
+    constructor() {
         console.log('constructor():RecordPage');
         // function that gets called with a newly created blob when
         // we hit the stop button - saves blob to local db

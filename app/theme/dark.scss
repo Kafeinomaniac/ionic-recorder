@@ -1,16 +1,6 @@
 // Dark Theme
 // — — — — — — — — — — — — — — — — — 
 
-$colors: (
-
-primary: #387ef5,
- secondary: #32db64,
- danger: #f53d3d,
- light: #fff,
- dark: #333,
-
-) !default;
-
 $text-color: map-get($colors, light) !default;
 $background-color: map-get($colors, dark) !default;
 

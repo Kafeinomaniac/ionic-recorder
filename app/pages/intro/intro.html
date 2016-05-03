@@ -1,12 +1,12 @@
-<ion-navbar *navbar>
+<ion-navbar *navbar dark>
     <ion-buttons end *ngIf="showSkipButton">
-        <button (click)="startApp()" primary>Skip</button>
+        <button (click)="skipIntro()" primary>Skip Intro</button>
     </ion-buttons>
 </ion-navbar>
 
-<ion-content>
+<ion-content padding>
     <ion-slides pager (slideChangeStart)="onSlideChangeStart($event)">
-        <ion-slide>
+        <!--ion-slide>
             <a href="https://tracktunes.org">
                 <img [src]="img/tracktunes-logo-text_sml-tm-w.svg" class="slide-image" />
             </a>
@@ -19,13 +19,23 @@
             </a>
             <h2 class="slide-title" [innerHTML]="slide.title"></h2>
             <p [innerHTML]="slide.description"></p>
+        </ion-slide-->
+        <ion-slide>
+            <a href="https://tracktunes.org">
+                <img src="img/tracktunes-logo.svg" class="slide-image" />
+            </a>
+            <h2 class="slide-title">Ready to Record?</h2>
+            <button large clear (click)="skipIntro()">
+                Continue
+                <ion-icon name="arrow-forward"></ion-icon>
+            </button>
         </ion-slide>
         <ion-slide>
-            <ion-toolbar>
-            </ion-toolbar>
-            <img src="img/ica-slidebox-img-4.png" class="slide-image" />
-            <h2 class="slide-title">Ready to Play?</h2>
-            <button large clear (click)="startApp()">
+            <a href="https://tracktunes.org">
+                <img src="img/tracktunes-logo.svg" class="slide-image" />
+            </a>
+            <h2 class="slide-title">Ready to Record?</h2>
+            <button large clear (click)="skipIntro()">
                 Continue
                 <ion-icon name="arrow-forward"></ion-icon>
             </button>

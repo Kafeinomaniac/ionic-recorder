@@ -1,9 +1,5 @@
 
-.tutorial-page {
-  .toolbar-background {
-    background: #fff;
-    border-color: transparent;
-  }
+.intro-page {
 
   .slide-zoom {
     height: 100%;
@@ -27,10 +23,10 @@
     padding: 0 40px;
     font-size: 14px;
     line-height: 1.5;
-    color: #60646B;
+    color: map-get($colors, medium-gray);
 
     b {
-      color: #000000;
+      color: map-get($colors, light-gray);
     }
   }
 

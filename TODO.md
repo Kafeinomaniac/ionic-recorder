@@ -5,6 +5,9 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Allow skipping intro "forever", add it to side menu too, add a bunch
+  of links to it (from about)
+* Check scss and minimize it for each module
 * make intro page a modal popped up from app?  try to pop a modal
   from app first.
 * for new release: 0.0.5-alpha, we need:

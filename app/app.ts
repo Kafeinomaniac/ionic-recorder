@@ -33,8 +33,8 @@ class AppExceptionHandler extends ExceptionHandler {
 })
 export class TracktunesApp {
     private appState: AppState = AppState.Instance;
-    // private rootPage: Type = TabsPage;
-    private rootPage: Type = IntroPage;
+    private rootPage: Type = TabsPage;
+    // private rootPage: Type = IntroPage;
 
     // make selectedTab not a real number so that it gets set
     // by what we get from app state for the first time. we use
