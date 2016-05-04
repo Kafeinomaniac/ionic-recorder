@@ -5,6 +5,9 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* See intro page scss - there's a class automatically created for us for 
+  each page we create - use that class in all scss to make them a bit 
+  more manageable / readable / consistent throughout
 * Allow skipping intro "forever", add it to side menu too, add a bunch
   of links to it (from about)
 * Check scss and minimize it for each module

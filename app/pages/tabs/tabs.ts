@@ -1,11 +1,11 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Page, IonicApp, NavController, Modal} from 'ionic-angular';
+import {AppState} from '../../providers/app-state/app-state';
 import {Type} from 'angular2/core';
 import {RecordPage} from '../record/record';
 import {LibraryPage} from '../library/library';
 import {IntroPage} from '../intro/intro';
-import {AppState} from '../../providers/app-state/app-state';
 
 
 /**
@@ -37,18 +37,19 @@ export class TabsPage {
                 console.log('selecting tab ' + tabIndex);
                 this.app.getComponent('nav-tabs').select(tabIndex);
                 this.selectedIndex = tabIndex;
-                this.appState.getProperty('startWithIntro').subscribe(
-                    (startWithIntro: boolean) => {
-                        if (startWithIntro) {
-                            let introModal = Modal.create(IntroPage);
-                            this.nav.present(introModal);
-                        }
-                    }
-                );
-            },
-            (error: any) => {
-                console.log('getProperty error: ' + error);
-            }
-        );
+            });
+        this.appState.getProperty('startWithIntro').subscribe(
+            (startWithIntro: boolean) => {
+                if (startWithIntro) {
+                    let introModal = Modal.create(IntroPage);
+                    this.nav.present(introModal);
+                }
+            });
+    }
+
+    onChange() {
+        console.log('tabs: onChange: ' + this.selectedIndex);
+        console.dir(this);
+        console.dir(this.app.getComponent('nav-tabs'));
     }
 }

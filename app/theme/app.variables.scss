@@ -61,14 +61,12 @@ $text-color: map-get($colors, light) !default;
 $background-color: map-get($colors, dark) !default;
 
 
-
 /*
  * list
  */
 $list-text-color: $text-color !default;
 $list-background-color: $background-color !default;
 $list-border-color: map-get($colors,dark-gray) !default;
-
 
 
 /*

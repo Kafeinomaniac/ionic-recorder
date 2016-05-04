@@ -82,6 +82,7 @@ export class TracktunesApp {
      * @param {boolean} whether to update AppState's 'lastSelectedTab' property
      */
     selectTab(tabIndex: number, updateAppState: boolean = true) {
+        console.log('App:selectTab(' + tabIndex + ')');
         if (tabIndex === this.selectedTab) {
             return;
         }

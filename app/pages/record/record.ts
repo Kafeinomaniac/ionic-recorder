@@ -57,11 +57,7 @@ export class RecordPage {
                         .subscribe(() => { }, (error: any) => {
                             alert('create data node error: ' + error);
                         }); // localDB.createDataNode().subscribe(
-                },
-                (error: any) => {
-                    console.error('AppState:getProperty error: ' + error);
-                }
-            ); // getProperty('unfiledFolderKey').subscribe(
+                }); // getProperty('unfiledFolderKey').subscribe(
         }; // recorder.onStop = (blob: Blob) => { ...
 
         // initialize with "remembered" gain values
