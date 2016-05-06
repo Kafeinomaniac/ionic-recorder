@@ -6,6 +6,9 @@ needs to understand it... i.e, do not attempt to try and understand
 anything written here, unless you wrote it.
 
 * Start putting the version number in About
+  Places where version goes:
+  - config.xml
+  - about.html
 * See intro page scss - there's a class automatically created for us for 
   each page we create - use that class in all scss to make them a bit 
   more manageable / readable / consistent throughout
