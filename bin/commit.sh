@@ -4,15 +4,18 @@
 # it automatically increments version numbers and automatically
 # tags each time.
 
+# path to file containing the version
+VERSIONFILE="VERSION"
+
 read MESSAGE
 
-if [ ! -e VERSION ]; then
+if [ ! -e $VERSIONFILE ]; then
     echo "No VERSION file - are you running this from the project home dir?"
     echo "Exiting ..."
     exit 1
 fi
 
-VERSION="`cat VERSION`"
+VERSION="`cat $VERSIONFILE | sed 's/.*VERSION\s*=\s(.*)\s*;*//'`"
 NUM="`echo $VERSION | sed 's/.*\.//'`"
 
 NEWNUM="`echo $NUM "+1" | bc`"
