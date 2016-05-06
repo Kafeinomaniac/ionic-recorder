@@ -26,11 +26,11 @@ NEWVERSION="`echo $VERSION | perl -pe 's/(.*)\.\d+$/$1/'`.$NEWNUM"
 echo "$VERSION -> $NEWVERSION"
 
 # change version in config.xml
-cat $CONFIGFILE | sed 's/$VERSION/$NEWVERSION/' > $CONFIGFILE
+cat $CONFIGFILE | sed "s/$VERSION/$NEWVERSION/" > $CONFIGFILE
 
 # change version in about.ts
-cat $ABOUTFILE | sed 's/$VERSION/$NEWVERSION/' > $ABOUTFILE
-
+cat $ABOUTFILE | sed "s/$VERSION/$NEWVERSION/" > $ABOUTFILE
+exit 0
 echo "STATUS:"
 git status
 
