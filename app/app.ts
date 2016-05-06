@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {App, IonicApp, Platform, MenuController, Alert} from 'ionic-angular';
+import {App, IonicApp, Platform, MenuController, NavController} from 'ionic-angular';
 import {Type, enableProdMode, ExceptionHandler, provide} from 'angular2/core';
 import {AppState} from './providers/app-state/app-state';
 import {TabsPage} from './pages/tabs/tabs';
@@ -50,8 +50,11 @@ export class TracktunesApp {
      * @param {IonicApp} instance used to get tabs component
      * @param {Platform} used for platform-specific styling
      */
-    constructor(private app: IonicApp, private platform: Platform,
-        private menu: MenuController) {
+    constructor(
+        private app: IonicApp,
+        private platform: Platform,
+        private menu: MenuController
+    ) {
         console.log('constructor():TracktunesApp');
         // NB: you can delete the DB here to get rid of it easily in Firefox
         // this.resetDB();
@@ -113,16 +116,5 @@ export class TracktunesApp {
                     alert('in update in app: ' + error);
                 });
         }
-    }
-
-    showSettings() {
-
-    }
-
-    showAbout() {
-        let alert = Alert.create();
-        alert.setTitle('ionic-recorder v' + APP_VERSION);
-        alert.addButton('OK');
-        
     }
 }

@@ -3,9 +3,11 @@
 import {Page, IonicApp, NavController, Modal} from 'ionic-angular';
 import {AppState} from '../../providers/app-state/app-state';
 import {Type} from 'angular2/core';
+import {IntroPage} from '../intro/intro';
 import {RecordPage} from '../record/record';
 import {LibraryPage} from '../library/library';
-import {IntroPage} from '../intro/intro';
+import {SettingsPage} from '../settings/settings';
+import {AboutPage} from '../about/about';
 
 
 /**
@@ -20,6 +22,8 @@ export class TabsPage {
     private appState: AppState = AppState.Instance;
     private tab1Root: Type = RecordPage;
     private tab2Root: Type = LibraryPage;
+    private tab3Root: Type = SettingsPage;
+    private tab4Root: Type = AboutPage;
     // making selectedIndex a nonsense index stops the problem of
     // the first tab showing for a split second before the real tab
     // displayed via 'lastSelectedTab'
