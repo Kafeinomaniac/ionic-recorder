@@ -15,7 +15,7 @@ if [ ! -e $VERSIONFILE ]; then
     exit 1
 fi
 
-VERSION="`cat $VERSIONFILE | sed 's/.*VERSION\s*=\s(.*)\s*;*//'`"
+VERSION="`cat $VERSIONFILE | sed 's/.*VERSION.*=\s*(.*)\s*;*/\1/'`"
 NUM="`echo $VERSION | sed 's/.*\.//'`"
 
 NEWNUM="`echo $NUM "+1" | bc`"
