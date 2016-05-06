@@ -6,6 +6,8 @@
 
 # path to file containing the version
 VERSIONFILE="VERSION"
+CONFIGFILE="config.xml"
+ABOUTFILE="app/pages/about/about.ts"
 
 read MESSAGE
 
@@ -15,13 +17,19 @@ if [ ! -e $VERSIONFILE ]; then
     exit 1
 fi
 
-VERSION="`cat $VERSIONFILE | sed 's/.*VERSION.*=\s*(.*)\s*;*/\1/'`"
+VERSION="`cat $VERSIONFILE`"
 NUM="`echo $VERSION | sed 's/.*\.//'`"
 
 NEWNUM="`echo $NUM "+1" | bc`"
 NEWVERSION="`echo $VERSION | perl -pe 's/(.*)\.\d+$/$1/'`.$NEWNUM"
 
 echo "$VERSION -> $NEWVERSION"
+
+# change version in config.xml
+cat $CONFIGFILE | sed 's/$VERSION/$NEWVERSION/' > $CONFIGFILE
+
+# change version in about.ts
+cat $ABOUTFILE | sed 's/$VERSION/$NEWVERSION/' > $ABOUTFILE
 
 echo "STATUS:"
 git status
