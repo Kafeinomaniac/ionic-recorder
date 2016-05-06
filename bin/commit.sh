@@ -28,11 +28,11 @@ echo "$VERSION -> $NEWVERSION"
 SEDSTR="s/$VERSION/$NEWVERSION/"
 
 # change version in config.xml
-cat $CONFIGFILE | sed $SEDSTR > $CONFIGFILE
+sed -i.bak $SEDSTR $CONFIGFILE
 
 # change version in about.ts
-cat $ABOUTFILE | sed $SEDSTR > $ABOUTFILE
-exit 0
+sed -i.bak $SEDSTR $ABOUTFILE
+
 echo "STATUS:"
 git status
 
