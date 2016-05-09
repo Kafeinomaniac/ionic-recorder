@@ -347,7 +347,8 @@ export class WebAudioRecorder {
     setGainFactor(factor: number) {
         // console.log('WebAudioRecorder:setGainFactor()');
         if (!this.audioGainNode) {
-            throw Error('GainNode not initialized!');
+            // throw Error('GainNode not initialized!');
+            return;
         }
         this.audioGainNode.gain.value = factor;
     }
