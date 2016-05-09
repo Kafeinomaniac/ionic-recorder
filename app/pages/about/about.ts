@@ -2,7 +2,7 @@
 
 import {Page, MenuController, NavController} from 'ionic-angular';
 
-export const APP_VERSION = '0.0.7-alpha.28';
+export const APP_VERSION = '0.0.7-alpha.29';
 
 /**
  * @name AboutPage

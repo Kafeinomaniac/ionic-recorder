@@ -27,11 +27,11 @@
         {{recorder.currentTime}}
     </div>
     <div class="record-upload-buttons">
-        <button logo-red (click)="onClickStartPauseButton()">
+        <button logo-red [disabled]="!recorder.isReady" (click)="onClickStartPauseButton()">
             <ion-icon [name]="recordButtonIcon">
             </ion-icon>
         </button>
-        <button logo-orange [disabled]="recorder.isReady && recorder.mediaRecorder.state === 'inactive'" (click)="onClickStopButton()">
+        <button logo-orange [disabled]="!recorder.isReady || (recorder.isReady && recorder.mediaRecorder.state === 'inactive')" (click)="onClickStopButton()">
             <ion-icon name="square">
             </ion-icon>
         </button>

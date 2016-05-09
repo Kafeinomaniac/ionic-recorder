@@ -64,10 +64,18 @@ export class RecordPage {
         this.appState.getProperty('gain').subscribe(
             (gain: GainState) => {
                 this.maxGainFactor = gain.maxFactor;
+                // this call, duplicated below, sets up the gain
+                // slider to show what we're setting gain to once
+                // the audio is ready.  before the audio is ready
+                // we still want to show the previous gain value.
+                // if we don't have this line below then it will
+                // always show up as gain == 0.
+                this.onGainChange(gain.factor / gain.maxFactor);
                 this.recorder.waitForAudio().subscribe(
                     () => {
+                        // this call actually sets the gain once
+                        // it is ready
                         this.onGainChange(gain.factor / gain.maxFactor);
-                        // this.audioReady = true;
                     }
                 ); // recorder.waitForAudio().subscribe(
             },
