@@ -8,8 +8,6 @@ import {IntroPage} from './pages/intro/intro';
 import {DB_NAME} from './providers/local-db/local-db';
 
 
-export const APP_VERSION: string = 'v0.0.7-alpha.26';
-
 // the reason for the following import 'es6-shim'; line is this:
 // https://forum.ionicframework.com/t/ionic-2-projects-updating-to-beta-4/49054
 // import 'es6-shim';
