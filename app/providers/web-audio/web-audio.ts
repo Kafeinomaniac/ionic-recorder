@@ -130,13 +130,14 @@ export class WebAudioRecorder {
                         (stream: MediaStream) => {
                             // ok we got a microphone
                             this.setUpNodes(stream);
+                            this.initMediaRecorder(stream);
                         },
                         (error: any) => {
                             this.noMicrophoneAlert(error);
                         });
                 }
                 catch (error) {
-                    alert('eyah!');
+                    alert('eyah no!');
                 }
             }
             else {
@@ -190,7 +191,7 @@ export class WebAudioRecorder {
         this.mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'audio/webm'
         });
-
+        console.log('MediaRecorder = ' + this.mediaRecorder);
         // feature surveying code - turn this on to discover if new formats
         // become available upon browser upgrades
         if (MediaRecorder.isTypeSupported === undefined) {
