@@ -1,6 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 .intro-page {
+    
+    .first-slide {
+        
+    }
 
     .slide-zoom {
         height: 100%;
@@ -24,11 +28,15 @@
         padding: 0 40px;
         font-size: 14px;
         line-height: 1.5;
-        color: map-get($colors, medium-gray);
+        color: map-get($colors, light-gray);
 
         b {
             color: map-get($colors, light-gray);
         }
+    }
+    
+    li {
+        text-align: left;
     }
 
 }

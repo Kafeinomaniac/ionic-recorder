@@ -18,12 +18,12 @@ export class IntroPage {
         private viewController: ViewController) {
         this.slides = [
             {
-                title: 'Ionic Recorder app, by <a href="https://tracktunes.org">Tracktunes Inc</a>',
-                description: 'The <b>Ionic Recorder App</b> is a practical preview of the Ionic Framework in action, and a demonstration of proper code use.',
+                title: 'ionic-recorder web app, by <a href="https://tracktunes.org">Tracktunes Inc</a>',
+                description: 'Record audio with your browser. Organize and share your recordings',
                 image: 'img/tracktunes-logo-text_sml-tm-w.svg',
             },
             {
-                title: 'What is Ionic?',
+                title: 'Record Page',
                 description: '<b>Ionic Framework</b> is an open source SDK that enables developers to build high quality mobile apps with web technologies like HTML, CSS, and JavaScript.',
                 image: 'img/ica-slidebox-img-2.png',
             },
