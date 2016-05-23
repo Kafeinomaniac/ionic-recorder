@@ -8,30 +8,26 @@
     <ion-slides pager (slideChangeStart)="onSlideChangeStart($event)">
         <ion-slide class="first-slide">
             <h2 class="slide-title">
-                Using the Record Page
+                Adjusting gain before you record
             </h2>
             <p>
-                The volume indicator (1) continuously monitors your microphone's' volume.
-                In it, the thin white 
-                rectangule (2) shows the max-volume thus far.
-                Hit the record button (3) to start, pause or resume recording. 
-                Hit (4) to stop, at which point the recorded file gets saved
-                in your library's Unfiled folder whose 
-                filename is the current time.
+                Use the gain control slider (1) to ensure sound levels are OK. The % peaks indicator (2) is computed by repeatedly calculating
+                the peak volume; it shows the percent of all computed volume peaks that have reached the overall max volume thus far.
+                (2) can be reset by clicking it, which also resets the "max volume thus far" indicator (3).
             </p>
-            <img src="img/record_page_sml.png" />
+            <img src="img/record_page_sml_b_m.png" />
         </ion-slide>
         <ion-slide class="first-slide">
             <h2 class="slide-title">
                 Record Page (Cont'd)
             </h2>
             <p>
-                To navigate to the
-                library page use the side menu (5). The top right (6) shows
-                the percentage of all volume peaks that have
-                reached the max-volume - click on it to reset peak volume stats.
+                Use the gain control slider (5) to ensure volume levels are OK before recording. Adjust (5) to ensure the % peaks indicator
+                (6) -- which indicates the percent of volume peaks, out of all peaks measured, that have reached max volume
+                -- remains a low number (clicking on (6) restarts all stats). The max volume indicator (2) should also be
+                close to the right.
             </p>
-            <img src="img/record_page_sml.png" />
+            <img src="img/record_page_sml_b_m2.png" />
         </ion-slide>
         <!--ion-slide *ngFor="#slide of slides">
             <img [src]="slide.image" class="slide-image" />
