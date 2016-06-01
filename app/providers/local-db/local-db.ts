@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {copyFromObject, prependArray} from '../utils/utils';
 

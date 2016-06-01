@@ -49,7 +49,7 @@
 
 <ion-content>
     <ion-list *ngIf="folderNode" class="file-folder-list">
-        <ion-item clear *ngFor="#i of folderNode.childOrder" class="library-item">
+        <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
             <ion-label button clear (click)="onClickListItem(folderItems[i])">
                 <span *ngIf="folderItems[i].dataKey">
                 <ion-icon name="document" medium-gray>

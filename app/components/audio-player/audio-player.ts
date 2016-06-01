@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Component, Input, OnChanges, SimpleChange} from 'angular2/core';
+import {Component, Input, OnChanges, SimpleChange} from '@angular/core';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
 import {WebAudioPlayer} from '../../providers/web-audio/web-audio';
 import {ProgressSlider} from '../progress-slider/progress-slider';

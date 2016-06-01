@@ -1,6 +1,6 @@
 import {TEST_BROWSER_PLATFORM_PROVIDERS, TEST_BROWSER_APPLICATION_PROVIDERS}
 from 'angular2/platform/testing/browser';
-import {setBaseTestProviders} from 'angular2/testing';
+import {setBaseTestProviders} from '@angular/testing';
 import {IonicApp, Platform, MenuController} from 'ionic-angular';
 import {TracktunesApp} from './app';
 import {DB_NAME} from './providers/local-db/local-db';

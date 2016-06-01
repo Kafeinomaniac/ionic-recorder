@@ -2,7 +2,7 @@
 
 import {Page, IonicApp, NavController, Modal} from 'ionic-angular';
 import {AppState} from '../../providers/app-state/app-state';
-import {Type} from 'angular2/core';
+import {Type} from '@angular/core';
 import {IntroPage} from '../intro/intro';
 import {RecordPage} from '../record/record';
 import {LibraryPage} from '../library/library';
@@ -54,6 +54,5 @@ export class TabsPage {
     onChange() {
         console.log('tabs: onChange: ' + this.selectedIndex);
         console.dir(this);
-        console.dir(this.app.getComponent('nav-tabs'));
     }
 }

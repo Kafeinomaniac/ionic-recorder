@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Page, NavParams, ViewController} from 'ionic-angular';
-import {Control, FormBuilder, ControlGroup, Validators} from 'angular2/common';
+import {Control, FormBuilder, ControlGroup, Validators} from '@angular/common';
 import {TreeNode} from '../../providers/local-db/local-db';
 
 
