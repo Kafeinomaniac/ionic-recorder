@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Component, Input, Output, ElementRef, Renderer, EventEmitter}
-from 'angular2/core';
+from '@angular/core';
 
 
 /**
