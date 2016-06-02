@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {App, IonicApp, Platform, MenuController, NavController} from 'ionic-angular';
+import {App, IonicApp, Platform, MenuController, Nav} from 'ionic-angular';
 import {ViewChild, Type, enableProdMode, ExceptionHandler, provide} from '@angular/core';
 import {AppState} from './providers/app-state/app-state';
 import {TabsPage} from './pages/tabs/tabs';
@@ -37,6 +37,7 @@ class AppExceptionHandler extends ExceptionHandler {
     }
 })
 export class TracktunesApp {
+    @ViewChild(Nav) nav: Nav;
     private appState: AppState = AppState.Instance;
     private rootPage: Type = TabsPage;
     // private rootPage: Type = IntroPage;
@@ -107,7 +108,7 @@ export class TracktunesApp {
 
         this.selectedTab = tabIndex;
 
-        this.navTabs.select(tabIndex);
+        this.nav.select(tabIndex);
 
         if (updateAppState) {
             this.appState.updateProperty('lastSelectedTab', tabIndex)
