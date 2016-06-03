@@ -51,8 +51,7 @@ cp package.json package.json.ORIG
 
 echo "ADDING SOME NPM PACKAGES ..."
 
-# NOTE: comment next line out when debugging this script
-# ./bin/install_npm_packages.sh
+./bin/install_npm_packages.sh
 /bin/rm -fr tslint.json
 ./bin/tslint --init
 
@@ -69,13 +68,11 @@ perl -pi -e 's/\"double\"/\"single\"/' tslint.json
 ./bin/fix_typings.sh
 
 # install package.json (ionic) packages
-# NOTE: comment next line out when debugging this script
-# npm install
+npm install
 
 # run the main gulp test task, which runs other tasks in order
 # NOTE: seems like we can't run these tasks in order from the
 # command line but we have to group them under this general task 'test'
 # because of the globals being tracked in the gulp.ts file ...
 
-# NOTE: comment next line out when debugging this script
-# ./bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test
+./bin/gulp --gulpfile test/gulpfile.ts --cwd ./ test
