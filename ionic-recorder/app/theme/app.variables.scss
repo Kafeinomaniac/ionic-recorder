@@ -1,0 +1,106 @@
+    // Copyright (c) 2016 Tracktunes Inc
+
+// See http://ionicframework.com/docs/v2/theming/
+
+// App Shared Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass variables found in Ionic's source scss files. Setting
+// variables before Ionic's Sass will use these variables rather than
+// Ionic's default Sass variable values. App Shared Sass imports belong
+// in the app.core.scss file and not this file. Sass variables specific
+// to the mode belong in either the app.ios.scss or app.md.scss files.
+
+
+// App Shared Color Variables
+// --------------------------------------------------
+// It's highly recommended to change the default colors
+// to match your app's branding. Ionic uses a Sass map of
+// colors so you can add, rename and remove colors as needed.
+// The "primary" color is the only required color in the map.
+// Both iOS and MD colors can be further customized if colors
+// are different per mode.
+
+$colors: (
+    primary: #ccc,
+
+    dark:               #000,
+    almost-dark:        #222,
+    darkest-gray:       #333,
+    dark-gray:          #666,
+    medium-gray:        #7f7f7f,
+    light-gray:         #999,
+    lightest-gray:      #ccc,
+    almost-light:       #ddd,
+    light:              #FFF,
+
+    logo-red:           #b92025,
+    logo-orange:        #f27321,
+    medium-green:       #2bc253,
+    light-green:        #54f054
+) !default;
+
+// overrides:
+
+$text-color: map-get($colors, light) !default;
+$background-color: map-get($colors, dark) !default;
+
+$list-background-color: map-get($colors, dark);
+$list-border-color: map-get($colors, dark-gray);
+$list-text-color: $text-color;
+
+//
+// overrides - some are globals used in project scss files
+//
+
+
+/*
+ * text and text background
+ */
+$text-color: map-get($colors, light) !default;
+$background-color: map-get($colors, dark) !default;
+
+
+/*
+ * list
+ */
+$list-text-color: $text-color !default;
+$list-background-color: $background-color !default;
+$list-border-color: map-get($colors,dark-gray) !default;
+
+
+/*
+ * links
+ */
+
+$link-color: map-get($colors, primary) !default;
+
+
+/*
+ * toolbar
+ */
+$toolbar-background-color: map-get($colors, almost-dark) !default;
+$toolbar-border-color: map-get($colors, dark) !default;
+$toolbar-text-color: $text-color !default;
+$toolbar-active-color: $link-color !default;
+$toolbar-inactive-color: map-get($colors, medium-gray) !default;
+// $toolbar-title-font-size is used in
+// - add-folder.scss
+// - library.scss
+// - audio-player.scss
+$toolbar-title-font-size: 13px;
+
+
+/*
+ * toggle
+ */
+$toggle-md-track-background-color-on: map-get($colors, dark-gray);
+$toggle-md-track-background-color-off: map-get($colors, darkest-gray);
+$toggle-md-handle-background-color-on: map-get($colors, medium-green);
+$toggle-md-handle-background-color-off: map-get($colors, logo-red);
+
+$toggle-ios-background-color-off: map-get($colors, darkest-gray);
+$toggle-ios-border-color-off: map-get($colors, darkest-gray);
+$toggle-ios-background-color-on: map-get($colors, medium-green);
+$toggle-ios-background-color-off: map-get($colors, dark);
+$toggle-ios-handle-background-color: map-get($colors, darkest-gray);

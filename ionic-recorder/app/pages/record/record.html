@@ -1,0 +1,39 @@
+<!-- Copyright (c) 2016 Tracktunes Inc -->
+
+<ion-navbar *navbar almost-dark>
+    <button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Record</ion-title>
+    <ion-buttons end *ngIf="recorder && recorder.isReady">
+        <button small (click)="recorder.resetPeaks()">
+            <ion-badge darkest-gray item-right>
+                {{recorder.percentPeaksAtMax}}% peaks @ max
+            </ion-badge>
+        </button>
+    </ion-buttons>
+</ion-navbar>
+
+<ion-content padding>
+    <vu-gauge height="2.5em" nbars="55" [value]="recorder.currentVolume" [max]="recorder.maxVolumeSinceReset">
+    </vu-gauge>
+    <p class="gain-item-label">
+        Gain: {{percentGain}}% ({{decibels}})
+        <button small almost-dark (click)="onGainChangeEnd(0.5)">Reset Gain</button>
+    </p>
+    <progress-slider [progress]="gainFactor/maxGainFactor" (change)="onGainChange($event)" (changeEnd)="onGainChangeEnd($event)">
+    </progress-slider>
+    <div class="recording-time">
+        {{recorder.currentTime}}
+    </div>
+    <div class="record-upload-buttons">
+        <button logo-red [disabled]="!recorder.isReady" (click)="onClickStartPauseButton()">
+            <ion-icon [name]="recordButtonIcon">
+            </ion-icon>
+        </button>
+        <button logo-orange [disabled]="!recorder.isReady || (recorder.isReady && recorder.mediaRecorder.state === 'inactive')" (click)="onClickStopButton()">
+            <ion-icon name="square">
+            </ion-icon>
+        </button>
+    </div>
+</ion-content>

@@ -1,0 +1,43 @@
+<!-- Copyright (c) 2016 Tracktunes Inc -->
+
+<ion-toolbar darkest-gray>
+    <ion-title>
+        Add Folder
+    </ion-title>
+    <ion-buttons end>
+        <button (click)="onClickCancel()">Cancel</button>
+    </ion-buttons>
+</ion-toolbar>
+
+<ion-content padding>
+    <ion-list>
+        <form [ngFormModel]="form">
+            <ion-item>
+                <ion-label floating primary>
+                    Name of folder to add
+                </ion-label>
+                <ion-input ngControl="nameControl" type="text">
+                </ion-input>
+            </ion-item>
+            <div class="error-message-container">
+                <div *ngIf="nameControl.dirty && !nameControl.valid">
+                    <p *ngIf="nameControl.errors.alreadyExists" logo-red padding-left>
+                        Name already exists in this folder
+                    </p>
+                    <p *ngIf="nameControl.errors.required" logo-red padding-left>
+                        Name cannot be empty
+                    </p>
+                    <p *ngIf="nameControl.errors.hasSlash" logo-red padding-left>
+                        Name cannot contain slash (/) characters
+                    </p>
+                </div>
+            </div>
+            <button type="button" (click)="onClickAdd()" [disabled]="!form.valid" block>
+                Add
+            </button>
+        </form>
+    </ion-list>
+    <p class="add-folder-path-message">
+        At: {{parentPath}}
+    </p>
+</ion-content>

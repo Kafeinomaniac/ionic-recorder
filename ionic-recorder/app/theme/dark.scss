@@ -1,0 +1,31 @@
+// Dark Theme
+// — — — — — — — — — — — — — — — — — 
+
+$text-color: map-get($colors, light) !default;
+$background-color: map-get($colors, dark) !default;
+
+$list-text-color: $text-color !default;
+$list-background-color: $background-color !default;
+$list-border-color: map-get($colors,dark-gray) !default;
+
+$link-color: map-get($colors, primary) !default;
+
+$toolbar-background-color: map-get($colors, almost-dark) !default;
+$toolbar-border-color: map-get($colors, dark) !default;
+$toolbar-text-color: $text-color !default;
+$toolbar-active-color: $link-color !default;
+$toolbar-inactive-color: map-get($colors, medium-gray) !default;
+
+/*
+ * toggle
+ */
+$toggle-md-track-background-color-on: map-get($colors, dark-gray);
+$toggle-md-track-background-color-off: map-get($colors, darkest-gray);
+$toggle-md-handle-background-color-on: map-get($colors, medium-green);
+$toggle-md-handle-background-color-off: map-get($colors, logo-red);
+
+$toggle-ios-background-color-off: map-get($colors, darkest-gray);
+$toggle-ios-border-color-off: map-get($colors, darkest-gray);
+$toggle-ios-background-color-on: map-get($colors, medium-green);
+$toggle-ios-background-color-off: map-get($colors, dark);
+$toggle-ios-handle-background-color: map-get($colors, darkest-gray);
