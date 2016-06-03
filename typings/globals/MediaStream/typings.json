@@ -1,8 +1,8 @@
 {
   "resolution": "main",
   "tree": {
-    "src": "https://raw.githubusercontent.com/tracktunes/ionic-recorder/master/typings/main/ambient/MediaStream/index.d.ts",
-    "raw": "github:tracktunes/ionic-recorder/typings/main/ambient/MediaStream/index.d.ts",
-    "typings": "https://raw.githubusercontent.com/tracktunes/ionic-recorder/master/typings/main/ambient/MediaStream/index.d.ts"
+    "src": "https://raw.githubusercontent.com/tracktunes/ionic-recorder/master/typings/globals/MediaStream/index.d.ts",
+    "raw": "github:tracktunes/ionic-recorder/typings/globals/MediaStream/index.d.ts",
+    "typings": "https://raw.githubusercontent.com/tracktunes/ionic-recorder/master/typings/globals/MediaStream/index.d.ts"
   }
 }
