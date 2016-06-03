@@ -10,9 +10,9 @@ GITHUB_PATH="tracktunes/$APP_NAME"
 
 # created/modified typings from this project/app's repo
 for typing in \
-    local=github:$GITHUB_PATH/typings/main/ambient/local/index.d.ts \
-    waa=github:$GITHUB_PATH/typings/main/ambient/waa/index.d.ts \
-    MediaStream=github:$GITHUB_PATH/typings/main/ambient/MediaStream/index.d.ts
+    local=github:$GITHUB_PATH/typings/globals/local/index.d.ts \
+    waa=github:$GITHUB_PATH/typings/globals/waa/index.d.ts \
+    MediaStream=github:$GITHUB_PATH/typings/globals/MediaStream/index.d.ts
 do
     ./bin/typings install --global --save $typing
 done
