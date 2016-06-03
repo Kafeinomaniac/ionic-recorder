@@ -3,7 +3,7 @@
 # Copyright (C) 2016 Tracktunes Inc
 
 mkdir -p typings
-/bin/rm -fr typings/*
+/bin/rm -fr typings.json typings/*
 
 APP_NAME="ionic-recorder"
 GITHUB_PATH="tracktunes/$APP_NAME"
