@@ -23,7 +23,6 @@ class AppExceptionHandler extends ExceptionHandler {
 })
 export class IonicRecorderApp {
     @ViewChild(Nav) nav: Nav;
-
     private rootPage: Type = LoadingPage;
     private pages: Array<{ title: string, component: Type }>;
 
