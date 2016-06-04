@@ -1,21 +1,16 @@
-// Copyright (c) 2016 Tracktunes Inc
+import {ExceptionHandler, provide, ViewChild, Type} from '@angular/core';
+import {App, Platform, Nav} from 'ionic-angular';
+import {StatusBar} from 'ionic-native';
+import {LoadingPage} from './pages/loading/loading';
+import {GettingStartedPage} from './pages/getting-started/getting-started';
+import {ListPage} from './pages/list/list';
 
-import {App, IonicApp, Platform, MenuController, Nav} from 'ionic-angular';
-import {ViewChild, Type, enableProdMode, ExceptionHandler, provide} from '@angular/core';
 import {AppState} from './providers/app-state/app-state';
-import {TabsPage} from './pages/tabs/tabs';
 import {IntroPage} from './pages/intro/intro';
-import {DB_NAME} from './providers/local-db/local-db';
-
-
-// the reason for the following import 'es6-shim'; line is this:
-// https://forum.ionicframework.com/t/ionic-2-projects-updating-to-beta-4/49054
-// import 'es6-shim';
-// Note: the above import broke PhantomJS: see test/karma.config.js.
-
-// check into doing this via ionic's way, the following is angular2 way:
-// enableProdMode();
-
+import {RecordPage} from './pages/record/record';
+import {LibraryPage} from './pages/library/library';
+import {SettingsPage} from './pages/settings/settings';
+import {AboutPage} from './pages/about/about';
 
 // Global catch-all with this
 // AppExceptionHandler class.  NOTE: we use 'extends' instead
@@ -23,8 +18,7 @@ import {DB_NAME} from './providers/local-db/local-db';
 // typescript warnings that did not make sense...
 class AppExceptionHandler extends ExceptionHandler {
     call(error, stackTrace = null, reason = null) {
-        // do something with the exception
-        alert('global catch: ' + error);
+        alert('AppExceptionHandler: ' + error);
     }
 }
 
@@ -32,91 +26,40 @@ class AppExceptionHandler extends ExceptionHandler {
 @App({
     templateUrl: 'build/app.html',
     providers: [provide(ExceptionHandler, { useClass: AppExceptionHandler })],
-    queries: {
-        navTabs: new ViewChild('nav-tabs')
-    }
+    config: {} // http://ionicframework.com/docs/v2/api/config/Config/
 })
-export class TracktunesApp {
+class MyApp {
     @ViewChild(Nav) nav: Nav;
-    private appState: AppState = AppState.Instance;
-    private rootPage: Type = TabsPage;
-    // private rootPage: Type = IntroPage;
 
-    // make selectedTab not a real number so that it gets set
-    // by what we get from app state for the first time. we use
-    // it to ensure we're not updating app state on no change.
-    private selectedTab: number = null;
+    private rootPage: Type = LoadingPage;
+    private pages: Array<{ title: string, component: Type }>
 
-    /**
-     * constructor
-     * @param {IonicApp} instance used to get tabs component
-     * @param {Platform} used for platform-specific styling
-     */
-    constructor(
-        private app: IonicApp,
-        private platform: Platform,
-        private menu: MenuController
-    ) {
-        console.log('constructor():TracktunesApp');
-        // NB: you can delete the DB here to get rid of it easily in Firefox
-        // this.resetDB();
+    constructor(private platform: Platform) {
+        this.initializeApp();
+
+        // used for an example of ngFor and navigation
+        this.pages = [
+            { title: 'Record', component: RecordPage },
+            { title: 'Library', component: LibraryPage },
+            { title: 'Settings', component: SettingsPage },
+            { title: 'About', component: AboutPage },
+        ];
+
+    }
+
+    initializeApp() {
         this.platform.ready().then(() => {
-            this.menu.swipeEnable(false);
+            // Okay, so the platform is ready and our plugins are available.
+            // Here you can do any higher level native things you might need.
+            // [ NOTE: cordova must be available for StatusBar ]
+            // StatusBar.styleDefault();
+            this.nav.setRoot(RecordPage);
         });
     }
 
-    /**
-     * Completely delete the DB and recreate it from scratch!
-     * @returns {void}
-     */
-    resetDB() {
-        let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
-
-        request.onsuccess = function() {
-            console.log('deleteDatabase: SUCCESS');
-        };
-
-        request.onerror = function() {
-            console.log('deleteDatabase: ERROR');
-        };
-
-        request.onblocked = function() {
-            console.log('deleteDatabase: BLOCKED');
-        };
-    }
-
-    /**
-     * Used by template/HTML/UI to select a tab
-     * @param {number} index of tab (menu item index, zero-indexed)
-     * @param {boolean} whether to update AppState's 'lastSelectedTab' property
-     */
-    selectTab(tabIndex: number, updateAppState: boolean = true) {
-        console.log('App:selectTab(' + tabIndex + ')');
-        if (tabIndex === this.selectedTab) {
-            return;
-        }
-
-        let oldId: string = 'button' + this.selectedTab,
-            newId: string = 'button' + tabIndex;
-
-        // TODO: there must be a better way to do this
-        if (this.selectedTab !== null) {
-            document.getElementById(oldId).classList.remove('button-selected');
-        }
-
-        document.getElementById(newId).classList.add('button-selected');
-
-        this.selectedTab = tabIndex;
-
-        this.nav.select(tabIndex);
-
-        if (updateAppState) {
-            this.appState.updateProperty('lastSelectedTab', tabIndex)
-                .subscribe(
-                () => { },
-                (error: any) => {
-                    alert('in update in app: ' + error);
-                });
-        }
+    openPage(page) {
+        // Reset the content nav to have just this page
+        // we wouldn't want the back button to show in this scenario
+        this.nav.setRoot(page.component);
     }
 }
