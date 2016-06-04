@@ -1,0 +1,9 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/tracktunes/ionic-recorder/master/typings/globals/mediastream/index.d.ts",
+    "raw": "github:tracktunes/ionic-recorder/typings/globals/mediastream/index.d.ts",
+    "typings": "https://raw.githubusercontent.com/tracktunes/ionic-recorder/master/typings/globals/mediastream/index.d.ts"
+  }
+}
+

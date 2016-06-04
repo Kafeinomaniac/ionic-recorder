@@ -12,24 +12,24 @@ npm install --save \
     zone.js
 
 npm install --save-dev \
-    awesome-typescript-loader \
-    chalk \
+    browserify \
+    browserify-istanbul \
+    codecov.io \
     del \
-    es6-module-loader \
     gulp \
-    gulp-inline-ng2-template \
-    gulp-load-plugins \
-    gulp-tap \
     gulp-tslint \
     gulp-typescript \
     gulp-watch \
+    ionic-gulp-browserify-typescript \
     ionic-gulp-fonts-copy \
     ionic-gulp-html-copy \
     ionic-gulp-sass-build \
-    ionic-gulp-webpack-build \
+    ionic-gulp-scripts-copy \
+    isparta \
     jasmine-core \
     jasmine-spec-reporter \
     karma \
+    karma-browserify \
     karma-chrome-launcher \
     karma-coverage \
     karma-jasmine \
@@ -38,11 +38,8 @@ npm install --save-dev \
     phantomjs-prebuilt \
     protractor \
     run-sequence \
-    strip-sourcemap-loader \
-    systemjs \
-    traceur \
     ts-node \
+    tsify \
     tslint \
     tslint-eslint-rules \
-    typescript \
     typings
