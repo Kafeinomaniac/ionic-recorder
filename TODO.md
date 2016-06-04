@@ -5,6 +5,10 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Get the loading page to load localDB and appState and to push to the 
+  rootpage after it's done loading what is needed
+* style loading page properly - add a spinner
+* fix progress slider not showing on record page
 * Start putting the version number in About
   Places where version goes:
   - config.xml

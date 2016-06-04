@@ -36,7 +36,6 @@ export class IonicRecorderApp {
             { title: 'Settings', component: SettingsPage },
             { title: 'About', component: AboutPage },
         ];
-
     }
 
     initializeApp() {
