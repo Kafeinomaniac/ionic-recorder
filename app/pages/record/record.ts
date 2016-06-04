@@ -8,10 +8,8 @@ import {LocalDB} from '../../providers/local-db/local-db';
 import {ProgressSlider}
 from '../../components/progress-slider/progress-slider';
 
-
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
-
 
 /**
  * @name RecordPage
