@@ -1,57 +1,56 @@
-import {TEST_BROWSER_PLATFORM_PROVIDERS, TEST_BROWSER_APPLICATION_PROVIDERS}
-from 'angular2/platform/testing/browser';
-import {setBaseTestProviders} from '@angular/testing';
-import {IonicApp, Platform, MenuController} from 'ionic-angular';
-import {TracktunesApp} from './app';
-import {DB_NAME} from './providers/local-db/local-db';
+import {
+    ADDITIONAL_TEST_BROWSER_PROVIDERS,
+    TEST_BROWSER_STATIC_PLATFORM_PROVIDERS
+} from '@angular/platform-browser/testing/browser_static';
+import {
+    BROWSER_APP_DYNAMIC_PROVIDERS
+} from '@angular/platform-browser-dynamic';
+import {
+    resetBaseTestProviders,
+    setBaseTestProviders
+} from '@angular/core/testing';
+import {Platform} from 'ionic-angular';
+import {IonicRecorderApp} from './app';
+import {LibraryPage} from './pages/library/library';
 
-const MAX_APP_INIT_TIME = 60;
+resetBaseTestProviders();
+setBaseTestProviders(
+    TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
+    [
+        BROWSER_APP_DYNAMIC_PROVIDERS,
+        ADDITIONAL_TEST_BROWSER_PROVIDERS
+    ]
+);
 
+let APP: IonicRecorderApp = null;
 
-// this needs doing _once_ for the entire test suite, hence it's here
-setBaseTestProviders(TEST_BROWSER_PLATFORM_PROVIDERS,
-    TEST_BROWSER_APPLICATION_PROVIDERS);
+describe('IonicRecorderApp', () => {
 
-function getComponentStub(name: string): any {
-    'use strict';
-
-    let component: Object = {
-        setRoot: function(): boolean { return true; },
-        close: function(root: any): boolean { return true; },
-    };
-    return component;
-}
-
-export function main(): void {
-    'use strict';
-
-    let ionicApp: IonicApp = new IonicApp(null, null, null),
-        platform: Platform = new Platform(),
-        menuController: MenuController = new MenuController(),
-        tracktunesApp: TracktunesApp =
-            new TracktunesApp(ionicApp, platform, menuController);
-
-    describe('TracktunesApp', () => {
-
-        beforeEach((done: Function) => {
-            done();
-        });
-
-        it('initialises with a root page and an app', (done) => {
-            setTimeout(() => {
-                expect(tracktunesApp['rootPage']).not.toBeFalsy();
-                expect(tracktunesApp['app']).not.toBeFalsy();
-                done();
-            }, MAX_APP_INIT_TIME);
-        });
-
-        it('initialises again with a root page and an app', (done) => {
-            setTimeout(() => {
-                expect(tracktunesApp['rootPage']).not.toBeFalsy();
-                expect(tracktunesApp['app']).not.toBeFalsy();
-                done();
-            }, MAX_APP_INIT_TIME);
-        });
-
+    beforeEach(() => {
+        let platform: Platform = new Platform();
+        APP = new IonicRecorderApp(platform);
     });
-}
+
+    it('initialises with two possible pages', () => {
+        expect(APP['pages'].length).toEqual(4);
+    });
+
+    it('initialises with a root page', () => {
+        expect(APP['rootpage']).not.toBe(null);
+    });
+
+    it('initialises with an APP', () => {
+        expect(APP['APP']).not.toBe(null);
+    });
+
+    it('opens a page', () => {
+        spyOn(APP['menu'], 'close');
+        // cant be bothered to set up dom testing for APP.ts to get
+        // access to @viewchild (nav)
+        APP['nav'] = (<any>APP['menu']);
+        spyOn(APP['nav'], 'setroot');
+        APP.openPage(APP['pages'][1]);
+        expect(APP['menu']['close']).toHaveBeenCalled();
+        expect(APP['nav'].setRoot).toHaveBeenCalledWith(LibraryPage);
+    });
+});

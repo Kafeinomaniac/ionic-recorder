@@ -1,5 +1,4 @@
 import {Page, MenuController, ViewController} from 'ionic-angular';
-import {TabsPage} from '../tabs/tabs';
 
 /**
  * @name IntroPage

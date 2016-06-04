@@ -2,8 +2,7 @@ import {ExceptionHandler, provide, ViewChild, Type} from '@angular/core';
 import {App, Platform, Nav} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {LoadingPage} from './pages/loading/loading';
-import {GettingStartedPage} from './pages/getting-started/getting-started';
-import {ListPage} from './pages/list/list';
+
 
 import {AppState} from './providers/app-state/app-state';
 import {IntroPage} from './pages/intro/intro';
@@ -12,27 +11,23 @@ import {LibraryPage} from './pages/library/library';
 import {SettingsPage} from './pages/settings/settings';
 import {AboutPage} from './pages/about/about';
 
-// Global catch-all with this
-// AppExceptionHandler class.  NOTE: we use 'extends' instead
-// of the more correct 'implements' here in order to avoid
-// typescript warnings that did not make sense...
+// Catch-all exception handler for this app
 class AppExceptionHandler extends ExceptionHandler {
     call(error, stackTrace = null, reason = null) {
         alert('AppExceptionHandler: ' + error);
     }
 }
 
-
 @App({
     templateUrl: 'build/app.html',
     providers: [provide(ExceptionHandler, { useClass: AppExceptionHandler })],
     config: {} // http://ionicframework.com/docs/v2/api/config/Config/
 })
-class MyApp {
+export class IonicRecorderApp {
     @ViewChild(Nav) nav: Nav;
 
     private rootPage: Type = LoadingPage;
-    private pages: Array<{ title: string, component: Type }>
+    private pages: Array<{ title: string, component: Type }>;
 
     constructor(private platform: Platform) {
         this.initializeApp();

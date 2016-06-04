@@ -1477,7 +1477,7 @@ export class LocalDB {
      * time one of the nodes with keys in 'nodeKeys'
      */
     ls(nodeKeys: number[]): Observable<TreeNode> {
-        return <Observable<TreeNode>>Observable.fromArray(nodeKeys)
+        return <Observable<TreeNode>>Observable.from(nodeKeys)
             .flatMap((key: number) => this.readNode(key));
     }
 

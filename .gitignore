@@ -1,14 +1,32 @@
-# Specifies files to intentionally ignore when using Git
+# Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
-node_modules/
-www/build/
-platforms/
-plugins/
-*.swp
-.DS_Store
-Thumbs.db
-coverage
-hooks
+#
+# files
+#
 *.ORIG
 *.bak
+*.log
+*.map
+*.tmp
+*.tmp.*
+*~
+.sass-cache/
+.travis/travis_rsa.pem
+.versions/
+log.txt
+Thumbs.db
+
+#
+# directories
+#
+coverage/
+dist/
+hooks/
+node_modules/
+platforms/
+plugins/
+temp/
+tmp/
+typings/
+www/build/
