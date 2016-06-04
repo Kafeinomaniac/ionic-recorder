@@ -2,8 +2,6 @@ import {ExceptionHandler, provide, ViewChild, Type} from '@angular/core';
 import {App, Platform, Nav} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {LoadingPage} from './pages/loading/loading';
-
-
 import {AppState} from './providers/app-state/app-state';
 import {IntroPage} from './pages/intro/intro';
 import {RecordPage} from './pages/record/record';
