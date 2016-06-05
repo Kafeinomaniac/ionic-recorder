@@ -1,17 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 .about-page {
-    /*
-    h1 {
-    }
-    
-    h2 {
-    }
-    
-    h3 {
-    }
-    */
-    
     b {
         font-weight: 500;
     }
@@ -26,5 +15,4 @@
             color: map-get($colors, light-gray);
         }
     }
-
 }
