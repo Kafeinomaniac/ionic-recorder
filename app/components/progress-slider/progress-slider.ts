@@ -3,7 +3,6 @@
 import {Component, Input, Output, ElementRef, Renderer, EventEmitter}
 from '@angular/core';
 
-
 /**
  * @name ProgressSlider
  * @description
@@ -23,22 +22,20 @@ export class ProgressSlider {
     private trackWidthRange: { start: number, end: number };
     private mouseUpListener: Function;
     private mouseMoveListener: Function;
-    private exitBodyListener: Function;
-    private enterBodyListener: Function;
 
     constructor(private element: ElementRef, private renderer: Renderer) {
         console.log('constructor():ProgressSlider');
     }
 
-    progressPercent() {
+    public progressPercent(): string {
         return (100.0 * this.progress).toString() + '%';
     }
 
-    remainingPercent() {
+    public remainingPercent(): string {
         return (100.0 - 100.0 * this.progress).toString() + '%';
     }
 
-    getTrackWidthRange(): { start: number, end: number } {
+    private getTrackWidthRange(): { start: number, end: number } {
         // console.dir(this.element.nativeElement);
         let width: number = parseFloat(getComputedStyle(
             this.element.nativeElement.firstChild, null)
@@ -53,7 +50,7 @@ export class ProgressSlider {
         };
     }
 
-    computeProgress(
+    private computeProgress(
         clientX: number,
         range: { start: number, end: number }
     ): number {
@@ -78,12 +75,15 @@ export class ProgressSlider {
         return clickRelativeX / rangeX;
     }
 
-    jumpToPosition(clientX: number, range: { start: number, end: number }) {
+    private jumpToPosition(
+        clientX: number,
+        range: { start: number, end: number }
+    ): void {
         this.progress = this.computeProgress(clientX, this.trackWidthRange);
         this.change.emit(this.progress);
     }
 
-    onSliderMouseDown(event: MouseEvent) {
+    public onSliderMouseDown(event: MouseEvent): void {
         console.log('onSliderMouseDown ' + this.element.nativeElement);
 
         this.trackWidthRange = this.getTrackWidthRange();
@@ -91,18 +91,22 @@ export class ProgressSlider {
         this.jumpToPosition(event.clientX, this.trackWidthRange);
 
         this.mouseUpListener =
-            this.renderer.listenGlobal('document', 'mouseup',
-                (event: MouseEvent) => {
-                    this.onMouseUp(event);
+            this.renderer.listenGlobal(
+                'document',
+                'mouseup',
+                (mouseEvent: MouseEvent) => {
+                    this.onMouseUp(mouseEvent);
                 });
         this.mouseMoveListener =
-            this.renderer.listenGlobal('document', 'mousemove',
-                (event: MouseEvent) => {
-                    this.onMouseMove(event);
+            this.renderer.listenGlobal(
+                'document',
+                'mousemove',
+                (mouseEvent: MouseEvent) => {
+                    this.onMouseMove(mouseEvent);
                 });
     }
 
-    onMouseUp(event: MouseEvent) {
+    public onMouseUp(event: MouseEvent): void {
         // free up the listening to mouse up from <body> now that it happened
         // until the next time we click on the progress-bar
         this.mouseUpListener();
@@ -112,19 +116,19 @@ export class ProgressSlider {
         this.changeEnd.emit(this.progress);
     }
 
-    onMouseMove(event: MouseEvent) {
+    public onMouseMove(event: MouseEvent): void {
         this.jumpToPosition(event.clientX, this.trackWidthRange);
     }
 
-    onSliderTouchMove(event: TouchEvent) {
+    public onSliderTouchMove(event: TouchEvent): void {
         this.jumpToPosition(event.touches[0].clientX, this.trackWidthRange);
     }
 
-    onSliderTouchStart(event: TouchEvent) {
+    public onSliderTouchStart(event: TouchEvent): void {
         this.trackWidthRange = this.getTrackWidthRange();
     }
 
-    onSliderTouchEnd() {
+    public onSliderTouchEnd(): void {
         this.changeEnd.emit(this.progress);
     }
 }

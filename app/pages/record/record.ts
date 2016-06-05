@@ -24,7 +24,6 @@ export class RecordPage {
     private localDB: LocalDB = LocalDB.Instance;
     private appState: AppState = AppState.Instance;
     private recorder: WebAudioRecorder = WebAudioRecorder.Instance;
-    private sliderValue: number = 100;
     private recordButtonIcon: string = START_RESUME_ICON;
     // gain variables get initialized in constructor
     private percentGain: string;
@@ -52,9 +51,7 @@ export class RecordPage {
             this.appState.getProperty('unfiledFolderKey').subscribe(
                 (unfiledFolderKey: number) => {
                     this.localDB.createDataNode(name, unfiledFolderKey, blob)
-                        .subscribe(() => { }, (error: any) => {
-                            alert('create data node error: ' + error);
-                        }); // localDB.createDataNode().subscribe(
+                        .subscribe();
                 }); // getProperty('unfiledFolderKey').subscribe(
         }; // recorder.onStop = (blob: Blob) => { ...
 
@@ -69,13 +66,7 @@ export class RecordPage {
                 // if we don't have this line below then it will
                 // always show up as gain == 0.
                 this.onGainChange(gain.factor / gain.maxFactor);
-                this.recorder.waitForAudio().subscribe(
-                    () => {
-                        // this call actually sets the gain once
-                        // it is ready
-                        this.onGainChange(gain.factor / gain.maxFactor);
-                    }
-                ); // recorder.waitForAudio().subscribe(
+                this.recorder.waitForAudio().subscribe();
             },
             (error: any) => {
                 console.error('AppState:getProperty() error: ' + error);
@@ -89,14 +80,12 @@ export class RecordPage {
      * gain value released.
      * @returns {void}
      */
-    onGainChangeEnd(position: number) {
+    public onGainChangeEnd(position: number): void {
         this.onGainChange(position);
         this.appState.updateProperty('gain', {
             factor: this.gainFactor,
             maxFactor: this.maxGainFactor
-        }).subscribe(() => { }, (error: any) => {
-            alert('AppState:updateProperty(): ' + error);
-        }); // localDB.createDataNode().subscribe(
+        }).subscribe();
     }
 
     /**
@@ -104,7 +93,7 @@ export class RecordPage {
      * slider around, during a drag, during the slide.
      * @returns {void}
      */
-    onGainChange(position: number) {
+    public onGainChange(position: number): void {
         // convert fro position in [0, 1] to [0, this.maxGainFactor]
         this.gainFactor = position * this.maxGainFactor;
 
@@ -124,7 +113,7 @@ export class RecordPage {
      * Start/pause recording - template button click callback
      * @returns {void}
      */
-    onClickStartPauseButton() {
+    public onClickStartPauseButton(): void {
         // this.currentVolume += Math.abs(Math.random() * 10);
         if (this.recorder.mediaRecorder.state === 'recording') {
             // we're recording (when clicked, so pause recording)
@@ -149,7 +138,7 @@ export class RecordPage {
      * Stop button - template button click callback
      * @returns {void}
      */
-    onClickStopButton() {
+    public onClickStopButton(): void {
         this.recorder.stop();
         this.recordButtonIcon = START_RESUME_ICON;
     }

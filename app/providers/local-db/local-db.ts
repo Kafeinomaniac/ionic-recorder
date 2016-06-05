@@ -94,7 +94,7 @@ export class LocalDB {
      * @param {number} the key we're verifying
      * @returns {boolean} whether argument is a valid LocalDB key
      */
-    validateKey(key: number): boolean {
+    public validateKey(key: number): boolean {
         return (
             key &&
             !isNaN(key) &&
@@ -117,7 +117,7 @@ export class LocalDB {
      * @returns {DataNode} newly created data node
      */
     // always returns an object with a 'data' field (a DataNode)
-    makeDataNode(newData: any): DataNode {
+    public makeDataNode(newData: any): DataNode {
         if (typeof newData === 'object' && newData.data) {
             return newData;
         }
@@ -142,7 +142,11 @@ export class LocalDB {
      * a folder TreeNode we're creating).
      * @returns {DataNode} newly created data node
      */
-    makeTreeNode(name: string, parentKey: number, dataKey: number): TreeNode {
+    public makeTreeNode(
+        name: string,
+        parentKey: number,
+        dataKey: number
+    ): TreeNode {
         let treeNode: TreeNode = {
             name: name,
             parentKey: parentKey,
@@ -164,9 +168,13 @@ export class LocalDB {
      * @param {TreeNode} childNode - the child TreeNode
      * @param {dataNode?} dataNode - if child TreeNode is a data TreeNode,
      * supply this as its corresponding data node.
+     * @returns {ParentChild}
      */
-    makeParentChild(parentNode: TreeNode, childNode: TreeNode,
-        dataNode?: DataNode) {
+    private makeParentChild(
+        parentNode: TreeNode,
+        childNode: TreeNode,
+        dataNode?: DataNode
+    ): ParentChild {
         let pc: ParentChild = {
             parent: parentNode,
             child: childNode
@@ -182,7 +190,7 @@ export class LocalDB {
      * @returns {Observable<IDBDatabase>} Observable that emits the database
      * when it's ready for use.
      */
-    waitForDB() {
+    public waitForDB(): Observable<IDBDatabase> {
         // NOTE: MAX_DB_INIT_TIME / 10
         // Check in the console how many times we loop here -
         // it shouldn't be much more than a handful
@@ -207,7 +215,7 @@ export class LocalDB {
      * @returns {Observable<IDBDatabase>} Observable that emits the database
      * when it's ready for use.
      */
-    openDB() {
+    private openDB(): Observable<IDBDatabase> {
         let source: Observable<IDBDatabase> = Observable.create((observer) => {
             let openRequest: IDBOpenDBRequest = indexedDB.open(
                 DB_NAME, DB_VERSION);
@@ -269,7 +277,10 @@ export class LocalDB {
      * @returns {Observable<IDBObjectStore>} Observable that emits the object
      * store obtained via a DB request, when it's ready for use.
      */
-    getStore(storeName: string, mode: string) {
+    private getStore(
+        storeName: string,
+        mode: string
+    ): Observable<IDBObjectStore> {
         let source: Observable<IDBObjectStore> =
             Observable.create((observer) => {
                 this.waitForDB().subscribe(
@@ -297,7 +308,7 @@ export class LocalDB {
      * store. The "data store" is where we store real data, not the tree
      * store (which is where we store just the tree).
      */
-    getDataStore(mode: string) {
+    private getDataStore(mode: string): Observable<IDBObjectStore> {
         return this.getStore(DB_DATA_STORE_NAME, mode);
     }
 
@@ -308,7 +319,7 @@ export class LocalDB {
      * store. The "tree store" is where we store the tree nodes (data or
      * folder nodes), not the real data (it is stored in the data store).
      */
-    getTreeStore(mode: string) {
+    private getTreeStore(mode: string): Observable<IDBObjectStore> {
         return this.getStore(DB_TREE_STORE_NAME, mode);
     }
 
@@ -318,7 +329,7 @@ export class LocalDB {
      * @returns {Observable<void>} Obervable that emits when the clear
      * operation is done
      */
-    clearStore(storeName: string) {
+    private clearStore(storeName: string): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
             this.getStore(storeName, 'readwrite').subscribe(
                 (store: IDBObjectStore) => {
@@ -334,9 +345,9 @@ export class LocalDB {
         return source;
     }
 
-    /*************************************************************************
-     * START: generic low-level CRUD methods                                 *
-     *************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // START: generic low-level CRUD methods
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * Create a new item in a db store
@@ -347,7 +358,7 @@ export class LocalDB {
      * as 'item'  input argument, but it will have a DB_KEY_PATH property
      * that has the correct key in the store where it was created)
      */
-    createStoreItem(storeName: string, item: any) {
+    private createStoreItem(storeName: string, item: any): Observable<any> {
         let source: Observable<any> = Observable.create((observer) => {
             if (!item) {
                 observer.error('Cannot add falsy item');
@@ -386,7 +397,7 @@ export class LocalDB {
      * @returns {Observable<any>} Observable that emits the item as
      * soon as the db read request completes
      */
-    readStoreItem(storeName: string, key: number) {
+    private readStoreItem(storeName: string, key: number): Observable<any> {
         let source: Observable<any> = Observable.create((observer) => {
             if (!this.validateKey(key)) {
                 observer.error('invalid key');
@@ -445,7 +456,11 @@ export class LocalDB {
      * to replace existing item in the db store
      * @returns {Observable<void>} Observable that emits after update ends
      */
-    updateStoreItem(storeName: string, key: number, newItem: any) {
+    private updateStoreItem(
+        storeName: string,
+        key: number,
+        newItem: any
+    ): Observable<any> {
         let source: Observable<void> = Observable.create((observer) => {
             if (!this.validateKey(key)) {
                 observer.error('invalid key');
@@ -506,7 +521,10 @@ export class LocalDB {
      * @param {number} key - the key of the item to delete in the db store
      * @returns {Observable<void>} Observable that emits after delete ends
      */
-    deleteStoreItem(storeName: string, key: number) {
+    private deleteStoreItem(
+        storeName: string,
+        key: number
+    ): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
             this.getStore(storeName, 'readwrite').subscribe(
                 (store: IDBObjectStore) => {
@@ -529,17 +547,17 @@ export class LocalDB {
         return source;
     }
 
-    /*************************************************************************
-     * END: generic low-level CRUD methods                                   *
-     *************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // END: generic low-level CRUD methods
+    ///////////////////////////////////////////////////////////////////////////
 
-    /*************************************************************************
-     * START: TreeStore / DataStore methods                                  *
-     *************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // START: TreeStore / DataStore methods
+    ///////////////////////////////////////////////////////////////////////////
 
-    // Returns observable<DataNode> of data store item created, it has key
+    // Returns Observable<DataNode> of data store item created, it has key
     // set on it to the new key assigned to it by the databse
-    createDataStoreItem(data: any) {
+    private createDataStoreItem(data: any): Observable<DataNode> {
         let source: Observable<DataNode> = Observable.create((observer) => {
             this.createStoreItem(DB_DATA_STORE_NAME, this.makeDataNode(data))
                 .subscribe(
@@ -555,11 +573,16 @@ export class LocalDB {
         return source;
     }
 
-    // Returns observable<TreeNode> of tree node created, it has key
+    // Returns Observable<TreeNode> of tree node created, it has key
     // set on it to the new key assigned to it by the databse
-    createTreeStoreItem(name: string, parentKey: number, dataKey: number) {
+    private createTreeStoreItem(
+        name: string,
+        parentKey: number,
+        dataKey: number
+    ): Observable<TreeNode> {
         let source: Observable<TreeNode> = Observable.create((observer) => {
-            this.createStoreItem(DB_TREE_STORE_NAME,
+            this.createStoreItem(
+                DB_TREE_STORE_NAME,
                 this.makeTreeNode(name, parentKey, dataKey)).subscribe(
                 (treeNode: TreeNode) => {
                     observer.next(treeNode);
@@ -574,27 +597,27 @@ export class LocalDB {
     }
 
     // Returns an Observable<void> of success in deleting item
-    deleteDataStoreItem(key: number) {
+    private deleteDataStoreItem(key: number): Observable<void> {
         return this.deleteStoreItem(DB_DATA_STORE_NAME, key);
     }
 
     // Returns an Observable<void> of success in deleting item
-    deleteTreeStoreItem(key: number) {
+    private deleteTreeStoreItem(key: number): Observable<void> {
         return this.deleteStoreItem(DB_TREE_STORE_NAME, key);
     }
 
-    /*************************************************************************
-     * END: TreeStore / DataStore methods                                    *
-     *************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // END: TreeStore / DataStore methods
+    ///////////////////////////////////////////////////////////////////////////
 
-    /*************************************************************************
-     * START: TreeNode methods - low level                                   *
-     *************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // START: TreeNode methods - low level
+    ///////////////////////////////////////////////////////////////////////////
 
     // Returns an Observable<ParentChild> of new child node created and
     // its associated parent node, whose child order has been updated
     // verifies name is unique among siblings in parent
-    createNode(name: string, parentKey: number, data?: any) {
+    private createNode(name: string, parentKey: number, data?: any) {
         if (data) {
             return this.createDataNode(name, parentKey, data);
         }
@@ -929,54 +952,55 @@ export class LocalDB {
         return source;
     }
 
-    /*************************************************************************
-     * END: TreeNode methods - low level                                     *
-     *************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // END: TreeNode methods - low level
+    ///////////////////////////////////////////////////////////////////////////
 
-    /*************************************************************************
-     * START: TreeNode methods - HIGH LEVEL API
-     *
-     * These are the only functions you should be using
-     *
-     * Main data structures: TreeNode
-     *
-     * There is one tree. TreeNode is a node in it.  It is either a data
-     * node or a folder node, in which case it can contain other nodes.
-     * Data nodes are TreeNode objects whose dataKey points to real data
-     * in the data store (no data is stored in the tree store).
-     *
-     * Public high level API functions, obtained via this command:
-     *
-     * > grep localDB\. `findword 'localDB.' | grep -v local-db` | \
-     *   sed 's/.*ocalDB\.*' | sed 's/(.**' | sort -u|grep -v Instance | nl
-     *   1     createDataNode
-     *   2     createFolderNode
-     *   3     deleteNodes
-     *   4     isFolderNode
-     *   5     readChildNodes
-     *   6     readNode
-     *   7     readNodeData
-     *   8     readOrCreateDataNode
-     *   9     readOrCreateFolderNode
-     *   10    updateNodeData
-     *   11    validateKey
-     *************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // START: TreeNode methods - HIGH LEVEL API
+    //
+    // These are the only functions you should be using
+    //
+    // Main data structures: TreeNode
+    //
+    // There is one tree. TreeNode is a node in it.  It is either a data
+    // node or a folder node, in which case it can contain other nodes.
+    // Data nodes are TreeNode objects whose dataKey points to real data
+    // in the data store (no data is stored in the tree store).
+    //
+    // Public high level API functions, obtained via this command:
+    //
+    // > grep localDB\. `findword 'localDB.' | grep -v local-db` | \
+    //   sed 's/.*ocalDB\.*' | sed 's/(.**' | sort -u|grep -v Instance | nl
+    //   1     createDataNode
+    //   2     createFolderNode
+    //   3     deleteNodes
+    //   4     isFolderNode
+    //   5     readChildNodes
+    //   6     readNode
+    //   7     readNodeData
+    //   8     readOrCreateDataNode
+    //   9     readOrCreateFolderNode
+    //   10    updateNodeData
+    //   11    validateKey
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * Creates a data TreeNode in a parent (folder TreeNode) by key, returning
      * the parent
      * @param {string} name - the name of the new node
-     * @param {number} parentKey - the db store key of the parent folder TreeNode
+     * @param {number} parentKey - db store key of parent folder TreeNode
      * @param {any} data - the data node
-     * @returns {Observable<ParentChild>} Parent and child nodes, child being the
+     * @returns {Observable<ParentChild>} Parent and child nodes, child is the
      * newly created data node with DB_KEY_PATH property having its id set and
-     * parent being the parent node that contains it.
+     * parent is the parent node that contains it.
      */
     createDataNode(name: string, parentKey: number, data: any) {
         let source: Observable<ParentChild> = Observable.create((observer) => {
             // non falsy data supplied, store it in the data table first
             this.getNodeByNameInParent(name, parentKey)
-                .subscribe((nodeInParent: TreeNode) => {
+                .subscribe(
+                (nodeInParent: TreeNode) => {
                     if (!nodeInParent) {
                         // data node does not yet exist in parent, create it
                         this.createDataStoreItem(data).subscribe(
@@ -1037,13 +1061,12 @@ export class LocalDB {
     }
 
     /**
-     * Creates a folder TreeNode in a parent (folder TreeNode) by key, returning
-     * the parent
+     * Creates a folder TreeNode in a parent (folder TreeNode) by key
      * @param {string} name - the name of the new node
-     * @param {number} parentKey - the db store key of the parent folder TreeNode
-     * @returns {Observable<ParentChild>} Parent and child nodes, child being the
+     * @param {number} parentKey - db store key of parent folder TreeNode
+     * @returns {Observable<ParentChild>} Parent and child nodes, child is the
      * newly created data node with DB_KEY_PATH property having its id set and
-     * parent being the parent node that contains it. In the newly created parent
+     * parent is the parent node that contains it. In the newly created parent
      * node, the child order has been updated, verifies name is unique among
      * siblings.
      */
@@ -1278,7 +1301,8 @@ export class LocalDB {
      * complete
      */
     updateNode(treeNode: TreeNode) {
-        return this.updateStoreItem(DB_TREE_STORE_NAME,
+        return this.updateStoreItem(
+            DB_TREE_STORE_NAME,
             treeNode[DB_KEY_PATH], treeNode);
     }
 
@@ -1304,9 +1328,12 @@ export class LocalDB {
     deleteDataNode(dataNode: TreeNode) {
         let source: Observable<void> = Observable.create((observer) => {
             this.deleteDataStoreItem(dataNode.dataKey)
-                .subscribe(() => {
-                    this.deleteTreeStoreItem(dataNode[DB_KEY_PATH])
-                        .subscribe(() => {
+                .subscribe(
+                () => {
+                    this.deleteTreeStoreItem(
+                        dataNode[DB_KEY_PATH])
+                        .subscribe(
+                        () => {
                             observer.next();
                             observer.complete();
                         },

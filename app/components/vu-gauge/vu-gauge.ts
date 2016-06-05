@@ -2,7 +2,6 @@
 
 import {Component, Input, OnChanges, SimpleChange} from '@angular/core';
 
-
 /**
  * @name VuGauge
  * @description
@@ -11,7 +10,7 @@ import {Component, Input, OnChanges, SimpleChange} from '@angular/core';
  */
 @Component({
     selector: 'vu-gauge',
-    templateUrl: 'build/components/vu-gauge/vu-gauge.html',
+    templateUrl: 'build/components/vu-gauge/vu-gauge.html'
 })
 export class VuGauge implements OnChanges {
     @Input() private height: string;
@@ -31,6 +30,10 @@ export class VuGauge implements OnChanges {
         console.log('constructor():VuGauge');
         this.leds = [];
         this.maxIndex = 0;
+        // some error checking
+        if (parseInt(this.height, 10)) {
+            throw Error('<vu-gauge> must have a height attribute');
+        }
     }
 
     /**
@@ -38,7 +41,7 @@ export class VuGauge implements OnChanges {
      * @param {number} index of LED whose color we're computing
      * @param {string} percentage (eg. '15%') of lightness to use
      */
-    fillColor(ledIndex: number, lightness: string) {
+    private fillColor(ledIndex: number, lightness: string): string {
         return ['hsl(', 120.0 - ledIndex * this.hStep,
             ',100%,', lightness, ')'].join('');
     }
@@ -47,7 +50,7 @@ export class VuGauge implements OnChanges {
      * Sets up UI on init once elements have been rendered
      * @returns {void}
      */
-    ngOnInit() {
+    public ngOnInit(): void {
         let percentWidth: number = 100.0 / (2 * this.nbars - 1),
             xStep: number = 2.0 * percentWidth, i: number;
         this.ledWidth = percentWidth + '%';
@@ -66,7 +69,9 @@ export class VuGauge implements OnChanges {
      * Updates the UI when value changes
      * @returns {void}
      */
-    ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
+    public ngOnChanges(
+        changeRecord: { [propertyName: string]: SimpleChange }
+    ): void {
         if (this.leds.length > 0) {
             let fill: string, i: number;
             for (i = 0; i < this.nbars; i++) {

@@ -5,7 +5,6 @@ import {IONIC_DIRECTIVES} from 'ionic-angular';
 import {WebAudioPlayer} from '../../providers/web-audio/web-audio';
 import {ProgressSlider} from '../progress-slider/progress-slider';
 
-
 /**
  * @name AudioPlayer
  * @description
@@ -34,7 +33,7 @@ export class AudioPlayer implements OnChanges {
      * Show audio player
      * @returns {void}
      */
-    show() {
+    public show(): void {
         this.hidden = false;
     }
 
@@ -42,7 +41,7 @@ export class AudioPlayer implements OnChanges {
      * Hide audio player
      * @returns {void}
      */
-    hide() {
+    public hide(): void {
         this.hidden = true;
     }
 
@@ -50,7 +49,9 @@ export class AudioPlayer implements OnChanges {
      * Handle changes (play new song) when a new song (url) is loaded
      * @returns {void}
      */
-    ngOnChanges(changeRecord: { [propertyName: string]: SimpleChange }) {
+    public ngOnChanges(
+        changeRecord: { [propertyName: string]: SimpleChange }
+    ): void {
         if (changeRecord['title']) {
             console.log('AudioPlayer:ngOnChanges(): title: ' + this.title);
             if (this.title !== undefined) {
@@ -60,7 +61,9 @@ export class AudioPlayer implements OnChanges {
         if (changeRecord['blob']) {
             console.log('AudioPlayer:ngOnChanges(): blob: ' + this.blob);
             if (this.blob !== undefined) {
-                this.player.loadAndDecode(this.blob, true,
+                this.player.loadAndDecode(
+                    this.blob,
+                    true,
                     () => {
                         alert('FileReader error: could not load blob');
                     },
@@ -71,12 +74,11 @@ export class AudioPlayer implements OnChanges {
                             'your device, but it now reports that it cannot ',
                             'play that audio file  We expect this problem to ',
                             'be fixed soon as more audio file formats get ',
-                            'handled by modern browsers but we are looking for ',
-                            'alternative playback solutions. In the meantime, ',
-                            'you can share the fles you want to play to your ',
-                            'device and play them with any music player on your ',
-                            'device. But oops, sorry, we will implement sharing ',
-                            'soon!'
+                            'handled by modern browsers but we are looking ',
+                            'for alternative playback solutions. In the ',
+                            'meantime, you can share the fles you want to ',
+                            'play to your device and play them with any ',
+                            'music player on your device.   '
                         ].join(''));
                     });
             }

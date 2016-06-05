@@ -1,9 +1,9 @@
 import {ExceptionHandler, provide, ViewChild, Type} from '@angular/core';
 import {App, Platform, Nav} from 'ionic-angular';
-import {StatusBar} from 'ionic-native';
+// import {StatusBar} from 'ionic-native';
 import {LoadingPage} from './pages/loading/loading';
-import {AppState} from './providers/app-state/app-state';
-import {IntroPage} from './pages/intro/intro';
+// import {AppState} from './providers/app-state/app-state';
+// import {IntroPage} from './pages/intro/intro';
 import {RecordPage} from './pages/record/record';
 import {LibraryPage} from './pages/library/library';
 import {SettingsPage} from './pages/settings/settings';
@@ -11,7 +11,7 @@ import {AboutPage} from './pages/about/about';
 
 // Catch-all exception handler for this app
 class AppExceptionHandler extends ExceptionHandler {
-    call(error, stackTrace = null, reason = null) {
+    public call(error: any, stackTrace: any, reason?: any): void {
         alert('AppExceptionHandler: ' + error);
     }
 }
@@ -22,23 +22,22 @@ class AppExceptionHandler extends ExceptionHandler {
     config: {} // http://ionicframework.com/docs/v2/api/config/Config/
 })
 export class IonicRecorderApp {
-    @ViewChild(Nav) nav: Nav;
-    private rootPage: Type = LoadingPage;
+    @ViewChild(Nav) private nav: Nav;
+    private rootPage: Type;
     private pages: Array<{ title: string, component: Type }>;
 
     constructor(private platform: Platform) {
-        this.initializeApp();
-
-        // used for an example of ngFor and navigation
+        this.rootPage = LoadingPage;
         this.pages = [
             { title: 'Record', component: RecordPage },
             { title: 'Library', component: LibraryPage },
             { title: 'Settings', component: SettingsPage },
-            { title: 'About', component: AboutPage },
+            { title: 'About', component: AboutPage }
         ];
+        this.initializeApp();
     }
 
-    initializeApp() {
+    public initializeApp(): void {
         this.platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
@@ -48,7 +47,7 @@ export class IonicRecorderApp {
         });
     }
 
-    openPage(page) {
+    public openPage(page: {title: string, component: Type}): void {
         // Reset the content nav to have just this page
         // we wouldn't want the back button to show in this scenario
         this.nav.setRoot(page.component);

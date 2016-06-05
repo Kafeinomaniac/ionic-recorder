@@ -2,7 +2,7 @@
 
 import {Page, MenuController, NavController} from 'ionic-angular';
 
-export const APP_VERSION = '0.0.7-alpha.30';
+export const APP_VERSION: string = '0.0.7-alpha.30';
 
 /**
  * @name AboutPage
@@ -11,10 +11,9 @@ export const APP_VERSION = '0.0.7-alpha.30';
  * among other info.
  */
 @Page({
-    templateUrl: 'build/pages/about/about.html',
+    templateUrl: 'build/pages/about/about.html'
 })
 export class AboutPage {
-    private version: string = APP_VERSION;
     /**
      * AboutPage modal constructor
      */
@@ -29,16 +28,16 @@ export class AboutPage {
      * UI callback handling cancellation of this modal
      * @returns {void}
      */
-    onClickCancel() {
+    public onClickCancel(): void {
         console.log('onClickCancel()');
     }
 
-    onPageDidEnter() {
+    public onPageDidEnter(): void {
         // the left menu should be disabled on the tutorial page
         this.menuController.enable(false);
     }
 
-    onPageDidLeave() {
+    public onPageDidLeave(): void {
         // enable the left menu when leaving the tutorial page
         this.menuController.enable(true);
     }

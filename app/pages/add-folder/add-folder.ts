@@ -4,7 +4,6 @@ import {Page, NavParams, ViewController} from 'ionic-angular';
 import {Control, FormBuilder, ControlGroup, Validators} from '@angular/common';
 import {TreeNode} from '../../providers/local-db/local-db';
 
-
 interface ValidationResult {
     [key: string]: boolean;
 }
@@ -36,7 +35,10 @@ export class AddFolderPage {
         // passed in a string with the parent path in it
         this.parentPath = navParams.data.parentPath;
 
-        let hasSlash = (control: Control): ValidationResult => {
+        let hasSlash: (control: Control) => ValidationResult,
+            alreadyExists: (control: Control) => ValidationResult;
+
+        hasSlash = (control: Control): ValidationResult => {
             console.log('HS validator control.value: ' + control.value);
             if (control.value !== '' && control.value.indexOf('/') !== -1) {
                 return { hasSlash: true };
@@ -44,7 +46,7 @@ export class AddFolderPage {
             return null;
         };
 
-        let alreadyExists = (control: Control): ValidationResult => {
+        alreadyExists = (control: Control): ValidationResult => {
             if (control.value === '') {
                 // alert('did not expect control.value to be empty');
                 return null;
@@ -92,7 +94,7 @@ export class AddFolderPage {
      * UI callback handling cancellation of this modal
      * @returns {void}
      */
-    onClickCancel() {
+    public onClickCancel(): void {
         console.log('onClickCancel()');
         this.viewController.dismiss('');
     }
@@ -101,7 +103,7 @@ export class AddFolderPage {
      * UI callback dismisses modal passing new name back to caller
      * @returns{void}
      */
-    onClickAdd() {
+    public onClickAdd(): void {
         console.log('onClickAdd()');
         let result: string = this.form.value.nameControl;
         // trim the result before returning it
@@ -109,5 +111,4 @@ export class AddFolderPage {
         result = result.replace(/^\s+|\s+$/, '');
         this.viewController.dismiss(result);
     }
-
 }

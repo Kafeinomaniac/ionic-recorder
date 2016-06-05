@@ -54,8 +54,6 @@ export class AppState {
     // dataNode contains the default state
     private dataNode: DataNode = null;
 
-    private state: State = null;
-
     /**
      * @constructor
      */
@@ -105,7 +103,7 @@ export class AppState {
      * Access the singleton class instance via AppState.Instance
      * @returns {AppState} singleton instance of this class
      */
-    static get Instance() {
+    static get Instance(): AppState {
         if (!this.instance) {
             this.instance = new AppState();
         }
@@ -116,7 +114,7 @@ export class AppState {
      * Get the key of the last viewed folder from the local DB
      * @returns {Observable<number>} Observable of last viewed folder's key
      */
-    getLastViewedFolderKey() {
+    public getLastViewedFolderKey(): Observable<number> {
         let source: Observable<number> = Observable.create((observer) => {
             this.getProperty('lastViewedFolderKey').subscribe(
                 (lastViewedFolderKey: number) => {
@@ -169,9 +167,9 @@ export class AppState {
      * Returns an observable that emits when this class is ready for use
      * @returns {Observable<void>} Observable, emits after this class is ready
      */
-    waitForAppState() {
+    public waitForAppState(): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
-            let repeat = () => {
+            let repeat: () => void = () => {
                 if (this.treeNode && this.dataNode) {
                     observer.next();
                     observer.complete();
@@ -190,7 +188,7 @@ export class AppState {
      * Gets a state property (from DB if necessary)
      * @returns {Observable<any>} Observable of value of property obtained
      */
-    getProperty(propertyName) {
+    public getProperty(propertyName: string): Observable<any> {
         let source: Observable<any> = Observable.create((observer) => {
             this.waitForAppState().subscribe(
                 () => {
@@ -217,7 +215,10 @@ export class AppState {
      * there is no need for an update (emits false in that case) or after we
      * have made the update in the DB (emits true in that case)
      */
-    updateProperty(propertyName: string, propertyValue: any) {
+    public updateProperty(
+        propertyName: string,
+        propertyValue: any
+    ): Observable<boolean> {
         let source: Observable<boolean> = Observable.create((observer) => {
             this.waitForAppState().subscribe(
                 () => {
