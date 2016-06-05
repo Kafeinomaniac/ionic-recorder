@@ -1365,6 +1365,7 @@ export class LocalDB {
      * is done
      */
     private deleteFolderNode(folderNode: TreeNode): Observable<void> {
+        console.log('deleteFolderNode()');
         let source: Observable<void> = Observable.create((observer) => {
             this.deleteTreeStoreItem(folderNode[DB_KEY_PATH]).subscribe(
                 () => {
