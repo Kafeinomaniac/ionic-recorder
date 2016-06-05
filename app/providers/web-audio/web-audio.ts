@@ -153,7 +153,7 @@ export class WebAudioRecorder {
 
     private noMicrophoneAlert(error: any): void {
         let msg: string = [
-            'This app needs the microphone to record audio with.',
+            'This app needs the microphone to record audio with. ',
             'Your browser got no access to your microphone - ',
             'if you are running this app on a desktop, perhaps ',
             'your microphone is not connected? If so, please ',
@@ -551,7 +551,7 @@ export class WebAudioPlayer {
         this.sourceNode.connect(CONTEXT.destination);
         this.sourceNode.buffer = this.audioBuffer;
         // this.sourceNode.onended = () => {
-        //     console.log('onended!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        //     console.log('onended!');
         // }
         this.sourceNode.start(0, offset);
         this.startedAt = CONTEXT.currentTime - offset;
