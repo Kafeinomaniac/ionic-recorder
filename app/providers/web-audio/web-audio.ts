@@ -3,20 +3,19 @@
 import {Observable} from 'rxjs/Rx';
 import {formatTime} from '../utils/format-time';
 
-
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.
 const MONITOR_REFRESH_RATE_HZ: number = 24;
 // derived:
 const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
-const CONTEXT = new (AudioContext || webkitAudioContext)();
-
+const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
 
 // TODO: just like in LocalDB, have initAudio return an observable
 // instead of .db we'll use .isReady here.  call
-/*****************************************************************************
- * RECORDER
- *****************************************************************************/
+
+///////////////////////////////////////////////////////////////////////////////
+// RECORDER
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * @name WebAudioRecorder
@@ -26,7 +25,7 @@ const CONTEXT = new (AudioContext || webkitAudioContext)();
 export class WebAudioRecorder {
     // 'instance' is used as part of Singleton pattern implementation
     private static instance: WebAudioRecorder = null;
-    mediaRecorder: MediaRecorder;
+    public mediaRecorder: MediaRecorder;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
     private analyserNode: AnalyserNode;
@@ -34,20 +33,19 @@ export class WebAudioRecorder {
     private analyserBufferLength: number;
     private blobChunks: Blob[] = [];
     // is ready means ready to record
-    isReady: boolean = false;
+    public isReady: boolean = false;
     // time related
     private startedAt: number = 0;
     private pausedAt: number = 0;
     // volume and max-volume and peak stats tracking
-    currentVolume: number = 0;
-    currentTime: string = formatTime(0);
-    maxVolumeSinceReset: number;
+    public currentVolume: number = 0;
+    public currentTime: string = formatTime(0);
+    public maxVolumeSinceReset: number;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
-    percentPeaksAtMax: string;
+    public percentPeaksAtMax: string;
     // gets called with the recorded blob as soon as we're done recording
-    onStopRecord: (recordedBlob: Blob) => void;
-
+    public onStopRecord: (recordedBlob: Blob) => void;
 
     // 'instance' is used as part of Singleton pattern implementation
     constructor() {
@@ -70,12 +68,12 @@ export class WebAudioRecorder {
         return this.instance;
     }
 
-    waitForAudio(): Observable<void> {
+    public waitForAudio(): Observable<void> {
         // NOTE: MAX_DB_INIT_TIME / 10
         // Check in the console how many times we loop here -
         // it shouldn't be much more than a handful
         let source: Observable<void> = Observable.create((observer) => {
-            let repeat = () => {
+            let repeat: () => void = () => {
                 if (this.isReady) {
                     observer.next();
                     observer.complete();
@@ -94,14 +92,14 @@ export class WebAudioRecorder {
      * Initialize audio, get it ready to record
      * @returns {void}
      */
-    initAudio() {
+    private initAudio(): void {
         if (!CONTEXT) {
             throw Error('AudioContext not available!');
         }
 
         console.log('SAMPLE RATE: ' + CONTEXT.sampleRate);
 
-        let getUserMediaOptions = { video: false, audio: true };
+        let getUserMediaOptions: Object = { video: false, audio: true };
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             // new getUserMedia is available, use it to get microphone stream
@@ -153,8 +151,8 @@ export class WebAudioRecorder {
         }
     }
 
-    noMicrophoneAlert(error: any) {
-        let msg = [
+    private noMicrophoneAlert(error: any): void {
+        let msg: string = [
             'This app needs the microphone to record audio with.',
             'Your browser got no access to your microphone - ',
             'if you are running this app on a desktop, perhaps ',
@@ -176,16 +174,16 @@ export class WebAudioRecorder {
      * @param {MediaStream} stream the stream obtained by getUserMedia
      * @returns {void}
      */
-    initMediaRecorder(stream: MediaStream) {
+    private initMediaRecorder(stream: MediaStream): void {
         if (!MediaRecorder) {
-            alert('MediaRecorder not available!');
-            let msg = [
+            alert([
                 'Your browser does not support the MediaRecorder object ',
                 'used for recording audio, please upgrade to one of the ',
                 'browsers supported by this app. Until you do so ',
                 'you will not be able to use the recording part of ',
                 'this app, but you will be able to play back audio.'
-            ].join('');
+            ].join(''));
+            return;
         }
 
         this.mediaRecorder = new MediaRecorder(stream, {
@@ -246,7 +244,7 @@ export class WebAudioRecorder {
      * @param {MediaStream} stream the stream obtained by getUserMedia
      * @returns {void}
      */
-    setUpNodes(stream: MediaStream) {
+    private setUpNodes(stream: MediaStream): void {
         // create the gainNode
         this.audioGainNode = CONTEXT.createGain();
 
@@ -273,20 +271,22 @@ export class WebAudioRecorder {
         this.audioGainNode.connect(this.analyserNode);
     }
 
-    /*************************************************************************
-     * PUBLIC API METHODS
-     *************************************************************************/
+    ///////////////////////////////////////////////////////////////////////////
+    // PUBLIC API METHODS
+    ///////////////////////////////////////////////////////////////////////////
+
     // this ensures change detection every GRAPHICS_REFRESH_INTERVAL
     // setInterval(() => { }, GRAPHICS_REFRESH_INTERVAL);
-
-    startMonitoring() {
-        setInterval(() => {
-            this.analyzeVolume();
-            this.currentTime = formatTime(this.getTime());
-        }, MONITOR_REFRESH_RATE_HZ);
+    private startMonitoring(): void {
+        setInterval(
+            () => {
+                this.analyzeVolume();
+                this.currentTime = formatTime(this.getTime());
+            },
+            MONITOR_REFRESH_INTERVAL);
     }
 
-    resetPeaks() {
+    public resetPeaks(): void {
         // console.log('WebAudioRecorder:resetPeaks()');
         this.maxVolumeSinceReset = 0;
         // at first we're always at 100% peax at max
@@ -301,7 +301,7 @@ export class WebAudioRecorder {
      * Compute the current latest buffer frame max volume and return it
      * @returns {void}
      */
-    analyzeVolume(): boolean {
+    private analyzeVolume(): boolean {
         // for some reason this setTimeout(() => { ... }, 0) fixes all our
         // update angular2 problems (in devMode we get a million exceptions
         // without this setTimeout)
@@ -345,7 +345,7 @@ export class WebAudioRecorder {
      * @param {number} factor fraction of volume, where 1.0 is no change
      * @returns {void}
      */
-    setGainFactor(factor: number) {
+    public setGainFactor(factor: number): void {
         // console.log('WebAudioRecorder:setGainFactor()');
         if (!this.audioGainNode) {
             // throw Error('GainNode not initialized!');
@@ -354,7 +354,7 @@ export class WebAudioRecorder {
         this.audioGainNode.gain.value = factor;
     }
 
-    getTime(): number {
+    private getTime(): number {
         if (this.pausedAt) {
             return this.pausedAt;
         }
@@ -368,7 +368,7 @@ export class WebAudioRecorder {
      * Start recording
      * @returns {void}
      */
-    start() {
+    public start(): void {
         console.log('record:start');
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (1)');
@@ -385,7 +385,7 @@ export class WebAudioRecorder {
      * Pause recording
      * @returns {void}
      */
-    pause() {
+    public pause(): void {
         console.log('record:pause');
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (2)');
@@ -398,7 +398,7 @@ export class WebAudioRecorder {
      * Resume recording
      * @returns {void}
      */
-    resume() {
+    public resume(): void {
         console.log('record:resume');
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (3)');
@@ -411,7 +411,7 @@ export class WebAudioRecorder {
      * Stop recording
      * @returns {void}
      */
-    stop() {
+    public stop(): void {
         console.log('record:stop');
         if (!this.mediaRecorder) {
             throw Error('MediaRecorder not initialized! (4)');
@@ -422,9 +422,9 @@ export class WebAudioRecorder {
     }
 }
 
-/*****************************************************************************
- * PLAYER
- *****************************************************************************/
+///////////////////////////////////////////////////////////////////////////////
+// PLAYER
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * @name WebAudioPlayer
@@ -440,9 +440,9 @@ export class WebAudioPlayer {
     private sourceNode: AudioBufferSourceNode = null;
     private startedAt: number = 0;
     private pausedAt: number = 0;
-    duration: number;
-    displayDuration: string;
-    isPlaying: boolean = false;
+    public duration: number;
+    public displayDuration: string;
+    public isPlaying: boolean = false;
 
     constructor() {
         console.log('constructor():WebAudioPlayer');
@@ -463,7 +463,7 @@ export class WebAudioPlayer {
      * Returns current playback time - position in song
      * @returns {number}
      */
-    getTime(): number {
+    private getTime(): number {
         let res: number = 0;
         if (this.pausedAt) {
             res = this.pausedAt;
@@ -485,7 +485,7 @@ export class WebAudioPlayer {
      * string representation of current duration.
      * @returns {string}
      */
-    getDisplayTime(): string {
+    public getDisplayTime(): string {
         return formatTime(this.getTime(), this.duration);
     }
 
@@ -493,7 +493,7 @@ export class WebAudioPlayer {
      * Returns a number in [0, 1] denoting relative location in song
      * @returns {number}
      */
-    getProgress(): number {
+    public getProgress(): number {
         // console.log(this.getTime() / this.duration);
         return this.getTime() / this.duration;
     }
@@ -502,27 +502,31 @@ export class WebAudioPlayer {
      * Load a blob and decode data in it, optionally playing it.
      * @returns {void}
      */
-    loadAndDecode(
+    public loadAndDecode(
         blob: Blob,
         playOnLoad: boolean,
         loadErrorCB: () => void,
         decodeErrorCB: () => void
-    ) {
+    ): void {
         this.fileReader.onerror = loadErrorCB;
         this.fileReader.onload = () => {
             console.log('fileReader.onload()');
-            CONTEXT.decodeAudioData(this.fileReader.result,
+            CONTEXT.decodeAudioData(
+                this.fileReader.result,
                 (audioBuffer: AudioBuffer) => {
                     this.audioBuffer = audioBuffer;
                     this.duration = audioBuffer.duration;
-                    this.displayDuration = formatTime(this.duration,
-                        this.duration);
+                    this.displayDuration = formatTime(
+                        this.duration,
+                        this.duration
+                    );
                     console.log('loaded and duration is: ' + this.duration);
                     if (playOnLoad) {
                         this.stop();
                         this.play();
                     }
-                }, decodeErrorCB);
+                },
+                decodeErrorCB);
         };
         this.fileReader.readAsArrayBuffer(blob);
     }
@@ -531,7 +535,7 @@ export class WebAudioPlayer {
      * Set this.isPlaying and force-fire angular2 change detection (a hack)
      * @returns {void}
      */
-    setPlaying(state: boolean) {
+    private setPlaying(state: boolean): void {
         // TODO: the setTimeout() call below is a terrible hack to prevent
         // angular change detection exceptions - can we do this better?
         setTimeout(() => { this.isPlaying = state; }, 1);
@@ -541,8 +545,8 @@ export class WebAudioPlayer {
      * Play
      * @returns {void}
      */
-    play() {
-        let offset = this.pausedAt;
+    public play(): void {
+        let offset: number = this.pausedAt;
         this.sourceNode = CONTEXT.createBufferSource();
         this.sourceNode.connect(CONTEXT.destination);
         this.sourceNode.buffer = this.audioBuffer;
@@ -559,7 +563,7 @@ export class WebAudioPlayer {
      * Pause
      * @returns {void}
      */
-    pause() {
+    public pause(): void {
         let elapsed: number = CONTEXT.currentTime - this.startedAt;
         this.stop();
         this.pausedAt = elapsed;
@@ -569,14 +573,14 @@ export class WebAudioPlayer {
      * Toggle state between play and pause
      * @returns {void}
      */
-    togglePlayPause() {
+    public togglePlayPause(): void {
         // play if !isPlaying or (isPlaying && pausedAt)
         if (!this.isPlaying) {
             this.play();
         }
         else {
             this.pause();
-            console.log('hhhhhh ' + this.pausedAt + ', p: ' + this.getProgress());
+            console.log('at: ' + this.pausedAt + ', p: ' + this.getProgress());
         }
     }
 
@@ -584,7 +588,7 @@ export class WebAudioPlayer {
      * Stop playback
      * @returns {void}
      */
-    stop() {
+    public stop(): void {
         if (this.sourceNode) {
             this.sourceNode.disconnect();
             this.sourceNode.stop(0);
@@ -599,7 +603,7 @@ export class WebAudioPlayer {
      * Seek playback to a specific time, retaining playing state (or not)
      * @returns {void}
      */
-    timeSeek(time: number) {
+    private timeSeek(time: number): void {
         let isPlaying: boolean = this.isPlaying;
         this.setPlaying(false);
         if (this.sourceNode) {
@@ -622,7 +626,7 @@ export class WebAudioPlayer {
      * Seek playback to a relative position, retaining playing state (or not)
      * @returns {void}
      */
-    positionSeek(position: number) {
+    public positionSeek(position: number): void {
         this.timeSeek(position * this.duration);
     }
 }

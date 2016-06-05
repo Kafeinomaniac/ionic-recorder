@@ -2,6 +2,7 @@
 
 // helper function used in formatTime()
 function addZero(n: number): string {
+    'use strict';
     return (n < 10) ? '0' : '';
 }
 

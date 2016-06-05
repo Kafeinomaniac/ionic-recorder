@@ -1,6 +1,5 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-
 export function copyFromObject(src: Object, dest: Object): Object {
     'use strict';
     for (let i in src) {
@@ -31,10 +30,6 @@ export function removeByAttr(arr: any[], attr: string, value: any): any[] {
     return arr;
 }
 
-// arrayEqual from: http://stackoverflow.com/questions/3115982/ ...
-//     ... how-to-check-javascript-array-equals
-export function arrayEqual(a, b) { 'use strict'; return !(a < b || b < a); };
-
 /**
  * objectInspector digs through a Javascript object
  * to display all its properties
@@ -43,9 +38,11 @@ export function arrayEqual(a, b) { 'use strict'; return !(a < b || b < a); };
  *
  * @return result - the concatenated description of all object properties
  */
-export function objectInspector(object: Object) {
+export function objectInspector(object: Object): string {
     'use strict';
-    let rows = [], key: string, count = 0;
+    let rows: Array<String> = [],
+        key: string,
+        count: number = 0;
     for (key in object) {
         rows.push([key, typeof object[key]].join(': '));
         count++;
