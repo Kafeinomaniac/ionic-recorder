@@ -2,7 +2,11 @@
 
 import {Page} from 'ionic-angular';
 import {VuGauge} from '../../components/vu-gauge/vu-gauge';
-import {AppState, GainState} from '../../providers/app-state/app-state';
+import {
+    AppState,
+    LastPageVisited,
+    GainState
+} from '../../providers/app-state/app-state';
 import {WebAudioRecorder} from '../../providers/web-audio/web-audio';
 import {LocalDB} from '../../providers/local-db/local-db';
 import {ProgressSlider}
@@ -72,6 +76,18 @@ export class RecordPage {
                 console.error('AppState:getProperty() error: ' + error);
             }
         ); // getProperty('gain').subscribe(
+    }
+
+    /**
+     * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
+     * @returns {void}
+     */
+    public onPageDidEnter(): void {
+        // update app state's last viewed folder
+        this.appState.updateProperty(
+            'lastPageVisited',
+            LastPageVisited.Record
+        ).subscribe();
     }
 
     /**

@@ -3,7 +3,12 @@
 import {Page, NavController, Modal, Alert} from 'ionic-angular';
 import {LocalDB, TreeNode, DataNode, ParentChild, DB_KEY_PATH}
 from '../../providers/local-db/local-db';
-import {AppState, ROOT_FOLDER_NAME} from '../../providers/app-state/app-state';
+import {
+    AppState,
+    LastPageVisited,
+    ROOT_FOLDER_NAME
+} from '../../providers/app-state/app-state';
+
 import {AddFolderPage} from '../add-folder/add-folder';
 import {AudioPlayer} from '../../components/audio-player/audio-player';
 
@@ -37,7 +42,6 @@ export class LibraryPage {
     }
 
     /**
-     * Called first time the graphics are initialized
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
      * @returns {void}
      */
@@ -72,6 +76,12 @@ export class LibraryPage {
                 alert('in getProperty: ' + error);
             }
         ); // getProperty().subscbribe(
+
+        // update app state's last viewed folder
+        this.appState.updateProperty(
+            'lastPageVisited',
+            LastPageVisited.Library
+        ).subscribe();
     }
 
     /**

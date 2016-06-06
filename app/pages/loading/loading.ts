@@ -1,5 +1,9 @@
-import {Page} from 'ionic-angular';
-// import {AppState} from '../../providers/app-state/app-state';
+import {Page, NavController} from 'ionic-angular';
+import {AppState, LastPageVisited} from '../../providers/app-state/app-state';
+import {RecordPage} from '../record/record';
+import {LibraryPage} from '../library/library';
+import {SettingsPage} from '../settings/settings';
+import {AboutPage} from '../about/about';
 
 /**
  * @name LoadingPage
@@ -10,8 +14,28 @@ import {Page} from 'ionic-angular';
     templateUrl: 'build/pages/loading/loading.html'
 })
 export class LoadingPage {
-    // private appState: AppState = AppState.Instance;
-    constructor() {
+    private appState: AppState = AppState.Instance;
+    constructor(private nav: NavController) {
         console.log('constructor(): LoadingPage');
+        this.appState.getProperty('lastPageVisited').subscribe(
+            (lastPageVisited: LastPageVisited) => {
+                switch (lastPageVisited) {
+                    case LastPageVisited.Record:
+                        console.log('lv: record');
+                        this.nav.setRoot(RecordPage);
+                        break;
+                    case LastPageVisited.Library:
+                        console.log('lv: library');
+                        this.nav.setRoot(LibraryPage);
+                        break;
+                    case LastPageVisited.Settings:
+                        this.nav.setRoot(SettingsPage);
+                        break;
+                    case LastPageVisited.About:
+                        this.nav.setRoot(AboutPage);
+                        break;
+                }
+            }
+        );
     }
 }

@@ -10,8 +10,15 @@ export interface GainState {
     maxFactor: number;
 }
 
+export enum LastPageVisited {
+    Record,
+    Library,
+    Settings,
+    About
+}
+
 interface State {
-    lastSelectedTab: number;
+    lastPageVisited: LastPageVisited;
     lastViewedFolderKey: number;
     rootFolderKey: number;
     unfiledFolderKey: number;
@@ -25,7 +32,7 @@ export const ROOT_FOLDER_NAME: string = 'root';
 export const UNFILED_FOLDER_NAME: string = 'Unfiled';
 
 const DEFAULT_STATE: State = {
-    lastSelectedTab: 0,
+    lastPageVisited: 0,
     lastViewedFolderKey: DB_NO_KEY,
     rootFolderKey: DB_NO_KEY,
     unfiledFolderKey: DB_NO_KEY,
