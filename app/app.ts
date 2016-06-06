@@ -1,13 +1,11 @@
 import {ExceptionHandler, provide, ViewChild, Type} from '@angular/core';
 import {App, Platform, Nav} from 'ionic-angular';
-// import {StatusBar} from 'ionic-native';
 import {LoadingPage} from './pages/loading/loading';
-// import {AppState} from './providers/app-state/app-state';
-// import {IntroPage} from './pages/intro/intro';
 import {RecordPage} from './pages/record/record';
 import {LibraryPage} from './pages/library/library';
 import {SettingsPage} from './pages/settings/settings';
 import {AboutPage} from './pages/about/about';
+// import {StatusBar} from 'ionic-native';
 // import {DB_NAME} from './providers/local-db/local-db';
 
 // Catch-all exception handler for this app

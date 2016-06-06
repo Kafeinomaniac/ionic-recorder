@@ -23,7 +23,6 @@ interface State {
     rootFolderKey: number;
     unfiledFolderKey: number;
     selectedNodes: { [id: string]: boolean };
-    startWithIntro: boolean;
     gain: GainState;
 }
 
@@ -37,7 +36,6 @@ const DEFAULT_STATE: State = {
     rootFolderKey: DB_NO_KEY,
     unfiledFolderKey: DB_NO_KEY,
     selectedNodes: {},
-    startWithIntro: true,
     gain: { factor: 1.0, maxFactor: 2.0 }
 };
 
