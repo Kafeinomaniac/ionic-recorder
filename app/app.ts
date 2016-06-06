@@ -27,6 +27,7 @@ export class IonicRecorderApp {
     private pages: Array<{ title: string, component: Type }>;
 
     constructor(private platform: Platform) {
+        console.log('constructor(): IonicRecorderApp');
         this.rootPage = LoadingPage;
         this.pages = [
             { title: 'Record', component: RecordPage },

@@ -152,6 +152,8 @@ export class WebAudioRecorder {
     }
 
     private noMicrophoneAlert(error: any): void {
+        console.log('noMicrophoneAlert(error): error = '+error);
+        console.dir(error);
         let msg: string = [
             'This app needs the microphone to record audio with. ',
             'Your browser got no access to your microphone - ',
