@@ -6,7 +6,8 @@ import {RecordPage} from './pages/record/record';
 import {LibraryPage} from './pages/library/library';
 import {SettingsPage} from './pages/settings/settings';
 import {AboutPage} from './pages/about/about';
-import {DB_NAME} from './providers/local-db/local-db';
+// Uncomment line below to reset DB, step 1/3
+// import {DB_NAME} from './providers/local-db/local-db';
 
 // Catch-all exception handler for this app
 class AppExceptionHandler extends ExceptionHandler {
@@ -38,28 +39,28 @@ export class IonicRecorderApp {
             { title: 'Settings', component: SettingsPage },
             { title: 'About', component: AboutPage }
         ];
-        // uncomment next line & function below & import {DB_NAME} line above
-        // to completely erase the databse
-        this.resetDB();
+        // Uncomment line below to reset DB, step 2/3
+        // this.resetDB();
         this.initializeApp();
     }
 
-    /**
-     * Completely delete the DB and recreate it from scratch!
-     * @returns {void}
-     */
-    private resetDB(): void {
-        let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
-        request.onsuccess = function(): void {
-            console.log('deleteDatabase: SUCCESS');
-        };
-        request.onerror = function(): void {
-            console.log('deleteDatabase: ERROR');
-        };
-        request.onblocked = function(): void {
-            console.log('deleteDatabase: BLOCKED');
-        };
-    }
+    // Uncomment method block below to reset DB, step 2/3
+    // /**
+    //  * Completely delete the DB and recreate it from scratch!
+    //  * @returns {void}
+    //  */
+    // private resetDB(): void {
+    //     let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
+    //     request.onsuccess = function(): void {
+    //         console.log('deleteDatabase: SUCCESS');
+    //     };
+    //     request.onerror = function(): void {
+    //         console.log('deleteDatabase: ERROR');
+    //     };
+    //     request.onblocked = function(): void {
+    //         console.log('deleteDatabase: BLOCKED');
+    //     };
+    // }
 
     /**
      * Initialize native stuff once platform is ready

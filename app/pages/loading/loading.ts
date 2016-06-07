@@ -21,6 +21,7 @@ export class LoadingPage {
         this.nav = nav;
         this.appState.getProperty('lastPageVisited').subscribe(
             (lastPageVisited: LastPageVisited) => {
+                console.log('lpv: ' + lastPageVisited);
                 switch (lastPageVisited) {
                     case LastPageVisited.Record:
                         console.log('lv: record');
