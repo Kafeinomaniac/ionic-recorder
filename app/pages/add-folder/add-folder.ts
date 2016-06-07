@@ -17,6 +17,9 @@ interface ValidationResult {
     templateUrl: 'build/pages/add-folder/add-folder.html'
 })
 export class AddFolderPage {
+    private navParams: NavParams;
+    private viewController: ViewController;
+    private formBuilder: FormBuilder;
     private nameControl: Control;
     private parentPath: string;
     private form: ControlGroup;
@@ -28,9 +31,9 @@ export class AddFolderPage {
      * @param {FormBuilder} used to build the form of this modal
      */
     constructor(
-        private navParams: NavParams,
-        private viewController: ViewController,
-        private formBuilder: FormBuilder
+        navParams: NavParams,
+        viewController: ViewController,
+        formBuilder: FormBuilder
     ) {
         // passed in a string with the parent path in it
         this.parentPath = navParams.data.parentPath;
@@ -85,7 +88,7 @@ export class AddFolderPage {
                 hasSlash
             ]));
 
-        this.form = formBuilder.group({
+        this.form = this.formBuilder.group({
             nameControl: this.nameControl
         });
     }

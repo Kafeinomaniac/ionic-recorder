@@ -11,10 +11,10 @@ export interface GainState {
 }
 
 export enum LastPageVisited {
-    Record,
-    Library,
-    Settings,
-    About
+    Record = 0,
+    Library = 1,
+    Settings = 2,
+    About = 3
 }
 
 interface State {
@@ -201,7 +201,8 @@ export class AppState {
                         observer.error('app state not properly read');
                     }
                     if (!this.dataNode.data.hasOwnProperty(propertyName)) {
-                        observer.error('no property by this name in dataNode');
+                        observer.error("no property by name '" +
+                            propertyName + "' in dataNode");
                     }
                     observer.next(this.dataNode.data[propertyName]);
                     observer.complete();

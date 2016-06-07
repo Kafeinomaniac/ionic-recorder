@@ -23,6 +23,7 @@ import {AudioPlayer} from '../../components/audio-player/audio-player';
     directives: [AudioPlayer]
 })
 export class LibraryPage {
+    private nav: NavController;
     private folderNode: TreeNode = null;
     private folderItems: { [id: string]: TreeNode; } = {};
     private selectedNodes: { [id: string]: TreeNode; } = {};
@@ -37,8 +38,9 @@ export class LibraryPage {
      * @constructor
      * @param {NavController} nav
      */
-    constructor(private nav: NavController) {
+    constructor(nav: NavController) {
         console.log('constructor():LibraryPage');
+        this.nav = nav;
     }
 
     /**

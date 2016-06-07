@@ -15,16 +15,24 @@ from '@angular/core';
     templateUrl: 'build/components/progress-slider/progress-slider.html'
 })
 export class ProgressSlider {
-    @Input() private progress: number = 0;
-    @Output() private change: EventEmitter<any> = new EventEmitter();
-    @Output() private changeEnd: EventEmitter<any> = new EventEmitter();
+    @Input() private progress: number;
+    @Output() private change: EventEmitter<any>;
+    @Output() private changeEnd: EventEmitter<any>;
+
+    private element: ElementRef;
+    private renderer: Renderer;
 
     private trackWidthRange: { start: number, end: number };
     private mouseUpListener: Function;
     private mouseMoveListener: Function;
 
-    constructor(private element: ElementRef, private renderer: Renderer) {
+    constructor(element: ElementRef, renderer: Renderer) {
         console.log('constructor():ProgressSlider');
+        this.element = element;
+        this.renderer = renderer;
+        this.progress = 0;
+        this.change = new EventEmitter();
+        this.changeEnd = new EventEmitter();
     }
 
     public progressPercent(): string {

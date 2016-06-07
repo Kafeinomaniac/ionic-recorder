@@ -14,9 +14,11 @@ import {AboutPage} from '../about/about';
     templateUrl: 'build/pages/loading/loading.html'
 })
 export class LoadingPage {
+    private nav: NavController;
     private appState: AppState = AppState.Instance;
-    constructor(private nav: NavController) {
+    constructor(nav: NavController) {
         console.log('constructor(): LoadingPage');
+        this.nav = nav;
         this.appState.getProperty('lastPageVisited').subscribe(
             (lastPageVisited: LastPageVisited) => {
                 switch (lastPageVisited) {

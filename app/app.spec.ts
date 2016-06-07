@@ -9,7 +9,6 @@ import {
     resetBaseTestProviders,
     setBaseTestProviders
 } from '@angular/core/testing';
-import {Platform} from 'ionic-angular';
 import {IonicRecorderApp} from './app';
 import {LibraryPage} from './pages/library/library';
 
@@ -24,11 +23,27 @@ setBaseTestProviders(
 
 let APP: IonicRecorderApp = null;
 
+class MockClass {
+    public ready(): any {
+        return new Promise((resolve: Function) => {
+            resolve();
+        });
+    }
+
+    public close(): any {
+        return true;
+    }
+
+    public setRoot(): any {
+        return true;
+    }
+}
+
 describe('IonicRecorderApp', () => {
 
     beforeEach(() => {
-        let platform: Platform = new Platform();
-        APP = new IonicRecorderApp(platform);
+        let mockClass: any = (<any>new MockClass());
+        APP = new IonicRecorderApp(mockClass, mockClass);
     });
 
     it('initialises with two possible pages', () => {
@@ -48,7 +63,7 @@ describe('IonicRecorderApp', () => {
         // cant be bothered to set up dom testing for APP.ts to get
         // access to @viewchild (nav)
         APP['nav'] = (<any>APP['menu']);
-        spyOn(APP['nav'], 'setroot');
+        spyOn(APP['nav'], 'setRoot');
         APP.openPage(APP['pages'][1]);
         expect(APP['menu']['close']).toHaveBeenCalled();
         expect(APP['nav'].setRoot).toHaveBeenCalledWith(LibraryPage);

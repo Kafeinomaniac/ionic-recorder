@@ -36,7 +36,7 @@
     "no-consecutive-blank-lines": true,
     "no-console": [false],
     "no-construct": false,
-    "no-constructor-vars": false,
+    "no-constructor-vars": true,
     "no-debugger": true,
     "no-duplicate-key": true,
     "no-duplicate-variable": true,
