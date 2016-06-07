@@ -6,7 +6,7 @@ import {RecordPage} from './pages/record/record';
 import {LibraryPage} from './pages/library/library';
 import {SettingsPage} from './pages/settings/settings';
 import {AboutPage} from './pages/about/about';
-// Uncomment line below to reset DB, step 1/3
+// Uncomment line below to reset DB (step 1/3)
 // import {DB_NAME} from './providers/local-db/local-db';
 
 // Catch-all exception handler for this app
@@ -39,12 +39,12 @@ export class IonicRecorderApp {
             { title: 'Settings', component: SettingsPage },
             { title: 'About', component: AboutPage }
         ];
-        // Uncomment line below to reset DB, step 2/3
+        // Uncomment line below to reset DB (step 2/3)
         // this.resetDB();
         this.initializeApp();
     }
 
-    // Uncomment method block below to reset DB, step 2/3
+    // Uncomment method block below to reset DB (step 3/3)
     // /**
     //  * Completely delete the DB and recreate it from scratch!
     //  * @returns {void}
