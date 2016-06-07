@@ -1,7 +1,11 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Page, MenuController} from 'ionic-angular';
-import {AppState, LastPageVisited} from '../../providers/app-state/app-state';
+import {
+    AppState,
+    LastPageVisited
+} from '../../providers/app-state/app-state';
+
 export const APP_VERSION: string = '0.0.7-alpha.30';
 
 /**

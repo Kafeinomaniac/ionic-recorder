@@ -1,5 +1,11 @@
-import {Page, NavController} from 'ionic-angular';
-import {AppState, LastPageVisited} from '../../providers/app-state/app-state';
+import {
+    Page,
+    NavController
+} from 'ionic-angular';
+import {
+    AppState,
+    LastPageVisited
+} from '../../providers/app-state/app-state';
 import {RecordPage} from '../record/record';
 import {LibraryPage} from '../library/library';
 import {SettingsPage} from '../settings/settings';
@@ -16,6 +22,7 @@ import {AboutPage} from '../about/about';
 export class LoadingPage {
     private nav: NavController;
     private appState: AppState = AppState.Instance;
+
     constructor(nav: NavController) {
         console.log('constructor(): LoadingPage');
         this.nav = nav;

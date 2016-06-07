@@ -1,14 +1,23 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Page, NavController, Modal, Alert} from 'ionic-angular';
-import {LocalDB, TreeNode, DataNode, ParentChild, DB_KEY_PATH}
-from '../../providers/local-db/local-db';
+import {
+    Page,
+    NavController,
+    Modal,
+    Alert
+} from 'ionic-angular';
+import {
+    LocalDB,
+    TreeNode,
+    DataNode,
+    ParentChild,
+    DB_KEY_PATH
+} from '../../providers/local-db/local-db';
 import {
     AppState,
     LastPageVisited,
     ROOT_FOLDER_NAME
 } from '../../providers/app-state/app-state';
-
 import {AddFolderPage} from '../add-folder/add-folder';
 import {AudioPlayer} from '../../components/audio-player/audio-player';
 

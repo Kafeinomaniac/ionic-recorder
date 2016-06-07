@@ -2,8 +2,14 @@
 
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {LocalDB, TreeNode, DataNode, DB_NO_KEY, DB_KEY_PATH, MAX_DB_INIT_TIME}
-from '../local-db/local-db';
+import {
+    LocalDB,
+    TreeNode,
+    DataNode,
+    DB_NO_KEY,
+    DB_KEY_PATH,
+    MAX_DB_INIT_TIME
+} from '../local-db/local-db';
 
 export interface GainState {
     factor: number;

@@ -9,8 +9,9 @@ import {
 } from '../../providers/app-state/app-state';
 import {WebAudioRecorder} from '../../providers/web-audio/web-audio';
 import {LocalDB} from '../../providers/local-db/local-db';
-import {ProgressSlider}
-from '../../components/progress-slider/progress-slider';
+import {
+    ProgressSlider
+} from '../../components/progress-slider/progress-slider';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';

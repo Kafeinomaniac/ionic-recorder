@@ -1,7 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {Page} from 'ionic-angular';
-import {AppState, LastPageVisited} from '../../providers/app-state/app-state';
+import {
+    AppState,
+    LastPageVisited
+} from '../../providers/app-state/app-state';
 
 /**
  * @name SettingsPage

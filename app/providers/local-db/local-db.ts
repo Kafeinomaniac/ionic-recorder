@@ -2,7 +2,10 @@
 
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {copyFromObject, prependArray} from '../utils/utils';
+import {
+    copyFromObject,
+    prependArray
+} from '../utils/utils';
 
 // TODO:
 // 1) replace readChildNodes with childOrder usage instead (faster)
