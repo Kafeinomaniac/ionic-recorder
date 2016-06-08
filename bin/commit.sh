@@ -9,7 +9,19 @@ VERSIONFILE="VERSION"
 CONFIGFILE="config.xml"
 ABOUTFILE="app/pages/about/about.ts"
 
+# run unit tests 
+TESTRESULT=`npm test 2>&1  | grep -e Finished | egrep "karma|unit-test"`
+echo $TESTRESULT
+exit 1
+
+
+# grab a commit message
 read MESSAGE
+
+# replace all tabs in text files in ./app with spaces.  (see:
+# stackoverflow.com/questions/4767396/linux-command-how-to-find-only-text-files)
+find ./app -type f -exec grep -Iq . {} \; -and -print \
+    | xargs sed -i 's/[ \t]*$//'
 
 if [ ! -e $VERSIONFILE ]; then
     echo "No VERSION file - are you running this from the project home dir?"
