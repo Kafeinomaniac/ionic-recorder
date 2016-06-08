@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
+import {Component} from '@angular/core';
 import {
-    Page,
     NavController,
     Modal,
     Alert
@@ -27,7 +27,7 @@ import {AudioPlayer} from '../../components/audio-player/audio-player';
  * Page of file/folder interface to all recorded files. AddFolderPage
  * music organizer.
  */
-@Page({
+@Component({
     templateUrl: 'build/pages/library/library.html',
     directives: [AudioPlayer]
 })
@@ -56,7 +56,7 @@ export class LibraryPage {
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
      * @returns {void}
      */
-    public onPageDidEnter(): void {
+    public ionViewDidEnter(): void {
         // switch folders, via AppState
         this.appState.getLastViewedFolderKey().subscribe(
             (lastViewedFolderKey: number) => {

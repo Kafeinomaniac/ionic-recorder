@@ -1,5 +1,7 @@
+// Copyright (c) 2016 Tracktunes Inc
+
+import {Component} from '@angular/core';
 import {
-    Page,
     NavController
 } from 'ionic-angular';
 import {
@@ -16,7 +18,7 @@ import {AboutPage} from '../about/about';
  * @description
  * Page that's displayed while we load things at app's start.
  */
-@Page({
+@Component({
     templateUrl: 'build/pages/loading/loading.html'
 })
 export class LoadingPage {

@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Page} from 'ionic-angular';
+import {Component} from '@angular/core';
 import {VuGauge} from '../../components/vu-gauge/vu-gauge';
 import {
     AppState,
@@ -21,7 +21,7 @@ const PAUSE_ICON: string = 'pause';
  * @description
  * The page from which we record audio and monitor microphone sound volume.
  */
-@Page({
+@Component({
     templateUrl: 'build/pages/record/record.html',
     directives: [VuGauge, ProgressSlider]
 })
@@ -83,7 +83,7 @@ export class RecordPage {
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
      * @returns {void}
      */
-    public onPageDidEnter(): void {
+    public ionViewDidEnter(): void {
         // update app state's last viewed folder
         this.appState.updateProperty(
             'lastPageVisited',

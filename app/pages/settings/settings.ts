@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Page} from 'ionic-angular';
+import {Component} from '@angular/core';
 import {
     AppState,
     LastPageVisited
@@ -11,7 +11,7 @@ import {
  * @description
  * Change app settings.
  */
-@Page({
+@Component({
     templateUrl: 'build/pages/settings/settings.html'
 })
 export class SettingsPage {
@@ -29,7 +29,7 @@ export class SettingsPage {
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
      * @returns {void}
      */
-    public onPageDidEnter(): void {
+    public ionViewDidEnter(): void {
 
         // update app state's last viewed folder
         this.appState.updateProperty(

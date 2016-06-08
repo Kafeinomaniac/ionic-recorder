@@ -1,12 +1,13 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Page, MenuController} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {MenuController} from 'ionic-angular';
 import {
     AppState,
     LastPageVisited
 } from '../../providers/app-state/app-state';
 
-export const APP_VERSION: string = '0.0.7-alpha.32';
+export const APP_VERSION: string = '0.0.7-alpha.33';
 
 /**
  * @name AboutPage
@@ -14,7 +15,7 @@ export const APP_VERSION: string = '0.0.7-alpha.32';
  * A modal About page that displays the version number of this program
  * among other info.
  */
-@Page({
+@Component({
     templateUrl: 'build/pages/about/about.html'
 })
 export class AboutPage {
@@ -34,7 +35,7 @@ export class AboutPage {
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
      * @returns {void}
      */
-    public onPageDidEnter(): void {
+    public ionViewDidEnter(): void {
         // the left menu should be disabled on the tutorial page
         this.menuController.enable(false);
 
@@ -53,7 +54,7 @@ export class AboutPage {
         console.log('onClickCancel()');
     }
 
-    public onPageDidLeave(): void {
+    public ionViewDidLeave(): void {
         // enable the left menu when leaving the tutorial page
         this.menuController.enable(true);
     }

@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
+import {Component} from '@angular/core';
 import {
-    Page,
     NavParams,
     ViewController
 } from 'ionic-angular';
@@ -22,7 +22,7 @@ interface ValidationResult {
  * @description
  * A modal page for entering a new folder's name and validating it.
  */
-@Page({
+@Component({
     templateUrl: 'build/pages/add-folder/add-folder.html'
 })
 export class AddFolderPage {

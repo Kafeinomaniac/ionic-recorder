@@ -1,5 +1,18 @@
-import {ExceptionHandler, provide, ViewChild, Type} from '@angular/core';
-import {App, Platform, Nav, MenuController} from 'ionic-angular';
+import {
+    Component,
+    ExceptionHandler,
+    provide,
+    ViewChild,
+    Type
+}
+from '@angular/core';
+import {
+    ionicBootstrap,
+    Platform,
+    Nav,
+    MenuController
+}
+from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {LoadingPage} from './pages/loading/loading';
 import {RecordPage} from './pages/record/record';
@@ -16,10 +29,9 @@ class AppExceptionHandler extends ExceptionHandler {
     }
 }
 
-@App({
+@Component({
     templateUrl: 'build/app.html',
-    providers: [provide(ExceptionHandler, { useClass: AppExceptionHandler })],
-    config: {} // http://ionicframework.com/docs/v2/api/config/Config/
+    providers: [provide(ExceptionHandler, { useClass: AppExceptionHandler })]
 })
 export class IonicRecorderApp {
     @ViewChild(Nav) private nav: Nav;
@@ -88,3 +100,10 @@ export class IonicRecorderApp {
         this.nav.setRoot(page.component);
     }
 }
+
+// Pass the main app component as the first argument
+// Pass any providers for your app in the second argument
+// Set any config for your app as the third argument:
+// http://ionicframework.com/docs/v2/api/config/Config/
+
+ionicBootstrap(IonicRecorderApp, [], {});
