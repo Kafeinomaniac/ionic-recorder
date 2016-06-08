@@ -10,14 +10,22 @@ CONFIGFILE="config.xml"
 ABOUTFILE="app/pages/about/about.ts"
 
 # run unit tests 
-TESTRESULT=`npm test 2>&1  | grep -e Finished | egrep "karma|unit-test"`
-echo $TESTRESULT
-exit 1
+echo "Running unit tests ..."
+TESTRESULTS="`npm test 2>&1  | grep -e Finished | egrep 'karma|unit-test'`"
 
+echo "Test results: $TESTRESULTS"
+
+if [ "$TESTRESULTS" == "" ]; then
+    echo "Unit tests failed, please fix those and try again, exiting."
+    exit 1
+fi
 
 # grab a commit message
+echo "Please enter commit message text now:"
 read MESSAGE
 
+# Throwing this one here to avoid developers introducing tabs in files.
+#
 # replace all tabs in text files in ./app with spaces.  (see:
 # stackoverflow.com/questions/4767396/linux-command-how-to-find-only-text-files)
 find ./app -type f -exec grep -Iq . {} \; -and -print \
@@ -35,7 +43,7 @@ NUM="`echo $VERSION | sed 's/.*\.//'`"
 NEWNUM="`echo $NUM "+1" | bc`"
 NEWVERSION="`echo $VERSION | perl -pe 's/(.*)\.\d+$/$1/'`.$NEWNUM"
 
-echo "$VERSION -> $NEWVERSION"
+echo "Bumping up version #: $VERSION -> $NEWVERSION"
 
 SEDSTR="s/$VERSION/$NEWVERSION/"
 
@@ -45,7 +53,7 @@ sed -i.bak $SEDSTR $CONFIGFILE
 # change version in about.ts
 sed -i.bak $SEDSTR $ABOUTFILE
 
-echo "STATUS:"
+echo "Pre-commit git status:\n----------------------"
 git status
 
 echo -e "\n\nCommitting with comment:\n\n" $MESSAGE "\n\n"
@@ -58,8 +66,9 @@ git push
 echo $NEWVERSION > VERSION
 git add VERSION
 git commit -m "$NEWVERSION"
-git push
+sgit push
 
 # now tag all with that version
 git tag -a "v$NEWVERSION" -m "See CHANGELOG.md for major version tag changes"
+# push tags to cloud
 git push --tags
