@@ -66,7 +66,7 @@ git push
 echo $NEWVERSION > VERSION
 git add VERSION
 git commit -m "$NEWVERSION"
-sgit push
+git push
 
 # now tag all with that version
 git tag -a "v$NEWVERSION" -m "See CHANGELOG.md for major version tag changes"
