@@ -47,11 +47,10 @@ echo "Bumping up version #: $VERSION -> $NEWVERSION"
 
 SEDSTR="s/$VERSION/$NEWVERSION/"
 
-# change version in config.xml
+# change version in config.xml, about.ts & package.json
 sed -i.bak $SEDSTR $CONFIGFILE
-
-# change version in about.ts
 sed -i.bak $SEDSTR $ABOUTFILE
+sed -i.bak $SEDSTR package.json
 
 echo "Pre-commit git status:\n----------------------"
 git status
