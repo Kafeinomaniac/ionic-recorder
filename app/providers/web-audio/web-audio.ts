@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Observable} from 'rxjs/Rx';
-import {formatTime} from '../utils/format-time';
+import { Observable } from 'rxjs/Rx';
+import { formatTime } from '../utils/format-time';
 
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.

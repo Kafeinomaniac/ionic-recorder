@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 import {
     NavParams,
     ViewController
@@ -11,7 +11,7 @@ import {
     ControlGroup,
     Validators
 } from '@angular/common';
-import {TreeNode} from '../../providers/local-db/local-db';
+import { TreeNode } from '../../providers/local-db/local-db';
 
 interface ValidationResult {
     [key: string]: boolean;

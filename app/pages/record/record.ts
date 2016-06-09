@@ -1,14 +1,14 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Component} from '@angular/core';
-import {VuGauge} from '../../components/vu-gauge/vu-gauge';
+import { Component } from '@angular/core';
+import { VuGauge } from '../../components/vu-gauge/vu-gauge';
 import {
     AppState,
     LastPageVisited,
     GainState
 } from '../../providers/app-state/app-state';
-import {WebAudioRecorder} from '../../providers/web-audio/web-audio';
-import {LocalDB} from '../../providers/local-db/local-db';
+import { WebAudioRecorder } from '../../providers/web-audio/web-audio';
+import { LocalDB } from '../../providers/local-db/local-db';
 import {
     ProgressSlider
 } from '../../components/progress-slider/progress-slider';

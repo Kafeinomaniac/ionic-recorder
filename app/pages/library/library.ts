@@ -1,6 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 import {
     NavController,
     Modal,
@@ -18,8 +18,8 @@ import {
     LastPageVisited,
     ROOT_FOLDER_NAME
 } from '../../providers/app-state/app-state';
-import {AddFolderPage} from '../add-folder/add-folder';
-import {AudioPlayer} from '../../components/audio-player/audio-player';
+import { AddFolderPage } from '../add-folder/add-folder';
+import { AudioPlayer } from '../../components/audio-player/audio-player';
 
 /**
  * @name LibraryPage

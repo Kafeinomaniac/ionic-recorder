@@ -6,9 +6,9 @@ import {
     OnChanges,
     SimpleChange
 } from '@angular/core';
-import {IONIC_DIRECTIVES} from 'ionic-angular';
-import {WebAudioPlayer} from '../../providers/web-audio/web-audio';
-import {ProgressSlider} from '../progress-slider/progress-slider';
+import { IONIC_DIRECTIVES } from 'ionic-angular';
+import { WebAudioPlayer } from '../../providers/web-audio/web-audio';
+import { ProgressSlider } from '../progress-slider/progress-slider';
 
 /**
  * @name AudioPlayer
