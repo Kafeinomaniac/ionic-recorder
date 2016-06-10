@@ -1,17 +1,18 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Component } from '@angular/core';
-import {
-    NavController
-} from 'ionic-angular';
+import { Component }      from '@angular/core';
+
+import { NavController }  from 'ionic-angular';
+
 import {
     AppState,
     LastPageVisited
-} from '../../providers/app-state/app-state';
-import { RecordPage } from '../record/record';
-import { LibraryPage } from '../library/library';
-import { SettingsPage } from '../settings/settings';
-import { AboutPage } from '../about/about';
+}                         from '../../providers/app-state/app-state';
+
+import { RecordPage }     from '../record/record';
+import { LibraryPage }    from '../library/library';
+import { SettingsPage }   from '../settings/settings';
+import { AboutPage }      from '../about/about';
 
 /**
  * @name LoadingPage

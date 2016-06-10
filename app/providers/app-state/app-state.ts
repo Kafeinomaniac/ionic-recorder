@@ -56,7 +56,8 @@ export class AppState {
     // 'instance' is used to implement this class as a Singleton
     private static instance: AppState = null;
 
-    private localDB: LocalDB = LocalDB.Instance;
+    // private localDB: LocalDB = LocalDB.Instance;
+    private localDB: LocalDB;
 
     // treeNode contains the node in the tree where we store the
     // data of default state, treeNode.dataKey points to dataNode
@@ -68,7 +69,7 @@ export class AppState {
     /**
      * @constructor
      */
-    constructor() {
+    constructor(localDB: LocalDB) {
         console.log('constructor():AppState');
 
         // Create root folder

@@ -4,21 +4,24 @@ import {
     provide,
     ViewChild,
     Type
-} from '@angular/core';
+}                        from '@angular/core';
+
 import {
     ionicBootstrap,
     Platform,
     Nav,
     MenuController
-} from 'ionic-angular';
-import { StatusBar } from 'ionic-native';
-import { LoadingPage } from './pages/loading/loading';
-import { RecordPage } from './pages/record/record';
-import { LibraryPage } from './pages/library/library';
-import { SettingsPage } from './pages/settings/settings';
-import { AboutPage } from './pages/about/about';
+}                        from 'ionic-angular';
+
+import { StatusBar }     from 'ionic-native';
+import { LoadingPage }   from './pages/loading/loading';
+import { RecordPage }    from './pages/record/record';
+import { LibraryPage }   from './pages/library/library';
+import { SettingsPage }  from './pages/settings/settings';
+import { AboutPage }     from './pages/about/about';
 // Uncomment line below to reset DB (step 1/3)
 // import {DB_NAME} from './providers/local-db/local-db';
+import { LocalDB }       from './providers/local-db/local-db';
 
 // Catch-all exception handler for this app
 class AppExceptionHandler extends ExceptionHandler {
@@ -28,8 +31,7 @@ class AppExceptionHandler extends ExceptionHandler {
 }
 
 @Component({
-    templateUrl: 'build/app.html',
-    providers: [provide(ExceptionHandler, { useClass: AppExceptionHandler })]
+    templateUrl: 'build/app.html'
 })
 export class IonicRecorderApp {
     @ViewChild(Nav) private nav: Nav;
@@ -104,4 +106,10 @@ export class IonicRecorderApp {
 // Set any config for your app as the third argument:
 // http://ionicframework.com/docs/v2/api/config/Config/
 
-ionicBootstrap(IonicRecorderApp, [], {});
+ionicBootstrap(
+    IonicRecorderApp,
+    [
+        provide(ExceptionHandler, { useClass: AppExceptionHandler }),
+        LocalDB
+    ],
+    {});
