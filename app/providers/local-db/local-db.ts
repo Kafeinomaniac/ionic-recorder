@@ -84,12 +84,12 @@ export class LocalDB {
      * Access the singleton class instance via LocalDB.Instance
      * @returns {LocalDB} the singleton instance of this class
      */
-    static get Instance(): LocalDB {
-        if (!this.instance) {
-            this.instance = new LocalDB();
-        }
-        return this.instance;
-    }
+    // static get Instance(): LocalDB {
+    //     if (!this.instance) {
+    //         this.instance = new LocalDB();
+    //     }
+    //     return this.instance;
+    // }
 
     /**
      * Verifies its argument to be a valid LocalDB key - returns true

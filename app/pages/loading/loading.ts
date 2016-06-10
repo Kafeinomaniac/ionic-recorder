@@ -24,9 +24,10 @@ import { AboutPage }      from '../about/about';
 })
 export class LoadingPage {
     private nav: NavController;
-    private appState: AppState = AppState.Instance;
+    //private appState: AppState = AppState.Instance;
+    private appState: AppState;
 
-    constructor(nav: NavController) {
+    constructor(nav: NavController, appState: AppState) {
         console.log('constructor(): LoadingPage');
         this.nav = nav;
         this.appState.getProperty('lastPageVisited').subscribe(

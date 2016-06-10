@@ -115,12 +115,12 @@ export class AppState {
      * Access the singleton class instance via AppState.Instance
      * @returns {AppState} singleton instance of this class
      */
-    static get Instance(): AppState {
-        if (!this.instance) {
-            this.instance = new AppState();
-        }
-        return this.instance;
-    }
+    // static get Instance(): AppState {
+    //     if (!this.instance) {
+    //         this.instance = new AppState();
+    //     }
+    //     return this.instance;
+    // }
 
     /**
      * Get the key of the last viewed folder from the local DB

@@ -26,8 +26,10 @@ const PAUSE_ICON: string = 'pause';
     directives: [VuGauge, ProgressSlider]
 })
 export class RecordPage {
-    private localDB: LocalDB = LocalDB.Instance;
-    private appState: AppState = AppState.Instance;
+    //private localDB: LocalDB = LocalDB.Instance;
+    //private appState: AppState = AppState.Instance;
+    private localDB: LocalDB;
+    private appState: AppState;
     private recorder: WebAudioRecorder = WebAudioRecorder.Instance;
     private recordButtonIcon: string = START_RESUME_ICON;
     // gain variables get initialized in constructor

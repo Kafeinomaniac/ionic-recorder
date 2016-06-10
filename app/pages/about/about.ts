@@ -25,10 +25,10 @@ export class AboutPage {
     /**
      * AboutPage modal constructor
      */
-    constructor(menuController: MenuController) {
+    constructor(menuController: MenuController, appState: AppState) {
         console.log('constructor():AboutPage');
         this.menuController = menuController;
-        this.appState = AppState.Instance;
+        // this.appState = AppState.Instance;
     }
 
     /**

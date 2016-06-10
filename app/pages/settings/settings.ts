@@ -15,13 +15,14 @@ import {
     templateUrl: 'build/pages/settings/settings.html'
 })
 export class SettingsPage {
-    private appState: AppState = AppState.Instance;
+    // private appState: AppState = AppState.Instance;
+    private appState: AppState;
 
     /**
      * @constructor
      * @param {NavController} nav
      */
-    constructor() {
+    constructor(appState: AppState) {
         console.log('constructor():SettingsPage');
     }
 

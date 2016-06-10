@@ -7,7 +7,7 @@ export function main(): void {
     'use strict';
 
     let appState: AppState = null;
-
+/*
     beforeEach((done: Function) => {
         appState = AppState.Instance;
         done();
@@ -103,4 +103,5 @@ export function main(): void {
         });
 
     });
+*/
 }
