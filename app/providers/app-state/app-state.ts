@@ -9,7 +9,7 @@ import {
     DB_NO_KEY,
     DB_KEY_PATH,
     MAX_DB_INIT_TIME
-} from '../local-db/local-db';
+}                     from '../local-db/local-db';
 
 export interface GainState {
     factor: number;
@@ -53,10 +53,6 @@ const DEFAULT_STATE: State = {
  */
 @Injectable()
 export class AppState {
-    // 'instance' is used to implement this class as a Singleton
-    private static instance: AppState = null;
-
-    // private localDB: LocalDB = LocalDB.Instance;
     private localDB: LocalDB;
 
     // treeNode contains the node in the tree where we store the
@@ -71,6 +67,7 @@ export class AppState {
      */
     constructor(localDB: LocalDB) {
         console.log('constructor():AppState');
+        this.localDB = localDB;
 
         // Create root folder
         this.localDB.readOrCreateFolderNode(ROOT_FOLDER_NAME, DB_NO_KEY)
@@ -110,17 +107,6 @@ export class AppState {
             }
             ); // readOrCreateFolderNode().subscribe(
     }
-
-    /**
-     * Access the singleton class instance via AppState.Instance
-     * @returns {AppState} singleton instance of this class
-     */
-    // static get Instance(): AppState {
-    //     if (!this.instance) {
-    //         this.instance = new AppState();
-    //     }
-    //     return this.instance;
-    // }
 
     /**
      * Get the key of the last viewed folder from the local DB
@@ -217,7 +203,7 @@ export class AppState {
                 (error: any) => {
                     observer.error(error);
                 }
-            ); // waitForDB().subscribe(
+            ); // waitAppState().subscribe(
         });
         return source;
     }

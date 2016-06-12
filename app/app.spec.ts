@@ -46,7 +46,7 @@ describe('IonicRecorderApp', () => {
         APP = new IonicRecorderApp(mockClass, mockClass);
     });
 
-    it('initialises with two possible pages', () => {
+    it('initialises with four possible pages', () => {
         expect(APP['pages'].length).toEqual(4);
     });
 

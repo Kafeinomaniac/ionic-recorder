@@ -20,16 +20,18 @@ import { AboutPage }      from '../about/about';
  * Page that's displayed while we load things at app's start.
  */
 @Component({
-    templateUrl: 'build/pages/loading/loading.html'
+    templateUrl: 'build/pages/loading/loading.html',
+    providers: []
 })
 export class LoadingPage {
     private nav: NavController;
-    //private appState: AppState = AppState.Instance;
     private appState: AppState;
 
     constructor(nav: NavController, appState: AppState) {
         console.log('constructor(): LoadingPage');
         this.nav = nav;
+        this.appState = appState;
+
         this.appState.getProperty('lastPageVisited').subscribe(
             (lastPageVisited: LastPageVisited) => {
                 console.log('lpv: ' + lastPageVisited);

@@ -1,16 +1,25 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {MAX_DB_INIT_TIME} from '../local-db/local-db';
-import {AppState} from './app-state';
+import {
+    MAX_DB_INIT_TIME,
+    LocalDB
+}                      from '../local-db/local-db';
+import { AppState }    from './app-state';
 
 export function main(): void {
     'use strict';
 
-    let appState: AppState = null;
-/*
+    let localDB: LocalDB = new LocalDB(),
+        appState: AppState = new AppState(localDB);
+
     beforeEach((done: Function) => {
-        appState = AppState.Instance;
-        done();
+        localDB.waitForDB().subscribe(
+            (database: IDBDatabase) => {
+                done();
+            },
+            (error) => {
+                fail(error);
+            });
     });
 
     jasmine.DEFAULT_TIMEOUT_INTERVAL = MAX_DB_INIT_TIME * 2;
@@ -103,5 +112,4 @@ export function main(): void {
         });
 
     });
-*/
 }

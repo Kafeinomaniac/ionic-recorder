@@ -58,8 +58,6 @@ export interface ParentChild {
  */
 @Injectable()
 export class LocalDB {
-    // 'instance' is used as part of Singleton pattern implementation
-    private static instance: LocalDB = null;
     private db: IDBDatabase = null;
 
     /**
@@ -79,17 +77,6 @@ export class LocalDB {
             }
         );
     }
-
-    /**
-     * Access the singleton class instance via LocalDB.Instance
-     * @returns {LocalDB} the singleton instance of this class
-     */
-    // static get Instance(): LocalDB {
-    //     if (!this.instance) {
-    //         this.instance = new LocalDB();
-    //     }
-    //     return this.instance;
-    // }
 
     /**
      * Verifies its argument to be a valid LocalDB key - returns true
@@ -965,7 +952,7 @@ export class LocalDB {
     // Public high level API functions, obtained via this command:
     //
     // > grep localDB\. `findword 'localDB.' | grep -v local-db` | \
-    //   sed 's/.*ocalDB\.*' | sed 's/(.**' | sort -u|grep -v Instance | nl
+    //   sed 's/.*ocalDB\.*' | sed 's/(.**' | sort -u | nl
     //   1     createDataNode
     //   2     createFolderNode
     //   3     deleteNodes

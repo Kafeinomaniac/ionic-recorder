@@ -26,8 +26,6 @@ const PAUSE_ICON: string = 'pause';
     directives: [VuGauge, ProgressSlider]
 })
 export class RecordPage {
-    //private localDB: LocalDB = LocalDB.Instance;
-    //private appState: AppState = AppState.Instance;
     private localDB: LocalDB;
     private appState: AppState;
     private recorder: WebAudioRecorder = WebAudioRecorder.Instance;
@@ -41,8 +39,12 @@ export class RecordPage {
     /**
      * @constructor
      */
-    constructor() {
+    constructor(localDB: LocalDB, appState: AppState) {
         console.log('constructor():RecordPage');
+
+        this.localDB = localDB;
+        this.appState = appState;
+
         // function that gets called with a newly created blob when
         // we hit the stop button - saves blob to local db
         this.recorder.onStopRecord = (blob: Blob) => {

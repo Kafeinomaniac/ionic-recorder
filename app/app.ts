@@ -13,7 +13,7 @@ import {
     MenuController
 }                        from 'ionic-angular';
 
-import { StatusBar }     from 'ionic-native';
+// import { StatusBar }     from 'ionic-native';
 import { LoadingPage }   from './pages/loading/loading';
 import { RecordPage }    from './pages/record/record';
 import { LibraryPage }   from './pages/library/library';
@@ -22,6 +22,7 @@ import { AboutPage }     from './pages/about/about';
 // Uncomment line below to reset DB (step 1/3)
 // import {DB_NAME} from './providers/local-db/local-db';
 import { LocalDB }       from './providers/local-db/local-db';
+import { AppState }      from './providers/app-state/app-state';
 
 // Catch-all exception handler for this app
 class AppExceptionHandler extends ExceptionHandler {
@@ -83,7 +84,7 @@ export class IonicRecorderApp {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
-            StatusBar.styleDefault();
+            // StatusBar.styleDefault();
         });
     }
 
@@ -110,6 +111,7 @@ ionicBootstrap(
     IonicRecorderApp,
     [
         provide(ExceptionHandler, { useClass: AppExceptionHandler }),
+        AppState,
         LocalDB
     ],
     {});

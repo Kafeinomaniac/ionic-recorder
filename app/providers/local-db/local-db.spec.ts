@@ -1,5 +1,5 @@
 // Copyright (c) 2016 Tracktunes Inc
-/*
+
 import {
     LocalDB,
     TreeNode,
@@ -32,8 +32,7 @@ request.onblocked = function (): void {
 export function main(): void {
     'use strict';
 
-    let localDB: LocalDB = null,
-        localDB2: LocalDB = null,
+    let localDB: LocalDB = new LocalDB(),
         db: IDBDatabase = null,
         randomWord1: TreeNode,
         unfiledFolder: TreeNode,
@@ -47,7 +46,6 @@ export function main(): void {
         item7: TreeNode;
 
     beforeEach((done: Function) => {
-        localDB = LocalDB.Instance;
         localDB.waitForDB().subscribe(
             (database: IDBDatabase) => {
                 db = database;
@@ -85,18 +83,6 @@ export function main(): void {
             expect(localDB.validateKey(-1)).toBeFalsy();
             expect(localDB.validateKey(1.1)).toBeFalsy();
             done();
-        });
-    });
-
-    describe('When two LocalDB instances are initialized', () => {
-        it('should be equal (singleton test)', (done) => {
-            setTimeout(
-                () => {
-                    localDB2 = LocalDB.Instance;
-                    expect(localDB2).toBe(localDB);
-                    done();
-                },
-                MAX_DB_INIT_TIME);
         });
     });
 
@@ -837,4 +823,3 @@ export function main(): void {
 
     }); // describe
 }
-*/

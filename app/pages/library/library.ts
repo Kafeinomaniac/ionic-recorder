@@ -33,13 +33,11 @@ import { AudioPlayer } from '../../components/audio-player/audio-player';
 })
 export class LibraryPage {
     private nav: NavController;
+    private localDB: LocalDB;
+    private appState: AppState;
     private folderNode: TreeNode = null;
     private folderItems: { [id: string]: TreeNode; } = {};
     private selectedNodes: { [id: string]: TreeNode; } = {};
-    //private localDB: LocalDB = LocalDB.Instance;
-    private localDB: LocalDB;
-    // private appState: AppState = AppState.Instance;
-    private appState: AppState;
     private totalSelectedCounter: number = 0;
     private unfiledFolderKey: number;
     private playerTitle: string;
@@ -49,9 +47,11 @@ export class LibraryPage {
      * @constructor
      * @param {NavController} nav
      */
-    constructor(nav: NavController, appState: AppState, localDB: LocalDB) {
+    constructor(nav: NavController, localDB: LocalDB, appState: AppState) {
         console.log('constructor():LibraryPage');
         this.nav = nav;
+        this.localDB = localDB;
+        this.appState = appState;
     }
 
     /**
