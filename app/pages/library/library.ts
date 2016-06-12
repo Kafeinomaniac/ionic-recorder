@@ -1,11 +1,15 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Component } from '@angular/core';
+import {
+    Component
+} from '@angular/core';
+
 import {
     NavController,
     Modal,
     Alert
 } from 'ionic-angular';
+
 import {
     LocalDB,
     TreeNode,
@@ -13,13 +17,20 @@ import {
     ParentChild,
     DB_KEY_PATH
 } from '../../providers/local-db/local-db';
+
 import {
     AppState,
     LastPageVisited,
     ROOT_FOLDER_NAME
 } from '../../providers/app-state/app-state';
-import { AddFolderPage } from '../add-folder/add-folder';
-import { AudioPlayer } from '../../components/audio-player/audio-player';
+
+import {
+    AddFolderPage
+} from '../add-folder/add-folder';
+
+import {
+    AudioPlayer
+} from '../../components/audio-player/audio-player';
 
 /**
  * @name LibraryPage
@@ -47,7 +58,11 @@ export class LibraryPage {
      * @constructor
      * @param {NavController} nav
      */
-    constructor(nav: NavController, localDB: LocalDB, appState: AppState) {
+    constructor(
+        nav: NavController,
+        localDB: LocalDB,
+        appState: AppState
+    ) {
         console.log('constructor():LibraryPage');
         this.nav = nav;
         this.localDB = localDB;

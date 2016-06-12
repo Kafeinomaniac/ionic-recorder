@@ -1,15 +1,17 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+    Injectable
+} from '@angular/core';
+
+import {
+    Observable
+} from 'rxjs/Rx';
+
 import {
     copyFromObject,
     prependArray
 } from '../utils/utils';
-
-// TODO:
-// 1) replace readChildNodes with childOrder usage instead (faster)
-// 2) make sure all ids are strings (do this later)
 
 // non-exported module globals
 

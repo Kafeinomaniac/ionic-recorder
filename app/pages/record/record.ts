@@ -1,14 +1,27 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Component } from '@angular/core';
-import { VuGauge } from '../../components/vu-gauge/vu-gauge';
+import {
+    Component
+} from '@angular/core';
+
+import {
+    VuGauge
+} from '../../components/vu-gauge/vu-gauge';
+
 import {
     AppState,
     LastPageVisited,
     GainState
 } from '../../providers/app-state/app-state';
-import { WebAudioRecorder } from '../../providers/web-audio/web-audio';
-import { LocalDB } from '../../providers/local-db/local-db';
+
+import {
+    WebAudioRecorder
+} from '../../providers/webaudio-recorder/webaudio-recorder';
+
+import {
+    LocalDB
+} from '../../providers/local-db/local-db';
+
 import {
     ProgressSlider
 } from '../../components/progress-slider/progress-slider';
@@ -23,12 +36,13 @@ const PAUSE_ICON: string = 'pause';
  */
 @Component({
     templateUrl: 'build/pages/record/record.html',
+    providers: [WebAudioRecorder],
     directives: [VuGauge, ProgressSlider]
 })
 export class RecordPage {
     private localDB: LocalDB;
     private appState: AppState;
-    private recorder: WebAudioRecorder = WebAudioRecorder.Instance;
+    private recorder: WebAudioRecorder;
     private recordButtonIcon: string = START_RESUME_ICON;
     // gain variables get initialized in constructor
     private percentGain: string;
@@ -39,11 +53,16 @@ export class RecordPage {
     /**
      * @constructor
      */
-    constructor(localDB: LocalDB, appState: AppState) {
+    constructor(
+        localDB: LocalDB,
+        appState: AppState,
+        recorder: WebAudioRecorder
+    ) {
         console.log('constructor():RecordPage');
 
         this.localDB = localDB;
         this.appState = appState;
+        this.recorder = recorder;
 
         // function that gets called with a newly created blob when
         // we hit the stop button - saves blob to local db

@@ -3,8 +3,11 @@
 import {
     MAX_DB_INIT_TIME,
     LocalDB
-}                      from '../local-db/local-db';
-import { AppState }    from './app-state';
+} from '../local-db/local-db';
+
+import {
+    AppState
+} from './app-state';
 
 export function main(): void {
     'use strict';

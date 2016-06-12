@@ -6,9 +6,18 @@ import {
     OnChanges,
     SimpleChange
 } from '@angular/core';
-import { IONIC_DIRECTIVES } from 'ionic-angular';
-import { WebAudioPlayer } from '../../providers/web-audio/web-audio';
-import { ProgressSlider } from '../progress-slider/progress-slider';
+
+import {
+    IONIC_DIRECTIVES
+} from 'ionic-angular';
+
+import {
+    WebAudioPlayer
+} from '../../providers/webaudio-player/webaudio-player';
+
+import {
+    ProgressSlider
+} from '../progress-slider/progress-slider';
 
 /**
  * @name AudioPlayer
@@ -19,19 +28,21 @@ import { ProgressSlider } from '../progress-slider/progress-slider';
 @Component({
     selector: 'audio-player',
     templateUrl: 'build/components/audio-player/audio-player.html',
+    providers: [WebAudioPlayer],
     directives: [IONIC_DIRECTIVES, ProgressSlider]
 })
 export class AudioPlayer implements OnChanges {
     @Input() private title: string;
     @Input() private blob: Blob;
-    private player: WebAudioPlayer = WebAudioPlayer.Instance;
+    private player: WebAudioPlayer;
     private hidden: boolean = true;
 
     /**
      * @constructor
      */
-    constructor() {
+    constructor(player: WebAudioPlayer) {
         console.log('constructor():AudioPlayer');
+        this.player = player;
     }
 
     /**

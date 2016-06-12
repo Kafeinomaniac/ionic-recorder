@@ -2,15 +2,23 @@ import {
     ADDITIONAL_TEST_BROWSER_PROVIDERS,
     TEST_BROWSER_STATIC_PLATFORM_PROVIDERS
 } from '@angular/platform-browser/testing/browser_static';
+
 import {
     BROWSER_APP_DYNAMIC_PROVIDERS
 } from '@angular/platform-browser-dynamic';
+
 import {
     resetBaseTestProviders,
     setBaseTestProviders
 } from '@angular/core/testing';
-import {IonicRecorderApp} from './app';
-import {LibraryPage} from './pages/library/library';
+
+import {
+    IonicRecorderApp
+} from './app';
+
+import {
+    LibraryPage
+} from './pages/library/library';
 
 resetBaseTestProviders();
 setBaseTestProviders(

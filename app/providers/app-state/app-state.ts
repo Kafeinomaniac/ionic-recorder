@@ -1,7 +1,13 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+    Injectable
+} from '@angular/core';
+
+import {
+    Observable
+} from 'rxjs/Rx';
+
 import {
     LocalDB,
     TreeNode,
@@ -9,7 +15,7 @@ import {
     DB_NO_KEY,
     DB_KEY_PATH,
     MAX_DB_INIT_TIME
-}                     from '../local-db/local-db';
+} from '../local-db/local-db';
 
 export interface GainState {
     factor: number;
@@ -23,6 +29,10 @@ export enum LastPageVisited {
     About = 3
 }
 
+export const STATE_NODE_NAME: string = 'app-state';
+export const ROOT_FOLDER_NAME: string = 'root';
+export const UNFILED_FOLDER_NAME: string = 'Unfiled';
+
 interface State {
     lastPageVisited: LastPageVisited;
     lastViewedFolderKey: number;
@@ -31,10 +41,6 @@ interface State {
     selectedNodes: { [id: string]: boolean };
     gain: GainState;
 }
-
-export const STATE_NODE_NAME: string = 'app-state';
-export const ROOT_FOLDER_NAME: string = 'root';
-export const UNFILED_FOLDER_NAME: string = 'Unfiled';
 
 const DEFAULT_STATE: State = {
     lastPageVisited: 0,
