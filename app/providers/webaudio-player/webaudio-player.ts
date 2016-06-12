@@ -17,8 +17,6 @@ const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
  */
 @Injectable()
 export class WebAudioPlayer {
-    // 'instance' is used as part of Singleton pattern implementation
-    private static instance: WebAudioPlayer = null;
     private fileReader: FileReader = new FileReader();
     private audioBuffer: AudioBuffer;
     private sourceNode: AudioBufferSourceNode = null;
@@ -30,17 +28,6 @@ export class WebAudioPlayer {
 
     constructor() {
         console.log('constructor():WebAudioPlayer');
-    }
-
-    /**
-     * Access the singleton class instance via Singleton.Instance
-     * @returns {Singleton} the single instance of this class
-     */
-    static get Instance(): WebAudioPlayer {
-        if (!this.instance) {
-            this.instance = new WebAudioPlayer();
-        }
-        return this.instance;
     }
 
     /**

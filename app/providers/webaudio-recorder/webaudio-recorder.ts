@@ -23,8 +23,6 @@ const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
  */
 @Injectable()
 export class WebAudioRecorder {
-    // 'instance' is used as part of Singleton pattern implementation
-    private static instance: WebAudioRecorder = null;
     public mediaRecorder: MediaRecorder;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
@@ -47,7 +45,6 @@ export class WebAudioRecorder {
     // gets called with the recorded blob as soon as we're done recording
     public onStopRecord: (recordedBlob: Blob) => void;
 
-    // 'instance' is used as part of Singleton pattern implementation
     constructor() {
         console.log('constructor():WebAudioRecorder');
         this.resetPeaks();
@@ -55,17 +52,6 @@ export class WebAudioRecorder {
         this.waitForAudio().subscribe(() => {
             this.startMonitoring();
         });
-    }
-
-    /**
-     * Access the singleton class instance via Singleton.Instance
-     * @returns {Singleton} the single instance of this class
-     */
-    static get Instance(): WebAudioRecorder {
-        if (!this.instance) {
-            this.instance = new WebAudioRecorder();
-        }
-        return this.instance;
     }
 
     public waitForAudio(): Observable<void> {
