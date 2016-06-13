@@ -16,6 +16,13 @@ const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 
 const AUDIO_CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
 
+// length of script processing buffer (must be power of 2, smallest possible,
+// to reduce latency and to compute time as accurately as possible)
+const BUFFER_LENGTH: number = 256;
+
+// number of input channels and number of output channels
+const N_CHANNELS: number = 1;
+
 const NO_MICROPHONE_MSG: string = [
     'This app needs the microphone to record audio with. Your browser got no ',
     'access to your microphone - if this app is running on a desktop, ensure ',
@@ -49,9 +56,7 @@ const NO_MEDIARECORDER_MSG: string = [
 export class WebAudioRecorder {
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
-    private analyserNode: AnalyserNode;
-    private analyserBuffer: Uint8Array;
-    private analyserBufferLength: number;
+    private scriptProcessorNode: ScriptProcessorNode;
     private blobChunks: Blob[];
     private startedAt: number;
     private pausedAt: number;
@@ -216,8 +221,11 @@ export class WebAudioRecorder {
     }
 
     /**
-     * Create Analyser and Gain nodes and connect them to a
-     * MediaStreamDestination node, which is fed to MediaRecorder
+     * Create the following nodes:
+     * this.sourceNode (createMediaStreamSourceNode)
+     * |--> this.gainNode (createGain)
+     *      |--> this.scriptProcessorNode (createScriptProcessor)
+     *           |--> MediaStreamAudioDestinationNode
      * @param {MediaStream} stream the stream obtained by getUserMedia
      * @returns {void}
      */
@@ -225,11 +233,67 @@ export class WebAudioRecorder {
         // create the gainNode
         this.audioGainNode = AUDIO_CONTEXT.createGain();
 
-        // create and configure the analyserNode
-        this.analyserNode = AUDIO_CONTEXT.createAnalyser();
-        this.analyserNode.fftSize = 2048;
-        this.analyserBufferLength = this.analyserNode.frequencyBinCount;
-        this.analyserBuffer = new Uint8Array(this.analyserBufferLength);
+        // create and configure the scriptProcessorNode
+
+        this.scriptProcessorNode = AUDIO_CONTEXT.createScriptProcessor(
+            BUFFER_LENGTH,
+            N_CHANNELS,
+            N_CHANNELS);
+        console.log('setUpNodes()');
+        this.scriptProcessorNode.onaudioprocess =
+            (processingEvent: AudioProcessingEvent): any => {
+                // console.log('setUpNodes():onaudioprocess 1');
+                let inputBuffer: AudioBuffer = processingEvent.inputBuffer,
+                    outputBuffer: AudioBuffer = processingEvent.outputBuffer,
+                    inputData: Float32Array,
+                    outputData: Float32Array,
+                    channel: number,
+                    sample: number,
+                    value: number,
+                    absValue: number,
+                    bufferMax: number;
+                for (channel = 0; channel < N_CHANNELS; channel++) {
+                    inputData = inputBuffer.getChannelData(channel);
+                    outputData = outputBuffer.getChannelData(channel);
+                    value = 0;
+                    absValue = 0;
+                    bufferMax = 0;
+                    for (sample = 0; sample < BUFFER_LENGTH; sample++) {
+                        value = inputData[sample];
+                        absValue = Math.abs(value);
+                        if (absValue > bufferMax) {
+                            bufferMax = absValue;
+                        }
+                        outputData[sample] = value;
+                    } // for (sample ...
+                } // for (channel ...
+
+                // we use bufferMax to represent current volume
+                // update some properties based on new value of bufferMax
+                this.nPeakMeasurements += 1;
+
+                if (bufferMax === this.currentVolume) {
+                    // no change in volume
+                    return;
+                }
+
+                // volume has changed, update this.currentVolume
+
+                if (bufferMax > this.maxVolumeSinceReset) {
+                    // on new maximum, re-start counting peaks
+                    this.resetPeaks();
+                    this.maxVolumeSinceReset = bufferMax;
+                }
+                else if (this.maxVolumeSinceReset === bufferMax) {
+                    this.nPeaksAtMax += 1;
+                }
+
+                this.percentPeaksAtMax =
+                    (100 * this.nPeaksAtMax / this.nPeakMeasurements)
+                        .toFixed(1);
+
+                this.currentVolume = bufferMax;
+            }; // this.scriptProcessorNode.onaudioprocess = ...
 
         // create a source node out of the audio media stream
         this.sourceNode = AUDIO_CONTEXT.createMediaStreamSource(stream);
@@ -241,23 +305,25 @@ export class WebAudioRecorder {
         // sourceNode (microphone) -> gainNode
         this.sourceNode.connect(this.audioGainNode);
 
-        // gainNode -> destination
-        this.audioGainNode.connect(dest);
+        // gainNode -> scriptProcessorNode
+        this.audioGainNode.connect(this.scriptProcessorNode);
 
-        // gainNode -> analyserNode
-        this.audioGainNode.connect(this.analyserNode);
+        // gainNode -> destination
+        // this.audioGainNode.connect(dest);
+
+        // scriptProcessorNode -> destination
+        this.scriptProcessorNode.connect(dest);
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // PUBLIC API METHODS
     ///////////////////////////////////////////////////////////////////////////
-
     // this ensures change detection every GRAPHICS_REFRESH_INTERVAL
     // setInterval(() => { }, GRAPHICS_REFRESH_INTERVAL);
+
     public startMonitoring(): void {
         this.setIntervalId = setInterval(
             () => {
-                this.analyzeVolume();
                 this.currentTime = formatTime(this.getTime());
             },
             MONITOR_REFRESH_INTERVAL);
@@ -276,49 +342,6 @@ export class WebAudioRecorder {
         this.nPeakMeasurements = 1;
         // make this 1 to match nPeakMeasurements and get 100% at start
         this.nPeaksAtMax = 1;
-    }
-
-    /**
-     * Compute the current latest buffer frame max volume and return it
-     * @returns {void}
-     */
-    private analyzeVolume(): boolean {
-        // for some reason this setTimeout(() => { ... }, 0) fixes all our
-        // update angular2 problems (in devMode we get a million exceptions
-        // without this setTimeout)
-        let i: number, bufferMax: number = 0, absValue: number;
-        this.analyserNode.getByteTimeDomainData(this.analyserBuffer);
-        for (i = 0; i < this.analyserBufferLength; i++) {
-            absValue = Math.abs(this.analyserBuffer[i] - 128.0);
-            if (absValue > bufferMax) {
-                bufferMax = absValue;
-            }
-        }
-
-        // we use bufferMax to represent current volume
-        // update some properties based on new value of bufferMax
-        this.nPeakMeasurements += 1;
-
-        if (bufferMax === this.currentVolume) {
-            // no change
-            return;
-        }
-
-        this.currentVolume = bufferMax;
-
-        if (this.maxVolumeSinceReset < bufferMax) {
-            this.resetPeaks();
-            this.maxVolumeSinceReset = bufferMax;
-        }
-        else if (this.maxVolumeSinceReset === bufferMax) {
-            this.nPeaksAtMax += 1;
-        }
-
-        this.percentPeaksAtMax =
-            (100 * this.nPeaksAtMax / this.nPeakMeasurements).toFixed(1);
-
-        this.currentVolume = bufferMax;
-        // console.log('WebAudioRecorder:getCurrentVolume(): ' + bufferMax);
     }
 
     /**

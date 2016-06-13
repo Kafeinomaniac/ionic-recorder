@@ -32,7 +32,7 @@ export class VuGauge implements OnChanges {
      * @constructor
      */
     constructor() {
-        console.log('constructor():VuGauge');
+        console.log('constructor():VuGauge ' + this.max);
         this.leds = [];
         this.maxIndex = 0;
         // some error checking
@@ -67,7 +67,7 @@ export class VuGauge implements OnChanges {
                 strokeWidth: '0'
             });
         }
-        this.valueStep = 128.0 / (this.nbars - 1.0);
+        this.valueStep = 1.0 / (this.nbars - 1);
     }
 
     /**
