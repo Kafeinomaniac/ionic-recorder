@@ -154,19 +154,22 @@ export class RecordPage {
      */
     public onClickStartPauseButton(): void {
         // this.currentVolume += Math.abs(Math.random() * 10);
-        if (this.recorder.mediaRecorder.state === 'recording') {
+        if (this.recorder.isRecording()) {
+            console.log('pausing...');
             // we're recording (when clicked, so pause recording)
             this.recorder.pause();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
             // we're not recording (when clicked, so start/resume recording)
-            if (this.recorder.mediaRecorder.state === 'inactive') {
+            if (this.recorder.isInactive()) {
                 // inactive, we're stopped (rather than paused) so start
+                console.log('starting...');
                 this.recorder.start();
             }
             else {
                 // it's active, we're just paused, so resume
+                console.log('resuming ...');
                 this.recorder.resume();
             }
             this.recordButtonIcon = PAUSE_ICON;

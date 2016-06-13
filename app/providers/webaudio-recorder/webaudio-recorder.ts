@@ -35,14 +35,6 @@ const NO_GETUSERMEDIA_MSG: string = [
     'to use the recording part of this app.'
 ].join('');
 
-const NO_MEDIARECORDER_MSG: string = [
-    'Your browser does not support the MediaRecorder object ',
-    'used for recording audio, please upgrade to one of the ',
-    'browsers supported by this app. Until you do so ',
-    'you will not be able to use the recording part of ',
-    'this app, but you will be able to play back audio.'
-].join('');
-
 /**
  * @name WebAudioRecorder
  * @description
@@ -54,13 +46,12 @@ export class WebAudioRecorder {
     private audioGainNode: AudioGainNode;
     private scriptProcessorNode: ScriptProcessorNode;
     private blobChunks: Blob[];
-    private startedAt: number;
-    private pausedAt: number;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
     private setIntervalId: NodeJS.Timer;
+    private startedAt: number;
+    private pausedAt: number;
 
-    public mediaRecorder: MediaRecorder;
     public isReady: boolean;
     public currentVolume: number;
     public currentTime: string;
@@ -102,8 +93,6 @@ export class WebAudioRecorder {
                 .then((stream: MediaStream) => {
                     console.log('new -> then ...');
                     this.setUpNodes(stream);
-                    this.initMediaRecorder(stream);
-                    this.startMonitoring();
                 })
                 .catch((error: any) => {
                     this.noMicrophoneAlert(error);
@@ -124,8 +113,6 @@ export class WebAudioRecorder {
                         (stream: MediaStream) => {
                             // ok we got a microphone
                             this.setUpNodes(stream);
-                            this.initMediaRecorder(stream);
-                            this.startMonitoring();
                         },
                         (error: any) => {
                             this.noMicrophoneAlert(error);
@@ -142,6 +129,11 @@ export class WebAudioRecorder {
         }
     }
 
+    /**
+     * Show error message alert
+     * @param {any} error object with .name and .message fields
+     * @returns {void}
+     */
     private noMicrophoneAlert(error: any): void {
         console.log('noMicrophoneAlert(error): error = ' + error);
         console.dir(error);
@@ -151,69 +143,6 @@ export class WebAudioRecorder {
             '\nError name: ', error.name,
             '\nError message: ', error.message
         ].join(''));
-    }
-
-    /**
-     * Create new MediaRecorder and set up its callbacks
-     * @param {MediaStream} stream the stream obtained by getUserMedia
-     * @returns {void}
-     */
-    private initMediaRecorder(stream: MediaStream): void {
-        if (!MediaRecorder) {
-            alert(NO_MEDIARECORDER_MSG);
-            return;
-        }
-
-        this.mediaRecorder = new MediaRecorder(stream, {
-            mimeType: 'audio/webm'
-        });
-        console.log('MediaRecorder = ' + this.mediaRecorder);
-        // feature surveying code - turn this on to discover if new formats
-        // become available upon browser upgrades
-        if (MediaRecorder.isTypeSupported === undefined) {
-            console.warn('MediaRecorder.isTypeSupported() is undefined!');
-        }
-        else {
-            if (MediaRecorder.isTypeSupported('audio/wav')) {
-                console.log('audio/wav SUPPORTED');
-            }
-            if (MediaRecorder.isTypeSupported('audio/ogg')) {
-                console.log('audio/ogg SUPPORTED');
-            }
-            if (MediaRecorder.isTypeSupported('audio/mp3')) {
-                console.log('audio/mp3 SUPPORTED');
-            }
-            if (MediaRecorder.isTypeSupported('audio/m4a')) {
-                console.log('audio/m4a SUPPORTED');
-            }
-            if (MediaRecorder.isTypeSupported('audio/webm')) {
-                console.log('audio/webm SUPPORTED');
-            }
-        }
-
-        this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
-            // console.log('ondataavailable()');
-            this.blobChunks.push(event.data);
-        };
-
-        this.mediaRecorder.onstop = (event: Event) => {
-            console.log('mediaRecorder.onStop() Got ' +
-                this.blobChunks.length + ' chunks');
-
-            if (!this.onStopRecord) {
-                throw Error('WebAudioRecorder:onStop() not set!');
-            }
-
-            // this.onStopRecord(new Blob(this.blobChunks, {
-            //     type: 'audio/webm'
-            // }));
-            this.onStopRecord(new Blob(this.blobChunks));
-            this.blobChunks = [];
-        };
-
-        // finally let users of this class know it's ready
-        this.isReady = true;
-        console.log('WebAudioRecorder: READY');
     }
 
     /**
@@ -230,7 +159,6 @@ export class WebAudioRecorder {
         this.audioGainNode = AUDIO_CONTEXT.createGain();
 
         // create and configure the scriptProcessorNode
-
         this.scriptProcessorNode = AUDIO_CONTEXT.createScriptProcessor(
             BUFFER_LENGTH,
             N_CHANNELS,
@@ -267,7 +195,8 @@ export class WebAudioRecorder {
         // create a source node out of the audio media stream
         this.sourceNode = AUDIO_CONTEXT.createMediaStreamSource(stream);
 
-        // create a destination node
+        // create a destination node (need something to connect the
+        // scriptProcessorNode with or else it won't process audio)
         let dest: MediaStreamAudioDestinationNode =
             AUDIO_CONTEXT.createMediaStreamDestination();
 
@@ -277,11 +206,14 @@ export class WebAudioRecorder {
         // gainNode -> scriptProcessorNode
         this.audioGainNode.connect(this.scriptProcessorNode);
 
-        // gainNode -> destination
-        // this.audioGainNode.connect(dest);
-
         // scriptProcessorNode -> destination
         this.scriptProcessorNode.connect(dest);
+
+        // finally, start monitoring audio volume levels
+        this.startMonitoring();
+
+        // and you can tell the world we're ready
+        this.isReady = true;
     }
 
     /**
@@ -312,9 +244,11 @@ export class WebAudioRecorder {
     ///////////////////////////////////////////////////////////////////////////
     // PUBLIC API METHODS
     ///////////////////////////////////////////////////////////////////////////
-    // this ensures change detection every GRAPHICS_REFRESH_INTERVAL
-    // setInterval(() => { }, GRAPHICS_REFRESH_INTERVAL);
 
+    /**
+     * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
+     * @returns {void}
+     */
     public startMonitoring(): void {
         this.setIntervalId = setInterval(
             () => {
@@ -324,10 +258,19 @@ export class WebAudioRecorder {
             MONITOR_REFRESH_INTERVAL);
     }
 
+    /**
+     * Stops monitoring (stops change detection)
+     * @returns {void}
+     */
     public stopMonitoring(): void {
         clearInterval(this.setIntervalId);
     }
 
+    /**
+     * Reset all peak stats as if we've just started playing audio at
+     * time 0. Call this when you want to compute stats from now.
+     * @returns {void}
+     */
     public resetPeaks(): void {
         // console.log('WebAudioRecorder:resetPeaks()');
         this.maxVolumeSinceReset = 0;
@@ -374,13 +317,6 @@ export class WebAudioRecorder {
      */
     public start(): void {
         console.log('record:start');
-        if (!this.mediaRecorder) {
-            throw Error('MediaRecorder not initialized! (1)');
-        }
-        // TODO: play around with putting the next line
-        // either immediately below or immediately above the
-        // start() call
-        this.mediaRecorder.start();
         this.startedAt = AUDIO_CONTEXT.currentTime;
         this.pausedAt = 0;
     }
@@ -391,10 +327,6 @@ export class WebAudioRecorder {
      */
     public pause(): void {
         console.log('record:pause');
-        if (!this.mediaRecorder) {
-            throw Error('MediaRecorder not initialized! (2)');
-        }
-        this.mediaRecorder.pause();
         this.pausedAt = AUDIO_CONTEXT.currentTime - this.startedAt;
     }
 
@@ -404,10 +336,7 @@ export class WebAudioRecorder {
      */
     public resume(): void {
         console.log('record:resume');
-        if (!this.mediaRecorder) {
-            throw Error('MediaRecorder not initialized! (3)');
-        }
-        this.mediaRecorder.resume();
+        this.startedAt = AUDIO_CONTEXT.currentTime - this.pausedAt;
         this.pausedAt = 0;
     }
 
@@ -417,11 +346,17 @@ export class WebAudioRecorder {
      */
     public stop(): void {
         console.log('record:stop');
-        if (!this.mediaRecorder) {
-            throw Error('MediaRecorder not initialized! (4)');
-        }
-        this.mediaRecorder.stop();
         this.startedAt = 0;
         this.pausedAt = 0;
+    }
+
+    public isRecording(): boolean {
+        // console.log('isRecording(): startedAt=' + this.startedAt +
+        //     ', pausedAt=' + this.pausedAt);
+        return this.startedAt > 0 && this.pausedAt === 0;
+    }
+
+    public isInactive(): boolean {
+        return this.startedAt === 0;
     }
 }

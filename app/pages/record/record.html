@@ -31,7 +31,7 @@
             <ion-icon [name]="recordButtonIcon">
             </ion-icon>
         </button>
-        <button logo-orange [disabled]="!recorder.isReady || (recorder.isReady && recorder.mediaRecorder.state === 'inactive')" (click)="onClickStopButton()">
+        <button logo-orange [disabled]="!recorder.isReady || (recorder.isReady && recorder.isInactive())" (click)="onClickStopButton()">
             <ion-icon name="square">
             </ion-icon>
         </button>
