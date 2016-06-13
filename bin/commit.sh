@@ -11,12 +11,12 @@ ABOUTFILE="app/pages/about/about.ts"
 
 # run unit tests 
 echo "Running unit tests ..."
-TESTRESULTS="`npm test 2>&1  | grep -e Finished | egrep 'karma|unit-test'`"
+TEST_ERRORS="`npm test 2>&1  | grep gulp-tslint | grep error`"
 
-echo "Test results: $TESTRESULTS"
-
-if [ "$TESTRESULTS" == "" ]; then
-    echo "Unit tests failed, please fix those and try again, exiting."
+if [ "$TEST_ERRORS" != "" ]; then
+    echo "Unit tests failed, please fix those and try again, errors:"
+    echo "$TEST_ERRORS"
+    echo "Exiting ..."
     exit 1
 fi
 

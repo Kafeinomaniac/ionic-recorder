@@ -14,7 +14,27 @@ const MONITOR_REFRESH_RATE_HZ: number = 24;
 
 const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 
-const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
+const AUDIO_CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
+
+const NO_MICROPHONE_MSG: string = [
+    'This app needs the microphone to record audio with. Your browser got no ',
+    'access to your microphone - if this app is running on a desktop, ensure ',
+    'your microphone is connected (you may need to reload this page).'
+].join('');
+
+const NO_GETUSERMEDIA_MSG: string = [
+    'Your browser does not support the function getUserMedia(). Please ',
+    'upgrade to the latest version of Chrome (50 or above), if you want ',
+    'to use the recording part of this app.'
+].join('');
+
+const NO_MEDIARECORDER_MSG: string = [
+    'Your browser does not support the MediaRecorder object ',
+    'used for recording audio, please upgrade to one of the ',
+    'browsers supported by this app. Until you do so ',
+    'you will not be able to use the recording part of ',
+    'this app, but you will be able to play back audio.'
+].join('');
 
 ///////////////////////////////////////////////////////////////////////////////
 // RECORDER
@@ -27,7 +47,6 @@ const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
  */
 @Injectable()
 export class WebAudioRecorder {
-    public mediaRecorder: MediaRecorder;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
     private analyserNode: AnalyserNode;
@@ -40,6 +59,7 @@ export class WebAudioRecorder {
     private nPeakMeasurements: number;
     private setIntervalId: NodeJS.Timer;
 
+    public mediaRecorder: MediaRecorder;
     public isReady: boolean;
     public currentVolume: number;
     public currentTime: string;
@@ -65,11 +85,11 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     private initAudio(): void {
-        if (!CONTEXT) {
+        if (!AUDIO_CONTEXT) {
             throw Error('AudioContext not available!');
         }
 
-        console.log('SAMPLE RATE: ' + CONTEXT.sampleRate);
+        console.log('SAMPLE RATE: ' + AUDIO_CONTEXT.sampleRate);
 
         let getUserMediaOptions: Object = { video: false, audio: true };
 
@@ -116,13 +136,7 @@ export class WebAudioRecorder {
             }
             else {
                 // neither old nor new getUserMedia are available
-                alert([
-                    'Your browser does not support the function ',
-                    'getUserMedia(), please upgrade to one of the ',
-                    'browsers supported by this app. Until you do so ',
-                    'you will not be able to use the recording part of ',
-                    'this app, but you will be able to play back audio.'
-                ].join(''));
+                alert(NO_GETUSERMEDIA_MSG);
             }
         }
     }
@@ -130,21 +144,12 @@ export class WebAudioRecorder {
     private noMicrophoneAlert(error: any): void {
         console.log('noMicrophoneAlert(error): error = ' + error);
         console.dir(error);
-        let msg: string = [
-            'This app needs the microphone to record audio with. ',
-            'Your browser got no access to your microphone - ',
-            'if you are running this app on a desktop, perhaps ',
-            'your microphone is not connected? If so, please ',
-            'connect your microphone and reload this page.'
-        ].join('');
-        if (error.name !== 'DevicesNotFoundError') {
-            msg += [
-                '\n\nError: ', error,
-                '\nError name: ', error.name,
-                '\nError message: ', error.message
-            ].join('');
-        }
-        alert(msg);
+        alert([
+            NO_MICROPHONE_MSG,
+            '\n\nError: ', error,
+            '\nError name: ', error.name,
+            '\nError message: ', error.message
+        ].join(''));
     }
 
     /**
@@ -154,13 +159,7 @@ export class WebAudioRecorder {
      */
     private initMediaRecorder(stream: MediaStream): void {
         if (!MediaRecorder) {
-            alert([
-                'Your browser does not support the MediaRecorder object ',
-                'used for recording audio, please upgrade to one of the ',
-                'browsers supported by this app. Until you do so ',
-                'you will not be able to use the recording part of ',
-                'this app, but you will be able to play back audio.'
-            ].join(''));
+            alert(NO_MEDIARECORDER_MSG);
             return;
         }
 
@@ -224,20 +223,20 @@ export class WebAudioRecorder {
      */
     private setUpNodes(stream: MediaStream): void {
         // create the gainNode
-        this.audioGainNode = CONTEXT.createGain();
+        this.audioGainNode = AUDIO_CONTEXT.createGain();
 
         // create and configure the analyserNode
-        this.analyserNode = CONTEXT.createAnalyser();
+        this.analyserNode = AUDIO_CONTEXT.createAnalyser();
         this.analyserNode.fftSize = 2048;
         this.analyserBufferLength = this.analyserNode.frequencyBinCount;
         this.analyserBuffer = new Uint8Array(this.analyserBufferLength);
 
         // create a source node out of the audio media stream
-        this.sourceNode = CONTEXT.createMediaStreamSource(stream);
+        this.sourceNode = AUDIO_CONTEXT.createMediaStreamSource(stream);
 
         // create a destination node
         let dest: MediaStreamAudioDestinationNode =
-            CONTEXT.createMediaStreamDestination();
+            AUDIO_CONTEXT.createMediaStreamDestination();
 
         // sourceNode (microphone) -> gainNode
         this.sourceNode.connect(this.audioGainNode);
@@ -341,7 +340,7 @@ export class WebAudioRecorder {
             return this.pausedAt;
         }
         if (this.startedAt) {
-            return CONTEXT.currentTime - this.startedAt;
+            return AUDIO_CONTEXT.currentTime - this.startedAt;
         }
         return 0;
     }
@@ -359,7 +358,7 @@ export class WebAudioRecorder {
         // either immediately below or immediately above the
         // start() call
         this.mediaRecorder.start();
-        this.startedAt = CONTEXT.currentTime;
+        this.startedAt = AUDIO_CONTEXT.currentTime;
         this.pausedAt = 0;
     }
 
@@ -373,7 +372,7 @@ export class WebAudioRecorder {
             throw Error('MediaRecorder not initialized! (2)');
         }
         this.mediaRecorder.pause();
-        this.pausedAt = CONTEXT.currentTime - this.startedAt;
+        this.pausedAt = AUDIO_CONTEXT.currentTime - this.startedAt;
     }
 
     /**

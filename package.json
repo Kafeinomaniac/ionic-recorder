@@ -49,7 +49,7 @@
     "typings": "1.0.4"
   },
   "name": "ionic-recorder",
-  "version": "0.0.7-alpha.40",
+  "version": "0.0.7-alpha.41",
   "description": "ionic-recorder: An Ionic2 / WebAudioApi recorder app",
   "cordovaPlugins": [
     "cordova-plugin-device",
@@ -66,7 +66,8 @@
     "karma": "gulp --gulpfile test/gulpfile.ts --cwd ./ karma-debug",
     "postinstall": "ionic state restore && typings install && webdriver-manager update && cp test/karma-static/*.html node_modules/karma/static",
     "start": "ionic serve --browser chromium-browser",
-    "test": "gulp --gulpfile test/gulpfile.ts --cwd ./ unit-test"
+    "test": "gulp --gulpfile test/gulpfile.ts --cwd ./ unit-test",
+    "detab": "find ./app -type f | xargs sed -i 's/[ \t]*$//'"
   },
   "repository": {
     "type": "git",
