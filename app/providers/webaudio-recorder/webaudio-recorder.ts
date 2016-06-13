@@ -90,8 +90,10 @@ export class WebAudioRecorder {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             // new getUserMedia is available, use it to get microphone stream
             console.log('Using NEW navigator.mediaDevices.getUserMedia');
+
             navigator.mediaDevices.getUserMedia(getUserMediaOptions)
                 .then((stream: MediaStream) => {
+                    console.log('new -> then ...');
                     this.setUpNodes(stream);
                     this.initMediaRecorder(stream);
                 })
