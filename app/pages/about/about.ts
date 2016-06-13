@@ -7,7 +7,7 @@ import {
     LastPageVisited
 } from '../../providers/app-state/app-state';
 
-export const APP_VERSION: string = '0.0.7-alpha.39';
+export const APP_VERSION: string = '0.0.7-alpha.40';
 
 /**
  * @name AboutPage
@@ -28,7 +28,7 @@ export class AboutPage {
     constructor(menuController: MenuController, appState: AppState) {
         console.log('constructor():AboutPage');
         this.menuController = menuController;
-        // this.appState = AppState.Instance;
+        this.appState = appState;
     }
 
     /**

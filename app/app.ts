@@ -4,25 +4,51 @@ import {
     provide,
     ViewChild,
     Type
-}                        from '@angular/core';
+} from '@angular/core';
 
 import {
     ionicBootstrap,
     Platform,
     Nav,
     MenuController
-}                        from 'ionic-angular';
+} from 'ionic-angular';
 
-// import { StatusBar }     from 'ionic-native';
-import { LoadingPage }   from './pages/loading/loading';
-import { RecordPage }    from './pages/record/record';
-import { LibraryPage }   from './pages/library/library';
-import { SettingsPage }  from './pages/settings/settings';
-import { AboutPage }     from './pages/about/about';
-// Uncomment line below to reset DB (step 1/3)
-// import {DB_NAME} from './providers/local-db/local-db';
-import { LocalDB }       from './providers/local-db/local-db';
-import { AppState }      from './providers/app-state/app-state';
+// import {
+//     StatusBar
+// } from 'ionic-native';
+
+import {
+    LoadingPage
+} from './pages/loading/loading';
+
+import {
+    RecordPage
+} from './pages/record/record';
+
+import {
+    LibraryPage
+} from './pages/library/library';
+
+import {
+    SettingsPage
+} from './pages/settings/settings';
+
+import {
+    AboutPage
+} from './pages/about/about';
+
+// Uncomment to reset DB (step 1/3)
+// import {
+//     DB_NAME
+// } from './providers/local-db/local-db';
+
+import {
+    LocalDB
+} from './providers/local-db/local-db';
+
+import {
+    AppState
+} from './providers/app-state/app-state';
 
 // Catch-all exception handler for this app
 class AppExceptionHandler extends ExceptionHandler {

@@ -1,18 +1,33 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Component }      from '@angular/core';
+import {
+    Component
+} from '@angular/core';
 
-import { NavController }  from 'ionic-angular';
+import {
+    NavController
+} from 'ionic-angular';
 
 import {
     AppState,
     LastPageVisited
-}                         from '../../providers/app-state/app-state';
+} from '../../providers/app-state/app-state';
 
-import { RecordPage }     from '../record/record';
-import { LibraryPage }    from '../library/library';
-import { SettingsPage }   from '../settings/settings';
-import { AboutPage }      from '../about/about';
+import {
+    RecordPage
+} from '../record/record';
+
+import {
+    LibraryPage
+} from '../library/library';
+
+import {
+    SettingsPage
+} from '../settings/settings';
+
+import {
+    AboutPage
+} from '../about/about';
 
 /**
  * @name LoadingPage
@@ -20,8 +35,7 @@ import { AboutPage }      from '../about/about';
  * Page that's displayed while we load things at app's start.
  */
 @Component({
-    templateUrl: 'build/pages/loading/loading.html',
-    providers: []
+    templateUrl: 'build/pages/loading/loading.html'
 })
 export class LoadingPage {
     private nav: NavController;
@@ -34,14 +48,11 @@ export class LoadingPage {
 
         this.appState.getProperty('lastPageVisited').subscribe(
             (lastPageVisited: LastPageVisited) => {
-                console.log('lpv: ' + lastPageVisited);
                 switch (lastPageVisited) {
                     case LastPageVisited.Record:
-                        console.log('lv: record');
                         this.nav.setRoot(RecordPage);
                         break;
                     case LastPageVisited.Library:
-                        console.log('lv: library');
                         this.nav.setRoot(LibraryPage);
                         break;
                     case LastPageVisited.Settings:
@@ -52,6 +63,6 @@ export class LoadingPage {
                         break;
                 }
             }
-        );
+        ); // this.appState.getProperty('lastPageVisited').subscribe(
     }
 }

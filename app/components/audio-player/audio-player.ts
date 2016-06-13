@@ -35,7 +35,7 @@ export class AudioPlayer implements OnChanges {
     @Input() private title: string;
     @Input() private blob: Blob;
     private player: WebAudioPlayer;
-    private hidden: boolean = true;
+    private hidden: boolean;
 
     /**
      * @constructor
@@ -43,6 +43,8 @@ export class AudioPlayer implements OnChanges {
     constructor(player: WebAudioPlayer) {
         console.log('constructor():AudioPlayer');
         this.player = player;
+        // player starts at hidden state
+        this.hidden = true;
     }
 
     /**

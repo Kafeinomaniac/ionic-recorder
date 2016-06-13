@@ -1,7 +1,12 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Injectable } from '@angular/core';
-import { formatTime } from '../utils/format-time';
+import {
+    Injectable
+} from '@angular/core';
+
+import {
+    formatTime
+} from '../utils/format-time';
 
 const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
 
@@ -17,17 +22,21 @@ const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
  */
 @Injectable()
 export class WebAudioPlayer {
-    private fileReader: FileReader = new FileReader();
     private audioBuffer: AudioBuffer;
-    private sourceNode: AudioBufferSourceNode = null;
-    private startedAt: number = 0;
-    private pausedAt: number = 0;
+    private sourceNode: AudioBufferSourceNode;
+    private startedAt: number;
+    private pausedAt: number;
     public duration: number;
     public displayDuration: string;
-    public isPlaying: boolean = false;
+    public isPlaying: boolean;
+    private fileReader: FileReader;
 
     constructor() {
         console.log('constructor():WebAudioPlayer');
+        this.startedAt = 0;
+        this.pausedAt = 0;
+        this.isPlaying = false;
+        this.fileReader = new FileReader();
     }
 
     /**

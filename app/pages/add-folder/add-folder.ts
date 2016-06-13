@@ -1,17 +1,24 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Component } from '@angular/core';
+import {
+    Component
+} from '@angular/core';
+
 import {
     NavParams,
     ViewController
 } from 'ionic-angular';
+
 import {
     Control,
     FormBuilder,
     ControlGroup,
     Validators
 } from '@angular/common';
-import { TreeNode } from '../../providers/local-db/local-db';
+
+import {
+    TreeNode
+} from '../../providers/local-db/local-db';
 
 interface ValidationResult {
     [key: string]: boolean;
@@ -44,6 +51,10 @@ export class AddFolderPage {
         viewController: ViewController,
         formBuilder: FormBuilder
     ) {
+        this.navParams = navParams;
+        this.viewController = viewController;
+        this.formBuilder = formBuilder;
+
         // passed in a string with the parent path in it
         this.parentPath = navParams.data.parentPath;
 

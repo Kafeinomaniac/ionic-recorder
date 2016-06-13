@@ -46,10 +46,10 @@ export class LibraryPage {
     private nav: NavController;
     private localDB: LocalDB;
     private appState: AppState;
-    private folderNode: TreeNode = null;
-    private folderItems: { [id: string]: TreeNode; } = {};
-    private selectedNodes: { [id: string]: TreeNode; } = {};
-    private totalSelectedCounter: number = 0;
+    private folderNode: TreeNode;
+    private folderItems: { [id: string]: TreeNode; };
+    private selectedNodes: { [id: string]: TreeNode; };
+    private totalSelectedCounter: number;
     private unfiledFolderKey: number;
     private playerTitle: string;
     private playerBlob: Blob;
@@ -64,9 +64,15 @@ export class LibraryPage {
         appState: AppState
     ) {
         console.log('constructor():LibraryPage');
+
         this.nav = nav;
         this.localDB = localDB;
         this.appState = appState;
+
+        this.folderNode = null;
+        this.folderItems = {};
+        this.selectedNodes = {};
+        this.totalSelectedCounter = 0;
     }
 
     /**

@@ -1,13 +1,17 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { formatTime } from '../utils/format-time';
+import {
+    Injectable
+} from '@angular/core';
+
+import {
+    formatTime
+} from '../utils/format-time';
 
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.
 const MONITOR_REFRESH_RATE_HZ: number = 24;
-// derived:
+
 const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 
 const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
@@ -29,50 +33,31 @@ export class WebAudioRecorder {
     private analyserNode: AnalyserNode;
     private analyserBuffer: Uint8Array;
     private analyserBufferLength: number;
-    private blobChunks: Blob[] = [];
-    // is ready means ready to record
-    public isReady: boolean = false;
-    // time related
-    private startedAt: number = 0;
-    private pausedAt: number = 0;
-    // volume and max-volume and peak stats tracking
-    public currentVolume: number = 0;
-    public currentTime: string = formatTime(0);
-    public maxVolumeSinceReset: number;
+    private blobChunks: Blob[];
+    private startedAt: number;
+    private pausedAt: number;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
+
+    public isReady: boolean;
+    public currentVolume: number;
+    public currentTime: string;
+    public maxVolumeSinceReset: number;
     public percentPeaksAtMax: string;
-    // gets called with the recorded blob as soon as we're done recording
     public onStopRecord: (recordedBlob: Blob) => void;
 
     constructor() {
         console.log('constructor():WebAudioRecorder');
+        this.isReady = false;
+        this.blobChunks = [];
+        this.startedAt = 0;
+        this.pausedAt = 0;
+        this.currentVolume = 0;
+        this.currentTime = formatTime(0);
+
         this.resetPeaks();
         this.initAudio();
-        // this.waitForAudio().subscribe(() => {
-        //     this.startMonitoring();
-        // });
     }
-
-    // public waitForAudio(): Observable<void> {
-    //     // NOTE: MAX_DB_INIT_TIME / 10
-    //     // Check in the console how many times we loop here -
-    //     // it shouldn't be much more than a handful
-    //     let source: Observable<void> = Observable.create((observer) => {
-    //         let repeat: () => void = () => {
-    //             if (this.isReady) {
-    //                 observer.next();
-    //                 observer.complete();
-    //             }
-    //             else {
-    //                 console.warn('... no Audio yet ...');
-    //                 setTimeout(repeat, 50);
-    //             }
-    //         };
-    //         repeat();
-    //     });
-    //     return source;
-    // }
 
     /**
      * Initialize audio, get it ready to record
@@ -86,7 +71,6 @@ export class WebAudioRecorder {
         console.log('SAMPLE RATE: ' + CONTEXT.sampleRate);
 
         let getUserMediaOptions: Object = { video: false, audio: true };
-
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             // new getUserMedia is available, use it to get microphone stream

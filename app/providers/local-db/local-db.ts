@@ -60,7 +60,7 @@ export interface ParentChild {
  */
 @Injectable()
 export class LocalDB {
-    private db: IDBDatabase = null;
+    private db: IDBDatabase;
 
     /**
      * @constructor

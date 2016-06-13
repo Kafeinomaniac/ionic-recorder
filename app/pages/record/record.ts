@@ -44,7 +44,6 @@ export class RecordPage {
     private appState: AppState;
     private recorder: WebAudioRecorder;
     private recordButtonIcon: string = START_RESUME_ICON;
-    // gain variables get initialized in constructor
     private percentGain: string;
     private maxGainFactor: number;
     private gainFactor: number;

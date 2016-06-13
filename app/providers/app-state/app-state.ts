@@ -60,13 +60,8 @@ const DEFAULT_STATE: State = {
 @Injectable()
 export class AppState {
     private localDB: LocalDB;
-
-    // treeNode contains the node in the tree where we store the
-    // data of default state, treeNode.dataKey points to dataNode
-    private treeNode: TreeNode = null;
-
-    // dataNode contains the default state
-    private dataNode: DataNode = null;
+    private treeNode: TreeNode;
+    private dataNode: DataNode;
 
     /**
      * @constructor
@@ -74,7 +69,6 @@ export class AppState {
     constructor(localDB: LocalDB) {
         console.log('constructor():AppState');
         this.localDB = localDB;
-
         // Create root folder
         this.localDB.readOrCreateFolderNode(ROOT_FOLDER_NAME, DB_NO_KEY)
             .subscribe(
