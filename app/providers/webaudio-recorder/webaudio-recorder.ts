@@ -43,10 +43,6 @@ const NO_MEDIARECORDER_MSG: string = [
     'this app, but you will be able to play back audio.'
 ].join('');
 
-///////////////////////////////////////////////////////////////////////////////
-// RECORDER
-///////////////////////////////////////////////////////////////////////////////
-
 /**
  * @name WebAudioRecorder
  * @description
@@ -78,9 +74,9 @@ export class WebAudioRecorder {
         this.blobChunks = [];
         this.startedAt = 0;
         this.pausedAt = 0;
+
         this.currentVolume = 0;
         this.currentTime = formatTime(0);
-
         this.resetPeaks();
         this.initAudio();
     }
@@ -250,49 +246,22 @@ export class WebAudioRecorder {
                     channel: number,
                     sample: number,
                     value: number,
-                    absValue: number,
-                    bufferMax: number;
+                    absValue: number;
                 for (channel = 0; channel < N_CHANNELS; channel++) {
                     inputData = inputBuffer.getChannelData(channel);
                     outputData = outputBuffer.getChannelData(channel);
                     value = 0;
                     absValue = 0;
-                    bufferMax = 0;
+                    this.currentVolume = 0;
                     for (sample = 0; sample < BUFFER_LENGTH; sample++) {
                         value = inputData[sample];
                         absValue = Math.abs(value);
-                        if (absValue > bufferMax) {
-                            bufferMax = absValue;
+                        if (absValue > this.currentVolume) {
+                            this.currentVolume = absValue;
                         }
                         outputData[sample] = value;
                     } // for (sample ...
                 } // for (channel ...
-
-                // we use bufferMax to represent current volume
-                // update some properties based on new value of bufferMax
-                this.nPeakMeasurements += 1;
-
-                if (bufferMax === this.currentVolume) {
-                    // no change in volume
-                    return;
-                }
-
-                // volume has changed, update this.currentVolume
-
-                if (bufferMax > this.maxVolumeSinceReset) {
-                    // on new maximum, re-start counting peaks
-                    this.resetPeaks();
-                    this.maxVolumeSinceReset = bufferMax;
-                }
-                else if (this.maxVolumeSinceReset === bufferMax) {
-                    this.nPeaksAtMax += 1;
-                }
-
-                this.percentPeaksAtMax =
-                    (100 * this.nPeaksAtMax / this.nPeakMeasurements)
-                        .toFixed(1);
-
-                this.currentVolume = bufferMax;
             }; // this.scriptProcessorNode.onaudioprocess = ...
 
         // create a source node out of the audio media stream
@@ -315,6 +284,31 @@ export class WebAudioRecorder {
         this.scriptProcessorNode.connect(dest);
     }
 
+    /**
+     * Compute the current latest buffer frame max volume and return it
+     * @returns {void}
+     */
+    private analyzeVolume(): void {
+        // we use currentVolume to represent current volume
+        // update some properties based on new value of currentVolume
+        this.nPeakMeasurements += 1;
+
+        // volume has changed, update this.currentVolume
+
+        if (this.currentVolume > this.maxVolumeSinceReset) {
+            // on new maximum, re-start counting peaks
+            this.resetPeaks();
+            this.maxVolumeSinceReset = this.currentVolume;
+        }
+        else if (this.currentVolume === this.maxVolumeSinceReset) {
+            this.nPeaksAtMax += 1;
+        }
+
+        this.percentPeaksAtMax =
+            (100 * this.nPeaksAtMax / this.nPeakMeasurements)
+                .toFixed(1);
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // PUBLIC API METHODS
     ///////////////////////////////////////////////////////////////////////////
@@ -324,6 +318,7 @@ export class WebAudioRecorder {
     public startMonitoring(): void {
         this.setIntervalId = setInterval(
             () => {
+                this.analyzeVolume();
                 this.currentTime = formatTime(this.getTime());
             },
             MONITOR_REFRESH_INTERVAL);
@@ -358,6 +353,11 @@ export class WebAudioRecorder {
         this.audioGainNode.gain.value = factor;
     }
 
+    /**
+     * Returns current time that takes into account pausing, so if we're
+     * paused, returns the last paused at time.
+     * @returns {number}
+     */
     private getTime(): number {
         if (this.pausedAt) {
             return this.pausedAt;
