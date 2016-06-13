@@ -49,30 +49,30 @@ export class WebAudioRecorder {
         console.log('constructor():WebAudioRecorder');
         this.resetPeaks();
         this.initAudio();
-        this.waitForAudio().subscribe(() => {
-            this.startMonitoring();
-        });
+        // this.waitForAudio().subscribe(() => {
+        //     this.startMonitoring();
+        // });
     }
 
-    public waitForAudio(): Observable<void> {
-        // NOTE: MAX_DB_INIT_TIME / 10
-        // Check in the console how many times we loop here -
-        // it shouldn't be much more than a handful
-        let source: Observable<void> = Observable.create((observer) => {
-            let repeat: () => void = () => {
-                if (this.isReady) {
-                    observer.next();
-                    observer.complete();
-                }
-                else {
-                    console.warn('... no Audio yet ...');
-                    setTimeout(repeat, 50);
-                }
-            };
-            repeat();
-        });
-        return source;
-    }
+    // public waitForAudio(): Observable<void> {
+    //     // NOTE: MAX_DB_INIT_TIME / 10
+    //     // Check in the console how many times we loop here -
+    //     // it shouldn't be much more than a handful
+    //     let source: Observable<void> = Observable.create((observer) => {
+    //         let repeat: () => void = () => {
+    //             if (this.isReady) {
+    //                 observer.next();
+    //                 observer.complete();
+    //             }
+    //             else {
+    //                 console.warn('... no Audio yet ...');
+    //                 setTimeout(repeat, 50);
+    //             }
+    //         };
+    //         repeat();
+    //     });
+    //     return source;
+    // }
 
     /**
      * Initialize audio, get it ready to record
@@ -87,6 +87,7 @@ export class WebAudioRecorder {
 
         let getUserMediaOptions: Object = { video: false, audio: true };
 
+
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             // new getUserMedia is available, use it to get microphone stream
             console.log('Using NEW navigator.mediaDevices.getUserMedia');
@@ -96,6 +97,7 @@ export class WebAudioRecorder {
                     console.log('new -> then ...');
                     this.setUpNodes(stream);
                     this.initMediaRecorder(stream);
+                    this.startMonitoring();
                 })
                 .catch((error: any) => {
                     this.noMicrophoneAlert(error);
@@ -117,6 +119,7 @@ export class WebAudioRecorder {
                             // ok we got a microphone
                             this.setUpNodes(stream);
                             this.initMediaRecorder(stream);
+                            this.startMonitoring();
                         },
                         (error: any) => {
                             this.noMicrophoneAlert(error);
