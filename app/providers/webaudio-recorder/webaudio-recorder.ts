@@ -38,6 +38,7 @@ export class WebAudioRecorder {
     private pausedAt: number;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
+    private setIntervalId: NodeJS.Timer;
 
     public isReady: boolean;
     public currentVolume: number;
@@ -254,13 +255,17 @@ export class WebAudioRecorder {
 
     // this ensures change detection every GRAPHICS_REFRESH_INTERVAL
     // setInterval(() => { }, GRAPHICS_REFRESH_INTERVAL);
-    private startMonitoring(): void {
-        setInterval(
+    public startMonitoring(): void {
+        this.setIntervalId = setInterval(
             () => {
                 this.analyzeVolume();
                 this.currentTime = formatTime(this.getTime());
             },
             MONITOR_REFRESH_INTERVAL);
+    }
+
+    public stopMonitoring(): void {
+        clearInterval(this.setIntervalId);
     }
 
     public resetPeaks(): void {
