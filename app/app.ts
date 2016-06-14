@@ -18,10 +18,10 @@ import {
 //     StatusBar
 // } from 'ionic-native';
 
-import {
-    TabsPage,
-    TAB_PAGES
-} from './pages/tabs/tabs';
+// import {
+//     TabsPage,
+//     TAB_PAGES
+// } from './pages/tabs/tabs';
 
 // Uncomment to reset DB (step 1/3)
 // import {
@@ -36,6 +36,22 @@ import {
     AppState
 } from './providers/app-state/app-state';
 
+import {
+    RecordPage
+} from './pages/record/record';
+
+import {
+    LibraryPage
+} from './pages/library/library';
+
+import {
+    SettingsPage
+} from './pages/settings/settings';
+
+import {
+    AboutPage
+} from './pages/about/about';
+
 // Catch-all exception handler for this app
 class AppExceptionHandler extends ExceptionHandler {
     public call(error: any, stackTrace: any, reason?: any): void {
@@ -43,9 +59,30 @@ class AppExceptionHandler extends ExceptionHandler {
     }
 }
 
+export const TAB_PAGES: Array<{ title: string, component: Type }> = [
+    { title: 'Record', component: RecordPage },
+    { title: 'Library', component: LibraryPage },
+    { title: 'Settings', component: SettingsPage },
+    { title: 'About', component: AboutPage }
+];
+
+function getComponentTabIndex(component: Type): number {
+    'use strict';
+    let i: number,
+        found: number = -1,
+        len: number = TAB_PAGES.length;
+    for (i = 0; i < len; i++) {
+        if (TAB_PAGES[i].component === component) {
+            found = i;
+            break;
+        }
+    }
+    return found;
+}
+
 @Component({
-    templateUrl: 'build/app.html',
-    directives: [TabsPage]
+    templateUrl: 'build/app.html'
+    // , directives: [TabsPage]
 })
 export class IonicRecorderApp {
     @ViewChild(Tabs) private tabsRef: Tabs;
@@ -54,14 +91,34 @@ export class IonicRecorderApp {
     private menu: MenuController;
     private rootPage: Type;
     private pages: Array<{ title: string, component: Type }>;
+    private appState: AppState;
+    // making selectedIndex a nonsense index stops the problem of
+    // the first tab showing for a split second before the real tab
+    // displayed via 'lastSelectedTab'
+    private mySelectedIndex: number = -1;
 
-    constructor(app: App, platform: Platform, menu: MenuController) {
+    constructor(
+        app: App,
+        platform: Platform,
+        menu: MenuController,
+        appState: AppState
+    ) {
         console.log('constructor(): IonicRecorderApp');
         this.app = app;
         this.platform = platform;
         this.menu = menu;
-        this.rootPage = TabsPage;
+        this.appState = appState;
+
+        // this.rootPage = TabsPage;
         this.pages = TAB_PAGES;
+
+        this.appState.getProperty('lastTabIndex').subscribe(
+            (tabIndex: number) => {
+                // this.selectedIndex = tabIndex;
+                this.mySelectedIndex = 1;
+                console.log('tab sel: ' + tabIndex);
+            }
+        );
 
         // Uncomment line below to reset DB (step 2/3)
         // this.resetDB();
@@ -106,9 +163,7 @@ export class IonicRecorderApp {
     public selectTab(page: { title: string, component: Type }): void {
         // close the menu when clicking a link from the menu
         this.menu.close();
-        console.log('hi 1a');
-        console.log(this.tabsRef);
-        console.log('hi 1b');
+        this.tabsRef.select(getComponentTabIndex(page.component));
     }
 }
 

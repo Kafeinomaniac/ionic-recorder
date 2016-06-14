@@ -1,35 +1,24 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-// general scss for entire app
-
-ion-content {
-    scroll-content {
-        overflow-y: auto;
-    }
-}
-
-// app left (navigation) menu
 ion-menu {
     ion-content {
-        // background of entire menu area plus background of
-        // any items that are not active or selected
+        /* background of entire menu area plus background of any items that are not active or selected */
         scroll-content, ion-list .item {
             background: map-get($colors, darkest-gray);
             cursor: pointer;
         }
         ion-list.app-menu-buttons {
-            // get rid of border between menu heading and first item
+            /* get rid of border between menu heading and first item */
             .item:first-child {
                 border: 0;
             }
 
-            // remove border at bottom of each menu item button
+            /* remove border at bottom of each menu item button */
             .item-inner, ion-list .item:last-child {
                 border-bottom: 0;
             }
 
-            // TODO: we need to fix the scss on this page, esp. next one
-            // activated (when being clicked) menu item color
+            /* TODO: we need to fix the scss on this page, esp. next one activated (when being clicked) menu item color */
             button.item.button-selected.activated, button.item.activated {
                 background-color: map-get($colors, red);
             }
