@@ -10,7 +10,7 @@ import {
 
 import {
     formatTime
-} from '../utils/format-time';
+} from '../../utils/format-time';
 
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.

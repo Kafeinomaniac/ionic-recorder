@@ -48,12 +48,12 @@ export function main(): void {
                 MAX_DB_INIT_TIME);
         });
 
-        // reason we expect lastPageVisited to be 0 is that in
+        // reason we expect lastTabIndex to be 0 is that in
         // test mode we never select a tab so it remains on 0
-        it('can read lastPageVisited to be 0', (done) => {
+        it('can read lastTabIndex to be 0', (done) => {
             setTimeout(
                 () => {
-                    appState.getProperty('lastPageVisited').subscribe(
+                    appState.getProperty('lastTabIndex').subscribe(
                         (tabIndex: number) => {
                             expect(tabIndex).toBe(0);
                             done();
@@ -66,10 +66,10 @@ export function main(): void {
                 MAX_DB_INIT_TIME);
         });
 
-        it('can update lastPageVisited to be 1', (done) => {
+        it('can update lastTabIndex to be 1', (done) => {
             setTimeout(
                 () => {
-                    appState.updateProperty('lastPageVisited', 1).subscribe(
+                    appState.updateProperty('lastTabIndex', 1).subscribe(
                         (updated: boolean) => {
                             expect(updated).toBe(true);
                             done();
@@ -82,10 +82,10 @@ export function main(): void {
                 MAX_DB_INIT_TIME);
         });
 
-        it('update again lastPageVisited to be 1 does nothing', (done) => {
+        it('update again lastTabIndex to be 1 does nothing', (done) => {
             setTimeout(
                 () => {
-                    appState.updateProperty('lastPageVisited', 1).subscribe(
+                    appState.updateProperty('lastTabIndex', 1).subscribe(
                         (updated: boolean) => {
                             expect(updated).toBe(true);
                             done();
@@ -98,10 +98,10 @@ export function main(): void {
                 MAX_DB_INIT_TIME);
         });
 
-        it('can read lastPageVisited to be 1', (done) => {
+        it('can read lastTabIndex to be 1', (done) => {
             setTimeout(
                 () => {
-                    appState.getProperty('lastPageVisited').subscribe(
+                    appState.getProperty('lastTabIndex').subscribe(
                         (tabIndex: number) => {
                             expect(tabIndex).toBe(1);
                             done();

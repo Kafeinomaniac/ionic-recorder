@@ -5,8 +5,7 @@ import {
 } from '@angular/core';
 
 import {
-    AppState,
-    LastPageVisited
+    AppState
 } from '../../providers/app-state/app-state';
 
 /**
@@ -27,18 +26,6 @@ export class SettingsPage {
      */
     constructor(appState: AppState) {
         console.log('constructor():SettingsPage');
-    }
-
-    /**
-     * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
-     * @returns {void}
-     */
-    public ionViewDidEnter(): void {
-
-        // update app state's last viewed folder
-        this.appState.updateProperty(
-            'lastPageVisited',
-            LastPageVisited.About
-        ).subscribe();
+        this.appState = appState;
     }
 }

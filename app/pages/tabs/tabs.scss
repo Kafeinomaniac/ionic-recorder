@@ -1,0 +1,15 @@
+.tabs-page {
+    // make tab bar invisible everywhere (app menu has the tabs)
+    ion-tabs {
+        ion-tabbar-section {
+            display: none;
+        }
+    }
+
+    // image shown while loading
+    // img {
+    //     max-height: 30%;
+    //     max-width: 60%;
+    //     margin: 36px 0;
+    // }
+}

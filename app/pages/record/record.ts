@@ -10,7 +10,6 @@ import {
 
 import {
     AppState,
-    LastPageVisited,
     GainState
 } from '../../providers/app-state/app-state';
 
@@ -101,18 +100,6 @@ export class RecordPage {
                 console.error('AppState:getProperty() error: ' + error);
             }
         ); // getProperty('gain').subscribe(
-    }
-
-    /**
-     * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
-     * @returns {void}
-     */
-    public ionViewDidEnter(): void {
-        // update app state's last viewed folder
-        this.appState.updateProperty(
-            'lastPageVisited',
-            LastPageVisited.Record
-        ).subscribe();
     }
 
     /**

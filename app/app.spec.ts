@@ -16,10 +16,6 @@ import {
     IonicRecorderApp
 } from './app';
 
-import {
-    LibraryPage
-} from './pages/library/library';
-
 resetBaseTestProviders();
 setBaseTestProviders(
     TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
@@ -51,7 +47,7 @@ describe('IonicRecorderApp', () => {
 
     beforeEach(() => {
         let mockClass: any = (<any>new MockClass());
-        APP = new IonicRecorderApp(mockClass, mockClass);
+        APP = new IonicRecorderApp(mockClass, mockClass, mockClass);
     });
 
     it('initialises with four possible pages', () => {
@@ -68,12 +64,7 @@ describe('IonicRecorderApp', () => {
 
     it('opens a page', () => {
         spyOn(APP['menu'], 'close');
-        // cant be bothered to set up dom testing for APP.ts to get
-        // access to @viewchild (nav)
-        APP['nav'] = (<any>APP['menu']);
-        spyOn(APP['nav'], 'setRoot');
-        APP.openPage(APP['pages'][1]);
+        APP.selectTab(APP['pages'][1]);
         expect(APP['menu']['close']).toHaveBeenCalled();
-        expect(APP['nav'].setRoot).toHaveBeenCalledWith(LibraryPage);
     });
 });

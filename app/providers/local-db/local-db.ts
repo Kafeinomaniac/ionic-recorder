@@ -11,7 +11,7 @@ import {
 import {
     copyFromObject,
     prependArray
-} from '../utils/utils';
+} from '../../utils/utils';
 
 // non-exported module globals
 

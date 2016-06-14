@@ -20,7 +20,6 @@ import {
 
 import {
     AppState,
-    LastPageVisited,
     ROOT_FOLDER_NAME
 } from '../../providers/app-state/app-state';
 
@@ -110,12 +109,6 @@ export class LibraryPage {
                 alert('in getProperty: ' + error);
             }
         ); // getProperty().subscbribe(
-
-        // update app state's last viewed folder
-        this.appState.updateProperty(
-            'lastPageVisited',
-            LastPageVisited.Library
-        ).subscribe();
     }
 
     /**

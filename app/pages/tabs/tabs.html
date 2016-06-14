@@ -1,0 +1,7 @@
+<!-- Copyright (c) 2016 Tracktunes Inc -->
+
+<ion-tabs preloadTabs="true" [selectedIndex]="mySelectedIndex">
+    <ion-tab *ngFor="let p of pages" [root]="p.component">
+        {{p.title}}
+    </ion-tab>
+</ion-tabs>

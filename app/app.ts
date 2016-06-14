@@ -7,9 +7,10 @@ import {
 } from '@angular/core';
 
 import {
+    App,
+    Tabs,
     ionicBootstrap,
     Platform,
-    Nav,
     MenuController
 } from 'ionic-angular';
 
@@ -18,24 +19,9 @@ import {
 // } from 'ionic-native';
 
 import {
-    LoadingPage
-} from './pages/loading/loading';
-
-import {
-    RecordPage
-} from './pages/record/record';
-
-import {
-    LibraryPage
-} from './pages/library/library';
-
-import {
-    SettingsPage
-} from './pages/settings/settings';
-
-import {
-    AboutPage
-} from './pages/about/about';
+    TabsPage,
+    TAB_PAGES
+} from './pages/tabs/tabs';
 
 // Uncomment to reset DB (step 1/3)
 // import {
@@ -58,26 +44,25 @@ class AppExceptionHandler extends ExceptionHandler {
 }
 
 @Component({
-    templateUrl: 'build/app.html'
+    templateUrl: 'build/app.html',
+    directives: [TabsPage]
 })
 export class IonicRecorderApp {
-    @ViewChild(Nav) private nav: Nav;
+    @ViewChild(Tabs) private tabsRef: Tabs;
+    private app: App;
+    private platform: Platform;
+    private menu: MenuController;
     private rootPage: Type;
     private pages: Array<{ title: string, component: Type }>;
-    private menu: MenuController;
-    private platform: Platform;
 
-    constructor(platform: Platform, menu: MenuController) {
+    constructor(app: App, platform: Platform, menu: MenuController) {
         console.log('constructor(): IonicRecorderApp');
+        this.app = app;
         this.platform = platform;
         this.menu = menu;
-        this.rootPage = LoadingPage;
-        this.pages = [
-            { title: 'Record', component: RecordPage },
-            { title: 'Library', component: LibraryPage },
-            { title: 'Settings', component: SettingsPage },
-            { title: 'About', component: AboutPage }
-        ];
+        this.rootPage = TabsPage;
+        this.pages = TAB_PAGES;
+
         // Uncomment line below to reset DB (step 2/3)
         // this.resetDB();
         this.initializeApp();
@@ -118,13 +103,12 @@ export class IonicRecorderApp {
      * Go to a page (via menu selection)
      * @returns {void}
      */
-    public openPage(page: { title: string, component: Type }): void {
+    public selectTab(page: { title: string, component: Type }): void {
         // close the menu when clicking a link from the menu
         this.menu.close();
-        // Reset the content nav to have just this page
-        // we wouldn't want the back button to show in this scenario
-        // navigate to the new page if it is not the current page
-        this.nav.setRoot(page.component);
+        console.log('hi 1a');
+        console.log(this.tabsRef);
+        console.log('hi 1b');
     }
 }
 
