@@ -6,7 +6,7 @@ import {
 
 import {
     formatTime
-} from '../../utils/format-time';
+} from '../../utils/utils';
 
 const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
 
