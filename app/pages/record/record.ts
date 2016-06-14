@@ -92,7 +92,9 @@ export class RecordPage {
                 // we still want to show the previous gain value.
                 // if we don't have this line below then it will
                 // always show up as gain == 0.
-                this.onGainChange(gain.factor / gain.maxFactor);
+                this.recorder.waitForAudio().subscribe(() => {
+                    this.onGainChange(gain.factor / gain.maxFactor);
+                });
                 // this.recorder.waitForAudio().subscribe();
             },
             (error: any) => {
@@ -154,7 +156,7 @@ export class RecordPage {
      */
     public onClickStartPauseButton(): void {
         // this.currentVolume += Math.abs(Math.random() * 10);
-        if (this.recorder.isRecording()) {
+        if (this.recorder.isRecording) {
             console.log('pausing...');
             // we're recording (when clicked, so pause recording)
             this.recorder.pause();
@@ -162,7 +164,7 @@ export class RecordPage {
         }
         else {
             // we're not recording (when clicked, so start/resume recording)
-            if (this.recorder.isInactive()) {
+            if (this.recorder.isInactive) {
                 // inactive, we're stopped (rather than paused) so start
                 console.log('starting...');
                 this.recorder.start();

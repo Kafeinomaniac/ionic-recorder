@@ -1,6 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
+    Observable
+} from 'rxjs/Rx';
+
+import {
     Injectable
 } from '@angular/core';
 
@@ -13,6 +17,9 @@ import {
 const MONITOR_REFRESH_RATE_HZ: number = 24;
 
 const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
+
+// number of miliseconds to wait between checks when checking if audio is ready
+const AUDIO_WAIT_MSEC: number = 1;
 
 const AUDIO_CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
 
@@ -45,14 +52,16 @@ export class WebAudioRecorder {
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
     private scriptProcessorNode: ScriptProcessorNode;
-    private blobChunks: Blob[];
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
     private setIntervalId: NodeJS.Timer;
-    private startedAt: number;
-    private pausedAt: number;
+    private setTimeoutId: NodeJS.Timer;
+    // count # of buffers we have encoded (== time)
+    private nEncodedBuffers: number;
 
     public isReady: boolean;
+    public isInactive: boolean;
+    public isRecording: boolean;
     public currentVolume: number;
     public currentTime: string;
     public maxVolumeSinceReset: number;
@@ -62,12 +71,8 @@ export class WebAudioRecorder {
     constructor() {
         console.log('constructor():WebAudioRecorder');
         this.isReady = false;
-        this.blobChunks = [];
-        this.startedAt = 0;
-        this.pausedAt = 0;
 
-        this.currentVolume = 0;
-        this.currentTime = formatTime(0);
+        this.stop();
         this.resetPeaks();
         this.initAudio();
     }
@@ -88,10 +93,8 @@ export class WebAudioRecorder {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             // new getUserMedia is available, use it to get microphone stream
             console.log('Using NEW navigator.mediaDevices.getUserMedia');
-
             navigator.mediaDevices.getUserMedia(getUserMediaOptions)
                 .then((stream: MediaStream) => {
-                    console.log('new -> then ...');
                     this.setUpNodes(stream);
                 })
                 .catch((error: any) => {
@@ -190,6 +193,9 @@ export class WebAudioRecorder {
                         outputData[sample] = value;
                     } // for (sample ...
                 } // for (channel ...
+                if (this.isRecording) {
+                    this.nEncodedBuffers++;
+                }
             }; // this.scriptProcessorNode.onaudioprocess = ...
 
         // create a source node out of the audio media stream
@@ -245,6 +251,27 @@ export class WebAudioRecorder {
     // PUBLIC API METHODS
     ///////////////////////////////////////////////////////////////////////////
 
+    public waitForAudio(): Observable<void> {
+        // NOTE: MAX_DB_INIT_TIME / 10
+        // Check in the console how many times we loop here -
+        // it shouldn't be much more than a handful
+        let source: Observable<void> = Observable.create((observer) => {
+            let repeat: () => void = () => {
+                if (this.isReady) {
+                    clearTimeout(this.setTimeoutId);
+                    observer.next();
+                    observer.complete();
+                }
+                else {
+                    console.warn('WebAudioRecorder:waitForAudio() ...');
+                    this.setTimeoutId = setTimeout(repeat, AUDIO_WAIT_MSEC);
+                }
+            };
+            repeat();
+        });
+        return source;
+    }
+
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      * @returns {void}
@@ -253,7 +280,8 @@ export class WebAudioRecorder {
         this.setIntervalId = setInterval(
             () => {
                 this.analyzeVolume();
-                this.currentTime = formatTime(this.getTime());
+                this.currentTime = formatTime(
+                    this.nBuffersToSeconds(this.nEncodedBuffers));
             },
             MONITOR_REFRESH_INTERVAL);
     }
@@ -288,27 +316,20 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public setGainFactor(factor: number): void {
-        // console.log('WebAudioRecorder:setGainFactor()');
+        // console.log('WebAudioRecorder:setGainFactor(' + factor + ')');
         if (!this.audioGainNode) {
-            // throw Error('GainNode not initialized!');
-            return;
+            throw Error('GainNode not initialized!');
         }
         this.audioGainNode.gain.value = factor;
     }
 
     /**
-     * Returns current time that takes into account pausing, so if we're
-     * paused, returns the last paused at time.
-     * @returns {number}
+     * Convert from known sample-rate and buffer-size, nBuffers to seconds
+     * @returns {number} Time in seconds
      */
-    private getTime(): number {
-        if (this.pausedAt) {
-            return this.pausedAt;
-        }
-        if (this.startedAt) {
-            return AUDIO_CONTEXT.currentTime - this.startedAt;
-        }
-        return 0;
+    private nBuffersToSeconds(nBuffers: number): number {
+        return this.nEncodedBuffers * 256.0 /
+            AUDIO_CONTEXT.sampleRate;
     }
 
     /**
@@ -316,9 +337,8 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public start(): void {
-        console.log('record:start');
-        this.startedAt = AUDIO_CONTEXT.currentTime;
-        this.pausedAt = 0;
+        this.isRecording = true;
+        this.isInactive = false;
     }
 
     /**
@@ -326,8 +346,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public pause(): void {
-        console.log('record:pause');
-        this.pausedAt = AUDIO_CONTEXT.currentTime - this.startedAt;
+        this.isRecording = false;
     }
 
     /**
@@ -335,9 +354,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public resume(): void {
-        console.log('record:resume');
-        this.startedAt = AUDIO_CONTEXT.currentTime - this.pausedAt;
-        this.pausedAt = 0;
+        this.isRecording = true;
     }
 
     /**
@@ -345,18 +362,8 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public stop(): void {
-        console.log('record:stop');
-        this.startedAt = 0;
-        this.pausedAt = 0;
-    }
-
-    public isRecording(): boolean {
-        // console.log('isRecording(): startedAt=' + this.startedAt +
-        //     ', pausedAt=' + this.pausedAt);
-        return this.startedAt > 0 && this.pausedAt === 0;
-    }
-
-    public isInactive(): boolean {
-        return this.startedAt === 0;
+        this.nEncodedBuffers = 0;
+        this.isRecording = false;
+        this.isInactive = true;
     }
 }
