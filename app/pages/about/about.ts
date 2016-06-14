@@ -13,7 +13,7 @@ import {
     LastPageVisited
 } from '../../providers/app-state/app-state';
 
-export const APP_VERSION: string = '0.0.7-alpha.47';
+export const APP_VERSION: string = '0.0.7-alpha.48';
 
 /**
  * @name AboutPage
