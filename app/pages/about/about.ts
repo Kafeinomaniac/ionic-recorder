@@ -1,13 +1,19 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import { Component } from '@angular/core';
-import { MenuController } from 'ionic-angular';
+import {
+    Component
+} from '@angular/core';
+
+import {
+    MenuController
+} from 'ionic-angular';
+
 import {
     AppState,
     LastPageVisited
 } from '../../providers/app-state/app-state';
 
-export const APP_VERSION: string = '0.0.7-alpha.46';
+export const APP_VERSION: string = '0.0.7-alpha.47';
 
 /**
  * @name AboutPage
@@ -21,6 +27,7 @@ export const APP_VERSION: string = '0.0.7-alpha.46';
 export class AboutPage {
     private menuController: MenuController;
     private appState: AppState;
+    private version: string;
 
     /**
      * AboutPage modal constructor
@@ -29,6 +36,7 @@ export class AboutPage {
         console.log('constructor():AboutPage');
         this.menuController = menuController;
         this.appState = appState;
+        this.version = APP_VERSION;
     }
 
     /**
