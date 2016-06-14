@@ -149,25 +149,15 @@ export class WebAudioRecorder {
     }
 
     /**
-     * Create the following nodes:
-     * this.sourceNode (createMediaStreamSourceNode)
-     * |--> this.gainNode (createGain)
-     *      |--> this.scriptProcessorNode (createScriptProcessor)
-     *           |--> MediaStreamAudioDestinationNode
-     * @param {MediaStream} stream the stream obtained by getUserMedia
-     * @returns {void}
+     * Create and set up the callback of the script processing node
+     * @returns {ScriptProcessorNode} the newly created/setup node
      */
-    private setUpNodes(stream: MediaStream): void {
-        // create the gainNode
-        this.audioGainNode = AUDIO_CONTEXT.createGain();
-
-        // create and configure the scriptProcessorNode
-        this.scriptProcessorNode = AUDIO_CONTEXT.createScriptProcessor(
+    private makeScriptProcessorNode(): ScriptProcessorNode {
+        let node: ScriptProcessorNode = AUDIO_CONTEXT.createScriptProcessor(
             BUFFER_LENGTH,
             N_CHANNELS,
             N_CHANNELS);
-        console.log('setUpNodes()');
-        this.scriptProcessorNode.onaudioprocess =
+        node.onaudioprocess =
             (processingEvent: AudioProcessingEvent): any => {
                 // console.log('setUpNodes():onaudioprocess 1');
                 let inputBuffer: AudioBuffer = processingEvent.inputBuffer,
@@ -197,6 +187,24 @@ export class WebAudioRecorder {
                     this.nEncodedBuffers++;
                 }
             }; // this.scriptProcessorNode.onaudioprocess = ...
+        return node;
+    }
+
+    /**
+     * Create the following nodes:
+     * this.sourceNode (createMediaStreamSourceNode)
+     * |--> this.gainNode (createGain)
+     *      |--> this.scriptProcessorNode (createScriptProcessor)
+     *           |--> MediaStreamAudioDestinationNode
+     * @param {MediaStream} stream the stream obtained by getUserMedia
+     * @returns {void}
+     */
+    private setUpNodes(stream: MediaStream): void {
+        // create the gainNode
+        this.audioGainNode = AUDIO_CONTEXT.createGain();
+
+        // create and configure the scriptProcessorNode
+        this.scriptProcessorNode = this.makeScriptProcessorNode();
 
         // create a source node out of the audio media stream
         this.sourceNode = AUDIO_CONTEXT.createMediaStreamSource(stream);
