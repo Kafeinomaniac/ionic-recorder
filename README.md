@@ -33,17 +33,17 @@ Tracktunes Inc currently uses that link for debugging purposes (it's over SSL, w
 
 ## Requirements for running the app
 This apps runs only in browsers that implement
-[MediaRecorder](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder_API).
-and a late version of IndexedDB that supports the `onupgradeended` event.
+a late version of IndexedDB that supports the `onupgradeended` event.
 
-The only browsers on which we successfully tested the above link is
-* Latest Chrome and latest Chromium on Ubuntu Linux
+The only browsers on which we successfully tested the above link are:
+* Latest Chrome
+* Latest Chromium
+Browsers were only tested in Ubuntu Linux 14.04.
 
 ## DEVELOPMENT
 
 ### Roadmap
-We will set up a separate page for that.  In the meantime the main high-level goal is 
-to make this simple app as stable as possible and not add any features.
+**TBA: We will set up a separate page for that.**  
 
 ## Installing the development environment and getting started
 * Get the latest versions of npm and nodejs:
@@ -59,6 +59,9 @@ to make this simple app as stable as possible and not add any features.
 * Install the npm packages needed by this project
 
         npm install
+* Install the typings
+
+        ./bin/typings install
 * You can develop now.  Check the Getting Started Coding page or the Getting Started Using page (neither page exists yet). You can open the root directory 'ionic-recorder' in VSCode.  All the code is under subdirectory 'app'.
 
 * The 'package.json' file has some useful high level commands at the 'scripts' subsection.  Sample useful commands in there:
