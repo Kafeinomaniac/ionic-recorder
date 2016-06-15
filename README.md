@@ -17,19 +17,19 @@ to build
 * Useful real-time visualizations, stats and data-analysis of the recorded 
   audio signal
 
-## Live demo
-A live demo of the app even in its current (sometimes broken) alpha state is up on 
+// ## Live demo
+// A live demo of the app even in its current (sometimes broken) alpha state is up on 
 
-[https://tracktunes.org/ionic-recorder](https://tracktunes.org/ionic-recorder)
+// [https://tracktunes.org/ionic-recorder](https://tracktunes.org/ionic-recorder)
 
-This app asks for permission to use  your microphone, for recording and sound monitoring.
+// This app asks for permission to use  your microphone, for recording and sound monitoring.
 
-But the app runs 100% locally, on your device: nothing (no information about you, no audio) gets transmitted over the internet with this app. 
+// But the app runs 100% locally, on your device: nothing (no information about you, no audio) gets transmitted over the internet with this app. 
 
-It is only for you to record from your device's microphone audio tht goes onto your device in an internal database only
-accessible when you use this app, unles you use the app's share button (not yet implemented).
+// It is only for you to record from your device's microphone audio tht goes onto your device in an internal database only
+// accessible when you use this app, unles you use the app's share button (not yet implemented).
 
-Tracktunes Inc currently uses that link for debugging purposes (it's over SSL, which allows us to test more easily on Chrome) so expect it to be broken sometimes, until the beta release.  When beta is released, we'll have a separate staging system with its own SSL certificates elsewhere.
+// Tracktunes Inc currently uses that link for debugging purposes (it's over SSL, which allows us to test more easily on Chrome) so expect it to be broken sometimes, until the beta release.  When beta is released, we'll have a separate staging system with its own SSL certificates elsewhere.
 
 ## Requirements for running the app
 This apps runs only in browsers that implement
