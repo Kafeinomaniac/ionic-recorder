@@ -45,6 +45,10 @@ Browsers were only tested in Ubuntu Linux 14.04.
 ### Roadmap
 **TBA: We will set up a separate page for that.**  
 
+## Contribution guidelines
+
+See the file [CONTRIBUTING.md](https://github.com/tracktunes/ionic-recorder/blob/master/CONTRIBUTING.md)
+
 ## Installing the development environment and getting started
 * Get the latest versions of npm and nodejs:
 
