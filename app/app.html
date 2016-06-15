@@ -5,15 +5,15 @@
 
     <ion-content>
         <ion-list>
-            <button menuClose ion-item *ngFor="let p of pages" (click)="selectTab(p)">
+            <button menuClose ion-item *ngFor="let p of pages" (click)="goToPage(p)">
                 {{p.title}}
             </button>
         </ion-list>
     </ion-content>
 </ion-menu>
 
-<ion-tabs #navTabs preloadTabs="true">
-    <ion-tab [root]="loadingPage"></ion-tab>
+<ion-tabs #navTabs preloadTabs="true" (ionChange)="onTabChange($event)" [selectedIndex]="0">
+    <ion-tab [root]="rootPage"></ion-tab>
     <ion-tab *ngFor="let p of pages" [root]="p.component">
         {{p.title}}
     </ion-tab>

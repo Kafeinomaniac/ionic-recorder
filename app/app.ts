@@ -8,6 +8,7 @@ import {
 
 import {
     Tabs,
+    Tab,
     ionicBootstrap,
     Platform,
     MenuController
@@ -78,12 +79,15 @@ interface TabPage {
     templateUrl: 'build/app.html'
 })
 export class IonicRecorderApp {
-    @ViewChild(Tabs) private tabsRef: Tabs;
+    // NOTE: either one of these @ViewChild declarations works, use only one ..
+    // @ViewChild(Tabs) private tabs: Tabs;
+    @ViewChild('navTabs') private tabs: Tabs;
+
     private platform: Platform;
     private menu: MenuController;
     private pages: TabPage[];
     private appState: AppState;
-    private loadingPage: Type;
+    private rootPage: Type;
 
     constructor(
         platform: Platform,
@@ -94,8 +98,8 @@ export class IonicRecorderApp {
         this.platform = platform;
         this.menu = menu;
         this.appState = appState;
-
-        this.loadingPage = LoadingPage;
+        // set root of the hidden (first, default) tab
+        this.rootPage = LoadingPage;
 
         // All pages of the side-menu/tabs, in their order of appearance.
         // NOTE: 'tabIndex' must start at 1 and increase by 1 in order,
@@ -106,6 +110,14 @@ export class IonicRecorderApp {
             { tabIndex: 3, title: 'Settings', component: SettingsPage },
             { tabIndex: 4, title: 'About', component: AboutPage }
         ];
+
+        // load index of last selected tab from DB and select it
+        this.appState.getProperty('lastTabIndex').subscribe(
+            (tabIndex: number) => {
+                console.log('--> lastTabIndex: ' + tabIndex);
+                this.tabs.select(tabIndex);
+            });
+
         this.initializeApp();
     }
 
@@ -119,20 +131,43 @@ export class IonicRecorderApp {
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
             // StatusBar.styleDefault();
+
             // NOTE: uncomment next line to pick the page you want selected
             // first on next incarnation of the app.
-            // this.selectTab(this.pages[0]);
+            // this.goToPage(this.pages[1]);
         });
+    }
+
+    /**
+     * Called any time a tab selection has changed
+     * @returns {void}
+     */
+    public onTabChange(selectedTab: Tab): void {
+        let tabIndex: number = selectedTab.index;
+        console.log('onTabChange: ' + tabIndex);
+        console.dir(selectedTab);
+        if (tabIndex === 0) {
+            // hide tab 0 dynamically because if we hide it in the
+            // template with [show]="false" then tabs automatically
+            // select tab 1 instead.  at this point, tab 0 has already
+            // been selected so this is the point at which it's best
+            // to hide it
+            selectedTab.show = false;
+        }
+        if (tabIndex > 0) {
+            // save in the DB the 'lastTabIndex' so that if we restart the app
+            // it starts with the last tab you've visited last time you used it
+            this.appState.updateProperty('lastTabIndex', tabIndex).subscribe();
+        }
     }
 
     /**
      * Go to a page (via menu selection)
      * @returns {void}
      */
-    public selectTab(page: TabPage): void {
+    public goToPage(page: TabPage): void {
         let tabIndex: number = page.tabIndex;
-        this.appState.updateProperty('lastTabIndex', tabIndex).subscribe();
-        this.tabsRef.select(tabIndex);
+        this.tabs.select(tabIndex);
         this.menu.close();
     }
 }

@@ -120,7 +120,7 @@ export class WebAudioRecorder {
                         });
                 }
                 catch (error) {
-                    alert('eyah no!');
+                    alert('getUserMedia() Error: ' + error);
                 }
             }
             else {

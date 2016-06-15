@@ -26,7 +26,9 @@ ion-app {
         }
     }
     // hide tabs (we only use them for in-program navigation, preloading pages and keeping them in memory while navigating, not for click-navigation)
-    ion-tabs ion-tabbar-section {
-        display: none;
+    ion-tabs {
+        ion-tabbar-section {
+            display: none;
+        }
     }
 }
