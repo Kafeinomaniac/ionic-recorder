@@ -37,9 +37,7 @@ This apps runs only in browsers that implement
 and a late version of IndexedDB that supports the `onupgradeended` event.
 
 The only browsers on which we successfully tested the above link is
-* Firefox 45.0 on Ubuntu Linux
-* That's it for now: Chrome has a problem in `decodeAudioData()`: it cannot
-  decode the same blob that the it used to save the file via `MediaRecorder()`!
+* Latest Chrome and latest Chromium on Ubuntu Linux
 
 ## DEVELOPMENT
 
@@ -48,15 +46,12 @@ We will set up a separate page for that.  In the meantime the main high-level go
 to make this simple app as stable as possible and not add any features.
 
 ## Installing the development environment and getting started
-* Get the latest versions of npm and nodejs (we use 'n' to manage nodejs version):
+* Get the latest versions of npm and nodejs:
 
-        sudo npm install -g npm
-        sudo npm install -g n
+        sudo npm install -g npm n ionic@beta cordova webdriver-manager
+* Install node via n
+
         sudo n stable
-* First, you need some global npm packages, in a shell, type
- 
-        sudo npm install -g ionic@beta
-        sudo npm install -g cordova
 * In a shell, type
 
         git clone https://github.com/tracktunes/ionic-recorder
@@ -64,10 +59,6 @@ to make this simple app as stable as possible and not add any features.
 * Install the npm packages needed by this project
 
         npm install
-* Typescript will complain about some missing types at a couple of spots in the node_modules packages just installed.  To avoid those, execute:
-
-        ./bin/fix_typings.sh
-
 * You can develop now.  Check the Getting Started Coding page or the Getting Started Using page (neither page exists yet). You can open the root directory 'ionic-recorder' in VSCode.  All the code is under subdirectory 'app'.
 
 * The 'package.json' file has some useful high level commands at the 'scripts' subsection.  Sample useful commands in there:
