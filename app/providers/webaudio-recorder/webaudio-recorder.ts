@@ -1,10 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    Observable
-} from 'rxjs/Rx';
-
-import {
     Injectable
 } from '@angular/core';
 
@@ -17,9 +13,6 @@ import {
 const MONITOR_REFRESH_RATE_HZ: number = 24;
 
 const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
-
-// number of miliseconds to wait between checks when checking if audio is ready
-const AUDIO_WAIT_MSEC: number = 1;
 
 const AUDIO_CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
 
@@ -54,8 +47,8 @@ export class WebAudioRecorder {
     private scriptProcessorNode: ScriptProcessorNode;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
-    private setIntervalId: NodeJS.Timer;
-    private setTimeoutId: NodeJS.Timer;
+    private intervalId: NodeJS.Timer;
+    private timeoutId: NodeJS.Timer;
     // count # of buffers we have encoded (== time)
     private nEncodedBuffers: number;
 
@@ -71,6 +64,8 @@ export class WebAudioRecorder {
     constructor() {
         console.log('constructor():WebAudioRecorder');
         this.isReady = false;
+        this.intervalId = null;
+        this.timeoutId = null;
 
         this.stop();
         this.resetPeaks();
@@ -98,26 +93,29 @@ export class WebAudioRecorder {
                     this.setUpNodes(stream);
                 })
                 .catch((error: any) => {
+                    // this.stopWaitingForAudio();
+                    this.stopMonitoring();
                     this.noMicrophoneAlert(error);
                 });
         }
         else {
             console.log('Using OLD navigator.getUserMedia (new not there)');
             // new getUserMedia not there, try the old one
-            navigator.getUserMedia = navigator.getUserMedia ||
+            let getUserMedia: NavigatorGetUserMedia = navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia ||
                 navigator.msGetUserMedia;
-            if (navigator.getUserMedia) {
+            if (getUserMedia) {
                 // old getUserMedia is available, use it
                 try {
-                    navigator.getUserMedia(
+                    getUserMedia(
                         getUserMediaOptions,
                         (stream: MediaStream) => {
-                            // ok we got a microphone
                             this.setUpNodes(stream);
                         },
                         (error: any) => {
+                            // this.stopWaitingForAudio();
+                            this.stopMonitoring();
                             this.noMicrophoneAlert(error);
                         });
                 }
@@ -259,33 +257,12 @@ export class WebAudioRecorder {
     // PUBLIC API METHODS
     ///////////////////////////////////////////////////////////////////////////
 
-    public waitForAudio(): Observable<void> {
-        // NOTE: MAX_DB_INIT_TIME / 10
-        // Check in the console how many times we loop here -
-        // it shouldn't be much more than a handful
-        let source: Observable<void> = Observable.create((observer) => {
-            let repeat: () => void = () => {
-                if (this.isReady) {
-                    clearTimeout(this.setTimeoutId);
-                    observer.next();
-                    observer.complete();
-                }
-                else {
-                    console.warn('WebAudioRecorder:waitForAudio() ...');
-                    this.setTimeoutId = setTimeout(repeat, AUDIO_WAIT_MSEC);
-                }
-            };
-            repeat();
-        });
-        return source;
-    }
-
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      * @returns {void}
      */
     public startMonitoring(): void {
-        this.setIntervalId = setInterval(
+        this.intervalId = setInterval(
             () => {
                 this.analyzeVolume();
                 this.currentTime = formatTime(
@@ -299,7 +276,10 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public stopMonitoring(): void {
-        clearInterval(this.setIntervalId);
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
     }
 
     /**
@@ -324,8 +304,12 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public setGainFactor(factor: number): void {
-        // console.log('WebAudioRecorder:setGainFactor(' + factor + ')');
+        if (!this.isReady) {
+            return;
+        }
+        // we're ready
         if (!this.audioGainNode) {
+            // but there is no gain node, very strange ...
             throw Error('GainNode not initialized!');
         }
         this.audioGainNode.gain.value = factor;

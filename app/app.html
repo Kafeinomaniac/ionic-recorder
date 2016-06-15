@@ -1,6 +1,6 @@
 <ion-menu [content]="navTabs">
-    <ion-toolbar>
-        <ion-title>Pages</ion-title>
+    <ion-toolbar darkest-gray>
+        <ion-title>Navigation</ion-title>
     </ion-toolbar>
 
     <ion-content>
@@ -12,7 +12,8 @@
     </ion-content>
 </ion-menu>
 
-<ion-tabs #navTabs preloadTabs="true" [selectedIndex]="mySelectedIndex">
+<ion-tabs #navTabs preloadTabs="true">
+    <ion-tab [root]="loadingPage"></ion-tab>
     <ion-tab *ngFor="let p of pages" [root]="p.component">
         {{p.title}}
     </ion-tab>

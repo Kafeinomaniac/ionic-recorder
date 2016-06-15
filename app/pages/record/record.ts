@@ -91,10 +91,7 @@ export class RecordPage {
                 // we still want to show the previous gain value.
                 // if we don't have this line below then it will
                 // always show up as gain == 0.
-                this.recorder.waitForAudio().subscribe(() => {
-                    this.onGainChange(gain.factor / gain.maxFactor);
-                });
-                // this.recorder.waitForAudio().subscribe();
+                this.onGainChange(gain.factor / gain.maxFactor);
             },
             (error: any) => {
                 console.error('AppState:getProperty() error: ' + error);

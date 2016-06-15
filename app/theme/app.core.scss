@@ -9,11 +9,10 @@
 // App Shared Sass variables belong in app.variables.scss.
 
 @import "../app";
-@import "../components/audio-player/audio-player";
-@import "../components/progress-slider/progress-slider";
+@import "../pages/record/record";
+@import "../pages/library/library";
+@import "../pages/settings/settings";
 @import "../pages/about/about";
 @import "../pages/add-folder/add-folder";
-@import "../pages/library/library";
-@import "../pages/tabs/tabs";
-@import "../pages/record/record";
-@import "../pages/settings/settings";
+@import "../components/audio-player/audio-player";
+@import "../components/progress-slider/progress-slider";

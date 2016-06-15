@@ -1,32 +1,32 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-ion-menu {
-    ion-content {
-        /* background of entire menu area plus background of any items that are not active or selected */
-        scroll-content, ion-list .item {
-            background: map-get($colors, darkest-gray);
-            cursor: pointer;
-        }
-        ion-list.app-menu-buttons {
-            /* get rid of border between menu heading and first item */
-            .item:first-child {
-                border: 0;
+ion-app {
+    ion-menu {
+        ion-content  {
+            // remove the scrollbar when it's not needed, it seems to be there all the time otherwise ...
+            scroll-content {
+                overflow-y: auto;
+                // color the side-menu portion from below the bottommost item to the bottom of the page
+                background: map-get($colors, darkest-gray);
             }
-
-            /* remove border at bottom of each menu item button */
-            .item-inner, ion-list .item:last-child {
-                border-bottom: 0;
-            }
-
-            /* TODO: we need to fix the scss on this page, esp. next one activated (when being clicked) menu item color */
-            button.item.button-selected.activated, button.item.activated {
-                background-color: map-get($colors, red);
-            }
-
-            // indicating page (cutton) currently selected
-            button.item.button-selected {
-                background: map-get($colors, almost-dark);
+            ion-list {
+                .item {
+                    // items in side-menu
+                    background: map-get($colors, darkest-gray);
+                    cursor: pointer;
+                }
+                // get rid of border between menu heading and first item and remove border at bottom of each menu item button
+                .item:first-child, .item-inner, .item:last-child {
+                   border: 0;
+                }
+                button.item.activated {
+                   background-color: map-get($colors, red);
+                }
             }
         }
+    }
+    // hide tabs (we only use them for in-program navigation, preloading pages and keeping them in memory while navigating, not for click-navigation)
+    ion-tabs ion-tabbar-section {
+        display: none;
     }
 }
