@@ -56,6 +56,13 @@ export class VuGauge implements OnChanges {
      * @returns {void}
      */
     public ngOnInit(): void {
+        // percentWidth is the width, in percent of the total width
+        // of each bar. Since we're drawing a bar every other bar,
+        // if we're drawing 'this.nbars' bars, pretend we're drawing
+        // 2 * this.nbars. We want the bars to be drawn starting at
+        // position 0 and ending at position (totalWidth - xStep).
+        // 'xStep' is the step by which we walk along the x-axis to
+        // draw.
         let percentWidth: number = 100.0 / (2 * this.nbars - 1),
             xStep: number = 2.0 * percentWidth, i: number;
         this.ledWidth = percentWidth + '%';
@@ -67,7 +74,12 @@ export class VuGauge implements OnChanges {
                 strokeWidth: '0'
             });
         }
-        this.valueStep = 1.0 / (this.nbars - 1);
+        // NOTE: change what the numerator is to make sure
+        // it's a number that is never exceeded. The numerator
+        // here is the maximum volume we'll ever encounter. If
+        // we encounter a higher volume than the numerator here,
+        // an error will occur.
+        this.valueStep = 4.0 / (this.nbars - 1);
     }
 
     /**
@@ -77,6 +89,13 @@ export class VuGauge implements OnChanges {
     public ngOnChanges(
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
+        // if (changeRecord['max']) {
+        //     console.log(changeRecord['value'].currentValue + ' / ' +
+        //         changeRecord['max'].currentValue);
+        // }
+        // else {
+        //     console.log(changeRecord['value'].currentValue);
+        // }
         if (this.leds.length > 0) {
             let fill: string, i: number;
             for (i = 0; i < this.nbars; i++) {
