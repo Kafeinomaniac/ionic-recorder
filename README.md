@@ -20,7 +20,7 @@ to build
 ## Live demo
 A live demo of the app even in its current (sometimes broken) alpha state is up on 
 
-**TBA: removed live demo link until we have automatic continuous test / build / deploy in place**
+[https://tracktunes.org/ionic-recorder/](https://tracktunes.org/ionic-recorder/)
 
 This app asks for permission to use  your microphone, for recording and sound monitoring.
 
