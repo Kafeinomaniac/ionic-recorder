@@ -1,27 +1,27 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 ion-app {
-    ion-menu {
-        ion-content  {
-            // remove the scrollbar when it's not needed, it seems to be there all the time otherwise ...
-            scroll-content {
-                overflow-y: auto;
-                // color the side-menu portion from below the bottommost item to the bottom of the page
+    scroll-content {
+        // remove the scrollbar when it's not needed, it seems to be there all the time otherwise ...
+        scroll-content {
+            overflow-y: auto;
+            // color the side-menu portion from below the bottommost item to the bottom of the page
+            background: map-get($colors, darkest-gray);
+        }
+    }
+    ion-menu ion-content  {
+        ion-list {
+            .item {
+                // items in side-menu
                 background: map-get($colors, darkest-gray);
+                cursor: pointer;
             }
-            ion-list {
-                .item {
-                    // items in side-menu
-                    background: map-get($colors, darkest-gray);
-                    cursor: pointer;
-                }
-                // get rid of border between menu heading and first item and remove border at bottom of each menu item button
-                .item:first-child, .item-inner, .item:last-child {
-                   border: 0;
-                }
-                button.item.activated {
-                   background-color: map-get($colors, red);
-                }
+            // get rid of border between menu heading and first item and remove border at bottom of each menu item button
+            .item:first-child, .item-inner, .item:last-child {
+                border: 0;
+            }
+            button.item.activated {
+                background-color: map-get($colors, red);
             }
         }
     }
