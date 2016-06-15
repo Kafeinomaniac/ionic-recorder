@@ -8,7 +8,7 @@ import {
     MenuController
 } from 'ionic-angular';
 
-const APP_VERSION: string = '0.0.7-alpha.53';
+const APP_VERSION: string = '0.0.7-alpha.54';
 
 /**
  * @name AboutPage

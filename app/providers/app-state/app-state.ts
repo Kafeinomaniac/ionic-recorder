@@ -36,7 +36,7 @@ interface State {
 }
 
 const DEFAULT_STATE: State = {
-    lastTabIndex: 0,
+    lastTabIndex: 1,
     lastViewedFolderKey: DB_NO_KEY,
     rootFolderKey: DB_NO_KEY,
     unfiledFolderKey: DB_NO_KEY,
