@@ -1,7 +1,7 @@
 # ionic-recorder
 
 Sound recording mobile / browser hybrid app, based on the Ionic framework,
-the Web Audio Interface and IndexedDB.
+the Web Audio API and IndexedDB.
 
 ## Introduction
 
