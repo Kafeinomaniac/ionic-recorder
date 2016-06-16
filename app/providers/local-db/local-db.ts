@@ -15,7 +15,7 @@ import {
 
 // non-exported module globals
 
-const DB_VERSION: number = 1;
+const DB_VERSION: number = 2;
 const DB_TREE_STORE_NAME: string = 'blobTree';
 const DB_DATA_STORE_NAME: string = 'dataTable';
 const STORE_EXISTS_ERROR_CODE: number = 0;
