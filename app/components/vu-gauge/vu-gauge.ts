@@ -98,9 +98,11 @@ export class VuGauge implements OnChanges {
                 this.leds[i].fill = fill;
                 this.leds[i].strokeWidth = '0';
             }
-            // show max-since-reset by drawing a white border rect
-            i = Math.floor(this.max / this.valueStep);
-            this.leds[i].strokeWidth = '1';
+            if (this.max > 0) {
+                // show max-since-reset by drawing a white border rect
+                i = Math.floor(this.max / this.valueStep);
+                this.leds[i].strokeWidth = '1';
+            }
         }
     }
 }

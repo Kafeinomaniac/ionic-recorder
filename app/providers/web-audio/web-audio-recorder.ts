@@ -23,6 +23,19 @@ const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 // to reduce latency and to compute time as accurately as possible)
 const BUFFER_LENGTH: number = 256;
 
+// number of buffers we used in each DB write
+const WRITE_BUFFERS_LENGTH: number = 40;
+
+// pre-fill the writeBuffers array to nulls
+const WRITE_BUFFERS: Float32Array[] = (function (): Float32Array[] {
+    let writeBuffers: Float32Array[] = [],
+        i: number;
+    for (i = 0; i < WRITE_BUFFERS_LENGTH; i++) {
+        writeBuffers[i] = null;
+    }
+    return writeBuffers;
+})();
+
 // statuses
 export enum RecorderStatus {
     // uninitialized means we have not been initialized yet
@@ -71,6 +84,7 @@ export class WebAudioRecorder {
         this.status = RecorderStatus.UNINITIALIZED;
         this.intervalId = null;
         this.timeoutId = null;
+        this.createNodes();
         this.stop();
         this.resetPeaks();
         this.initAudio();
@@ -98,7 +112,7 @@ export class WebAudioRecorder {
             // console.log('Using NEW navigator.mediaDevices.getUserMedia');
             navigator.mediaDevices.getUserMedia(getUserMediaOptions)
                 .then((stream: MediaStream) => {
-                    this.setUpNodes(stream);
+                    this.connectNodes(stream);
                 })
                 .catch((error: any) => {
                     this.status = RecorderStatus.NO_MICROPHONE;
@@ -116,7 +130,7 @@ export class WebAudioRecorder {
                     getUserMedia(
                         getUserMediaOptions,
                         (stream: MediaStream) => {
-                            this.setUpNodes(stream);
+                            this.connectNodes(stream);
                         },
                         (error: any) => {
                             this.status = RecorderStatus.NO_MICROPHONE;
@@ -134,18 +148,20 @@ export class WebAudioRecorder {
     }
 
     /**
-     * Create and set up the callback of the script processing node
-     * @returns {ScriptProcessorNode} the newly created/setup node
+     * Create audioGainNode & scriptProcessorNode
+     * @returns {void}
      */
-    private makeScriptProcessorNode(): ScriptProcessorNode {
-        // NOTE: mono only (for now) 1 input channel 1, output channel
-        let node: ScriptProcessorNode = AUDIO_CONTEXT.createScriptProcessor(
+    private createNodes(): void {
+        // create the gainNode
+        this.audioGainNode = AUDIO_CONTEXT.createGain();
+
+        // create and configure the scriptProcessorNode
+        this.scriptProcessorNode = AUDIO_CONTEXT.createScriptProcessor(
             BUFFER_LENGTH,
             1,
             1);
-        node.onaudioprocess =
+        this.scriptProcessorNode.onaudioprocess =
             (processingEvent: AudioProcessingEvent): any => {
-                // console.log('setUpNodes():onaudioprocess 1');
                 let inputBuffer: AudioBuffer = processingEvent.inputBuffer,
                     inputData: Float32Array = inputBuffer.getChannelData(0),
                     i: number,
@@ -165,10 +181,17 @@ export class WebAudioRecorder {
                 } // for (i ...
 
                 if (this.isRecording) {
+                    let writeBuffersIndex: number =
+                        this.nEncodedBuffers % WRITE_BUFFERS_LENGTH;
+                    WRITE_BUFFERS[writeBuffersIndex] = inputData;
+                    if (writeBuffersIndex === WRITE_BUFFERS_LENGTH - 1) {
+                        // send over the write buffers to the DB writer worker
+                        console.log(WRITE_BUFFERS.map(x => x[0]));
+                    }
                     this.nEncodedBuffers++;
+
                 }
             }; // this.scriptProcessorNode.onaudioprocess = ...
-        return node;
     }
 
     /**
@@ -180,14 +203,10 @@ export class WebAudioRecorder {
      * @param {MediaStream} stream the stream obtained by getUserMedia
      * @returns {void}
      */
-    private setUpNodes(stream: MediaStream): void {
-        // create the gainNode
-        this.audioGainNode = AUDIO_CONTEXT.createGain();
-
-        // create and configure the scriptProcessorNode
-        this.scriptProcessorNode = this.makeScriptProcessorNode();
-
+    private connectNodes(stream: MediaStream): void {
         // create a source node out of the audio media stream
+        // (the other nodes, which do not require a stream for their
+        // initialization, are created in this.createNodes())
         this.sourceNode = AUDIO_CONTEXT.createMediaStreamSource(stream);
 
         // create a destination node (need something to connect the
@@ -277,10 +296,8 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public setGainFactor(factor: number): void {
-        if (this.status !== RecorderStatus.READY) {
-            return;
-        }
         this.audioGainNode.gain.value = factor;
+        this.resetPeaks();
     }
 
     /**

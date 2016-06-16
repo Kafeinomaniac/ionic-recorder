@@ -5,7 +5,7 @@
         <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Record</ion-title>
-    <ion-buttons end *ngIf="recorderIsReady()">
+    <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
         <button small (click)="recorder.resetPeaks()">
             <ion-badge darkest-gray item-right>
                 {{recorder.percentPeaksAtMax}}% peaks @ max
