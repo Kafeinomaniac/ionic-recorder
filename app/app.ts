@@ -115,7 +115,6 @@ export class IonicRecorderApp {
         // load index of last selected tab from DB and select it
         this.appState.getProperty('lastTabIndex').subscribe(
             (tabIndex: number) => {
-                console.log('--> lastTabIndex: ' + tabIndex);
                 this.tabs.select(tabIndex);
             });
 
@@ -145,8 +144,7 @@ export class IonicRecorderApp {
      */
     public onTabChange(selectedTab: Tab): void {
         let tabIndex: number = selectedTab.index;
-        console.log('onTabChange: ' + tabIndex);
-        console.dir(selectedTab);
+        // console.log('onTabChange: ' + tabIndex);
         if (tabIndex === 0) {
             // hide tab 0 dynamically because if we hide it in the
             // template with [show]="false" then tabs automatically
