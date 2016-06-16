@@ -8,25 +8,16 @@ import {
     formatTime
 } from '../../utils/utils';
 
+import {
+    AUDIO_CONTEXT
+} from './audio-context';
+
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.
 const MONITOR_REFRESH_RATE_HZ: number = 24;
+
 // MONITOR_REFRESH_INTERVAL is derived from MONITOR_REFRESH_RATE_HZ
 const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
-
-const AUDIO_CONTEXT: AudioContext = (function (): AudioContext {
-    if (typeof AudioContext === 'undefined') {
-        if (typeof webkitAudioContext === 'undefined') {
-            return null;
-        }
-        else {
-            return new webkitAudioContext();
-        }
-    }
-    else {
-        return new AudioContext();
-    }
-})();
 
 // length of script processing buffer (must be power of 2, smallest possible,
 // to reduce latency and to compute time as accurately as possible)
@@ -34,11 +25,17 @@ const BUFFER_LENGTH: number = 256;
 
 // statuses
 export enum RecorderStatus {
+    // uninitialized means we have not been initialized yet
     UNINITIALIZED,
+    // error occured - no AudioContext
     NO_CONTEXT,
+    // error occured - no microphone
     NO_MICROPHONE,
+    // error occured - no getUserMedia()
     NO_GETUSERMEDIA,
+    // error occured - getUserMedia() has crashed
     GETUSERMEDIA_ERROR,
+    // normal operation
     READY
 }
 
@@ -150,21 +147,22 @@ export class WebAudioRecorder {
             (processingEvent: AudioProcessingEvent): any => {
                 // console.log('setUpNodes():onaudioprocess 1');
                 let inputBuffer: AudioBuffer = processingEvent.inputBuffer,
-                    outputBuffer: AudioBuffer = processingEvent.outputBuffer,
                     inputData: Float32Array = inputBuffer.getChannelData(0),
-                    outputData: Float32Array = outputBuffer.getChannelData(0),
-                    sample: number,
+                    i: number,
                     value: number,
                     absValue: number;
+                // put the maximum of current buffer into this.currentVolume
                 this.currentVolume = 0;
-                for (sample = 0; sample < BUFFER_LENGTH; sample++) {
-                    value = inputData[sample];
+                for (i = 0; i < BUFFER_LENGTH; i++) {
+                    value = inputData[i];
                     absValue = Math.abs(value);
+                    if (absValue > 1) {
+                        absValue = 1;
+                    }
                     if (absValue > this.currentVolume) {
                         this.currentVolume = absValue;
                     }
-                    outputData[sample] = value;
-                } // for (sample ...
+                } // for (i ...
 
                 if (this.isRecording) {
                     this.nEncodedBuffers++;
@@ -264,7 +262,6 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public resetPeaks(): void {
-        // console.log('WebAudioRecorder:resetPeaks()');
         this.maxVolumeSinceReset = 0;
         // at first we're always at 100% peax at max
         this.percentPeaksAtMax = '100.0';

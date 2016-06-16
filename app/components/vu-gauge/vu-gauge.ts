@@ -47,7 +47,7 @@ export class VuGauge implements OnChanges {
      * @param {string} percentage (eg. '15%') of lightness to use
      */
     private fillColor(ledIndex: number, lightness: string): string {
-        return ['hsl(', 120.0 - ledIndex * this.hStep,
+        return ['hsl(', 120 - ledIndex * this.hStep,
             ',100%,', lightness, ')'].join('');
     }
 
@@ -63,10 +63,10 @@ export class VuGauge implements OnChanges {
         // position 0 and ending at position (totalWidth - xStep).
         // 'xStep' is the step by which we walk along the x-axis to
         // draw.
-        let percentWidth: number = 100.0 / (2 * this.nbars - 1),
-            xStep: number = 2.0 * percentWidth, i: number;
+        let percentWidth: number = 100 / (2 * this.nbars - 1),
+            xStep: number = 2 * percentWidth, i: number;
         this.ledWidth = percentWidth + '%';
-        this.hStep = 120.0 / (this.nbars - 1.0);
+        this.hStep = 120 / (this.nbars - 1);
         for (i = 0; i < this.nbars; i++) {
             this.leds.push({
                 x: (i * xStep) + '%',
@@ -74,12 +74,9 @@ export class VuGauge implements OnChanges {
                 strokeWidth: '0'
             });
         }
-        // NOTE: change what the numerator is to make sure
-        // it's a number that is never exceeded. The numerator
-        // here is the maximum volume we'll ever encounter. If
-        // we encounter a higher volume than the numerator here,
-        // an error will occur.
-        this.valueStep = 2.0 / (this.nbars - 1);
+        // NOTE: we expect that the maximum value ever encountered
+        // is 1.  This is why 1 is in the numerator here.
+        this.valueStep = 1 / (this.nbars - 1);
     }
 
     /**
@@ -89,13 +86,6 @@ export class VuGauge implements OnChanges {
     public ngOnChanges(
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
-        // if (changeRecord['max']) {
-        //     console.log(changeRecord['value'].currentValue + ' / ' +
-        //         changeRecord['max'].currentValue);
-        // }
-        // else {
-        //     console.log(changeRecord['value'].currentValue);
-        // }
         if (this.leds.length > 0) {
             let fill: string, i: number;
             for (i = 0; i < this.nbars; i++) {
@@ -108,10 +98,9 @@ export class VuGauge implements OnChanges {
                 this.leds[i].fill = fill;
                 this.leds[i].strokeWidth = '0';
             }
-            if (this.value) {
-                i = Math.floor(this.max / this.valueStep);
-                this.leds[i].strokeWidth = '1';
-            }
+            // show max-since-reset by drawing a white border rect
+            i = Math.floor(this.max / this.valueStep);
+            this.leds[i].strokeWidth = '1';
         }
     }
 }

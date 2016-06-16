@@ -13,7 +13,7 @@ import {
 
 import {
     WebAudioPlayer
-} from '../../providers/webaudio-player/webaudio-player';
+} from '../../providers/web-audio/web-audio-player';
 
 import {
     ProgressSlider

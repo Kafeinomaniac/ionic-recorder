@@ -14,8 +14,9 @@ import {
 } from '../../providers/app-state/app-state';
 
 import {
-    WebAudioRecorder
-} from '../../providers/webaudio-recorder/webaudio-recorder';
+    WebAudioRecorder,
+    RecorderStatus
+} from '../../providers/web-audio/web-audio-recorder';
 
 import {
     LocalDB
@@ -97,6 +98,14 @@ export class RecordPage {
                 console.error('AppState:getProperty() error: ' + error);
             }
         ); // getProperty('gain').subscribe(
+    }
+
+    /**
+     * Returns whether the WebAudioApi recorder is fully initialized
+     * @returns {boolean}
+     */
+    public recorderIsReady(): boolean {
+        return this.recorder && this.recorder.status === RecorderStatus.READY;
     }
 
     /**

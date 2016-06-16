@@ -8,7 +8,9 @@ import {
     formatTime
 } from '../../utils/utils';
 
-const CONTEXT: AudioContext = new (AudioContext || webkitAudioContext)();
+import {
+    AUDIO_CONTEXT
+} from './audio-context';
 
 ///////////////////////////////////////////////////////////////////////////////
 // PLAYER
@@ -49,7 +51,7 @@ export class WebAudioPlayer {
             res = this.pausedAt;
         }
         if (this.startedAt) {
-            res = CONTEXT.currentTime - this.startedAt;
+            res = AUDIO_CONTEXT.currentTime - this.startedAt;
         }
         if (res >= this.duration) {
             console.log('res: ' + res + ', dur: ' + this.duration);
@@ -91,7 +93,7 @@ export class WebAudioPlayer {
         this.fileReader.onerror = loadErrorCB;
         this.fileReader.onload = () => {
             console.log('fileReader.onload()');
-            CONTEXT.decodeAudioData(
+            AUDIO_CONTEXT.decodeAudioData(
                 this.fileReader.result,
                 (audioBuffer: AudioBuffer) => {
                     this.audioBuffer = audioBuffer;
@@ -127,14 +129,14 @@ export class WebAudioPlayer {
      */
     public play(): void {
         let offset: number = this.pausedAt;
-        this.sourceNode = CONTEXT.createBufferSource();
-        this.sourceNode.connect(CONTEXT.destination);
+        this.sourceNode = AUDIO_CONTEXT.createBufferSource();
+        this.sourceNode.connect(AUDIO_CONTEXT.destination);
         this.sourceNode.buffer = this.audioBuffer;
         // this.sourceNode.onended = () => {
         //     console.log('onended!');
         // }
         this.sourceNode.start(0, offset);
-        this.startedAt = CONTEXT.currentTime - offset;
+        this.startedAt = AUDIO_CONTEXT.currentTime - offset;
         this.pausedAt = 0;
         this.setPlaying(true);
     }
@@ -144,7 +146,7 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public pause(): void {
-        let elapsed: number = CONTEXT.currentTime - this.startedAt;
+        let elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
         this.stop();
         this.pausedAt = elapsed;
     }
@@ -191,12 +193,12 @@ export class WebAudioPlayer {
             this.sourceNode.stop(0);
             this.sourceNode = null;
         }
-        this.sourceNode = CONTEXT.createBufferSource();
-        this.sourceNode.connect(CONTEXT.destination);
+        this.sourceNode = AUDIO_CONTEXT.createBufferSource();
+        this.sourceNode.connect(AUDIO_CONTEXT.destination);
         this.sourceNode.buffer = this.audioBuffer;
         if (isPlaying) {
             this.sourceNode.start(0, time);
-            this.startedAt = CONTEXT.currentTime - time;
+            this.startedAt = AUDIO_CONTEXT.currentTime - time;
             this.pausedAt = 0;
         }
         this.setPlaying(isPlaying);
