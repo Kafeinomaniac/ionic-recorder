@@ -1,14 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 ion-app {
-    scroll-content {
-        // remove the scrollbar when it's not needed, it seems to be there all the time otherwise ...
-        scroll-content {
-            overflow-y: auto;
-            // color the side-menu portion from below the bottommost item to the bottom of the page
-            background: map-get($colors, darkest-gray);
-        }
-    }
+
     ion-menu ion-content  {
         ion-list {
             .item {
@@ -29,6 +22,12 @@ ion-app {
     ion-tabs {
         ion-tabbar-section {
             display: none;
+        }
+        // remove the scrollbar when it's not needed, it seems to be there all the time otherwise ...
+        scroll-content {
+            overflow-y: auto;
+            // color the side-menu portion from below the bottommost item to the bottom of the page
+            background: map-get($colors, dark);
         }
     }
 }

@@ -48,19 +48,19 @@ import {
 
 // Uncomment this block to completely erase browser's IndexedDB
 // (but only the DB created by this app gets erased)
-// import {
-//     DB_NAME
-// } from './providers/local-db/local-db';
-// let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
-// request.onsuccess = function(): void {
-//     console.log('deleteDatabase: SUCCESS');
-// };
-// request.onerror = function(): void {
-//     console.log('deleteDatabase: ERROR');
-// };
-// request.onblocked = function(): void {
-//     console.log('deleteDatabase: BLOCKED');
-// };
+import {
+    DB_NAME
+} from './providers/local-db/local-db';
+let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
+request.onsuccess = function(): void {
+    console.log('deleteDatabase: SUCCESS');
+};
+request.onerror = function(): void {
+    console.log('deleteDatabase: ERROR');
+};
+request.onblocked = function(): void {
+    console.log('deleteDatabase: BLOCKED');
+};
 
 // Global catch-all exception handler for this app - any error thrown
 // will be handled by this function.
