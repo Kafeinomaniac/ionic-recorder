@@ -3,6 +3,11 @@
 ion-app {
 
     ion-menu ion-content  {
+        // remove the scrollbar when it's not needed, it seems to be there all the time otherwise ...
+        scroll-content {
+            overflow-y: auto;
+            // color the side-menu portion from below the bottommost item to the bottom of the page
+            background: map-get($colors, darkest-gray);        }
         ion-list {
             .item {
                 // items in side-menu

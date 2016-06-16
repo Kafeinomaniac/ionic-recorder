@@ -79,7 +79,7 @@ export class VuGauge implements OnChanges {
         // here is the maximum volume we'll ever encounter. If
         // we encounter a higher volume than the numerator here,
         // an error will occur.
-        this.valueStep = 4.0 / (this.nbars - 1);
+        this.valueStep = 2.0 / (this.nbars - 1);
     }
 
     /**
