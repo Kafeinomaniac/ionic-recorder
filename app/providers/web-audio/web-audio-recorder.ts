@@ -10,7 +10,7 @@ import {
 
 import {
     AUDIO_CONTEXT
-} from './audio-context';
+} from './web-audio-common';
 
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.
@@ -21,37 +21,44 @@ const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 
 // length of script processing buffer (must be power of 2, smallest possible,
 // to reduce latency and to compute time as accurately as possible)
-const BUFFER_LENGTH: number = 256;
+const PROCESSING_BUFFER_LENGTH: number = 256;
 
-// number of buffers we used in each DB write
-const WRITE_BUFFERS_LENGTH: number = 40;
+// make this a multiple of PROCESSING_BUFFER_LENGTH
+const DB_CHUNK_LENGTH: number = 512 * PROCESSING_BUFFER_LENGTH;
 
-// pre-fill the writeBuffers array to nulls
-const WRITE_BUFFERS: Float32Array[] = (function (): Float32Array[] {
-    let writeBuffers: Float32Array[] = [],
-        i: number;
-    for (i = 0; i < WRITE_BUFFERS_LENGTH; i++) {
-        writeBuffers[i] = null;
-    }
-    return writeBuffers;
-})();
+// pre-allocate the DB_CHUNK
+const DB_CHUNK: Float32Array = new Float32Array(DB_CHUNK_LENGTH);
 
 // statuses
 export enum RecorderStatus {
     // uninitialized means we have not been initialized yet
-    UNINITIALIZED,
+    UNINITIALIZED_STATE,
     // error occured - no AudioContext
-    NO_CONTEXT,
+    NO_CONTEXT_ERROR,
     // error occured - no microphone
-    NO_MICROPHONE,
+    NO_MICROPHONE_ERROR,
     // error occured - no getUserMedia()
-    NO_GETUSERMEDIA,
+    NO_GETUSERMEDIA_ERROR,
     // error occured - getUserMedia() has crashed
     GETUSERMEDIA_ERROR,
     // normal operation
-    READY
+    READY_STATE
 }
 
+// create a filename that reflects the time now
+function makeTimestampFilename(): string {
+    'use strict';
+    let now: Date = new Date();
+    return [
+        now.getFullYear().toString(),
+        '-',
+        (now.getMonth() + 1).toString(),
+        '-',
+        now.getDate().toString(),
+        ' -- ',
+        now.toLocaleTimeString()
+    ].join('');
+}
 /**
  * @name WebAudioRecorder
  * @description
@@ -65,9 +72,11 @@ export class WebAudioRecorder {
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
     private intervalId: NodeJS.Timer;
-    private timeoutId: NodeJS.Timer;
-    // count # of buffers we have encoded (== time)
-    private nEncodedBuffers: number;
+    // count # of buffers we have encoded; this is also how we count time
+    private nRecordedProcessingBuffers: number;
+    private nDbBuffers: number;
+    private dbChunkIndex: number;
+    private lastDbFileName: string;
 
     public status: RecorderStatus;
     public sampleRate: number;
@@ -81,12 +90,21 @@ export class WebAudioRecorder {
 
     constructor() {
         console.log('constructor():WebAudioRecorder');
-        this.status = RecorderStatus.UNINITIALIZED;
-        this.intervalId = null;
-        this.timeoutId = null;
+
+        if (!AUDIO_CONTEXT) {
+            this.status = RecorderStatus.NO_CONTEXT_ERROR;
+            return;
+        }
+
+        this.status = RecorderStatus.UNINITIALIZED_STATE;
+
+        // create nodes that do not require a stream in their constructor
         this.createNodes();
+        // this call to stop() initializes a lot of private variables
         this.stop();
+        // this call to resetPeaks() also initializes private variables
         this.resetPeaks();
+        // grab microphone, init nodes that rely on stream, connect nodes
         this.initAudio();
     }
 
@@ -95,11 +113,6 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     private initAudio(): void {
-        if (!AUDIO_CONTEXT) {
-            this.status = RecorderStatus.NO_CONTEXT;
-            return;
-        }
-
         this.sampleRate = AUDIO_CONTEXT.sampleRate;
         console.log('SAMPLE RATE: ' + this.sampleRate);
 
@@ -115,7 +128,7 @@ export class WebAudioRecorder {
                     this.connectNodes(stream);
                 })
                 .catch((error: any) => {
-                    this.status = RecorderStatus.NO_MICROPHONE;
+                    this.status = RecorderStatus.NO_MICROPHONE_ERROR;
                 });
         }
         else {
@@ -133,7 +146,7 @@ export class WebAudioRecorder {
                             this.connectNodes(stream);
                         },
                         (error: any) => {
-                            this.status = RecorderStatus.NO_MICROPHONE;
+                            this.status = RecorderStatus.NO_MICROPHONE_ERROR;
                         });
                 }
                 catch (error) {
@@ -142,7 +155,7 @@ export class WebAudioRecorder {
             }
             else {
                 // neither old nor new getUserMedia are available
-                this.status = RecorderStatus.NO_GETUSERMEDIA;
+                this.status = RecorderStatus.NO_GETUSERMEDIA_ERROR;
             }
         }
     }
@@ -157,7 +170,7 @@ export class WebAudioRecorder {
 
         // create and configure the scriptProcessorNode
         this.scriptProcessorNode = AUDIO_CONTEXT.createScriptProcessor(
-            BUFFER_LENGTH,
+            PROCESSING_BUFFER_LENGTH,
             1,
             1);
         this.scriptProcessorNode.onaudioprocess =
@@ -169,7 +182,7 @@ export class WebAudioRecorder {
                     absValue: number;
                 // put the maximum of current buffer into this.currentVolume
                 this.currentVolume = 0;
-                for (i = 0; i < BUFFER_LENGTH; i++) {
+                for (i = 0; i < PROCESSING_BUFFER_LENGTH; i++) {
                     value = inputData[i];
                     absValue = Math.abs(value);
                     if (absValue > 1) {
@@ -178,18 +191,30 @@ export class WebAudioRecorder {
                     if (absValue > this.currentVolume) {
                         this.currentVolume = absValue;
                     }
-                } // for (i ...
-
-                if (this.isRecording) {
-                    let writeBuffersIndex: number =
-                        this.nEncodedBuffers % WRITE_BUFFERS_LENGTH;
-                    WRITE_BUFFERS[writeBuffersIndex] = inputData;
-                    if (writeBuffersIndex === WRITE_BUFFERS_LENGTH - 1) {
-                        // send over the write buffers to the DB writer worker
-                        console.log(WRITE_BUFFERS.map(x => x[0]));
+                    if (this.isRecording) {
+                        if (this.nRecordedProcessingBuffers === 0 &&
+                            this.dbChunkIndex === 0) {
+                            // we are at the very beginning, at 1st sample
+                            // set the filename to use for this recording
+                            // according to the time now
+                            this.lastDbFileName = makeTimestampFilename();
+                        }
+                        if (this.dbChunkIndex === DB_CHUNK_LENGTH) {
+                            console.log('Saving chunk ' + this.nDbBuffers +
+                                '; Filename: ' + this.lastDbFileName);
+                            this.nDbBuffers++;
+                            this.dbChunkIndex = 0;
+                        }
+                        else {
+                            // keep filling up DB_CHUNK
+                            DB_CHUNK[this.dbChunkIndex] = value;
+                            this.dbChunkIndex++;
+                        }
                     }
-                    this.nEncodedBuffers++;
-
+                } // for (i ...
+                if (this.isRecording) {
+                    // this is how we keep track of recording time
+                    this.nRecordedProcessingBuffers++;
                 }
             }; // this.scriptProcessorNode.onaudioprocess = ...
     }
@@ -227,7 +252,7 @@ export class WebAudioRecorder {
         this.startMonitoring();
 
         // and you can tell the world we're ready
-        this.status = RecorderStatus.READY;
+        this.status = RecorderStatus.READY_STATE;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -240,10 +265,11 @@ export class WebAudioRecorder {
      */
     public startMonitoring(): void {
         this.intervalId = setInterval(
+            // the monitoring actions are in the following function:
             () => {
                 // update currentTime property
                 this.currentTime = formatTime(
-                    this.nBuffersToSeconds(this.nEncodedBuffers));
+                    this.nBuffersToSeconds(this.nRecordedProcessingBuffers));
 
                 // update currentVolume property
                 this.nPeakMeasurements += 1;
@@ -305,7 +331,7 @@ export class WebAudioRecorder {
      * @returns {number} Time in seconds
      */
     private nBuffersToSeconds(nBuffers: number): number {
-        return this.nEncodedBuffers * 256.0 / this.sampleRate;
+        return this.nRecordedProcessingBuffers * 256.0 / this.sampleRate;
     }
 
     /**
@@ -338,8 +364,17 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public stop(): void {
-        this.nEncodedBuffers = 0;
         this.isRecording = false;
         this.isInactive = true;
+        // finish off saving the last of it
+        if (this.dbChunkIndex) {
+            // we have some samples left
+            console.log('Saving chunk ' + this.nDbBuffers +
+                ' (# samples = ' + this.dbChunkIndex + ')' +
+                '; Filename: ' + this.lastDbFileName);
+        }
+        this.nRecordedProcessingBuffers = 0;
+        this.nDbBuffers = 0;
+        this.dbChunkIndex = 0;
     }
 }

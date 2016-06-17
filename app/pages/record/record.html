@@ -8,14 +8,14 @@
     <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
         <button small (click)="recorder.resetPeaks()">
             <ion-badge darkest-gray item-right>
-                {{recorder.percentPeaksAtMax}}% peaks @ max
+                {{webAudioRecorder.percentPeaksAtMax}}% peaks @ max
             </ion-badge>
         </button>
     </ion-buttons>
 </ion-navbar>
 
 <ion-content padding>
-    <vu-gauge height="2.5em" nbars="55" [value]="recorder.currentVolume" [max]="recorder.maxVolumeSinceReset">
+    <vu-gauge height="2.5em" nbars="55" [value]="webAudioRecorder.currentVolume" [max]="webAudioRecorder.maxVolumeSinceReset">
     </vu-gauge>
     <p class="gain-item-label">
         Gain: {{percentGain}}% ({{decibels}})
@@ -24,14 +24,14 @@
     <progress-slider [progress]="gainFactor/maxGainFactor" (change)="onGainChange($event)" (changeEnd)="onGainChangeEnd($event)">
     </progress-slider>
     <div class="recording-time">
-        {{recorder.currentTime}}
+        {{webAudioRecorder.currentTime}}
     </div>
     <div class="record-upload-buttons">
         <button logo-red [disabled]="!recorderIsReady()" (click)="onClickStartPauseButton()">
             <ion-icon [name]="recordButtonIcon">
             </ion-icon>
         </button>
-        <button logo-orange [disabled]="!recorderIsReady() || recorder.isInactive" (click)="onClickStopButton()">
+        <button logo-orange [disabled]="!recorderIsReady() || webAudioRecorder.isInactive" (click)="onClickStopButton()">
             <ion-icon name="square">
             </ion-icon>
         </button>

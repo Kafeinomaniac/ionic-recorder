@@ -42,7 +42,7 @@ const PAUSE_ICON: string = 'pause';
 export class RecordPage {
     private localDB: LocalDB;
     private appState: AppState;
-    private recorder: WebAudioRecorder;
+    private webAudioRecorder: WebAudioRecorder;
     private recordButtonIcon: string = START_RESUME_ICON;
     private percentGain: string;
     private maxGainFactor: number;
@@ -55,32 +55,13 @@ export class RecordPage {
     constructor(
         localDB: LocalDB,
         appState: AppState,
-        recorder: WebAudioRecorder
+        webAudioRecorder: WebAudioRecorder
     ) {
         console.log('constructor():RecordPage');
 
         this.localDB = localDB;
         this.appState = appState;
-        this.recorder = recorder;
-
-        // function that gets called with a newly created blob when
-        // we hit the stop button - saves blob to local db
-        this.recorder.onStopRecord = (blob: Blob) => {
-            let now: Date = new Date(),
-                name: string = now.getFullYear() + '-' +
-                    (now.getMonth() + 1) + '-' +
-                    now.getDate() + ' -- ' +
-                    now.toLocaleTimeString();
-            // this console.dir is here in order to monitor when Chrome is
-            // finally going to report some info in the string representation
-            // of Blob that it shows, which currently always says size == 0
-            console.dir(blob);
-            this.appState.getProperty('unfiledFolderKey').subscribe(
-                (unfiledFolderKey: number) => {
-                    this.localDB.createDataNode(name, unfiledFolderKey, blob)
-                        .subscribe();
-                }); // getProperty('unfiledFolderKey').subscribe(
-        }; // recorder.onStop = (blob: Blob) => { ...
+        this.webAudioRecorder = webAudioRecorder;
 
         // initialize with "remembered" gain values
         this.appState.getProperty('gain').subscribe(
@@ -101,11 +82,12 @@ export class RecordPage {
     }
 
     /**
-     * Returns whether the WebAudioApi recorder is fully initialized
+     * Returns whether this.ebAudioRecorder is fully initialized
      * @returns {boolean}
      */
     public recorderIsReady(): boolean {
-        return this.recorder && this.recorder.status === RecorderStatus.READY;
+        return this.webAudioRecorder &&
+            this.webAudioRecorder.status === RecorderStatus.READY_STATE;
     }
 
     /**
@@ -131,7 +113,7 @@ export class RecordPage {
         // convert fro position in [0, 1] to [0, this.maxGainFactor]
         this.gainFactor = position * this.maxGainFactor;
 
-        this.recorder.setGainFactor(this.gainFactor);
+        this.webAudioRecorder.setGainFactor(this.gainFactor);
 
         if (position === 0) {
             this.decibels = 'Muted';
@@ -149,20 +131,20 @@ export class RecordPage {
      */
     public onClickStartPauseButton(): void {
         // this.currentVolume += Math.abs(Math.random() * 10);
-        if (this.recorder.isRecording) {
+        if (this.webAudioRecorder.isRecording) {
             // we're recording (when clicked, so pause recording)
-            this.recorder.pause();
+            this.webAudioRecorder.pause();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
             // we're not recording (when clicked, so start/resume recording)
-            if (this.recorder.isInactive) {
+            if (this.webAudioRecorder.isInactive) {
                 // inactive, we're stopped (rather than paused) so start
-                this.recorder.start();
+                this.webAudioRecorder.start();
             }
             else {
                 // it's active, we're just paused, so resume
-                this.recorder.resume();
+                this.webAudioRecorder.resume();
             }
             this.recordButtonIcon = PAUSE_ICON;
         }
@@ -173,7 +155,7 @@ export class RecordPage {
      * @returns {void}
      */
     public onClickStopButton(): void {
-        this.recorder.stop();
+        this.webAudioRecorder.stop();
         this.recordButtonIcon = START_RESUME_ICON;
     }
 }
