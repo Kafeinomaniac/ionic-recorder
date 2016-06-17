@@ -5,7 +5,8 @@ import {
 } from '@angular/core';
 
 import {
-    formatTime
+    formatTime,
+    makeTimestamp
 } from '../../utils/utils';
 
 import {
