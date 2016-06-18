@@ -23,7 +23,6 @@ import {
 import {
     ComponentFixture,
     TestComponentBuilder
-
 } from '@angular/compiler/testing';
 
 import {
@@ -37,6 +36,10 @@ import {
 import {
     AppState
 } from '../../services/app-state/app-state';
+
+import {
+    WebAudioRecorder
+} from '../../services/web-audio/web-audio-recorder';
 
 resetBaseTestProviders();
 setBaseTestProviders(
@@ -53,7 +56,8 @@ let recordPageFixture: ComponentFixture<RecordPage> = null;
 describe('RecordPage', () => {
     beforeEachProviders(() => [
         LocalDB,
-        AppState
+        AppState,
+        WebAudioRecorder
     ]);
 
     beforeEach(injectAsync(
