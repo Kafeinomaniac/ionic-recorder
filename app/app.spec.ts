@@ -42,19 +42,19 @@ import {
     LoadingPage
 } from './pages/loading/loading';
 
-let platform: Platform,
-    menuController: MenuController,
-    localDB: LocalDB,
-    appState: AppState,
+let platform: Platform = new Platform(),
+    menuController: MenuController = new MenuController(),
+    localDB: LocalDB = new LocalDB(),
+    appState: AppState = new AppState(localDB),
     app: IonicRecorderApp;
 
 describe('IonicRecorderApp', () => {
 
     beforeEach(() => {
-        platform = new Platform();
-        menuController = new MenuController();
-        localDB = new LocalDB();
-        appState = new AppState(localDB);
+        // platform = new Platform();
+        // menuController = new MenuController();
+        // localDB = new LocalDB();
+        // appState = new AppState(localDB);
         app = new IonicRecorderApp(
             platform,
             menuController,

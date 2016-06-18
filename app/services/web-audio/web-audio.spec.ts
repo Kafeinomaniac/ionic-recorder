@@ -1,3 +1,1 @@
-export function main(): void {
-    'use strict';
-}
+// Copyright (c) 2016 Tracktunes Inc
