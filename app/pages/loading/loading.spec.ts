@@ -12,7 +12,6 @@ import {
 import {
     resetBaseTestProviders,
     setBaseTestProviders,
-    beforeEachProviders,
     beforeEach,
     describe,
     expect,
@@ -25,19 +24,6 @@ import {
     TestComponentBuilder
 
 } from '@angular/compiler/testing';
-
-import {
-    Config,
-    Form,
-    App,
-    NavController,
-    NavParams,
-    Platform
-} from 'ionic-angular';
-
-import {
-    provide
-} from '@angular/core';
 
 import {
     LoadingPage
@@ -55,29 +41,7 @@ setBaseTestProviders(
 let loadingPage: LoadingPage = null;
 let loadingPageFixture: ComponentFixture<LoadingPage> = null;
 
-class MockClass {
-    public get(): any {
-        return {};
-    }
-
-    public getBoolean(): boolean {
-        return true;
-    }
-
-    public getNumber(): number {
-        return 42;
-    }
-}
-
 describe('LoadingPage', () => {
-    beforeEachProviders(() => [
-        Form,
-        provide(NavController, { useClass: MockClass }),
-        provide(NavParams, { useClass: MockClass }),
-        provide(Config, { useClass: MockClass }),
-        provide(App, { useClass: MockClass }),
-        provide(Platform, { useClass: MockClass })
-    ]);
 
     beforeEach(injectAsync(
         [TestComponentBuilder],
