@@ -5,11 +5,8 @@ import {
 } from '@angular/core';
 
 import {
+    AUDIO_CONTEXT,
     formatTime
-} from '../../utils/utils';
-
-import {
-    AUDIO_CONTEXT
 } from './web-audio-common';
 
 ///////////////////////////////////////////////////////////////////////////////

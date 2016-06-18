@@ -6,7 +6,7 @@ import {
 
 import {
     AppState
-} from '../../providers/app-state/app-state';
+} from '../../services/app-state/app-state';
 
 /**
  * @name SettingsPage

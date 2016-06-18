@@ -18,7 +18,7 @@ import {
 
 import {
     TreeNode
-} from '../../providers/local-db/local-db';
+} from '../../services/local-db/local-db';
 
 interface ValidationResult {
     [key: string]: boolean;

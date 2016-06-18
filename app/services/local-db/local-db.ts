@@ -8,16 +8,14 @@ import {
     Observable
 } from 'rxjs/Rx';
 
-import {
-    copyFromObject,
-    prependArray
-} from '../../utils/utils';
-
 // non-exported module globals
 
 const DB_VERSION: number = 2;
+
 const DB_TREE_STORE_NAME: string = 'blobTree';
+
 const DB_DATA_STORE_NAME: string = 'dataTable';
+
 const STORE_EXISTS_ERROR_CODE: number = 0;
 
 // module exports
@@ -27,11 +25,32 @@ const STORE_EXISTS_ERROR_CODE: number = 0;
 // the DB to initialize.  If DB does not initialize
 // under this time (in msec) then some error will occur
 export const MAX_DB_INIT_TIME: number = 600;
+
 export const DB_NAME: string = 'ionic-recorder-db';
+
 export const DB_NO_KEY: number = 0;
-export const DB_KEY_PATH: string = 'id';
 
 // NB: DB_KEY_PATH must be an optional field in both these interfaces
+export const DB_KEY_PATH: string = 'id';
+
+// helper functions
+
+export function copyFromObject(src: Object, dest: Object): Object {
+    'use strict';
+    for (let i in src) {
+        if (src.hasOwnProperty(i)) {
+            dest[i] = src[i];
+        }
+    }
+    return dest;
+}
+
+export function prependArray(value: any, arr: any[]): any[] {
+    'use strict';
+    let newArray: any[] = arr.slice(0);
+    newArray.unshift(value);
+    return newArray;
+}
 
 export interface DataNode {
     data: any;
@@ -324,12 +343,14 @@ export class LocalDB {
      * @param {string} storeName - the name of the db store where we're
      * creating the item
      * @param {any} item - the item we're about to store in the db store
-     * @returns {Observable<any>} Observable that emits the item (same
-     * as 'item'  input argument, but it will have a DB_KEY_PATH property
-     * that has the correct key in the store where it was created)
+     * @returns {Observable<number>} Observable that emits the item key
+     * that was automatically incremented for the newly created (stored) item.
      */
-    private createStoreItem(storeName: string, item: any): Observable<any> {
-        let source: Observable<any> = Observable.create((observer) => {
+    private createStoreItemReturningKey(
+        storeName: string,
+        item: any
+    ): Observable<any> {
+        let source: Observable<number> = Observable.create((observer) => {
             if (!item) {
                 observer.error('Cannot add falsy item');
             }
@@ -342,8 +363,7 @@ export class LocalDB {
                     (store: IDBObjectStore) => {
                         let addRequest: IDBRequest = store.add(item);
                         addRequest.onsuccess = (event: IDBEvent) => {
-                            item[DB_KEY_PATH] = addRequest.result;
-                            observer.next(item);
+                            observer.next(addRequest.result);
                             observer.complete();
                         };
                         addRequest.onerror = (event: IDBEvent) => {
@@ -351,10 +371,37 @@ export class LocalDB {
                         };
                     },
                     (error) => {
-                        observer.error('in getStore: ' + error);
+                        observer.error(
+                            'in createStoreItemReturningKey: ' + error
+                        );
                     }
                 ); // getStore().subscribe(
             }
+        });
+        return source;
+    }
+
+    /**
+     * Create a new item in a db store
+     * @param {string} storeName - the name of the db store where we're
+     * creating the item
+     * @param {any} item - the item we're about to store in the db store
+     * @returns {Observable<any>} Observable that emits the item (same
+     * as 'item'  input argument, but it will have a DB_KEY_PATH property
+     * that has the correct key in the store where it was created)
+     */
+    private createStoreItem(storeName: string, item: any): Observable<any> {
+        let source: Observable<any> = Observable.create((observer) => {
+            this.createStoreItemReturningKey(storeName, item).subscribe(
+                (key: number) => {
+                    item[DB_KEY_PATH] = key;
+                    observer.next(item);
+                    observer.complete();
+                },
+                (error) => {
+                    observer.error('in createStoreItem: ' + error);
+                }
+            ); // getStore().subscribe(
         });
         return source;
     }
@@ -1061,6 +1108,7 @@ export class LocalDB {
         name: string,
         parentKey: number
     ): Observable<ParentChild> {
+        console.log('createFolderNode(' + name + ', ' + parentKey + ')');
         let source: Observable<ParentChild> =
             Observable.create((observer) => {
                 this.getNodeByNameInParent(name, parentKey).subscribe(
@@ -1269,6 +1317,8 @@ export class LocalDB {
                 this.getNodeByNameInParent(name, parentKey).subscribe(
                     (readTreeNode: TreeNode) => {
                         if (readTreeNode) {
+                            console.log(
+                                'got node by name: ' + readTreeNode.name);
                             observer.next(readTreeNode);
                             observer.complete();
                         }

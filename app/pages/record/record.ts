@@ -11,16 +11,16 @@ import {
 import {
     AppState,
     GainState
-} from '../../providers/app-state/app-state';
+} from '../../services/app-state/app-state';
 
 import {
     WebAudioRecorder,
     RecorderStatus
-} from '../../providers/web-audio/web-audio-recorder';
+} from '../../services/web-audio/web-audio-recorder';
 
 import {
     LocalDB
-} from '../../providers/local-db/local-db';
+} from '../../services/local-db/local-db';
 
 import {
     ProgressSlider

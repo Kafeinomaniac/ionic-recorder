@@ -32,11 +32,11 @@ import {
 
 import {
     LocalDB
-} from './providers/local-db/local-db';
+} from './services/local-db/local-db';
 
 import {
     AppState
-} from './providers/app-state/app-state';
+} from './services/app-state/app-state';
 
 import {
     LoadingPage

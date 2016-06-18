@@ -16,12 +16,12 @@ import {
     DataNode,
     ParentChild,
     DB_KEY_PATH
-} from '../../providers/local-db/local-db';
+} from '../../services/local-db/local-db';
 
 import {
     AppState,
     ROOT_FOLDER_NAME
-} from '../../providers/app-state/app-state';
+} from '../../services/app-state/app-state';
 
 import {
     AddFolderPage

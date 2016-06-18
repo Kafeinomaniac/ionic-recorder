@@ -20,11 +20,11 @@ import {
 
 import {
     LocalDB
-} from './providers/local-db/local-db';
+} from './services/local-db/local-db';
 
 import {
     AppState
-} from './providers/app-state/app-state';
+} from './services/app-state/app-state';
 
 import {
     LoadingPage
@@ -50,7 +50,7 @@ import {
 // (but only the DB created by this app gets erased)
 // import {
 //     DB_NAME
-// } from './providers/local-db/local-db';
+// } from './services/local-db/local-db';
 // let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
 // request.onsuccess = function(): void {
 //     console.log('deleteDatabase: SUCCESS');
