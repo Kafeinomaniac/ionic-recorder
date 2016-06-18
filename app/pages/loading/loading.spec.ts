@@ -43,10 +43,6 @@ import {
     LoadingPage
 } from './loading';
 
-// import {
-//     TestUtils
-// } from '../../services/test-utils/test-utils';
-
 resetBaseTestProviders();
 setBaseTestProviders(
     TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
@@ -98,7 +94,7 @@ describe('LoadingPage', () => {
                     // http://stackoverflow.com/a/30741722
                     setTimeout(function (): void { throw reason; });
                 });
-        })) ;
+        }));
 
     it('initialises', () => {
         expect(loadingPage).not.toBeNull();
