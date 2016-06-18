@@ -27,19 +27,6 @@ import {
 } from '@angular/compiler/testing';
 
 import {
-    Config,
-    Form,
-    App,
-    NavController,
-    NavParams,
-    Platform
-} from 'ionic-angular';
-
-import {
-    provide
-} from '@angular/core';
-
-import {
     RecordPage
 } from './record';
 
@@ -63,30 +50,8 @@ setBaseTestProviders(
 let recordPage: RecordPage = null;
 let recordPageFixture: ComponentFixture<RecordPage> = null;
 
-class MockClass {
-    public get(): any {
-        return {};
-    }
-
-    public getBoolean(): boolean {
-        return true;
-    }
-
-    public getNumber(): number {
-        return 42;
-    }
-}
-
 describe('RecordPage', () => {
     beforeEachProviders(() => [
-        Form,
-        provide(NavController, { useClass: MockClass }),
-        provide(NavParams, { useClass: MockClass }),
-        provide(Config, { useClass: MockClass }),
-        provide(App, { useClass: MockClass }),
-        provide(Platform, { useClass: MockClass }),
-        // provide(LocalDB, { useClass: MockClass }),
-        // provide(AppState, { useClass: MockClass })
         LocalDB,
         AppState
     ]);
