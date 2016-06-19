@@ -71,7 +71,6 @@ describe('RecordPage', () => {
                     recordPageFixture.detectChanges();
                 })
                 .catch((reason: any): void => {
-                    // throw the error out to the console -
                     // http://stackoverflow.com/a/30741722
                     setTimeout(function (): void { throw reason; });
                 });
