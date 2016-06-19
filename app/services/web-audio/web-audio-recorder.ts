@@ -9,6 +9,11 @@ import {
     formatTime
 } from './web-audio-common';
 
+import {
+    DB_FILE_STORE_NAME,
+    LocalDB
+} from '../local-db/local-db';
+
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.
 const MONITOR_REFRESH_RATE_HZ: number = 24;
@@ -21,10 +26,11 @@ const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 const PROCESSING_BUFFER_LENGTH: number = 256;
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH
-const DB_CHUNK_LENGTH: number = 512 * PROCESSING_BUFFER_LENGTH;
+const DB_CHUNK_LENGTH: number = 256 * PROCESSING_BUFFER_LENGTH;
 
-// pre-allocate the DB_CHUNK
-const DB_CHUNK: Float32Array = new Float32Array(DB_CHUNK_LENGTH);
+// pre-allocate the double chunk buffers used for saving to DB
+const DB_CHUNK1: Float32Array = new Float32Array(DB_CHUNK_LENGTH);
+const DB_CHUNK2: Float32Array = new Float32Array(DB_CHUNK_LENGTH);
 
 // statuses
 export enum RecorderStatus {
@@ -78,6 +84,10 @@ export class WebAudioRecorder {
     private nDbBuffers: number;
     private dbChunkIndex: number;
     private lastDbFileName: string;
+    private localDB: LocalDB;
+    private lastDbStartKey: number;
+    private lastDbEndKey: number;
+    private doubleBufferIndex: number;
 
     public status: RecorderStatus;
     public sampleRate: number;
@@ -89,8 +99,10 @@ export class WebAudioRecorder {
     public percentPeaksAtMax: string;
     public onStopRecord: (recordedBlob: Blob) => void;
 
-    constructor() {
+    constructor(localDB: LocalDB) {
         console.log('constructor():WebAudioRecorder');
+
+        this.localDB = localDB;
 
         if (!AUDIO_CONTEXT) {
             this.status = RecorderStatus.NO_CONTEXT_ERROR;
@@ -161,6 +173,24 @@ export class WebAudioRecorder {
         }
     }
 
+    private swapChunks(): void {
+        if (this.doubleBufferIndex === 0) {
+            this.doubleBufferIndex = 1;
+        }
+        else if (this.doubleBufferIndex === 1) {
+            this.doubleBufferIndex = 0;
+        }
+    }
+
+    private selectChunk(): Float32Array {
+        if (this.doubleBufferIndex === 0) {
+            return DB_CHUNK1;
+        }
+        else if (this.doubleBufferIndex === 1) {
+            return DB_CHUNK2;
+        }
+    }
+
     /**
      * Create audioGainNode & scriptProcessorNode
      * @returns {void}
@@ -184,31 +214,72 @@ export class WebAudioRecorder {
                 // put the maximum of current buffer into this.currentVolume
                 this.currentVolume = 0;
                 for (i = 0; i < PROCESSING_BUFFER_LENGTH; i++) {
+                    // value is the float value of the current PCM sample
+                    // it is expected to be in [-1, 1] but goes beyond that
+                    // sometimes
                     value = inputData[i];
+
+                    // absValue is what we use to monitor volume = abs(value)
                     absValue = Math.abs(value);
+
+                    // clip monitored volume at [0, 1]
                     if (absValue > 1) {
                         absValue = 1;
                     }
+
+                    // keep track of volume (for monitoring) via
+                    // this.currentVolume, which is set to the max
+                    // in absolute value of each processing buffer
                     if (absValue > this.currentVolume) {
                         this.currentVolume = absValue;
                     }
+
+                    // fill up double-buffer active buffer if recording and
+                    // save each time a fill-up occurs
                     if (this.isRecording) {
+                        // grab current chunk buffer from double buffer
+                        let chunk: Float32Array = this.selectChunk();
                         if (this.nRecordedProcessingBuffers === 0 &&
                             this.dbChunkIndex === 0) {
-                            // we are at the very beginning, at 1st sample
+                            // we are at the very beginning: at 1st sample.
                             // set the filename to use for this recording
                             // according to the time now
                             this.lastDbFileName = makeTimestamp();
                         }
                         if (this.dbChunkIndex === DB_CHUNK_LENGTH) {
-                            console.log('Saving chunk ' + this.nDbBuffers +
-                                '; Filename: ' + this.lastDbFileName);
-                            this.nDbBuffers++;
+                            // we reached the end of a chunk, save it to DB
+                            // but before we save, swap chunks to let
+                            // processing continue in the other chunk
+                            // before we swap chunks set the index to 0 to
+                            // start at the beginning of the buffer
                             this.dbChunkIndex = 0;
+                            this.swapChunks();
+                            this.localDB.createStoreItemReturningKey(
+                                DB_FILE_STORE_NAME,
+                                { data: chunk }).subscribe(
+                                (key: number) => {
+                                    console.log('Saving chunk ' +
+                                        this.nDbBuffers + 1 +
+                                        '; Filename: ' +
+                                        this.lastDbFileName +
+                                        '; nSamples: ' +
+                                        DB_CHUNK_LENGTH +
+                                        '; Key: ' + key);
+                                    if (this.nDbBuffers === 0) {
+                                        // first chunk just saved, save its key
+                                        this.lastDbStartKey = key;
+                                    }
+                                    // increment the buffers-saved counter
+                                    // only after we've saved
+                                    this.nDbBuffers++;
+                                    // current key returned is the last key,
+                                    // no matter if it's the first chunk or not
+                                    this.lastDbEndKey = key;
+                                });
                         }
                         else {
                             // keep filling up DB_CHUNK
-                            DB_CHUNK[this.dbChunkIndex] = value;
+                            chunk[this.dbChunkIndex] = value;
                             this.dbChunkIndex++;
                         }
                     }
@@ -369,15 +440,44 @@ export class WebAudioRecorder {
     public stop(): void {
         this.isRecording = false;
         this.isInactive = true;
-        // finish off saving the last of it
-        if (this.dbChunkIndex) {
-            // we have some samples left
-            console.log('Saving chunk ' + this.nDbBuffers +
-                ' (# samples = ' + this.dbChunkIndex + ')' +
-                '; Filename: ' + this.lastDbFileName);
+        // finish off saving the last of it, if there are some
+        // samples left
+        if (this.dbChunkIndex !== 0 && this.dbChunkIndex !== undefined) {
+            // we have some samples left save them & reset
+            let chunk: Float32Array = this.selectChunk();
+            this.swapChunks();
+            this.localDB.createStoreItemReturningKey(
+                DB_FILE_STORE_NAME,
+                {
+                    data: chunk.subarray(
+                        0,
+                        this.dbChunkIndex - 1
+                    )
+                }).subscribe(
+                (key: number) => {
+                    console.log('Saving chunk ' +
+                        this.nDbBuffers + 1 +
+                        '; Filename: ' +
+                        this.lastDbFileName +
+                        '; nSamples: ' +
+                        this.dbChunkIndex +
+                        '; Key: ' + key);
+                    if (this.nDbBuffers === 0) {
+                        // first chunk saved, save its key
+                        this.lastDbStartKey = key;
+                    }
+                    this.doubleBufferIndex = 0;
+                    this.nRecordedProcessingBuffers = 0;
+                    this.nDbBuffers = 0;
+                    this.dbChunkIndex = 0;
+                });
         }
-        this.nRecordedProcessingBuffers = 0;
-        this.nDbBuffers = 0;
-        this.dbChunkIndex = 0;
+        else {
+            // no samples left, just reset
+            this.doubleBufferIndex = 0;
+            this.nRecordedProcessingBuffers = 0;
+            this.nDbBuffers = 0;
+            this.dbChunkIndex = 0;
+        }
     }
 }

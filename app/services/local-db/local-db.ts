@@ -16,6 +16,8 @@ const DB_TREE_STORE_NAME: string = 'blobTree';
 
 const DB_DATA_STORE_NAME: string = 'dataTable';
 
+export const DB_FILE_STORE_NAME: string = 'fileTable';
+
 const STORE_EXISTS_ERROR_CODE: number = 0;
 
 // module exports
@@ -129,7 +131,7 @@ export class LocalDB {
      */
     // always returns an object with a 'data' field (a DataNode)
     public makeDataNode(newData: any): DataNode {
-        if (typeof newData === 'object' && newData.data) {
+        if (typeof newData === 'object' && newData['data'] !== undefined) {
             return newData;
         }
         else {
@@ -212,7 +214,6 @@ export class LocalDB {
                     observer.complete();
                 }
                 else {
-                    // console.warn('... no DB yet ...');
                     setTimeout(repeat, MAX_DB_INIT_TIME / 10);
                 }
             };
@@ -264,6 +265,12 @@ export class LocalDB {
                     // create internal data-table store
                     openRequest.result.createObjectStore(
                         DB_DATA_STORE_NAME,
+                        { keyPath: DB_KEY_PATH, autoIncrement: true }
+                    );
+
+                    // create internal file store
+                    openRequest.result.createObjectStore(
+                        DB_FILE_STORE_NAME,
                         { keyPath: DB_KEY_PATH, autoIncrement: true }
                     );
                 }
@@ -346,10 +353,10 @@ export class LocalDB {
      * @returns {Observable<number>} Observable that emits the item key
      * that was automatically incremented for the newly created (stored) item.
      */
-    private createStoreItemReturningKey(
+    public createStoreItemReturningKey(
         storeName: string,
         item: any
-    ): Observable<any> {
+    ): Observable<number> {
         let source: Observable<number> = Observable.create((observer) => {
             if (!item) {
                 observer.error('Cannot add falsy item');
@@ -361,6 +368,7 @@ export class LocalDB {
             else {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
+                        console.log('creating item: ' + item);
                         let addRequest: IDBRequest = store.add(item);
                         addRequest.onsuccess = (event: IDBEvent) => {
                             observer.next(addRequest.result);
@@ -691,7 +699,6 @@ export class LocalDB {
         name: string,
         parentKey: number
     ): Observable<TreeNode> {
-        console.warn('getNodeByNameInParent(' + name + ', ' + parentKey + ')');
         let source: Observable<TreeNode> = Observable.create((observer) => {
             this.readNodesByName(name).subscribe(
                 (nodes: TreeNode[]) => {
@@ -1110,7 +1117,6 @@ export class LocalDB {
         name: string,
         parentKey: number
     ): Observable<ParentChild> {
-        console.log('createFolderNode(' + name + ', ' + parentKey + ')');
         let source: Observable<ParentChild> =
             Observable.create((observer) => {
                 this.getNodeByNameInParent(name, parentKey).subscribe(
@@ -1259,10 +1265,6 @@ export class LocalDB {
                 this.getNodeByNameInParent(name, parentKey).subscribe(
                     (readTreeNode: TreeNode) => {
                         if (readTreeNode) {
-                            console.warn(
-                                'got(read) data node by name: ' +
-                                readTreeNode.name);
-                            // found a node in parent by name 'name'
                             this.readNodeData(readTreeNode).subscribe(
                                 (dataNode: DataNode) => {
                                     // assume this always returns non null data
@@ -1278,9 +1280,6 @@ export class LocalDB {
                             );
                         } // if (node) {
                         else {
-                            console.warn(
-                                'creating data node by name: ' + name);
-                            // no node in parent by name 'name', create it
                             this.createDataNode(
                                 name, parentKey, data).subscribe(
                                 (parentChild: ParentChild) => {
@@ -1324,15 +1323,10 @@ export class LocalDB {
                 this.getNodeByNameInParent(name, parentKey).subscribe(
                     (readTreeNode: TreeNode) => {
                         if (readTreeNode) {
-                            console.warn(
-                                'got(read) folder node by name: ' +
-                                readTreeNode.name);
                             observer.next(readTreeNode);
                             observer.complete();
                         }
                         else {
-                            console.warn(
-                                'creating folder node by name: ' + name);
                             this.createFolderNode(
                                 name, parentKey).subscribe(
                                 (parentChild: ParentChild) => {
@@ -1417,7 +1411,6 @@ export class LocalDB {
      * is done
      */
     private deleteFolderNode(folderNode: TreeNode): Observable<void> {
-        console.log('deleteFolderNode()');
         let source: Observable<void> = Observable.create((observer) => {
             this.deleteTreeStoreItem(folderNode[DB_KEY_PATH]).subscribe(
                 () => {
