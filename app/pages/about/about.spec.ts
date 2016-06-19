@@ -14,7 +14,7 @@ import {
     setBaseTestProviders,
     beforeEachProviders,
     beforeEach,
-    // describe,
+    describe,
     expect,
     injectAsync,
     it
