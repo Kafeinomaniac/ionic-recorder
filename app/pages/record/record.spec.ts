@@ -14,7 +14,7 @@ import {
     setBaseTestProviders,
     beforeEachProviders,
     beforeEach,
-    describe,
+    // describe,
     expect,
     injectAsync,
     it
@@ -50,8 +50,8 @@ setBaseTestProviders(
     ]
 );
 
-let recordPage: RecordPage = null;
-let recordPageFixture: ComponentFixture<RecordPage> = null;
+let recordPage: RecordPage = null,
+    recordPageFixture: ComponentFixture<RecordPage> = null;
 
 describe('RecordPage', () => {
     beforeEachProviders(() => [

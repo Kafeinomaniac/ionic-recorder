@@ -1,15 +1,31 @@
-### v0.0.7-alpha
+## 0.0.8-alpha
+* Update to Ionic 2.0.0-beta.9 / Angular 2.0.0-rc.1
+  (numerous breaking changes were made since rc.1)
+* Made karma / jasmine to work after many breaking changes
+* Changed from using MediaRecorder to ScriptProcessorNode approach
+  no longer recording webm but recording wav instead
+* New chunking method that saves current recording one chunk at a 
+  time to IndexedDB. This allows for recording as large a wav file as
+  your hard drive would allow, but with very little memory overhead.
+  At this stage we're almost writing to DB but not quite. However,
+  we're chunking and filling the temporary memory chunks and testing
+  this and it runs for many days straight. We'll add the final save
+  after some serious refactoring and testing of LocalDB, next, and
+  we'll keep this feature in the 0.0.8-alpha.x series.  The 0.0.9
+  series will start when we're playing thse DB files.
+  
+## 0.0.7-alpha
 * Both in `audio-player` and in `record`, the html now refers to `web-audio`
   functions directly.  This makes things simpler and makes `web-audio` more
   useful as a standalone module.  More separation of graphics & action.
 * Got rid of many timing bugs.  Running in dev mode with no exceptions
   thrown.  More stable.
 
-### v0.0.6-alpha
+## 0.0.6-alpha
 * Got rid of some record page timing / event issues that caused either
   the navbar to go blank or an error to be thrown
 
-### v0.0.5-alpha
+## 0.0.5-alpha
 * Returned to alpha.1, etc naming, because we're going to create a commit
   script that automatically increments that number on each commit
 * Main change: got rid of master clock from record.ts, the app is 50% more 

@@ -55,7 +55,7 @@
 
 // jasmine.DEFAULT_TIMEOUT_INTERVAL = MAX_DB_INIT_TIME * 10;
 
-// xdescribe('When localDB initialized', () => {
+// describe('When localDB initialized', () => {
 //     it('localDB is not falsy', (done) => {
 //         setTimeout(
 //             () => {
@@ -83,7 +83,7 @@
 //     });
 // });
 
-// xdescribe('When DB is available -- CREATING A TREE', () => {
+// describe('When DB is available -- CREATING A TREE', () => {
 //     it('db is not falsy', (done) => {
 //         setTimeout(
 //             () => {

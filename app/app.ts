@@ -14,9 +14,9 @@ import {
     MenuController
 } from 'ionic-angular';
 
-// import {
-//     StatusBar
-// } from 'ionic-native';
+import {
+    StatusBar
+} from 'ionic-native';
 
 import {
     LocalDB
@@ -81,8 +81,8 @@ interface TabPage {
 })
 export class IonicRecorderApp {
     // NOTE: either one of these @ViewChild declarations works, use only one ..
-    // @ViewChild(Tabs) private tabs: Tabs;
-    @ViewChild('navTabs') private tabs: Tabs;
+    @ViewChild(Tabs) private tabs: Tabs;
+    // @ViewChild('navTabs') private tabs: Tabs;
 
     private platform: Platform;
     private menu: MenuController;
@@ -112,12 +112,6 @@ export class IonicRecorderApp {
             { tabIndex: 4, title: 'About', component: AboutPage }
         ];
 
-        // load index of last selected tab from DB and select it
-        this.appState.getProperty('lastTabIndex').subscribe(
-            (tabIndex: number) => {
-                this.tabs.select(tabIndex);
-            });
-
         this.initializeApp();
     }
 
@@ -126,15 +120,25 @@ export class IonicRecorderApp {
      * @returns {void}
      */
     public initializeApp(): void {
+        // NOTE: this.tabs @ViewChild property is undefined here
+        console.log('initializeApp()');
+        console.log('this.platform.ready: ' + this.platform.ready);
         this.platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
-            // StatusBar.styleDefault();
+            StatusBar.styleDefault();
 
-            // NOTE: uncomment next line to pick the page you want selected
-            // first on next incarnation of the app.
+            // NOTE: this.tabs @ViewChild property is *defined* here
+
+            // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
+
+            this.appState.getProperty('lastTabIndex').subscribe(
+                (tabIndex: number) => {
+                    this.tabs.select(tabIndex);
+                });
+
         });
     }
 
@@ -166,7 +170,13 @@ export class IonicRecorderApp {
      */
     public goToPage(page: TabPage): void {
         let tabIndex: number = page.tabIndex;
-        this.tabs.select(tabIndex);
+        console.log('goToPage: ' + tabIndex);
+        if (typeof this.tabs !== undefined) {
+            // we need this conditional because @ViewChild does not work
+            // when karma and this.tabs ends up undefined in karma
+            // TODO: make sure you get rid of this hack
+            this.tabs.select(tabIndex);
+        }
         this.menu.close();
     }
 }

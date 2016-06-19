@@ -323,7 +323,9 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public setGainFactor(factor: number): void {
-        this.audioGainNode.gain.value = factor;
+        if (this.status === RecorderStatus.READY_STATE) {
+            this.audioGainNode.gain.value = factor;
+        }
         this.resetPeaks();
     }
 

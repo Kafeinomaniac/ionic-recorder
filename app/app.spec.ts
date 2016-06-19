@@ -1,104 +1,87 @@
-// import {
-//     ADDITIONAL_TEST_BROWSER_PROVIDERS,
-//     TEST_BROWSER_STATIC_PLATFORM_PROVIDERS
-// } from '@angular/platform-browser/testing/browser_static';
+// Copyright (c) 2016 Tracktunes Inc
 
-// import {
-//     BROWSER_APP_DYNAMIC_PROVIDERS
-// } from '@angular/platform-browser-dynamic';
+import {
+    ADDITIONAL_TEST_BROWSER_PROVIDERS,
+    TEST_BROWSER_STATIC_PLATFORM_PROVIDERS
+} from '@angular/platform-browser/testing/browser_static';
 
-// import {
-//     resetBaseTestProviders,
-//     setBaseTestProviders
-// } from '@angular/core/testing';
+import {
+    BROWSER_APP_DYNAMIC_PROVIDERS
+} from '@angular/platform-browser-dynamic';
 
-// import {
-//     Observable
-// } from 'rxjs/Rx';
+import {
+    resetBaseTestProviders,
+    setBaseTestProviders
+} from '@angular/core/testing';
 
-// import {
-//     IonicRecorderApp
-// } from './app';
+import {
+    Observable
+} from 'rxjs/Rx';
 
-// // import {
-// //     LoadingPage
-// // } from './pages/loading/loading';
+import {
+    IonicRecorderApp
+} from './app';
 
-// resetBaseTestProviders();
-// setBaseTestProviders(
-//     TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
-//     [
-//         BROWSER_APP_DYNAMIC_PROVIDERS,
-//         ADDITIONAL_TEST_BROWSER_PROVIDERS
-//     ]
-// );
+resetBaseTestProviders();
+setBaseTestProviders(
+    TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
+    [
+        BROWSER_APP_DYNAMIC_PROVIDERS,
+        ADDITIONAL_TEST_BROWSER_PROVIDERS
+    ]
+);
 
-// class MockClass {
-//     public ready(): any {
-//         return new Promise((resolve: Function) => {
-//             resolve();
-//         });
-//     }
+class MockClass {
+  public ready(): any {
+    return new Promise((resolve: Function) => {
+      resolve();
+    });
+  }
 
-//     public close(): any {
-//         return true;
-//     }
+  public close(): any {
+    return true;
+  }
 
-//     public setRoot(): any {
-//         return true;
-//     }
-// }
+  public setRoot(): any {
+    return true;
+  }
+}
 
-// class MockAppState {
-//     public getProperty(propertyName: string): Observable<any> {
-//         let source: Observable<any> = Observable.create((observer) => {
-//             observer.next(null);
-//             observer.complete();
-//         });
-//         return source;
-//     }
+class MockAppState {
 
-//     public updateProperty(
-//         propertyName: string,
-//         propertyValue: any
-//     ): Observable<boolean> {
-//         let source: Observable<boolean> = Observable.create((observer) => {
-//             observer.next(true);
-//             observer.complete();
-//         });
-//         return source;
-//     }
-// }
+    public getProperty(propertyName: string): Observable<any> {
+        let source: Observable<any> = Observable.create((observer) => {
+            console.log('PROP NAME: ' + propertyName);
+            observer.next(1);
+            observer.complete();
+        });
+        return source;
+    }
 
-// let app: IonicRecorderApp = null;
+    public updateProperty(
+        propertyName: string,
+        propertyValue: any
+    ): Observable<boolean> {
+        let source: Observable<boolean> = Observable.create((observer) => {
+            observer.next(false);
+            observer.complete();
+        });
+        return source;
+    }
+}
 
-// describe('IonicRecorderApp', () => {
+let app: IonicRecorderApp = null;
 
-//     beforeEach(() => {
-//         let mockClass: any = (<any>new MockClass()),
-//             mockAppState: any = (<any>new MockAppState());
-//         app = new IonicRecorderApp(
-//             mockClass,
-//             mockClass,
-//             mockAppState
-//         );
-//     });
+describe('IonicRecorderApp', () => {
 
-//     it('initialises with four possible pages', () => {
-//         expect(app['pages'].length).toEqual(4);
-//     });
+    beforeEach(() => {
+        let mockClass: any = (<any>new MockClass()),
+            mockAppState: any = (<any>new MockAppState());
+        app = new IonicRecorderApp(mockClass, mockClass, mockAppState);
+    });
 
-//     // it('initialises with loadingPage as root page', () => {
-//     //     expect(app['rootPage']).toBeTruthy();
-//     //     expect(app['rootPage']).toEqual(LoadingPage);
-//     // });
+    it('initialises', () => {
+        expect(app).not.toBeNull();
+    });
 
-//     // it('goes to a page', () => {
-//     //     spyOn(app['menu'], 'close');
-//     //     // cant be bothered to set up DOM testing for
-//     //     // app.ts to get access to @ViewChild (Nav)
-//     //     app['nav'] = (<any>app['menu']);
-//     //     app.goToPage(app['pages'][1]);
-//     //     expect(app['menu']['close']).toHaveBeenCalled();
-//     // });
-// });
+});
