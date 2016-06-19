@@ -691,6 +691,7 @@ export class LocalDB {
         name: string,
         parentKey: number
     ): Observable<TreeNode> {
+        console.warn('getNodeByNameInParent(' + name + ', ' + parentKey + ')');
         let source: Observable<TreeNode> = Observable.create((observer) => {
             this.readNodesByName(name).subscribe(
                 (nodes: TreeNode[]) => {
@@ -707,7 +708,8 @@ export class LocalDB {
                         }
                     }
                     if (nFound > 1) {
-                        observer.error('unique name violation 1');
+                        observer.error('unique name violation 1 - found ' +
+                            nFound + ' of name: ' + name);
                     }
                     else {
                         observer.next(nodeFound);
@@ -1257,6 +1259,9 @@ export class LocalDB {
                 this.getNodeByNameInParent(name, parentKey).subscribe(
                     (readTreeNode: TreeNode) => {
                         if (readTreeNode) {
+                            console.warn(
+                                'got(read) data node by name: ' +
+                                readTreeNode.name);
                             // found a node in parent by name 'name'
                             this.readNodeData(readTreeNode).subscribe(
                                 (dataNode: DataNode) => {
@@ -1273,6 +1278,8 @@ export class LocalDB {
                             );
                         } // if (node) {
                         else {
+                            console.warn(
+                                'creating data node by name: ' + name);
                             // no node in parent by name 'name', create it
                             this.createDataNode(
                                 name, parentKey, data).subscribe(
@@ -1317,12 +1324,15 @@ export class LocalDB {
                 this.getNodeByNameInParent(name, parentKey).subscribe(
                     (readTreeNode: TreeNode) => {
                         if (readTreeNode) {
-                            console.log(
-                                'got node by name: ' + readTreeNode.name);
+                            console.warn(
+                                'got(read) folder node by name: ' +
+                                readTreeNode.name);
                             observer.next(readTreeNode);
                             observer.complete();
                         }
                         else {
+                            console.warn(
+                                'creating folder node by name: ' + name);
                             this.createFolderNode(
                                 name, parentKey).subscribe(
                                 (parentChild: ParentChild) => {

@@ -69,7 +69,6 @@ export class AppState {
                 let rootNodeKey: number = rootFolderNode[DB_KEY_PATH];
                 DEFAULT_STATE['rootFolderKey'] = rootNodeKey;
                 // Create Unfiled folder as child of root using root's key
-                console.log('about to call readOrCreateFolderNode: Unfiled');
                 this.localDB.readOrCreateFolderNode(
                     UNFILED_FOLDER_NAME, rootNodeKey)
                     .subscribe(

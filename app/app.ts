@@ -86,9 +86,9 @@ export class IonicRecorderApp {
 
     private platform: Platform;
     private menu: MenuController;
-    private pages: TabPage[];
     private appState: AppState;
     private rootPage: Type;
+    private pages: TabPage[];
 
     constructor(
         platform: Platform,
@@ -99,6 +99,7 @@ export class IonicRecorderApp {
         this.platform = platform;
         this.menu = menu;
         this.appState = appState;
+
         // set root of the hidden (first, default) tab
         this.rootPage = LoadingPage;
 
@@ -136,9 +137,10 @@ export class IonicRecorderApp {
 
             this.appState.getProperty('lastTabIndex').subscribe(
                 (tabIndex: number) => {
+                    console.log('lastTabIndex = ' + tabIndex +
+                        ', this.tabs = ' + this.tabs);
                     this.tabs.select(tabIndex);
                 });
-
         });
     }
 
@@ -194,3 +196,4 @@ ionicBootstrap(
         LocalDB
     ],
     {});
+
