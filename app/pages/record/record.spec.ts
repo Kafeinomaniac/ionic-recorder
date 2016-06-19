@@ -41,6 +41,10 @@ import {
     WebAudioRecorder
 } from '../../services/web-audio/web-audio-recorder';
 
+import {
+    promiseCatchHandler
+} from '../../services/test-utils/test-utils';
+
 resetBaseTestProviders();
 setBaseTestProviders(
     TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
@@ -70,10 +74,7 @@ describe('RecordPage', () => {
                     recordPage = componentFixture.componentInstance;
                     recordPageFixture.detectChanges();
                 })
-                .catch((reason: any): void => {
-                    // http://stackoverflow.com/a/30741722
-                    setTimeout(function (): void { throw reason; });
-                });
+                .catch(promiseCatchHandler);
         }));
 
     it('initialises', () => {

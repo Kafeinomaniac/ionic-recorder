@@ -47,6 +47,10 @@ import {
     AppState
 } from '../../services/app-state/app-state';
 
+import {
+    promiseCatchHandler
+} from '../../services/test-utils/test-utils';
+
 resetBaseTestProviders();
 setBaseTestProviders(
     TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
@@ -91,10 +95,7 @@ describe('LibraryPage', () => {
                     libraryPage = componentFixture.componentInstance;
                     libraryPageFixture.detectChanges();
                 })
-                .catch((reason: any): void => {
-                    // http://stackoverflow.com/a/30741722
-                    setTimeout(function (): void { throw reason; });
-                });
+                .catch(promiseCatchHandler);
         }));
 
     it('initialises', () => {

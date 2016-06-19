@@ -18,3 +18,10 @@ export function resetControl(control: AbstractControl): AbstractControl {
     // control.setErrors(null);
     return control;
 }
+
+export function promiseCatchHandler(err: Error): void {
+    'use strict';
+    console.error('ERROR - An error has occurred inside a promise!');
+    // http://stackoverflow.com/a/30741722
+    setTimeout(function (): void { throw err; });
+}
