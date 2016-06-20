@@ -38,7 +38,7 @@ export function uint16ArrayToBlobWAV(uint16Array: Uint16Array): Blob {
     headerView.setUint16(34, 16, true);
     setString(headerView, 36, 'data');
     headerView.setUint32(40, arrayByteLength, true);
-    return new Blob([headerView, Uint16Array], { type: 'audio/wav' });
+    return new Blob([headerView, uint16Array], { type: 'audio/wav' });
 }
 
 /**
