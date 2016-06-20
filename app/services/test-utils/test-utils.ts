@@ -52,75 +52,20 @@ import {
 } from '@angular/core/testing';
 
 ///////////////////////////////////////////////////////////////////////////////
-// Ionic mock classes
-///////////////////////////////////////////////////////////////////////////////
-
-export class ConfigMock {
-
-    public get(): any {
-        return '';
-    }
-
-    public getBoolean(): boolean {
-        return true;
-    }
-
-    public getNumber(): number {
-        return 1;
-    }
-}
-
-export class NavMock {
-
-    public pop(): any {
-        return new Promise(function (resolve: Function): void {
-            resolve();
-        });
-    }
-
-    public push(): any {
-        return new Promise(function (resolve: Function): void {
-            resolve();
-        });
-    }
-
-    public getActive(): any {
-        return {
-            'instance': {
-                'model': 'something'
-            }
-        };
-    }
-
-    public setRoot(): any {
-        return true;
-    }
-}
-
-export class PlatformMock {
-    public ready(): any {
-        return new Promise((resolve: Function) => {
-            resolve();
-        });
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Ionic Providers
-///////////////////////////////////////////////////////////////////////////////
-
-export const configProvider: Provider =
-    provide(Config, { useClass: ConfigMock });
-
-export const menuControllerProvider: Provider =
-    provide(MenuController, { useClass: ConfigMock });
-
-export const navControllerProvider: Provider =
-    provide(NavController, { useClass: NavMock });
-
-///////////////////////////////////////////////////////////////////////////////
 // utility functions and interfaces
 ///////////////////////////////////////////////////////////////////////////////
+
+export function setUpBaseTestProviders(): void {
+    'use strict';
+    resetBaseTestProviders();
+    setBaseTestProviders(
+        TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
+        [
+            BROWSER_APP_DYNAMIC_PROVIDERS,
+            ADDITIONAL_TEST_BROWSER_PROVIDERS
+        ]
+    );
+}
 
 // bit of a hack here to reset the validation / state on the
 // control as well as the value expecting a Control.reset() method
@@ -192,14 +137,69 @@ export function beforeEachDI(
     };
 }
 
-export function setUpBaseTestProviders(): void {
-    'use strict';
-    resetBaseTestProviders();
-    setBaseTestProviders(
-        TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
-        [
-            BROWSER_APP_DYNAMIC_PROVIDERS,
-            ADDITIONAL_TEST_BROWSER_PROVIDERS
-        ]
-    );
+///////////////////////////////////////////////////////////////////////////////
+// Ionic mock classes used in specs
+///////////////////////////////////////////////////////////////////////////////
+
+export class ConfigMock {
+
+    public get(): any {
+        return '';
+    }
+
+    public getBoolean(): boolean {
+        return true;
+    }
+
+    public getNumber(): number {
+        return 1;
+    }
 }
+
+export class NavMock {
+
+    public pop(): any {
+        return new Promise(function (resolve: Function): void {
+            resolve();
+        });
+    }
+
+    public push(): any {
+        return new Promise(function (resolve: Function): void {
+            resolve();
+        });
+    }
+
+    public getActive(): any {
+        return {
+            'instance': {
+                'model': 'something'
+            }
+        };
+    }
+
+    public setRoot(): any {
+        return true;
+    }
+}
+
+export class PlatformMock {
+    public ready(): any {
+        return new Promise((resolve: Function) => {
+            resolve();
+        });
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Ionic Providers used in specs
+///////////////////////////////////////////////////////////////////////////////
+
+export const configProvider: Provider =
+    provide(Config, { useClass: ConfigMock });
+
+export const menuControllerProvider: Provider =
+    provide(MenuController, { useClass: ConfigMock });
+
+export const navControllerProvider: Provider =
+    provide(NavController, { useClass: NavMock });
