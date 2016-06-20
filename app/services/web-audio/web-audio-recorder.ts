@@ -29,8 +29,8 @@ const PROCESSING_BUFFER_LENGTH: number = 256;
 const DB_CHUNK_LENGTH: number = 256 * PROCESSING_BUFFER_LENGTH;
 
 // pre-allocate the double chunk buffers used for saving to DB
-const DB_CHUNK1: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
-const DB_CHUNK2: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
+const DB_CHUNK1: Uint16Array = new Uint16Array(DB_CHUNK_LENGTH);
+const DB_CHUNK2: Uint16Array = new Uint16Array(DB_CHUNK_LENGTH);
 
 // statuses
 export enum RecorderStatus {
@@ -182,7 +182,7 @@ export class WebAudioRecorder {
         }
     }
 
-    private selectChunk(): Int16Array {
+    private selectChunk(): Uint16Array {
         if (this.doubleBufferIndex === 0) {
             return DB_CHUNK1;
         }
@@ -223,7 +223,7 @@ export class WebAudioRecorder {
             // fill up double-buffer active buffer if recording and
             // save each time a fill-up occurs
             if (this.isRecording) {
-                let chunk: Int16Array = this.selectChunk();
+                let chunk: Uint16Array = this.selectChunk();
                 if (this.nRecordedProcessingBuffers === 0 &&
                     this.dbChunkIndex === 0) {
                     // we are at the very beginning: at 1st sample.
@@ -423,7 +423,7 @@ export class WebAudioRecorder {
     }
 
     private saveChunkToDbAndSwap(
-        chunk: Int16Array,
+        chunk: Uint16Array,
         chunkEndIndex: number,
         finalAction: Function
     ): void {
@@ -464,7 +464,7 @@ export class WebAudioRecorder {
         this.isInactive = true;
         // finish off saving the last of it, if there are samples left
         if (this.dbChunkIndex !== 0 && this.dbChunkIndex !== undefined) {
-            let chunk: Int16Array = this.selectChunk();
+            let chunk: Uint16Array = this.selectChunk();
             this.saveChunkToDbAndSwap(
                 chunk,
                 this.dbChunkIndex,
