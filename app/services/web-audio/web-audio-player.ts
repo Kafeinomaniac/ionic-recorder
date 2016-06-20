@@ -24,8 +24,7 @@ function setString(dataView: DataView, offset: number, str: string): void {
 export function uint16ArrayToBlobWAV(uint16Array: Uint16Array): Blob {
     'use strict';
     let arrayByteLength: number = uint16Array.byteLength,
-        headerView: DataView = new DataView(new ArrayBuffer(44)),
-        dataView: DataView = new DataView(uint16Array);
+        headerView: DataView = new DataView(new ArrayBuffer(44));
     setString(headerView, 0, 'RIFF');
     headerView.setUint32(4, 36 + arrayByteLength);
     setString(headerView, 8, 'WAVE');
@@ -39,7 +38,7 @@ export function uint16ArrayToBlobWAV(uint16Array: Uint16Array): Blob {
     headerView.setUint16(34, 16, true);
     setString(headerView, 36, 'data');
     headerView.setUint32(40, arrayByteLength, true);
-    return new Blob([headerView, dataView], { type: 'audio/wav' });
+    return new Blob([headerView, Uint16Array], { type: 'audio/wav' });
 }
 
 /**
