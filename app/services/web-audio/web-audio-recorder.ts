@@ -233,12 +233,9 @@ export class WebAudioRecorder {
                 }
                 if (this.dbChunkIndex === DB_CHUNK_LENGTH) {
                     // we reached the end of a chunk, save it to DB
-                    // but before we save, swap chunks to let
-                    // processing continue in the other chunk
-                    // before we swap chunks set the index to 0 to
+                    this.saveChunkToDB(chunk, this.dbChunkIndex, null);
                     // start at the beginning of the buffer
                     this.dbChunkIndex = 0;
-                    this.saveChunkToDB(chunk, null);
                 }
                 else {
                     // keep filling up DB_CHUNK
@@ -421,16 +418,16 @@ export class WebAudioRecorder {
         this.dbChunkIndex = 0;
     }
 
-    private saveChunkToDB(chunk: Float32Array, finalAction: Function): void {
+    private saveChunkToDB(
+        chunk: Float32Array,
+        chunkEndIndex: number,
+        finalAction: Function
+    ): void {
         this.swapChunks();
         this.localDB.createStoreItemReturningKey(
             DB_FILE_STORE_NAME,
-            {
-                data: chunk.subarray(
-                    0,
-                    this.dbChunkIndex - 1
-                )
-            }).subscribe(
+            { data: chunk.subarray(0, chunkEndIndex ) }
+        ).subscribe(
             (key: number) => {
                 // increment the buffers-saved counter
                 this.nDbBuffers++;
@@ -439,7 +436,7 @@ export class WebAudioRecorder {
                     '; Filename: ' +
                     this.lastDbFileName +
                     '; nSamples: ' +
-                    this.dbChunkIndex +
+                    chunkEndIndex +
                     '; Key: ' + key);
                 if (this.nDbBuffers === 0) {
                     // first chunk saved, save its key as last
@@ -466,6 +463,7 @@ export class WebAudioRecorder {
             let chunk: Float32Array = this.selectChunk();
             this.saveChunkToDB(
                 chunk,
+                this.dbChunkIndex,
                 () => { this.resetBufferVariables(); }
             );
         }
