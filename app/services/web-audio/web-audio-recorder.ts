@@ -479,6 +479,10 @@ export class WebAudioRecorder {
                             PROCESSING_BUFFER_LENGTH) + ' ~samples(3), ' +
                         this.dbFileName + ': ' +
                         this.dbStartKey + ' - ' + this.dbEndKey);
+                    // create a new node in our tree pointing to the data
+                    // TODO using '2' below is a hack - we know that the 
+                    // unfiled folder gets created as the second node in our
+                    // tree so we use 2 here, but we need to do this better.
                     this.localDB.createDataNode(
                         this.dbFileName,
                         2,
