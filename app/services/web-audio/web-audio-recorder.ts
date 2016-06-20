@@ -88,6 +88,7 @@ export class WebAudioRecorder {
     private lastDbStartKey: number;
     private lastDbEndKey: number;
     private doubleBufferIndex: number;
+    private nRecordedSamples: number;
 
     public status: RecorderStatus;
     public sampleRate: number;
@@ -234,14 +235,16 @@ export class WebAudioRecorder {
                 if (this.dbChunkIndex === DB_CHUNK_LENGTH) {
                     // we reached the end of a chunk, save it to DB
                     this.saveChunkToDB(chunk, this.dbChunkIndex, null);
-                    // start at the beginning of the buffer
+                    // saveChunk immediately called swapChunks() before the
+                    // observable.subscribe, so we need to reset the index in
+                    // the newly swapped chunk to the start. this next line
+                    // gets executed while the saveToDB is still working
                     this.dbChunkIndex = 0;
                 }
-                else {
-                    // keep filling up DB_CHUNK
-                    chunk[this.dbChunkIndex] = value * 0x7FFF;
-                    this.dbChunkIndex++;
-                }
+                // keep filling up DB_CHUNK
+                this.nRecordedSamples++;
+                chunk[this.dbChunkIndex] = value * 0x7FFF;
+                this.dbChunkIndex++;
             }
         } // for (i ...
         if (this.isRecording) {
@@ -393,6 +396,7 @@ export class WebAudioRecorder {
     public start(): void {
         this.isRecording = true;
         this.isInactive = false;
+        this.resetBufferVariables();
     }
 
     /**
@@ -416,6 +420,7 @@ export class WebAudioRecorder {
         this.nRecordedProcessingBuffers = 0;
         this.nDbBuffers = 0;
         this.dbChunkIndex = 0;
+        this.nRecordedSamples = 0;
     }
 
     private saveChunkToDB(
@@ -438,7 +443,7 @@ export class WebAudioRecorder {
                     '; nSamples: ' +
                     chunkEndIndex +
                     '; Key: ' + key);
-                if (this.nDbBuffers === 0) {
+                if (this.nDbBuffers === 1) {
                     // first chunk saved, save its key as last
                     this.lastDbStartKey = key;
                 }
@@ -464,7 +469,18 @@ export class WebAudioRecorder {
             this.saveChunkToDB(
                 chunk,
                 this.dbChunkIndex,
-                () => { this.resetBufferVariables(); }
+                () => {
+                    console.log('DONE: ' + this.nDbBuffers + ' DB buffers, ' +
+                        this.nRecordedProcessingBuffers + ' P buffers, ' +
+                        ((this.nDbBuffers - 1) * DB_CHUNK_LENGTH +
+                            this.dbChunkIndex) + ' samples(1), ' +
+                        'dbChunkIndex: ' + this.dbChunkIndex + ' --- ' +
+                        this.nRecordedSamples + ' samples(2), ' +
+                        (this.nRecordedProcessingBuffers *
+                            PROCESSING_BUFFER_LENGTH) + ' ~samples(3), ' +
+                        this.lastDbFileName + ': ' +
+                        this.lastDbStartKey + ' - ' + this.lastDbEndKey);
+                }
             );
         }
         else {
