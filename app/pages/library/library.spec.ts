@@ -1,43 +1,18 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    ADDITIONAL_TEST_BROWSER_PROVIDERS,
-    TEST_BROWSER_STATIC_PLATFORM_PROVIDERS
-} from '@angular/platform-browser/testing/browser_static';
-
-import {
-    BROWSER_APP_DYNAMIC_PROVIDERS
-} from '@angular/platform-browser-dynamic';
-
-import {
-    resetBaseTestProviders,
-    setBaseTestProviders,
-    beforeEachProviders,
-    beforeEach,
     describe,
     expect,
-    injectAsync,
     it
 } from '@angular/core/testing';
 
 import {
-    ComponentFixture,
-    TestComponentBuilder
-
-} from '@angular/compiler/testing';
-
-import {
-    provide
-} from '@angular/core';
-
-import {
-    Config,
-    NavController
-} from 'ionic-angular';
-
-import {
-    LibraryPage
-} from './library';
+    setUpBaseTestProviders,
+    configProvider,
+    navControllerProvider,
+    InstanceFixture,
+    diBeforeEach
+} from '../../services/test-utils/test-utils';
 
 import {
     LocalDB
@@ -48,58 +23,23 @@ import {
 } from '../../services/app-state/app-state';
 
 import {
-    promiseCatchHandler
-} from '../../services/test-utils/test-utils';
+    LibraryPage
+} from './library';
 
-resetBaseTestProviders();
-setBaseTestProviders(
-    TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
-    [
-        BROWSER_APP_DYNAMIC_PROVIDERS,
-        ADDITIONAL_TEST_BROWSER_PROVIDERS
-    ]
-);
+setUpBaseTestProviders();
 
-class MockClass {
-    public get(): any {
-        return '';
-    }
-
-    public getBoolean(): boolean {
-        return true;
-    }
-
-    public getNumber(): number {
-        return 42;
-    }
-}
-
-let libraryPage: LibraryPage = null;
-let libraryPageFixture: ComponentFixture<LibraryPage> = null;
+let instanceFixture: InstanceFixture = null;
 
 describe('LibraryPage', () => {
-    beforeEachProviders(() => [
-        LocalDB,
-        AppState,
-        provide(Config, { useClass: MockClass }),
-        provide(NavController, { useClass: MockClass })
-    ]);
-
-    beforeEach(injectAsync(
-        [TestComponentBuilder],
-        (tcb: TestComponentBuilder) => {
-            return tcb
-                .createAsync(LibraryPage)
-                .then((componentFixture: ComponentFixture<LibraryPage>) => {
-                    libraryPageFixture = componentFixture;
-                    libraryPage = componentFixture.componentInstance;
-                    libraryPageFixture.detectChanges();
-                })
-                .catch(promiseCatchHandler);
-        }));
+    instanceFixture = diBeforeEach(
+        LibraryPage,
+        [LocalDB, AppState, configProvider, navControllerProvider],
+        true,
+        null
+    );
 
     it('initialises', () => {
-        expect(libraryPage).not.toBeNull();
-        expect(libraryPageFixture).not.toBeNull();
+        expect(instanceFixture.instance).not.toBeNull();
+        expect(instanceFixture.fixture).not.toBeNull();
     });
 });

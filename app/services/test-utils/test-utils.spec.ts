@@ -13,7 +13,7 @@ import {
     it
 } from '@angular/core/testing';
 
-describe('services/test-utils/resetControl()', () => {
+describe('test-utils/resetControl()', () => {
 
     it('resets a control', () => {
         let control: Control = new Control('');

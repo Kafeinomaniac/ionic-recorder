@@ -1,101 +1,40 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    ADDITIONAL_TEST_BROWSER_PROVIDERS,
-    TEST_BROWSER_STATIC_PLATFORM_PROVIDERS
-} from '@angular/platform-browser/testing/browser_static';
-
-import {
-    BROWSER_APP_DYNAMIC_PROVIDERS
-} from '@angular/platform-browser-dynamic';
-
-import {
-    resetBaseTestProviders,
-    setBaseTestProviders,
-    beforeEachProviders,
-    beforeEach,
     describe,
     expect,
-    injectAsync,
     it
 } from '@angular/core/testing';
 
 import {
-    ComponentFixture,
-    TestComponentBuilder
-} from '@angular/compiler/testing';
-
-import {
-    provide
-} from '@angular/core';
-
-import {
-    MenuController
-} from 'ionic-angular';
-
-import {
-    AboutPage
-} from './about';
+    setUpBaseTestProviders,
+    menuControllerProvider,
+    InstanceFixture,
+    diBeforeEach
+} from '../../services/test-utils/test-utils';
 
 import {
     AppState
 } from '../../services/app-state/app-state';
 
 import {
-    promiseCatchHandler
-} from '../../services/test-utils/test-utils';
+    AboutPage
+} from './about';
 
-resetBaseTestProviders();
-setBaseTestProviders(
-    TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
-    [
-        BROWSER_APP_DYNAMIC_PROVIDERS,
-        ADDITIONAL_TEST_BROWSER_PROVIDERS
-    ]
-);
+setUpBaseTestProviders();
 
-class MockClass {
-    public get(): any {
-        return '';
-    }
-
-    public getBoolean(): boolean {
-        return true;
-    }
-
-    public getNumber(): number {
-        return 42;
-    }
-}
-
-let aboutPage: AboutPage = null;
-let aboutPageFixture: ComponentFixture<AboutPage> = null;
+let instanceFixture: InstanceFixture = null;
 
 describe('AboutPage', () => {
-    beforeEachProviders(() => [
-        AppState,
-        provide(MenuController, { useClass: MockClass })
-    ]);
-
-    beforeEach(injectAsync(
-        [TestComponentBuilder],
-        (tcb: TestComponentBuilder) => {
-            return tcb
-                .createAsync(AboutPage)
-                .then((componentFixture: ComponentFixture<AboutPage>) => {
-                    aboutPageFixture = componentFixture;
-                    aboutPage = componentFixture.componentInstance;
-                    aboutPageFixture.detectChanges();
-                })
-                .catch(promiseCatchHandler);
-                // (reason: any): void => {
-                //     // http://stackoverflow.com/a/30741722
-                //     setTimeout(function (): void { throw reason; });
-                // });
-        }));
+    instanceFixture = diBeforeEach(
+        AboutPage,
+        [AppState, menuControllerProvider],
+        true,
+        null
+    );
 
     it('initialises', () => {
-        expect(aboutPage).not.toBeNull();
-        expect(aboutPageFixture).not.toBeNull();
+        expect(instanceFixture.instance).not.toBeNull();
+        expect(instanceFixture.fixture).not.toBeNull();
     });
 });
