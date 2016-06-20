@@ -11,7 +11,7 @@ import {
     configProvider,
     navControllerProvider,
     InstanceFixture,
-    diBeforeEach
+    beforeEachDI
 } from '../../services/test-utils/test-utils';
 
 import {
@@ -31,7 +31,7 @@ setUpBaseTestProviders();
 let instanceFixture: InstanceFixture = null;
 
 describe('LibraryPage', () => {
-    instanceFixture = diBeforeEach(
+    instanceFixture = beforeEachDI(
         LibraryPage,
         [LocalDB, AppState, configProvider, navControllerProvider],
         true,

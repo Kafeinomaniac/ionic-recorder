@@ -10,7 +10,7 @@ import {
     setUpBaseTestProviders,
     menuControllerProvider,
     InstanceFixture,
-    diBeforeEach
+    beforeEachDI
 } from '../../services/test-utils/test-utils';
 
 import {
@@ -26,7 +26,7 @@ setUpBaseTestProviders();
 let instanceFixture: InstanceFixture = null;
 
 describe('AboutPage', () => {
-    instanceFixture = diBeforeEach(
+    instanceFixture = beforeEachDI(
         AboutPage,
         [AppState, menuControllerProvider],
         true,

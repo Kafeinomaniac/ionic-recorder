@@ -9,7 +9,7 @@ import {
 import {
     setUpBaseTestProviders,
     InstanceFixture,
-    diBeforeEach
+    beforeEachDI
 } from '../../services/test-utils/test-utils';
 
 import {
@@ -33,7 +33,7 @@ setUpBaseTestProviders();
 let instanceFixture: InstanceFixture = null;
 
 describe('RecordPage', () => {
-    instanceFixture = diBeforeEach(
+    instanceFixture = beforeEachDI(
         RecordPage,
         [LocalDB, AppState, WebAudioRecorder],
         true,

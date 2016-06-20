@@ -161,7 +161,7 @@ export interface InstanceFixture {
     fixture: ComponentFixture<Type>;
 }
 
-export function diBeforeEach(
+export function beforeEachDI(
     component: Type,
     providers: any[],
     detectChanges: boolean,

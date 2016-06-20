@@ -9,7 +9,7 @@ import {
 import {
     setUpBaseTestProviders,
     InstanceFixture,
-    diBeforeEach
+    beforeEachDI
 } from '../../services/test-utils/test-utils';
 
 import {
@@ -21,7 +21,7 @@ setUpBaseTestProviders();
 let instanceFixture: InstanceFixture = null;
 
 describe('LoadingPage', () => {
-    instanceFixture = diBeforeEach(
+    instanceFixture = beforeEachDI(
         LoadingPage,
         [],
         true,
