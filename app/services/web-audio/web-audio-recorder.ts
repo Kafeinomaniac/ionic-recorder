@@ -79,16 +79,15 @@ export class WebAudioRecorder {
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
     private intervalId: NodeJS.Timer;
-    // count # of buffers we have encoded; this is also how we count time
     private nRecordedProcessingBuffers: number;
     private nDbBuffers: number;
     private dbChunkIndex: number;
-    private lastDbFileName: string;
     private localDB: LocalDB;
-    private lastDbStartKey: number;
-    private lastDbEndKey: number;
     private doubleBufferIndex: number;
     private nRecordedSamples: number;
+    private dbFileName: string;
+    private dbStartKey: number;
+    private dbEndKey: number;
 
     public status: RecorderStatus;
     public sampleRate: number;
@@ -98,8 +97,8 @@ export class WebAudioRecorder {
     public currentTime: string;
     public maxVolumeSinceReset: number;
     public percentPeaksAtMax: string;
-    public onStopRecord: (recordedBlob: Blob) => void;
 
+    // this is how we signal
     constructor(localDB: LocalDB) {
         console.log('constructor():WebAudioRecorder');
 
@@ -230,11 +229,11 @@ export class WebAudioRecorder {
                     // we are at the very beginning: at 1st sample.
                     // set the filename to use for this recording
                     // according to the time now
-                    this.lastDbFileName = makeTimestamp();
+                    this.dbFileName = makeTimestamp();
                 }
                 if (this.dbChunkIndex === DB_CHUNK_LENGTH) {
                     // we reached the end of a chunk, save it to DB
-                    this.saveChunkToDB(chunk, this.dbChunkIndex, null);
+                    this.saveChunkToDbAndSwap(chunk, this.dbChunkIndex, null);
                     // saveChunk immediately called swapChunks() before the
                     // observable.subscribe, so we need to reset the index in
                     // the newly swapped chunk to the start. this next line
@@ -423,7 +422,7 @@ export class WebAudioRecorder {
         this.nRecordedSamples = 0;
     }
 
-    private saveChunkToDB(
+    private saveChunkToDbAndSwap(
         chunk: Int16Array,
         chunkEndIndex: number,
         finalAction: Function
@@ -439,16 +438,16 @@ export class WebAudioRecorder {
                 console.log('Saving chunk ' +
                     this.nDbBuffers +
                     '; Filename: ' +
-                    this.lastDbFileName +
+                    this.dbFileName +
                     '; nSamples: ' +
                     chunkEndIndex +
                     '; Key: ' + key);
                 if (this.nDbBuffers === 1) {
                     // first chunk saved, save its key as last
-                    this.lastDbStartKey = key;
+                    this.dbStartKey = key;
                 }
                 // current key returned is the last key
-                this.lastDbEndKey = key;
+                this.dbEndKey = key;
 
                 if (finalAction) {
                     finalAction();
@@ -466,7 +465,7 @@ export class WebAudioRecorder {
         // finish off saving the last of it, if there are samples left
         if (this.dbChunkIndex !== 0 && this.dbChunkIndex !== undefined) {
             let chunk: Int16Array = this.selectChunk();
-            this.saveChunkToDB(
+            this.saveChunkToDbAndSwap(
                 chunk,
                 this.dbChunkIndex,
                 () => {
@@ -478,8 +477,15 @@ export class WebAudioRecorder {
                         this.nRecordedSamples + ' samples(2), ' +
                         (this.nRecordedProcessingBuffers *
                             PROCESSING_BUFFER_LENGTH) + ' ~samples(3), ' +
-                        this.lastDbFileName + ': ' +
-                        this.lastDbStartKey + ' - ' + this.lastDbEndKey);
+                        this.dbFileName + ': ' +
+                        this.dbStartKey + ' - ' + this.dbEndKey);
+                    this.localDB.createDataNode(
+                        this.dbFileName,
+                        2,
+                        {
+                            startKey: this.dbStartKey,
+                            endKey: this.dbEndKey
+                        }).subscribe();
                 }
             );
         }
