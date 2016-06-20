@@ -29,8 +29,8 @@ const PROCESSING_BUFFER_LENGTH: number = 256;
 const DB_CHUNK_LENGTH: number = 256 * PROCESSING_BUFFER_LENGTH;
 
 // pre-allocate the double chunk buffers used for saving to DB
-const DB_CHUNK1: Float32Array = new Float32Array(DB_CHUNK_LENGTH);
-const DB_CHUNK2: Float32Array = new Float32Array(DB_CHUNK_LENGTH);
+const DB_CHUNK1: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
+const DB_CHUNK2: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
 
 // statuses
 export enum RecorderStatus {
@@ -182,7 +182,7 @@ export class WebAudioRecorder {
         }
     }
 
-    private selectChunk(): Float32Array {
+    private selectChunk(): Int16Array {
         if (this.doubleBufferIndex === 0) {
             return DB_CHUNK1;
         }
@@ -223,7 +223,7 @@ export class WebAudioRecorder {
             // fill up double-buffer active buffer if recording and
             // save each time a fill-up occurs
             if (this.isRecording) {
-                let chunk: Float32Array = this.selectChunk();
+                let chunk: Int16Array = this.selectChunk();
                 if (this.nRecordedProcessingBuffers === 0 &&
                     this.dbChunkIndex === 0) {
                     // we are at the very beginning: at 1st sample.
@@ -239,7 +239,7 @@ export class WebAudioRecorder {
                 }
                 else {
                     // keep filling up DB_CHUNK
-                    chunk[this.dbChunkIndex] = value;
+                    chunk[this.dbChunkIndex] = value * 0x7FFF;
                     this.dbChunkIndex++;
                 }
             }
@@ -419,14 +419,14 @@ export class WebAudioRecorder {
     }
 
     private saveChunkToDB(
-        chunk: Float32Array,
+        chunk: Int16Array,
         chunkEndIndex: number,
         finalAction: Function
     ): void {
         this.swapChunks();
         this.localDB.createStoreItemReturningKey(
             DB_FILE_STORE_NAME,
-            { data: chunk.subarray(0, chunkEndIndex ) }
+            { data: chunk.subarray(0, chunkEndIndex) }
         ).subscribe(
             (key: number) => {
                 // increment the buffers-saved counter
@@ -460,7 +460,7 @@ export class WebAudioRecorder {
         this.isInactive = true;
         // finish off saving the last of it, if there are samples left
         if (this.dbChunkIndex !== 0 && this.dbChunkIndex !== undefined) {
-            let chunk: Float32Array = this.selectChunk();
+            let chunk: Int16Array = this.selectChunk();
             this.saveChunkToDB(
                 chunk,
                 this.dbChunkIndex,
