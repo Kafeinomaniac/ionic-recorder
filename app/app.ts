@@ -48,19 +48,19 @@ import {
 
 // Uncomment this block to completely erase browser's IndexedDB
 // (but only the DB created by this app gets erased)
-import {
-    DB_NAME
-} from './services/local-db/local-db';
-let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
-request.onsuccess = function(): void {
-    console.log('deleteDatabase: SUCCESS');
-};
-request.onerror = function(): void {
-    console.log('deleteDatabase: ERROR');
-};
-request.onblocked = function(): void {
-    console.log('deleteDatabase: BLOCKED');
-};
+// import {
+//     DB_NAME
+// } from './services/local-db/local-db';
+// let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
+// request.onsuccess = function(): void {
+//     console.log('deleteDatabase: SUCCESS');
+// };
+// request.onerror = function(): void {
+//     console.log('deleteDatabase: ERROR');
+// };
+// request.onblocked = function(): void {
+//     console.log('deleteDatabase: BLOCKED');
+// };
 
 // Global catch-all exception handler for this app - any error thrown
 // will be handled by this function.
@@ -81,8 +81,8 @@ interface TabPage {
 })
 export class IonicRecorderApp {
     // NOTE: either one of these @ViewChild declarations works, use only one ..
-    @ViewChild(Tabs) private tabs: Tabs;
-    // @ViewChild('navTabs') private tabs: Tabs;
+    // @ViewChild(Tabs) private tabs: Tabs;
+    @ViewChild('navTabs') private tabs: Tabs;
 
     private platform: Platform;
     private menu: MenuController;
