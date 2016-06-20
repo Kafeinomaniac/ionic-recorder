@@ -13,6 +13,35 @@ import {
 // PLAYER
 ///////////////////////////////////////////////////////////////////////////////
 
+function setString(dataView: DataView, offset: number, str: string): void {
+    'use strict';
+    let len: number = str.length, i: number;
+    for (i = 0; i < len; i++) {
+        dataView.setUint8(offset + i, str.charCodeAt(i));
+    }
+}
+
+export function uint16ArrayToBlobWAV(uint16Array: Uint16Array): Blob {
+    'use strict';
+    let arrayByteLength: number = uint16Array.byteLength,
+        headerView: DataView = new DataView(new ArrayBuffer(44)),
+        dataView: DataView = new DataView(uint16Array);
+    setString(headerView, 0, 'RIFF');
+    headerView.setUint32(4, 36 + arrayByteLength);
+    setString(headerView, 8, 'WAVE');
+    setString(headerView, 12, 'fmt ');
+    headerView.setUint32(16, 16, true);
+    headerView.setUint16(20, 1, true);
+    headerView.setUint16(22, this.numChannels, true);
+    headerView.setUint32(24, this.sampleRate, true);
+    headerView.setUint32(28, this.sampleRate * 4, true);
+    headerView.setUint16(32, this.numChannels * 2, true);
+    headerView.setUint16(34, 16, true);
+    setString(headerView, 36, 'data');
+    headerView.setUint32(40, arrayByteLength, true);
+    return new Blob([headerView, dataView], { type: 'audio/wav' });
+}
+
 /**
  * @name WebAudioPlayer
  * @description
