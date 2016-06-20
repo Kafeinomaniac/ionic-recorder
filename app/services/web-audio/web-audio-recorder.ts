@@ -259,7 +259,7 @@ export class WebAudioRecorder {
                                 { data: chunk }).subscribe(
                                 (key: number) => {
                                     console.log('Saving chunk ' +
-                                        this.nDbBuffers + 1 +
+                                        (this.nDbBuffers + 1) +
                                         '; Filename: ' +
                                         this.lastDbFileName +
                                         '; nSamples: ' +
@@ -456,7 +456,7 @@ export class WebAudioRecorder {
                 }).subscribe(
                 (key: number) => {
                     console.log('Saving chunk ' +
-                        this.nDbBuffers + 1 +
+                        (this.nDbBuffers + 1) +
                         '; Filename: ' +
                         this.lastDbFileName +
                         '; nSamples: ' +
