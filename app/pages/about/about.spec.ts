@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    describe,
+    xdescribe,
     expect,
     it
 } from '@angular/core/testing';
@@ -25,7 +25,7 @@ setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 
-describe('AboutPage', () => {
+xdescribe('AboutPage', () => {
     instanceFixture = beforeEachDI(
         AboutPage,
         [AppState, menuControllerProvider],

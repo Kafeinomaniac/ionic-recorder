@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    describe,
+    xdescribe,
     expect,
     it
 } from '@angular/core/testing';
@@ -32,7 +32,7 @@ setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 
-describe('RecordPage', () => {
+xdescribe('RecordPage', () => {
     instanceFixture = beforeEachDI(
         RecordPage,
         [LocalDB, AppState, WebAudioRecorder],
