@@ -92,11 +92,10 @@ describe('Idb', () => {
         done();
     });
 
-    it('createStoreItem(item1) returns 1', (done) => {
+    it('create(item1) returns 1', (done) => {
         setTimeout(
             () => {
-                idb.createStoreItem<Uint16Array>('s', item1)
-                    .subscribe(
+                idb.create<Uint16Array>('s', item1).subscribe(
                     (key: number) => {
                         key1 = key;
                         expect(key1).toEqual(1);
@@ -106,11 +105,10 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('createStoreItem(item2) returns 2', (done) => {
+    it('create(item2) returns 2', (done) => {
         setTimeout(
             () => {
-                idb.createStoreItem<Uint16Array>('s', item2)
-                    .subscribe(
+                idb.create<Uint16Array>('s', item2).subscribe(
                     (key: number) => {
                         key2 = key;
                         expect(key2).toEqual(2);
@@ -132,11 +130,10 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('createStoreItem(item1) returns 3', (done) => {
+    it('create(item1) returns 3', (done) => {
         setTimeout(
             () => {
-                idb.createStoreItem<Uint16Array>('s', item1)
-                    .subscribe(
+                idb.create<Uint16Array>('s', item1).subscribe(
                     (key: number) => {
                         key1 = key;
                         expect(key1).toEqual(3);
@@ -146,11 +143,10 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('createStoreItem(item2) returns 4', (done) => {
+    it('create(item2) returns 4', (done) => {
         setTimeout(
             () => {
-                idb.createStoreItem<Uint16Array>('s', item2)
-                    .subscribe(
+                idb.create<Uint16Array>('s', item2).subscribe(
                     (key: number) => {
                         key2 = key;
                         expect(key2).toEqual(4);
@@ -160,28 +156,26 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('readStoreItem(1) returns item1', (done) => {
+    it('read(1) returns item1', (done) => {
         setTimeout(
             () => {
-                idb.readStoreItem<Uint16Array>(
-                    's',
-                    key1).subscribe(
+                idb.read<Uint16Array>('s', key1).subscribe(
                     (result: Uint16Array) => {
                         expect(result.length).toEqual(item1len);
                         expect(result.BYTES_PER_ELEMENT).toEqual(2);
                         done();
                     }
-                    );
+                );
             },
             WAIT_FOR_DB_MSEC);
     });
 
-    it('deleteStoreItem(1) works', (done) => {
+    it('delete(1) works', (done) => {
         setTimeout(
             () => {
-                idb.deleteStoreItem('s', key1).subscribe(
+                idb.delete('s', key1).subscribe(
                     () => {
-                        idb.readStoreItem('s', key1).subscribe(
+                        idb.read('s', key1).subscribe(
                             (result: Uint16Array) => {
                                 expect(result).toEqual(undefined);
                                 done();
@@ -191,10 +185,10 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('readStoreItem(2) returns item2', (done) => {
+    it('read(2) returns item2', (done) => {
         setTimeout(
             () => {
-                idb.readStoreItem<Uint16Array>('s', key2).subscribe(
+                idb.read<Uint16Array>('s', key2).subscribe(
                     (result: Uint16Array) => {
                         expect(result.length).toEqual(item2len);
                         expect(result.BYTES_PER_ELEMENT).toEqual(2);
@@ -205,11 +199,10 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('createStoreItem(item1) again returns 5', (done) => {
+    it('create(item1) again returns 5', (done) => {
         setTimeout(
             () => {
-                idb.createStoreItem<Uint16Array>('s', item1)
-                    .subscribe(
+                idb.create<Uint16Array>('s', item1).subscribe(
                     (key: number) => {
                         key1 = key;
                         expect(key1).toEqual(5);
@@ -219,14 +212,13 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('updateStoreItem(key1, item2) item1 to item2 works', (done) => {
+    it('update(key1, item2) item1 to item2 works', (done) => {
         setTimeout(
             () => {
-                idb.updateStoreItem<Uint16Array>('s', key1, item2)
-                    .subscribe(
+                idb.update<Uint16Array>('s', key1, item2).subscribe(
                     () => {
                         // read it after updating ensure length same as item2
-                        idb.readStoreItem('s', key1).subscribe(
+                        idb.read('s', key1).subscribe(
                             (result: Uint16Array) => {
                                 expect(result.length).toEqual(item2len);
                                 done();
@@ -236,14 +228,13 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('updateStoreItem(key2, item1) item2 to item1 works', (done) => {
+    it('update(key2, item1) item2 to item1 works', (done) => {
         setTimeout(
             () => {
-                idb.updateStoreItem<Uint16Array>('s', key2, item1)
-                    .subscribe(
+                idb.update<Uint16Array>('s', key2, item1).subscribe(
                     () => {
                         // read it after updating ensure length same as item2
-                        idb.readStoreItem('s', key2).subscribe(
+                        idb.read('s', key2).subscribe(
                             (result: Uint16Array) => {
                                 expect(result.length).toEqual(item1len);
                                 done();

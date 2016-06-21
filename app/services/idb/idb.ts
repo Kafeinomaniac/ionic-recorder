@@ -4,6 +4,13 @@ import {
     Observable
 } from 'rxjs/Rx';
 
+// type of StoreKeys dictionary
+interface StoreKeys {
+    [storeName: string]: number;
+}
+
+// config object type hierarchy
+
 interface StoreIndexConfig {
     name: string;
     unique: boolean;
@@ -20,17 +27,13 @@ export interface IdbConfig {
     storeConfigs: StoreConfig[];
 }
 
+// wait time between checks that the db is initialized
 export const WAIT_FOR_DB_MSEC: number = 60;
-
-interface StoreKeys {
-    [storeName: string]: number;
-}
 
 /**
  * @name Idb
  * @description
- * A tree data structure for storage and traversal and file/folder like
- * functionality (CRUD functions) based on IndexedDB.
+ * Basic IndexedDB wrapper for setup and CRUD functions with arbitrary objects
  */
 export class Idb {
     private db: IDBDatabase;
@@ -60,7 +63,7 @@ export class Idb {
 
     /**
      * Verifies its argument to be a valid key - returns true
-     * if key is a whole number > 0, returns false otherwise.
+     * if key is a positive whole number, returns false otherwise.
      * @param {number} the key we're verifying
      * @returns {boolean} whether argument is a valid key
      */
@@ -245,7 +248,7 @@ export class Idb {
      * @returns {Observable<number>} Observable that emits the item key
      * that was automatically incremented for the newly created (stored) item.
      */
-    public createStoreItem<T>(
+    public create<T>(
         storeName: string,
         item: T
     ): Observable<number> {
@@ -274,7 +277,7 @@ export class Idb {
                     },
                     (error) => {
                         observer.error(
-                            'in createStoreItem: ' + error
+                            'in create: ' + error
                         );
                     }
                 ); // getStore().subscribe(
@@ -291,7 +294,7 @@ export class Idb {
      * @returns {Observable<T>} Observable that emits the item as
      * soon as the db read request completes
      */
-    public readStoreItem<T>(
+    public read<T>(
         storeName: string,
         key: number
     ): Observable<T> {
@@ -334,7 +337,7 @@ export class Idb {
      * to replace existing item in the db store
      * @returns {Observable<void>} Observable that emits after update ends
      */
-    public updateStoreItem<T>(
+    public update<T>(
         storeName: string,
         key: number,
         newItem: T
@@ -398,7 +401,7 @@ export class Idb {
      * @param {number} key - the key of the item to delete in the db store
      * @returns {Observable<void>} Observable that emits after delete ends
      */
-    public deleteStoreItem(
+    public delete(
         storeName: string,
         key: number
     ): Observable<void> {
