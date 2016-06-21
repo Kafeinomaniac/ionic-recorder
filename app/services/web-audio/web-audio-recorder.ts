@@ -14,6 +14,23 @@ import {
     LocalDB
 } from '../local-db/local-db';
 
+// import {
+//     Idb,
+//     IdbConfig,
+//     WAIT_FOR_DB_MSEC
+// } from '../idb/idb';
+
+// const DB_CONFIG: IdbConfig = {
+//     name: 'WebAudioRecordings',
+//     version: 1,
+//     storeConfigs: [
+//         {
+//             name: 'RecordedChunks',
+//             indexConfigs: []
+//         }
+//     ]
+// };
+
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.
 const MONITOR_REFRESH_RATE_HZ: number = 24;

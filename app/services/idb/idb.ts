@@ -4,12 +4,13 @@ import {
     Observable
 } from 'rxjs/Rx';
 
-// type of StoreKeys dictionary
+import {
+    positiveWholeNumber
+} from '../utils/utils';
+
 interface StoreKeys {
     [storeName: string]: number;
 }
-
-// config object type hierarchy
 
 interface StoreIndexConfig {
     name: string;
@@ -42,17 +43,15 @@ export class Idb {
     /**
      * @constructor
      */
-    constructor(dbConfig: IdbConfig) {
+    constructor(config: IdbConfig) {
         console.log('constructor():Idb');
-        if (!indexedDB) {
+        if (typeof window['indexedDB'] === 'undefined') {
             throw new Error('Browser does not support indexedDB');
         }
 
-        this.openDB(
-            dbConfig.name,
-            dbConfig.version,
-            dbConfig.storeConfigs
-        ).subscribe(
+        this.validateConfig(config);
+
+        this.openDB(config).subscribe(
             (db: IDBDatabase) => {
                 this.db = db;
             },
@@ -61,19 +60,24 @@ export class Idb {
             });
     }
 
-    /**
-     * Verifies its argument to be a valid key - returns true
-     * if key is a positive whole number, returns false otherwise.
-     * @param {number} the key we're verifying
-     * @returns {boolean} whether argument is a valid key
-     */
-    public validateKey(key: number): boolean {
-        return (
-            key &&
-            !isNaN(key) &&
-            key > 0 &&
-            key === Math.floor(key)
-        );
+    private validateConfig(config: IdbConfig): void {
+        if (typeof config === 'undefined' || !config) {
+            throw Error('Falsey DB config');
+        }
+        if (typeof config['name'] === 'undefined') {
+            throw Error('No DB name in DB config');
+        }
+        if (typeof config['version'] === 'undefined') {
+            throw Error('No DB version in DB config');
+        }
+        if (!positiveWholeNumber(config['version'])) {
+            throw Error('Malformed DB version number in DB config');
+        }
+        if (typeof config['storeConfigs'] === 'undefined' ||
+            typeof config['storeConfigs']['length'] === 'undefined' ||
+            config.storeConfigs.length === 0) {
+            throw Error('No store configs in DB config');
+        }
     }
 
     /**
@@ -99,18 +103,49 @@ export class Idb {
     }
 
     /**
+     * Set up data stores and internal data structures related to them.
+     * @param {StoreConfig[]} a verified StoreConfig array
+     * @param {IDBOpenDBRequest} an open database request object
+     * @returns {void}
+     */
+    private initStores(
+        storeConfigs: StoreConfig[],
+        openRequest: IDBOpenDBRequest
+    ): void {
+        let i: number,
+            nStoreConfigs: number = storeConfigs.length,
+            storeConfig: StoreConfig,
+            store: IDBObjectStore;
+        this.storeKeys = {};
+        for (i = 0; i < nStoreConfigs; i++) {
+            storeConfig = storeConfigs[i];
+            // initialize key for current store
+            this.storeKeys[storeConfig.name] = 1;
+            store = openRequest.result.createObjectStore(storeConfig.name);
+            let j: number,
+                indexConfigs: StoreIndexConfig[] = storeConfig.indexConfigs,
+                nIndexConfigs: number = indexConfigs.length,
+                indexConfig: StoreIndexConfig;
+            for (j = 0; j < nIndexConfigs; j++) {
+                indexConfig = indexConfigs[j];
+                store.createIndex(
+                    indexConfig.name,
+                    indexConfig.name,
+                    { unique: indexConfig.unique }
+                );
+            }
+        }
+    }
+
+    /**
      * Open the DB and set it up for use.
      * @returns {Observable<IDBDatabase>} Observable that emits the database
      * when it's ready for use.
      */
-    private openDB(
-        dbName: string,
-        dbVersion: number,
-        storeConfigs: StoreConfig[]
-    ): Observable<IDBDatabase> {
+    private openDB(config: IdbConfig): Observable<IDBDatabase> {
         let source: Observable<IDBDatabase> = Observable.create((observer) => {
             let openRequest: IDBOpenDBRequest = indexedDB.open(
-                dbName, dbVersion);
+                config.name, config.version);
 
             openRequest.onsuccess = (event: Event) => {
                 observer.next(openRequest.result);
@@ -128,41 +163,14 @@ export class Idb {
             // This function is called when the database doesn't exist
             openRequest.onupgradeneeded = (event: IDBVersionChangeEvent) => {
                 try {
-                    let i: number,
-                        nStoreConfigs: number = storeConfigs.length,
-                        storeConfig: StoreConfig,
-                        store: IDBObjectStore,
-                        storeName: string;
-                    this.storeKeys = {};
-                    for (i = 0; i < nStoreConfigs; i++) {
-                        storeConfig = storeConfigs[i];
-                        storeName = storeConfig.name;
-                        // initialize key for current store
-                        this.storeKeys[storeName] = 1;
-                        store = openRequest.result.createObjectStore(
-                            storeName
-                        );
-                        let j: number,
-                            indexConfigs: StoreIndexConfig[] =
-                                storeConfig.indexConfigs,
-                            nIndexConfigs: number = indexConfigs.length,
-                            indexConfig: StoreIndexConfig;
-                        for (j = 0; j < nIndexConfigs; j++) {
-                            indexConfig = indexConfigs[j];
-                            store.createIndex(
-                                indexConfig.name,
-                                indexConfig.name,
-                                { unique: indexConfig.unique }
-                            );
-                        }
-                    } // for (i = 0; i < nStoreConfigs; i++) {
+                    this.initStores(config.storeConfigs, openRequest);
                 }
                 catch (error) {
                     let ex: DOMException = error;
                     observer.error('in openRequest.onupgradeended: ' +
                         'code=' + ex.code + ' - ' + ex.message);
-                } // try .. catch ..
-            }; // openRequest.onupgradeneeded =
+                }
+            }; // openRequest.onupgradeneeded = ..
         });
         return source;
     }
@@ -198,18 +206,16 @@ export class Idb {
             Observable.create((observer) => {
                 this.waitForDB().subscribe(
                     (db: IDBDatabase) => {
-                        observer.next(
-                            db.transaction(
-                                storeName,
-                                mode
-                            ).objectStore(storeName)
-                        );
+                        observer.next(db.transaction(
+                            storeName,
+                            mode
+                        ).objectStore(storeName));
                         observer.complete();
                     },
                     (error) => {
-                        observer.error('in waitForDB: ' + error);
+                        observer.error('Idb:getStore(): ' + error);
                     }
-                ); // waitForDB().subscribe(
+                ); // this.waitForDB().subscribe(
             });
         return source;
     }
@@ -229,9 +235,9 @@ export class Idb {
                     observer.complete();
                 },
                 (error) => {
-                    observer.error('in getStore: ' + error);
+                    observer.error('Idb:clearStore(): ' + error);
                 }
-            ); // getStore().subscribe(
+            );
         });
         return source;
     }
@@ -253,17 +259,15 @@ export class Idb {
         item: T
     ): Observable<number> {
         let source: Observable<number> = Observable.create((observer) => {
-            if (!item) {
-                observer.error('cannot add falsy item: ' + item);
-            }
-            else {
+            if (typeof item !== 'undefined' && item) {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
                         let key: number = this.storeKeys[storeName],
                             addRequest: IDBRequest = store.add(item, key);
+
                         addRequest.onsuccess = (event: IDBEvent) => {
                             if (addRequest.result !== key) {
-                                observer.error('add key mismatch');
+                                observer.error('addRequest key mismatch');
                             }
                             else {
                                 this.storeKeys[storeName]++;
@@ -271,16 +275,18 @@ export class Idb {
                                 observer.complete();
                             }
                         };
+
                         addRequest.onerror = (event: IDBEvent) => {
-                            observer.error('in addRequest.onerror');
+                            observer.error('addRequest.onerror');
                         };
                     },
                     (error) => {
-                        observer.error(
-                            'in create: ' + error
-                        );
+                        observer.error('Idb:create(): ' + error);
                     }
-                ); // getStore().subscribe(
+                ); // this.getStore(storeName, 'readwrite').subscribe(
+            } // if (typeof item !== 'undefined' && item) {
+            else {
+                observer.error('cannot add falsy item: ' + item);
             }
         });
         return source;
@@ -299,10 +305,7 @@ export class Idb {
         key: number
     ): Observable<T> {
         let source: Observable<T> = Observable.create((observer) => {
-            if (!this.validateKey(key)) {
-                observer.error('invalid key');
-            }
-            else {
+            if (positiveWholeNumber(key)) {
                 this.getStore(storeName, 'readonly').subscribe(
                     (store: IDBObjectStore) => {
                         let getRequest: IDBRequest = store.get(key);
@@ -322,7 +325,10 @@ export class Idb {
                     (error) => {
                         observer.error('in getStore: ' + error);
                     }
-                ); // getStore().subscribe(
+                ); // this.getStore(storeName, 'readonly').subscribe(
+            } // if (positiveWholeNumber(key)) {
+            else {
+                observer.error('invalid key: ' + key);
             }
         });
         return source;
@@ -343,13 +349,11 @@ export class Idb {
         newItem: T
     ): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
-            if (!this.validateKey(key)) {
-                observer.error('invalid key: ' + key);
-            }
-            else {
+            if (positiveWholeNumber(key)) {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
                         let getRequest: IDBRequest = store.get(key);
+
                         getRequest.onsuccess = (event: IDBEvent) => {
                             if (!getRequest.result) {
                                 // request success, but we got nothing. ERROR:
@@ -361,6 +365,7 @@ export class Idb {
                                     newItem,
                                     key
                                 );
+
                                 putRequest.onsuccess =
                                     (errorEvent: IDBErrorEvent) => {
                                         // the key of the updated item is in
@@ -374,6 +379,7 @@ export class Idb {
                                             observer.complete();
                                         }
                                     };
+
                                 putRequest.onerror =
                                     (errorEvent: IDBErrorEvent) => {
                                         observer.error('put request');
@@ -388,8 +394,11 @@ export class Idb {
                     (getStoreError) => {
                         observer.error(getStoreError);
                     }
-                ); // getStore().subscribe(
-            } // if (!this.validateKey(key)) { .. else {
+                ); // this.getStore(storeName, 'readwrite').subscribe(
+            } // if (positiveWholeNumber(key)) {
+            else {
+                observer.error('invalid key: ' + key);
+            }
         });
         return source;
     }
@@ -406,23 +415,28 @@ export class Idb {
         key: number
     ): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
-            this.getStore(storeName, 'readwrite').subscribe(
-                (store: IDBObjectStore) => {
-                    let deleteRequest: IDBRequest = store.delete(key);
+            if (positiveWholeNumber(key)) {
+                this.getStore(storeName, 'readwrite').subscribe(
+                    (store: IDBObjectStore) => {
+                        let deleteRequest: IDBRequest = store.delete(key);
 
-                    deleteRequest.onsuccess = (event: IDBEvent) => {
-                        observer.next();
-                        observer.complete();
-                    };
+                        deleteRequest.onsuccess = (event: IDBEvent) => {
+                            observer.next();
+                            observer.complete();
+                        };
 
-                    deleteRequest.onerror = (event: IDBErrorEvent) => {
-                        observer.error('delete request');
-                    };
-                },
-                (error) => {
-                    observer.error(error);
-                }
-            ); // getStore().subscribe(
+                        deleteRequest.onerror = (event: IDBErrorEvent) => {
+                            observer.error('delete request');
+                        };
+                    },
+                    (error) => {
+                        observer.error(error);
+                    }
+                ); // this.getStore(storeName, 'readwrite').subscribe(
+            } // if (positiveWholeNumber(key)) {
+            else {
+                observer.error('invalid key: ' + key);
+            }
         });
         return source;
     }

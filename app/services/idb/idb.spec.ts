@@ -84,14 +84,6 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('db validateKey() works as expected', (done) => {
-        expect(idb.validateKey(1)).toBeTruthy();
-        expect(idb.validateKey(0)).toBeFalsy();
-        expect(idb.validateKey(-1)).toBeFalsy();
-        expect(idb.validateKey(1.1)).toBeFalsy();
-        done();
-    });
-
     it('create(item1) returns 1', (done) => {
         setTimeout(
             () => {
