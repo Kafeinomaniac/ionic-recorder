@@ -3,7 +3,7 @@
 import {
     Idb,
     IdbConfig,
-    MAX_DB_INIT_TIME
+    WAIT_FOR_DB_MSEC
 } from './idb';
 
 const DB_CONFIG: IdbConfig = {
@@ -28,7 +28,7 @@ const DB_CONFIG: IdbConfig = {
             ]
         }
     ]
-}
+};
 
 Idb.deleteDb('d');
 
@@ -63,16 +63,16 @@ beforeEach((done: Function) => {
         });
 });
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = MAX_DB_INIT_TIME * 10;
+// jasmine.DEFAULT_TIMEOUT_INTERVAL = WAIT_FOR_DB_MSEC;
 
-describe('When idb is initialized', () => {
+describe('Idb', () => {
     it('idb is not falsy', (done) => {
         setTimeout(
             () => {
                 expect(idb).not.toBeFalsy();
                 done();
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('db is not falsy', (done) => {
@@ -81,7 +81,7 @@ describe('When idb is initialized', () => {
                 expect(db).not.toBeFalsy();
                 done();
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('db validateKey() works as expected', (done) => {
@@ -103,7 +103,7 @@ describe('When idb is initialized', () => {
                         done();
                     });
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('createStoreItem(item2) returns 2', (done) => {
@@ -117,7 +117,7 @@ describe('When idb is initialized', () => {
                         done();
                     });
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('clears the store', (done) => {
@@ -129,7 +129,7 @@ describe('When idb is initialized', () => {
                     }
                 );
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('createStoreItem(item1) returns 3', (done) => {
@@ -143,7 +143,7 @@ describe('When idb is initialized', () => {
                         done();
                     });
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('createStoreItem(item2) returns 4', (done) => {
@@ -157,7 +157,7 @@ describe('When idb is initialized', () => {
                         done();
                     });
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('readStoreItem(1) returns item1', (done) => {
@@ -173,7 +173,7 @@ describe('When idb is initialized', () => {
                     }
                     );
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('deleteStoreItem(1) works', (done) => {
@@ -188,7 +188,7 @@ describe('When idb is initialized', () => {
                             });
                     });
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('readStoreItem(2) returns item2', (done) => {
@@ -202,7 +202,7 @@ describe('When idb is initialized', () => {
                     }
                 );
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('createStoreItem(item1) again returns 5', (done) => {
@@ -216,7 +216,7 @@ describe('When idb is initialized', () => {
                         done();
                     });
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('updateStoreItem(key1, item2) item1 to item2 works', (done) => {
@@ -233,7 +233,7 @@ describe('When idb is initialized', () => {
                             });
                     });
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
     it('updateStoreItem(key2, item1) item2 to item1 works', (done) => {
@@ -250,7 +250,7 @@ describe('When idb is initialized', () => {
                             });
                     });
             },
-            MAX_DB_INIT_TIME);
+            WAIT_FOR_DB_MSEC);
     });
 
 });

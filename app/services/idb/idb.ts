@@ -20,20 +20,14 @@ export interface IdbConfig {
     storeConfigs: StoreConfig[];
 }
 
-const STORE_EXISTS_ERROR_CODE: number = 0;
-
-// use MAX_DB_INIT_TIME in setTimeout() calls after
-// initializing DB.  This value is the longest we allow
-// the DB to initialize.  If DB does not initialize
-// under this time (in msec) then some error will occur
-export const MAX_DB_INIT_TIME: number = 600;
+export const WAIT_FOR_DB_MSEC: number = 60;
 
 interface StoreKeys {
     [storeName: string]: number;
 }
 
 /**
- * @name LocalDbBaisc
+ * @name Idb
  * @description
  * A tree data structure for storage and traversal and file/folder like
  * functionality (CRUD functions) based on IndexedDB.
@@ -93,7 +87,7 @@ export class Idb {
                     observer.complete();
                 }
                 else {
-                    setTimeout(repeat, MAX_DB_INIT_TIME / 10);
+                    setTimeout(repeat, WAIT_FOR_DB_MSEC);
                 }
             };
             repeat();
@@ -162,13 +156,9 @@ export class Idb {
                 }
                 catch (error) {
                     let ex: DOMException = error;
-                    if (ex.code !== STORE_EXISTS_ERROR_CODE) {
-                        // ignore 'store already exists' error
-                        observer.error('in openRequest.onupgradeended: ' +
-                            ex.message);
-                    }
+                    observer.error('in openRequest.onupgradeended: ' +
+                        'code=' + ex.code + ' - ' + ex.message);
                 } // try .. catch ..
-                // console.log('openDB:onupgradeended DONE');
             }; // openRequest.onupgradeneeded =
         });
         return source;
