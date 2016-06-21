@@ -225,7 +225,7 @@ describe('Idb', () => {
             () => {
                 idb.update<Uint16Array>('s', key2, item1).subscribe(
                     () => {
-                        // read it after updating ensure length same as item2
+                        // read it after updating ensure length same as item1
                         idb.read('s', key2).subscribe(
                             (result: Uint16Array) => {
                                 expect(result.length).toEqual(item1len);
