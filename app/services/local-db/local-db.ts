@@ -282,7 +282,7 @@ export class LocalDB {
                             ex.message);
                     }
                 } // try .. catch ..
-                console.log('openDB:onupgradeended DONE');
+                // console.log('openDB:onupgradeended DONE');
             }; // openRequest.onupgradeneeded =
         });
         return source;
@@ -368,7 +368,6 @@ export class LocalDB {
             else {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
-                        console.log('creating item: ' + item);
                         let addRequest: IDBRequest = store.add(item);
                         addRequest.onsuccess = (event: IDBEvent) => {
                             observer.next(addRequest.result);
