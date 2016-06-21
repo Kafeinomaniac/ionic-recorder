@@ -28,6 +28,28 @@ export interface IdbConfig {
     storeConfigs: StoreConfig[];
 }
 
+export function validateConfig(config: IdbConfig): IdbConfig {
+    'use strict';
+    if (typeof config === 'undefined' || !config) {
+        throw Error('Falsey DB config');
+    }
+    if (typeof config['name'] === 'undefined') {
+        throw Error('No DB name in DB config');
+    }
+    if (typeof config['version'] === 'undefined') {
+        throw Error('No DB version in DB config');
+    }
+    if (!positiveWholeNumber(config['version'])) {
+        throw Error('Malformed DB version number in DB config');
+    }
+    if (typeof config['storeConfigs'] === 'undefined' ||
+        typeof config['storeConfigs']['length'] === 'undefined' ||
+        config.storeConfigs.length === 0) {
+        throw Error('No store configs in DB config');
+    }
+    return config;
+}
+
 // wait time between checks that the db is initialized
 export const WAIT_FOR_DB_MSEC: number = 60;
 
@@ -44,12 +66,12 @@ export class Idb {
      * @constructor
      */
     constructor(config: IdbConfig) {
-        console.log('constructor():Idb');
+        validateConfig(config);
+        console.log('constructor():Idb, name=' + config.name +
+            ', version=' + config.version);
         if (typeof window['indexedDB'] === 'undefined') {
             throw new Error('Browser does not support indexedDB');
         }
-
-        this.validateConfig(config);
 
         this.openDB(config).subscribe(
             (db: IDBDatabase) => {
@@ -58,26 +80,6 @@ export class Idb {
             (error) => {
                 console.error('in openDB: ' + error);
             });
-    }
-
-    private validateConfig(config: IdbConfig): void {
-        if (typeof config === 'undefined' || !config) {
-            throw Error('Falsey DB config');
-        }
-        if (typeof config['name'] === 'undefined') {
-            throw Error('No DB name in DB config');
-        }
-        if (typeof config['version'] === 'undefined') {
-            throw Error('No DB version in DB config');
-        }
-        if (!positiveWholeNumber(config['version'])) {
-            throw Error('Malformed DB version number in DB config');
-        }
-        if (typeof config['storeConfigs'] === 'undefined' ||
-            typeof config['storeConfigs']['length'] === 'undefined' ||
-            config.storeConfigs.length === 0) {
-            throw Error('No store configs in DB config');
-        }
     }
 
     /**
@@ -103,38 +105,80 @@ export class Idb {
     }
 
     /**
-     * Set up data stores and internal data structures related to them.
+     * Initialize (find the last key of) all data stores 
      * @param {StoreConfig[]} a verified StoreConfig array
      * @param {IDBOpenDBRequest} an open database request object
      * @returns {void}
      */
-    private initStores(
+    private initStoreKeys(
+        storeConfigs: StoreConfig[],
+        openRequest: IDBOpenDBRequest,
+        observer: any
+    ): void {
+        let nStores: number = storeConfigs.length,
+            db: IDBDatabase = openRequest.result,
+            errorsFound: boolean = false,
+            nCursorsProcessed: number = 0,
+            callObserver: () => void = () => {
+                if (nCursorsProcessed === nStores) {
+                    if (errorsFound) {
+                        observer.error('init store error');
+                    }
+                    else {
+                        observer.next(db);
+                        observer.complete();
+                    }
+                }
+            };
+        this.storeKeys = {};
+        storeConfigs.forEach((sConfig: StoreConfig) => {
+            let storeName: string = sConfig.name,
+                cursorRequest: IDBRequest =
+                    db.transaction(storeName, 'readonly')
+                        .objectStore(storeName).openCursor(null, 'prev');
+
+            cursorRequest.onsuccess = (event: IDBEvent) => {
+                let cursor: IDBCursorWithValue = cursorRequest.result;
+                if (cursor) {
+                    // add 1 because this.storeKeys always has next key to save
+                    this.storeKeys[storeName] = cursor.key + 1;
+                }
+                else {
+                    // no cursor, meaning store is empty
+                    this.storeKeys[storeName] = 1;
+                }
+                nCursorsProcessed++;
+                callObserver();
+            };
+
+            cursorRequest.onerror = (event: IDBErrorEvent) => {
+                errorsFound = true;
+                nCursorsProcessed++;
+                callObserver();
+            };
+        });
+    }
+
+    /**
+     * Create data stores from scratch
+     * @param {StoreConfig[]} a verified StoreConfig array
+     * @param {IDBOpenDBRequest} an open database request object
+     * @returns {void}
+     */
+    private createStores(
         storeConfigs: StoreConfig[],
         openRequest: IDBOpenDBRequest
     ): void {
-        let i: number,
-            nStoreConfigs: number = storeConfigs.length,
-            storeConfig: StoreConfig,
-            store: IDBObjectStore;
-        this.storeKeys = {};
-        for (i = 0; i < nStoreConfigs; i++) {
-            storeConfig = storeConfigs[i];
-            // initialize key for current store
-            this.storeKeys[storeConfig.name] = 1;
-            store = openRequest.result.createObjectStore(storeConfig.name);
-            let j: number,
-                indexConfigs: StoreIndexConfig[] = storeConfig.indexConfigs,
-                nIndexConfigs: number = indexConfigs.length,
-                indexConfig: StoreIndexConfig;
-            for (j = 0; j < nIndexConfigs; j++) {
-                indexConfig = indexConfigs[j];
+        storeConfigs.forEach((sConfig: StoreConfig) => {
+            let store: IDBObjectStore =
+                openRequest.result.createObjectStore(sConfig.name);
+            sConfig.indexConfigs.forEach((iConfig: StoreIndexConfig) => {
                 store.createIndex(
-                    indexConfig.name,
-                    indexConfig.name,
-                    { unique: indexConfig.unique }
-                );
-            }
-        }
+                    iConfig.name,
+                    iConfig.name,
+                    { unique: iConfig.unique });
+            });
+        });
     }
 
     /**
@@ -148,8 +192,8 @@ export class Idb {
                 config.name, config.version);
 
             openRequest.onsuccess = (event: Event) => {
-                observer.next(openRequest.result);
-                observer.complete();
+                console.log('indexedDB.open():onsuccess()');
+                this.initStoreKeys(config.storeConfigs, openRequest, observer);
             };
 
             openRequest.onerror = (event: IDBErrorEvent) => {
@@ -162,8 +206,9 @@ export class Idb {
 
             // This function is called when the database doesn't exist
             openRequest.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+                console.log('indexedDB.open():onupgradeended()');
                 try {
-                    this.initStores(config.storeConfigs, openRequest);
+                    this.createStores(config.storeConfigs, openRequest);
                 }
                 catch (error) {
                     let ex: DOMException = error;
@@ -173,22 +218,6 @@ export class Idb {
             }; // openRequest.onupgradeneeded = ..
         });
         return source;
-    }
-
-    public static deleteDb(dbName: string): void {
-        let request: IDBOpenDBRequest = indexedDB.deleteDatabase(dbName);
-
-        request.onsuccess = function (): void {
-            // console.log('deleteDatabase: SUCCESS');
-        };
-
-        request.onerror = function (): void {
-            console.warn('deleteDatabase: ERROR');
-        };
-
-        request.onblocked = function (): void {
-            console.warn('deleteDatabase: BLOCKED');
-        };
     }
 
     /**
@@ -220,6 +249,26 @@ export class Idb {
         return source;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Public API
+    ///////////////////////////////////////////////////////////////////////////
+
+    public static deleteDb(dbName: string): void {
+        let request: IDBOpenDBRequest = indexedDB.deleteDatabase(dbName);
+
+        request.onsuccess = function (): void {
+            // console.log('deleteDatabase: SUCCESS');
+        };
+
+        request.onerror = function (): void {
+            console.warn('deleteDatabase: ERROR');
+        };
+
+        request.onblocked = function (): void {
+            console.warn('deleteDatabase: BLOCKED');
+        };
+    }
+
     /**
      * Completely erases all content of a db store
      * @params {string} storeName - the name of the store to delete
@@ -242,9 +291,7 @@ export class Idb {
         return source;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     // CRUD methods
-    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * Create a new item in a db store
@@ -265,6 +312,8 @@ export class Idb {
                         let key: number = this.storeKeys[storeName],
                             addRequest: IDBRequest = store.add(item, key);
 
+                        console.log('addRequest key: ' + key);
+
                         addRequest.onsuccess = (event: IDBEvent) => {
                             if (addRequest.result !== key) {
                                 observer.error('addRequest key mismatch');
@@ -277,7 +326,8 @@ export class Idb {
                         };
 
                         addRequest.onerror = (event: IDBEvent) => {
-                            observer.error('addRequest.onerror');
+                            observer.error('addRequest.onerror ' +
+                                event.target);
                         };
                     },
                     (error) => {

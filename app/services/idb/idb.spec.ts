@@ -3,37 +3,39 @@
 import {
     Idb,
     IdbConfig,
+    validateConfig,
     WAIT_FOR_DB_MSEC
 } from './idb';
 
-const DB_CONFIG: IdbConfig = {
-    name: 'd',
-    version: 1,
-    storeConfigs: [
-        {
-            name: 's',
-            indexConfigs: [
-                {
-                    name: 'name',
-                    unique: false
-                },
-                {
-                    name: 'parentKey',
-                    unique: false
-                },
-                {
-                    name: 'timestamp',
-                    unique: true
-                }
-            ]
-        }
-    ]
-};
+const DB_CONFIG: IdbConfig = validateConfig(
+    {
+        name: 'd',
+        version: 1,
+        storeConfigs: [
+            {
+                name: 's',
+                indexConfigs: [
+                    {
+                        name: 'name',
+                        unique: false
+                    },
+                    {
+                        name: 'parentKey',
+                        unique: false
+                    },
+                    {
+                        name: 'timestamp',
+                        unique: true
+                    }
+                ]
+            }
+        ]
+    }
+);
 
 Idb.deleteDb('d');
 
-let idb: Idb =
-    new Idb(DB_CONFIG),
+let idb: Idb = new Idb(DB_CONFIG),
     db: IDBDatabase = null,
     item1len: number = 3,
     item2len: number = 5,
@@ -236,4 +238,18 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
+    it('can initialize 2nd Idb & get correct last key', (done) => {
+        setTimeout(
+            () => {
+                // db.close(); - no need, multiple conections supported
+                let idb2: Idb = new Idb(DB_CONFIG);
+                idb2.create<Uint16Array>('s', item2).subscribe(
+                    (key: number) => {
+                        key2 = key;
+                        expect(key2).toEqual(6);
+                        done();
+                    });
+            },
+            WAIT_FOR_DB_MSEC);
+    });
 });
