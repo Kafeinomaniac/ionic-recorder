@@ -1,21 +1,46 @@
 // Copyright (c) 2016 Tracktunes Inc
 
+import {
+    Idb
+} from '../idb/idb';
+
 // this is just here for DRY-ness - things used in both web-audio-player.ts
 // and web-audio-recorder.ts
-
-export const AUDIO_CONTEXT: AudioContext = (function (): AudioContext {
-    if (typeof AudioContext === 'undefined') {
-        if (typeof webkitAudioContext === 'undefined') {
-            return null;
+export const AUDIO_CONTEXT: AudioContext =
+    ((): AudioContext => {
+        if (typeof window['AudioContext'] === 'undefined') {
+            if (typeof window['webkitAudioContext'] === 'undefined') {
+                return null;
+            }
+            else {
+                return new webkitAudioContext();
+            }
         }
         else {
-            return new webkitAudioContext();
+            return new AudioContext();
         }
-    }
-    else {
-        return new AudioContext();
-    }
-})();
+    })();
+
+// we'll open recordings db only once, here, for both player and recorder
+export const IDB: Idb =
+    ((): Idb => {
+        try {
+            return new Idb({
+                name: 'WebAudioRecordings',
+                version: 1,
+                storeConfigs: [
+                    {
+                        name: 'RecordedChunks',
+                        indexConfigs: []
+                    }
+                ]
+            });
+
+        }
+        catch (err) {
+            return null;
+        }
+    })();
 
 /**
  * format time into H*:MM:SS.CC
