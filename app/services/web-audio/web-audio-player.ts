@@ -10,7 +10,7 @@ import {
 
 import {
     formatTime
-} from '../utils/time-utils';
+} from '../utils/utils';
 
 ///////////////////////////////////////////////////////////////////////////////
 // PLAYER
