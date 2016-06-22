@@ -57,17 +57,20 @@ export class IdbFilesystem extends Idb {
     }
 
     public static isDataNode(treeNode: TreeNode): boolean {
-        return treeNode['data'];
+        console.log('D? treeNode["data"] = ' + treeNode['data']);
+        return treeNode['data'] !== undefined;
     }
 
     public static isFolderNode(treeNode: TreeNode): boolean {
-        return !treeNode['data'];
+        console.log('F? treeNode["data"] = ' + treeNode['data']);
+        return treeNode['data'] === undefined;
     }
 
     // if you supply data it's a data node, otherwise it's a folder node
+    // if you do not supply a parent key it's a root node
     public static makeTreeNode(
         name: string,
-        parentKey: number,
+        parentKey?: number,
         data?: any
     ): TreeNode {
         let treeNode: TreeNode = {
@@ -75,7 +78,13 @@ export class IdbFilesystem extends Idb {
             parentKey: parentKey,
             timeStamp: Date.now()
         };
-        if (this.isFolderNode(treeNode)) {
+        if (parentKey) {
+            treeNode.parentKey = parentKey;
+        }
+        if (data) {
+            treeNode.data = data;
+        }
+        else {
             treeNode.childOrder = [];
         }
         return treeNode;
