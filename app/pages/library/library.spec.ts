@@ -30,7 +30,7 @@ setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 
-xdescribe('LibraryPage', () => {
+xdescribe('pages/library:LibraryPage', () => {
     instanceFixture = beforeEachDI(
         LibraryPage,
         [LocalDB, AppState, configProvider, navControllerProvider],
@@ -38,7 +38,7 @@ xdescribe('LibraryPage', () => {
         null
     );
 
-    it('initialises', () => {
+    it('initializes', () => {
         expect(instanceFixture.instance).not.toBeNull();
         expect(instanceFixture.fixture).not.toBeNull();
     });

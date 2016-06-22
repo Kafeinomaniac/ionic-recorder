@@ -38,21 +38,42 @@ Idb.deleteDb('d');
 let idb: Idb = new Idb(DB_CONFIG),
     db: IDBDatabase = null,
     item1len: number = 3,
-    item2len: number = 5,
+    item2len: number = 4,
     item1: Uint16Array = new Uint16Array(item1len),
     item2: Uint16Array = new Uint16Array(item2len),
     key1: number,
     key2: number;
 
-item1[0] = 1;
-item1[1] = 2;
-item1[2] = 3;
+// fill up item1 and item2 with unique data per element
+item1[0] = 11;
+item1[1] = 12;
+item1[2] = 13;
 
-item2[0] = 11;
+item2[0] = 21;
 item2[1] = 22;
-item2[2] = 33;
-item2[3] = 44;
-item2[4] = 55;
+item2[2] = 23;
+item2[3] = 24;
+
+// explicitly check every element
+function whichItem(item: Uint16Array): number {
+    'use strict';
+    if (item.length === item1len &&
+        item[0] === 11 &&
+        item[1] === 12 &&
+        item[2] === 13) {
+        return 1;
+    }
+    else if (item.length === item2len &&
+        item[0] === 21 &&
+        item[1] === 22 &&
+        item[2] === 23 &&
+        item[3] === 24) {
+        return 2;
+    }
+    else {
+        throw Error('item is neither 1 nor 2, item: ' + item);
+    }
+}
 
 beforeEach((done: Function) => {
     idb.waitForDB().subscribe(
@@ -67,31 +88,24 @@ beforeEach((done: Function) => {
 
 // jasmine.DEFAULT_TIMEOUT_INTERVAL = WAIT_FOR_DB_MSEC;
 
-describe('Idb', () => {
-    it('idb is not falsy', (done) => {
+describe('services/idb:Idb', () => {
+    it('initializes', (done) => {
         setTimeout(
             () => {
                 expect(idb).not.toBeFalsy();
-                done();
-            },
-            WAIT_FOR_DB_MSEC);
-    });
-
-    it('db is not falsy', (done) => {
-        setTimeout(
-            () => {
                 expect(db).not.toBeFalsy();
                 done();
             },
             WAIT_FOR_DB_MSEC);
     });
 
-    it('create(item1) returns 1', (done) => {
+    it('can create(item1), key == 1', (done) => {
         setTimeout(
             () => {
                 idb.create<Uint16Array>('s', item1).subscribe(
                     (key: number) => {
                         key1 = key;
+                        // db has just been deleted first key should be 1
                         expect(key1).toEqual(1);
                         done();
                     });
@@ -99,12 +113,13 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('create(item2) returns 2', (done) => {
+    it('can create(item2), key == 2', (done) => {
         setTimeout(
             () => {
                 idb.create<Uint16Array>('s', item2).subscribe(
                     (key: number) => {
                         key2 = key;
+                        // tests that keys are created as successive ints
                         expect(key2).toEqual(2);
                         done();
                     });
@@ -112,7 +127,7 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('clears the store', (done) => {
+    it('can clear the store', (done) => {
         setTimeout(
             () => {
                 idb.clearStore('s').subscribe(
@@ -124,7 +139,7 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('create(item1) returns 3', (done) => {
+    it('can create(item1), key == 3', (done) => {
         setTimeout(
             () => {
                 idb.create<Uint16Array>('s', item1).subscribe(
@@ -137,7 +152,7 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('create(item2) returns 4', (done) => {
+    it('can create(item2), key == 4', (done) => {
         setTimeout(
             () => {
                 idb.create<Uint16Array>('s', item2).subscribe(
@@ -150,13 +165,12 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('read(1) returns item1', (done) => {
+    it('can read(item1)', (done) => {
         setTimeout(
             () => {
                 idb.read<Uint16Array>('s', key1).subscribe(
                     (result: Uint16Array) => {
-                        expect(result.length).toEqual(item1len);
-                        expect(result.BYTES_PER_ELEMENT).toEqual(2);
+                        expect(whichItem(result)).toEqual(1);
                         done();
                     }
                 );
@@ -164,11 +178,12 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('delete(1) works', (done) => {
+    it('can delete(item1)', (done) => {
         setTimeout(
             () => {
                 idb.delete('s', key1).subscribe(
                     () => {
+                        // delete works, test that you cannot re-read it
                         idb.read('s', key1).subscribe(
                             (result: Uint16Array) => {
                                 expect(result).toEqual(undefined);
@@ -179,13 +194,12 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('read(2) returns item2', (done) => {
+    it('can read(item2)', (done) => {
         setTimeout(
             () => {
                 idb.read<Uint16Array>('s', key2).subscribe(
                     (result: Uint16Array) => {
-                        expect(result.length).toEqual(item2len);
-                        expect(result.BYTES_PER_ELEMENT).toEqual(2);
+                        expect(whichItem(result)).toEqual(2);
                         done();
                     }
                 );
@@ -193,7 +207,7 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('create(item1) again returns 5', (done) => {
+    it('can create(item1) again, key == 5', (done) => {
         setTimeout(
             () => {
                 idb.create<Uint16Array>('s', item1).subscribe(
@@ -206,15 +220,15 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('update(key1, item2) item1 to item2 works', (done) => {
+    it('can update(key1, item2)', (done) => {
         setTimeout(
             () => {
                 idb.update<Uint16Array>('s', key1, item2).subscribe(
                     () => {
-                        // read it after updating ensure length same as item2
+                        // read it after updating ensure same as item2
                         idb.read('s', key1).subscribe(
                             (result: Uint16Array) => {
-                                expect(result.length).toEqual(item2len);
+                                expect(whichItem(result)).toEqual(2);
                                 done();
                             });
                     });
@@ -222,7 +236,7 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('update(key2, item1) item2 to item1 works', (done) => {
+    it('can update(key2, item1)', (done) => {
         setTimeout(
             () => {
                 idb.update<Uint16Array>('s', key2, item1).subscribe(
@@ -230,7 +244,7 @@ describe('Idb', () => {
                         // read it after updating ensure length same as item1
                         idb.read('s', key2).subscribe(
                             (result: Uint16Array) => {
-                                expect(result.length).toEqual(item1len);
+                                expect(whichItem(result)).toEqual(1);
                                 done();
                             });
                     });
@@ -238,7 +252,7 @@ describe('Idb', () => {
             WAIT_FOR_DB_MSEC);
     });
 
-    it('can initialize 2nd Idb & get correct last key', (done) => {
+    it('can initialize 2nd Idb and create item2 in it', (done) => {
         setTimeout(
             () => {
                 // db.close(); - no need, multiple conections supported
@@ -246,6 +260,7 @@ describe('Idb', () => {
                 idb2.create<Uint16Array>('s', item2).subscribe(
                     (key: number) => {
                         key2 = key;
+                        // tests that keys continue to get incremented 
                         expect(key2).toEqual(6);
                         done();
                     });

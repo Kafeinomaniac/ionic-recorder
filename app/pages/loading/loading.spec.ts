@@ -20,7 +20,7 @@ setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 
-xdescribe('LoadingPage', () => {
+xdescribe('pages/loading:LoadingPage', () => {
     instanceFixture = beforeEachDI(
         LoadingPage,
         [],
@@ -28,7 +28,7 @@ xdescribe('LoadingPage', () => {
         null
     );
 
-    it('initialises', () => {
+    it('initializes', () => {
         expect(instanceFixture.instance).not.toBeNull();
         expect(instanceFixture.fixture).not.toBeNull();
     });

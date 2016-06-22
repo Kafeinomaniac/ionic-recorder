@@ -28,17 +28,11 @@ beforeEach(() => {
     setter = new DoubleBufferSetter(buffer1, buffer2, preSetCB);
 });
 
-describe('DoubleBuffer Getter/Setter', () => {
+describe('utils/double-buffer:DoubleBufferGetter/Setter', () => {
 
-    it('is at double buffer start', () => {
-        expect(getter.atStart()).toBe(true);
-        expect(setter.atStart()).toBe(true);
-    });
-
-    it('wrapping works as expected', () => {
+    it('wrap around as expected', () => {
         // fill up buffer1 to be [1,2,3], buffer2 to be [4,5,6]
         setter.setNext(1);
-        expect(setter.atStart()).toBe(false);
         expect(preSetCBCounter).toEqual(0);
         setter.setNext(2);
         expect(preSetCBCounter).toEqual(0);
@@ -54,7 +48,6 @@ describe('DoubleBuffer Getter/Setter', () => {
 
         // getter should get them in the same order
         expect(getter.getNext()).toEqual(1);
-        expect(getter.atStart()).toBe(false);
         expect(preGetCBCounter).toEqual(0);
         expect(getter.getNext()).toEqual(2);
         expect(preGetCBCounter).toEqual(0);

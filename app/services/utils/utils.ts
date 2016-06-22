@@ -1,6 +1,22 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 /**
+ * Update object 'dest' by adding or changing any fields that differ in 'src'
+ * @param {Object} 'src' the source object from which to update 'dest'
+ * @param {Object} 'dest' the destination object to update and return
+ * @returns {Object} the updated 'dest' object
+ */
+export function copyFromObject(src: Object, dest: Object): Object {
+    'use strict';
+    for (let i in src) {
+        if (src.hasOwnProperty(i)) {
+            dest[i] = src[i];
+        }
+    }
+    return dest;
+}
+
+/**
  * Positive whole number test
  * @param {number} the number we're verifying
  * @returns {boolean} whether argument is a positive whole number

@@ -29,10 +29,6 @@ export abstract class DoubleBuffer {
         this.activeBuffer = buffer1;
     }
 
-    public atStart(): boolean {
-        return this.cumulativeIndex === 0;
-    }
-
     protected swap(): void {
         if (this.preSwapCB) {
             this.preSwapCB();

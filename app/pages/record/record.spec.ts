@@ -32,7 +32,7 @@ setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 
-xdescribe('RecordPage', () => {
+xdescribe('pages/record:RecordPage', () => {
     instanceFixture = beforeEachDI(
         RecordPage,
         [LocalDB, AppState, WebAudioRecorder],
@@ -40,7 +40,7 @@ xdescribe('RecordPage', () => {
         null
     );
 
-    it('initialises', () => {
+    it('initializes', () => {
         expect(instanceFixture.instance).not.toBeNull();
         expect(instanceFixture.fixture).not.toBeNull();
     });

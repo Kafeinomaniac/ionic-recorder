@@ -25,7 +25,7 @@ setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 
-xdescribe('AboutPage', () => {
+xdescribe('pages/about:AboutPage', () => {
     instanceFixture = beforeEachDI(
         AboutPage,
         [AppState, menuControllerProvider],
@@ -33,7 +33,7 @@ xdescribe('AboutPage', () => {
         null
     );
 
-    it('initialises', () => {
+    it('initializes', () => {
         expect(instanceFixture.instance).not.toBeNull();
         expect(instanceFixture.fixture).not.toBeNull();
     });

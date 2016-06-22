@@ -13,11 +13,11 @@ import {
     it
 } from '@angular/core/testing';
 
-describe('test-utils', () => {
+describe('utils/test-utils:resetControl()', () => {
 
     it('resets a control', () => {
-        let control: Control = new Control('');
-        let returnedControl: AbstractControl = null;
+        let control: Control = new Control(''),
+            returnedControl: AbstractControl = null;
         control.markAsTouched();
         control.updateValue('dave');
         returnedControl = resetControl(control);
