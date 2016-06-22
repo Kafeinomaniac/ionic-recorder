@@ -105,7 +105,7 @@ export class Idb {
     }
 
     /**
-     * Initialize (find the last key of) all data stores 
+     * Initialize (find the last key of) all data stores
      * @param {StoreConfig[]} a verified StoreConfig array
      * @param {IDBOpenDBRequest} an open database request object
      * @returns {void}
