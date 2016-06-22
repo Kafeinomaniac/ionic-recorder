@@ -41,7 +41,7 @@ describe('services/idb:IdbFilesystem', () => {
             IT_TIMEOUT_MSEC);
     });
 
-    it('can make a folder node', (done) => {
+    it('can make nodes and test them', (done) => {
         setTimeout(
             () => {
                 // verify folder node creation
