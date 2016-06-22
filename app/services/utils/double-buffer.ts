@@ -1,13 +1,13 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 export abstract class DoubleBuffer {
-    protected bufferLength: number;
-    protected bufferIndex: number;
-    protected cumulativeIndex: number;
-    protected activeBuffer: any;
     private buffer1: any;
     private buffer2: any;
     private preSwapCB: () => void;
+    protected bufferLength: number;
+    public bufferIndex: number;
+    public cumulativeIndex: number;
+    public activeBuffer: any;
 
     constructor(
         buffer1: any,

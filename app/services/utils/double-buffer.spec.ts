@@ -23,6 +23,7 @@ beforeEach(() => {
     buffer2 = new Uint16Array(3);
     preGetCBCounter = 0;
     preSetCBCounter = 0;
+    // (buffer1, buffer2) are shared by getter and setter 
     getter = new DoubleBufferGetter(buffer1, buffer2, preGetCB);
     setter = new DoubleBufferSetter(buffer1, buffer2, preSetCB);
 });

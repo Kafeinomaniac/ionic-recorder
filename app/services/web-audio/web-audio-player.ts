@@ -5,9 +5,12 @@ import {
 } from '@angular/core';
 
 import {
-    AUDIO_CONTEXT,
-    formatTime
+    AUDIO_CONTEXT
 } from './web-audio-common';
+
+import {
+    formatTime
+} from '../utils/time-utils';
 
 ///////////////////////////////////////////////////////////////////////////////
 // PLAYER

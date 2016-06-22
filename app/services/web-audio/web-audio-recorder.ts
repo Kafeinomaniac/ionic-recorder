@@ -5,31 +5,19 @@ import {
 } from '@angular/core';
 
 import {
-    AUDIO_CONTEXT,
-    formatTime
+    IDB,
+    IDB_STORE_NAME,
+    AUDIO_CONTEXT
 } from './web-audio-common';
 
 import {
-    DB_FILE_STORE_NAME,
-    LocalDB
-} from '../local-db/local-db';
+    DoubleBufferSetter
+} from '../utils/double-buffer';
 
-// import {
-//     Idb,
-//     IdbConfig,
-//     WAIT_FOR_DB_MSEC
-// } from '../idb/idb';
-
-// const DB_CONFIG: IdbConfig = {
-//     name: 'WebAudioRecordings',
-//     version: 1,
-//     storeConfigs: [
-//         {
-//             name: 'RecordedChunks',
-//             indexConfigs: []
-//         }
-//     ]
-// };
+import {
+    formatTime,
+    makeSecondsTimestamp
+} from '../utils/time-utils';
 
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.
@@ -53,6 +41,8 @@ const DB_CHUNK2: Uint16Array = new Uint16Array(DB_CHUNK_LENGTH);
 export enum RecorderStatus {
     // uninitialized means we have not been initialized yet
     UNINITIALIZED_STATE,
+    // error occured - no indexedDB available
+    NO_DB_ERROR,
     // error occured - no AudioContext
     NO_CONTEXT_ERROR,
     // error occured - no microphone
@@ -63,24 +53,6 @@ export enum RecorderStatus {
     GETUSERMEDIA_ERROR,
     // normal operation
     READY_STATE
-}
-
-/**
- * Create a string that reflects the time now, at 1 second resolution
- * @return {string} - human readable text representation of time now
- */
-function makeTimestamp(): string {
-    'use strict';
-    let now: Date = new Date();
-    return [
-        now.getFullYear().toString(),
-        '-',
-        (now.getMonth() + 1).toString(),
-        '-',
-        now.getDate().toString(),
-        ' -- ',
-        now.toLocaleTimeString()
-    ].join('');
 }
 
 /**
@@ -97,14 +69,10 @@ export class WebAudioRecorder {
     private nPeakMeasurements: number;
     private intervalId: NodeJS.Timer;
     private nRecordedProcessingBuffers: number;
-    private nDbBuffers: number;
-    private dbChunkIndex: number;
-    private localDB: LocalDB;
-    private doubleBufferIndex: number;
     private nRecordedSamples: number;
     private dbFileName: string;
-    private dbStartKey: number;
-    private dbEndKey: number;
+    private dbKeys: number[];
+    private setter: DoubleBufferSetter;
 
     public status: RecorderStatus;
     public sampleRate: number;
@@ -116,10 +84,13 @@ export class WebAudioRecorder {
     public percentPeaksAtMax: string;
 
     // this is how we signal
-    constructor(localDB: LocalDB) {
+    constructor() {
         console.log('constructor():WebAudioRecorder');
 
-        this.localDB = localDB;
+        if (!IDB) {
+            this.status = RecorderStatus.NO_DB_ERROR;
+            return;
+        }
 
         if (!AUDIO_CONTEXT) {
             this.status = RecorderStatus.NO_CONTEXT_ERROR;
@@ -130,12 +101,22 @@ export class WebAudioRecorder {
 
         // create nodes that do not require a stream in their constructor
         this.createNodes();
-        // this call to stop() initializes a lot of private variables
-        this.stop();
         // this call to resetPeaks() also initializes private variables
         this.resetPeaks();
         // grab microphone, init nodes that rely on stream, connect nodes
         this.initAudio();
+
+        this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
+            IDB.create(IDB_STORE_NAME, this.setter.activeBuffer).subscribe(
+                (key: number) => {
+                    // increment the buffers-saved counter
+                    this.dbKeys.push(key);
+                    console.log('saved chunk ' + this.dbKeys.length);
+                });
+        });
+
+        // stop() properly inits some variables for the next start()
+        this.stop();
     }
 
     /**
@@ -190,24 +171,6 @@ export class WebAudioRecorder {
         }
     }
 
-    private swapChunks(): void {
-        if (this.doubleBufferIndex === 0) {
-            this.doubleBufferIndex = 1;
-        }
-        else if (this.doubleBufferIndex === 1) {
-            this.doubleBufferIndex = 0;
-        }
-    }
-
-    private selectChunk(): Uint16Array {
-        if (this.doubleBufferIndex === 0) {
-            return DB_CHUNK1;
-        }
-        else if (this.doubleBufferIndex === 1) {
-            return DB_CHUNK2;
-        }
-    }
-
     private onAudioProcess(processingEvent: AudioProcessingEvent): void {
         let inputBuffer: AudioBuffer = processingEvent.inputBuffer,
             inputData: Float32Array = inputBuffer.getChannelData(0),
@@ -240,27 +203,8 @@ export class WebAudioRecorder {
             // fill up double-buffer active buffer if recording and
             // save each time a fill-up occurs
             if (this.isRecording) {
-                let chunk: Uint16Array = this.selectChunk();
-                if (this.nRecordedProcessingBuffers === 0 &&
-                    this.dbChunkIndex === 0) {
-                    // we are at the very beginning: at 1st sample.
-                    // set the filename to use for this recording
-                    // according to the time now
-                    this.dbFileName = makeTimestamp();
-                }
-                if (this.dbChunkIndex === DB_CHUNK_LENGTH) {
-                    // we reached the end of a chunk, save it to DB
-                    this.saveChunkToDbAndSwap(chunk, this.dbChunkIndex, null);
-                    // saveChunk immediately called swapChunks() before the
-                    // observable.subscribe, so we need to reset the index in
-                    // the newly swapped chunk to the start. this next line
-                    // gets executed while the saveToDB is still working
-                    this.dbChunkIndex = 0;
-                }
-                // keep filling up DB_CHUNK
+                this.setter.setNext(value * 0x7FFF);
                 this.nRecordedSamples++;
-                chunk[this.dbChunkIndex] = value * 0x7FFF;
-                this.dbChunkIndex++;
             }
         } // for (i ...
         if (this.isRecording) {
@@ -410,9 +354,12 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public start(): void {
+        this.dbFileName = makeSecondsTimestamp();
+        this.nRecordedProcessingBuffers = 0;
+        this.nRecordedSamples = 0;
+        this.dbKeys = [];
         this.isRecording = true;
         this.isInactive = false;
-        this.resetBufferVariables();
     }
 
     /**
@@ -431,47 +378,6 @@ export class WebAudioRecorder {
         this.isRecording = true;
     }
 
-    private resetBufferVariables(): void {
-        this.doubleBufferIndex = 0;
-        this.nRecordedProcessingBuffers = 0;
-        this.nDbBuffers = 0;
-        this.dbChunkIndex = 0;
-        this.nRecordedSamples = 0;
-    }
-
-    private saveChunkToDbAndSwap(
-        chunk: Uint16Array,
-        chunkEndIndex: number,
-        finalAction: Function
-    ): void {
-        this.swapChunks();
-        this.localDB.createStoreItemReturningKey(
-            DB_FILE_STORE_NAME,
-            { data: chunk.subarray(0, chunkEndIndex) }
-        ).subscribe(
-            (key: number) => {
-                // increment the buffers-saved counter
-                this.nDbBuffers++;
-                console.log('Saving chunk ' +
-                    this.nDbBuffers +
-                    '; Filename: ' +
-                    this.dbFileName +
-                    '; nSamples: ' +
-                    chunkEndIndex +
-                    '; Key: ' + key);
-                if (this.nDbBuffers === 1) {
-                    // first chunk saved, save its key as last
-                    this.dbStartKey = key;
-                }
-                // current key returned is the last key
-                this.dbEndKey = key;
-
-                if (finalAction) {
-                    finalAction();
-                }
-            });
-    }
-
     /**
      * Stop recording
      * @returns {void}
@@ -479,40 +385,21 @@ export class WebAudioRecorder {
     public stop(): void {
         this.isRecording = false;
         this.isInactive = true;
-        // finish off saving the last of it, if there are samples left
-        if (this.dbChunkIndex !== 0 && this.dbChunkIndex !== undefined) {
-            let chunk: Uint16Array = this.selectChunk();
-            this.saveChunkToDbAndSwap(
-                chunk,
-                this.dbChunkIndex,
-                () => {
-                    console.log('DONE: ' + this.nDbBuffers + ' DB buffers, ' +
-                        this.nRecordedProcessingBuffers + ' P buffers, ' +
-                        ((this.nDbBuffers - 1) * DB_CHUNK_LENGTH +
-                            this.dbChunkIndex) + ' samples(1), ' +
-                        'dbChunkIndex: ' + this.dbChunkIndex + ' --- ' +
-                        this.nRecordedSamples + ' samples(2), ' +
-                        (this.nRecordedProcessingBuffers *
-                            PROCESSING_BUFFER_LENGTH) + ' ~samples(3), ' +
-                        this.dbFileName + ': ' +
-                        this.dbStartKey + ' - ' + this.dbEndKey);
-                    // create a new node in our tree pointing to the data
-                    // TODO using '2' below is a hack - we know that the 
-                    // unfiled folder gets created as the second node in our
-                    // tree so we use 2 here, but we need to do this better.
-                    this.localDB.createDataNode(
-                        this.dbFileName,
-                        2,
-                        {
-                            startKey: this.dbStartKey,
-                            endKey: this.dbEndKey
-                        }).subscribe();
-                }
-            );
+        this.nRecordedProcessingBuffers = 0;
+        if (this.setter.bufferIndex === 0) {
+            // no leftovers: rare that we reach here due to no leftovers
+            // but we also reach here during the constructor call
+            return;
         }
-        else {
-            // no samples left, just reset
-            this.resetBufferVariables();
-        }
+        // save leftover partial buffer
+        IDB.create(
+            IDB_STORE_NAME,
+            this.setter.activeBuffer.subarray(0, this.setter.bufferIndex)
+        ).subscribe(
+            (key: number) => {
+                // increment the buffers-saved counter
+                this.dbKeys.push(key);
+                console.log('saved final chunk ' + this.dbKeys.length);
+            });
     }
 }

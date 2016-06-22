@@ -192,7 +192,7 @@ export class Idb {
                 config.name, config.version);
 
             openRequest.onsuccess = (event: Event) => {
-                console.log('indexedDB.open():onsuccess()');
+                // console.log('indexedDB.open():onsuccess()');
                 this.initStoreKeys(config.storeConfigs, openRequest, observer);
             };
 
@@ -311,8 +311,6 @@ export class Idb {
                     (store: IDBObjectStore) => {
                         let key: number = this.storeKeys[storeName],
                             addRequest: IDBRequest = store.add(item, key);
-
-                        console.log('addRequest key: ' + key);
 
                         addRequest.onsuccess = (event: IDBEvent) => {
                             if (addRequest.result !== key) {
