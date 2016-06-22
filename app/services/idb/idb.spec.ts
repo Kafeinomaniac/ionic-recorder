@@ -2,12 +2,12 @@
 
 import {
     Idb,
-    IdbConfig,
-    validateConfig,
-    WAIT_FOR_DB_MSEC
+    IdbConfig
 } from './idb';
 
-const DB_CONFIG: IdbConfig = validateConfig(
+const IT_TIMEOUT_MSEC: number = 60;
+
+const DB_CONFIG: IdbConfig = Idb.validateConfig(
     {
         name: 'd',
         version: 1,
@@ -86,7 +86,7 @@ beforeEach((done: Function) => {
         });
 });
 
-// jasmine.DEFAULT_TIMEOUT_INTERVAL = WAIT_FOR_DB_MSEC;
+// jasmine.DEFAULT_TIMEOUT_INTERVAL = IT_TIMEOUT_MSEC;
 
 describe('services/idb:Idb', () => {
     it('initializes', (done) => {
@@ -96,7 +96,7 @@ describe('services/idb:Idb', () => {
                 expect(db).not.toBeFalsy();
                 done();
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can create(item1), key == 1', (done) => {
@@ -110,7 +110,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can create(item2), key == 2', (done) => {
@@ -124,7 +124,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can clear the store', (done) => {
@@ -136,7 +136,7 @@ describe('services/idb:Idb', () => {
                     }
                 );
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can create(item1), key == 3', (done) => {
@@ -149,7 +149,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can create(item2), key == 4', (done) => {
@@ -162,7 +162,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can read(item1)', (done) => {
@@ -175,7 +175,7 @@ describe('services/idb:Idb', () => {
                     }
                 );
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can delete(item1)', (done) => {
@@ -191,7 +191,7 @@ describe('services/idb:Idb', () => {
                             });
                     });
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can read(item2)', (done) => {
@@ -204,7 +204,7 @@ describe('services/idb:Idb', () => {
                     }
                 );
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can create(item1) again, key == 5', (done) => {
@@ -217,7 +217,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can update(key1, item2)', (done) => {
@@ -233,7 +233,7 @@ describe('services/idb:Idb', () => {
                             });
                     });
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can update(key2, item1)', (done) => {
@@ -249,7 +249,7 @@ describe('services/idb:Idb', () => {
                             });
                     });
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 
     it('can initialize 2nd Idb and create item2 in it', (done) => {
@@ -265,6 +265,6 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            WAIT_FOR_DB_MSEC);
+            IT_TIMEOUT_MSEC);
     });
 });

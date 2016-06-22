@@ -8,6 +8,9 @@ import {
     positiveWholeNumber
 } from '../utils/utils';
 
+// wait time between checks that the db is initialized
+const WAIT_FOR_DB_MSEC: number = 60;
+
 interface StoreKeys {
     [storeName: string]: number;
 }
@@ -28,31 +31,6 @@ export interface IdbConfig {
     storeConfigs: StoreConfig[];
 }
 
-export function validateConfig(config: IdbConfig): IdbConfig {
-    'use strict';
-    if (typeof config === 'undefined' || !config) {
-        throw Error('Falsey DB config');
-    }
-    if (typeof config['name'] === 'undefined') {
-        throw Error('No DB name in DB config');
-    }
-    if (typeof config['version'] === 'undefined') {
-        throw Error('No DB version in DB config');
-    }
-    if (!positiveWholeNumber(config['version'])) {
-        throw Error('Malformed DB version number in DB config');
-    }
-    if (typeof config['storeConfigs'] === 'undefined' ||
-        typeof config['storeConfigs']['length'] === 'undefined' ||
-        config.storeConfigs.length === 0) {
-        throw Error('No store configs in DB config');
-    }
-    return config;
-}
-
-// wait time between checks that the db is initialized
-export const WAIT_FOR_DB_MSEC: number = 60;
-
 /**
  * @name Idb
  * @description
@@ -66,7 +44,7 @@ export class Idb {
      * @constructor
      */
     constructor(config: IdbConfig) {
-        validateConfig(config);
+        Idb.validateConfig(config);
         console.log('constructor():Idb, name=' + config.name +
             ', version=' + config.version);
         if (typeof window['indexedDB'] === 'undefined') {
@@ -80,6 +58,30 @@ export class Idb {
             (error) => {
                 console.error('in openDB: ' + error);
             });
+    }
+
+    // we make this a static function because it needs to be called
+    // before class construction sometimes
+    public static validateConfig(config: IdbConfig): IdbConfig {
+        'use strict';
+        if (typeof config === 'undefined' || !config) {
+            throw Error('Falsey DB config');
+        }
+        if (typeof config['name'] === 'undefined') {
+            throw Error('No DB name in DB config');
+        }
+        if (typeof config['version'] === 'undefined') {
+            throw Error('No DB version in DB config');
+        }
+        if (!positiveWholeNumber(config['version'])) {
+            throw Error('Malformed DB version number in DB config');
+        }
+        if (typeof config['storeConfigs'] === 'undefined' ||
+            typeof config['storeConfigs']['length'] === 'undefined' ||
+            config.storeConfigs.length === 0) {
+            throw Error('No store configs in DB config');
+        }
+        return config;
     }
 
     /**
