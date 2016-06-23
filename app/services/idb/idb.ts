@@ -29,32 +29,6 @@ interface StoreConfig {
 // START: Public API
 ////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Delete entire database. Exported global because we may call it
- * before constructing an Idb object.
- * @params {string} dbName - the name of the database to delete
- * @returns {void} We assume the delete just works but we get an
- * error thrown if it does not.
- */
-export function deleteDb(dbName: string): void {
-    'use strict';
-    let request: IDBOpenDBRequest = indexedDB.deleteDatabase(dbName);
-
-    request.onsuccess = function (): void {
-        // console.log('deleteDatabase: SUCCESS');
-    };
-
-    request.onerror = function (): void {
-        console.warn('deleteDatabase: ERROR');
-        throw Error('Idb:deleteDb() request error');
-    };
-
-    request.onblocked = function (): void {
-        console.warn('deleteDatabase: BLOCKED');
-        throw Error('Idb:deleteDb() request blocked error');
-    };
-}
-
 export interface IdbConfig {
     name: string;
     version: number;
@@ -88,6 +62,32 @@ export class Idb {
             (error) => {
                 console.error('in openDB: ' + error);
             });
+    }
+
+    /**
+     * Delete entire database. Exported global because we may call it
+     * before constructing an Idb object.
+     * @params {string} dbName - the name of the database to delete
+     * @returns {void} We assume the delete just works but we get an
+     * error thrown if it does not.
+     */
+    public static deleteDb(dbName: string): void {
+        'use strict';
+        let request: IDBOpenDBRequest = indexedDB.deleteDatabase(dbName);
+
+        request.onsuccess = function (): void {
+            // console.log('deleteDatabase: SUCCESS');
+        };
+
+        request.onerror = function (): void {
+            console.warn('deleteDatabase: ERROR');
+            throw Error('Idb:deleteDb() request error');
+        };
+
+        request.onblocked = function (): void {
+            console.warn('deleteDatabase: BLOCKED');
+            throw Error('Idb:deleteDb() request blocked error');
+        };
     }
 
     // we make this a static function because it needs to be called

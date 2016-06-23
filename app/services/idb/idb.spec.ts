@@ -2,8 +2,7 @@
 
 import {
     Idb,
-    IdbConfig,
-    deleteDb
+    IdbConfig
 } from './idb';
 
 const IT_TIMEOUT_MSEC: number = 60;
@@ -34,7 +33,7 @@ const DB_CONFIG: IdbConfig = Idb.validateConfig(
     }
 );
 
-deleteDb('d');
+Idb.deleteDb('d');
 
 let idb: Idb = new Idb(DB_CONFIG),
     db: IDBDatabase = null,
