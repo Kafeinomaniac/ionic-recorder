@@ -90,10 +90,3 @@ export function makeSecondsTimestamp(): string {
         now.toLocaleTimeString()
     ].join('');
 }
-
-export function prependArray(value: any, arr: any[]): any[] {
-    'use strict';
-    let newArray: any[] = arr.slice(0);
-    newArray.unshift(value);
-    return newArray;
-}

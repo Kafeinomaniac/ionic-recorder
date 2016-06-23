@@ -9,8 +9,7 @@ import {
 } from 'rxjs/Rx';
 
 import {
-    positiveWholeNumber,
-    prependArray
+    positiveWholeNumber
 } from '../../services/utils/utils';
 
 const NODE_STORE: string = 'fileSystem';
@@ -323,9 +322,7 @@ export class IdbFilesystem extends Idb {
                 (parentNode: TreeNode) => {
                     // push newly created nodes to the front of
                     // the parent childOrder list
-                    parentNode.childOrder = prependArray(
-                        childKey,
-                        parentNode.childOrder);
+                    parentNode.childOrder.unshift(childKey);
                     // now you update the node with new childOrder
                     this.update<TreeNode>(
                         NODE_STORE,
