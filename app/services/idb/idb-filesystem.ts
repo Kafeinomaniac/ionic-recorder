@@ -65,9 +65,13 @@ export class IdbFilesystem extends Idb {
                 }
             ]
         });
+
         this.rootFolderName = rootFolderName;
         this.waitForFilesystem().subscribe(
             (rootFolderKey: number) => {
+                if (rootFolderKey !== 1) {
+                    throw Error('rootFolder key is not 1');
+                }
                 this.rootFolderKey = rootFolderKey;
             },
             (error) => {
@@ -94,25 +98,23 @@ export class IdbFilesystem extends Idb {
                                         this.rootFolderName)
                                 ).subscribe(
                                     (key: number) => {
-                                        if (key !== 1) {
-                                            throw Error('rootFolder key != 1');
-                                        }
-                                        else {
-                                            observer.next(key);
-                                            observer.complete();
-                                        }
+                                        observer.next(key);
+                                        observer.complete();
                                     },
                                     (error) => {
-                                        observer.error(error);
+                                        observer.error('waitForFilesystem():' +
+                                            'waitForDB():readNode():' +
+                                            'create(): ' + error);
                                     });
                             }
                         },
                         (error) => {
-                            observer.error(error);
+                            observer.error('waitForFilesystem():waitForDB():' +
+                                'readNode(): ' + error);
                         });
                 },
                 (error) => {
-                    observer.error(error);
+                    observer.error('waitForFilesystem():waitForDB() ' + error);
                 });
         });
         return source;
