@@ -38,6 +38,8 @@ export interface KeyDict {
 }
 
 export class IdbFilesystem extends Idb {
+    private rootFolderName: string;
+    private rootFolderKey: number;
 
     constructor(dbName: string, dbVersion: number, rootFolderName: string) {
         super({
@@ -63,16 +65,51 @@ export class IdbFilesystem extends Idb {
                 }
             ]
         });
-        // TODO: read or create the root folder node here
+        this.rootFolderName = rootFolderName;
+        this.waitForFilesystem().subscribe();
+    }
+
+    // read or create root folder
+    public waitForFilesystem(): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
+            this.waitForDB().subscribe(
+                (db: IDBDatabase) => {
+                    this.readNode(1).subscribe(
+                        (rootNode: TreeNode) => {
+                            if (rootNode) {
+                                observer.next();
+                                observer.complete();
+                            }
+                            else {
+                                this.create<TreeNode>(
+                                    NODE_STORE,
+                                    IdbFilesystem.makeTreeNode(
+                                        this.rootFolderName)
+                                ).subscribe(
+                                    (key: number) => {
+                                        this.rootFolderKey = key;
+                                    },
+                                    (error) => {
+                                        observer.error(error);
+                                    });
+                            }
+                        },
+                        (error) => {
+                            observer.error(error);
+                        });
+                },
+                (error) => {
+                    observer.error(error);
+                });
+        });
+        return source;
     }
 
     public static isDataNode(treeNode: TreeNode): boolean {
-        console.log('D? treeNode["data"] = ' + treeNode['data']);
         return treeNode['data'] !== undefined;
     }
 
     public static isFolderNode(treeNode: TreeNode): boolean {
-        console.log('F? treeNode["data"] = ' + treeNode['data']);
         return treeNode['data'] === undefined;
     }
 
@@ -95,9 +132,12 @@ export class IdbFilesystem extends Idb {
             treeNode.parentKey = parentKey;
         }
         if (data) {
+            // this is a data node
             treeNode.data = data;
         }
         else {
+            // this is a tree node
+            treeNode.path = '';
             treeNode.childOrder = [];
         }
         return treeNode;
