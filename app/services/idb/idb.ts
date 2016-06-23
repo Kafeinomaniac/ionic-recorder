@@ -250,6 +250,36 @@ export class Idb {
     }
 
     /**
+     * Read a collection of nodes, designated by their keys in 'nodeKeys'
+     * @param {string} storeName - the name of the db store where the
+     * @param {number[]} nodeKeys an array of node keys
+     * @returns {Observable<T[]>} observable of an array of T
+     * objects whose ids are in nodeKeys
+     */
+    public multiRead<T>(
+        storeName: string,
+        nodeKeys: number[]
+    ): Observable<T[]> {
+        let source: Observable<T[]> = Observable.create((observer) => {
+            let childNodes: T[] = [];
+            // asynchronously read childOrder array  nodes, emits T[]
+            this.ls<T>(storeName, nodeKeys).subscribe(
+                (node: T) => {
+                    childNodes.push(node);
+                },
+                (error: any) => {
+                    observer.error(error);
+                },
+                () => {
+                    observer.next(childNodes);
+                    observer.complete();
+                }
+            );
+        });
+        return source;
+    }
+
+    /**
      * Update an item already in a db store with new values
      * @param {string} storeName - the name of the db store where the
      * existing item to update is
@@ -504,4 +534,16 @@ export class Idb {
             });
         return source;
     }
+
+    /**
+     * Returns a stream Observable<T> that emits a new T on
+     * each request that's got the key of one of the nodeKeys keys
+     * @returns {Observable<T>} observable that emits one at a
+     * time one of the nodes with keys in 'nodeKeys'
+     */
+    private ls<T>(storeName: string, nodeKeys: number[]): Observable<T> {
+        return <Observable<T>>Observable.from(nodeKeys)
+            .flatMap((key: number) => this.read<T>(storeName, key));
+    }
+
 }

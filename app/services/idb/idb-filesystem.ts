@@ -205,7 +205,7 @@ export class IdbFilesystem extends Idb {
     // returns Observable<TreeNode[]>
     public readChildNodes(folderNode: TreeNode): Observable<TreeNode[]> {
         let source: Observable<TreeNode[]> = Observable.create((observer) => {
-            console.log('readChildNodes observable');
+            return this.multiRead<TreeNode>(NODE_STORE, folderNode.childOrder);
         });
         return source;
     }
