@@ -1,5 +1,9 @@
 // Copyright (c) 2016 Tracktunes Inc
 
+// import {
+//     deleteDb
+// } from './idb';
+
 import {
     IdbFilesystem,
     TreeNode
@@ -13,7 +17,7 @@ let idbFS: IdbFilesystem = new IdbFilesystem(
     'root'
 );
 
-IdbFilesystem.deleteDb('f');
+// deleteDb('f');
 
 let dbFS: IDBDatabase;
 
@@ -57,19 +61,22 @@ describe('services/idb:IdbFilesystem', () => {
                     IdbFilesystem.makeTreeNode('test', 0, 'data');
                 }
                 catch (error) {
-                    expect(error).toEqual('makeTreeNode(): invalid parentKey');
+                    expect(error.toString())
+                        .toEqual('Error: makeTreeNode(): invalid parentKey');
                 }
                 try {
                     IdbFilesystem.makeTreeNode('test', 1.1, 'data');
                 }
                 catch (error) {
-                    expect(error).toEqual('makeTreeNode(): invalid parentKey');
+                    expect(error.toString())
+                        .toEqual('Error: makeTreeNode(): invalid parentKey');
                 }
                 try {
                     IdbFilesystem.makeTreeNode('test', Infinity, 'data');
                 }
                 catch (error) {
-                    expect(error).toEqual('makeTreeNode(): invalid parentKey');
+                    expect(error.toString())
+                        .toEqual('Error: makeTreeNode(): invalid parentKey');
                 }
 
                 // verify data node creation

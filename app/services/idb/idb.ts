@@ -25,6 +25,36 @@ interface StoreConfig {
     indexConfigs: StoreIndexConfig[];
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// START: Public API
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Delete entire database. Exported global because we may call it
+ * before constructing an Idb object.
+ * @params {string} dbName - the name of the database to delete
+ * @returns {void} We assume the delete just works but we get an
+ * error thrown if it does not.
+ */
+export function deleteDb(dbName: string): void {
+    'use strict';
+    let request: IDBOpenDBRequest = indexedDB.deleteDatabase(dbName);
+
+    request.onsuccess = function (): void {
+        // console.log('deleteDatabase: SUCCESS');
+    };
+
+    request.onerror = function (): void {
+        console.warn('deleteDatabase: ERROR');
+        throw Error('Idb:deleteDb() request error');
+    };
+
+    request.onblocked = function (): void {
+        console.warn('deleteDatabase: BLOCKED');
+        throw Error('Idb:deleteDb() request blocked error');
+    };
+}
+
 export interface IdbConfig {
     name: string;
     version: number;
@@ -104,171 +134,6 @@ export class Idb {
             repeat();
         });
         return source;
-    }
-
-    /**
-     * Initialize (find the last key of) all data stores
-     * @param {StoreConfig[]} a verified StoreConfig array
-     * @param {IDBOpenDBRequest} an open database request object
-     * @returns {void}
-     */
-    private initStoreKeys(
-        storeConfigs: StoreConfig[],
-        openRequest: IDBOpenDBRequest,
-        observer: any
-    ): void {
-        let nStores: number = storeConfigs.length,
-            db: IDBDatabase = openRequest.result,
-            errorsFound: boolean = false,
-            nCursorsProcessed: number = 0,
-            callObserver: () => void = () => {
-                if (nCursorsProcessed === nStores) {
-                    if (errorsFound) {
-                        observer.error('init store error');
-                    }
-                    else {
-                        observer.next(db);
-                        observer.complete();
-                    }
-                }
-            };
-        this.storeKeys = {};
-        storeConfigs.forEach((sConfig: StoreConfig) => {
-            let storeName: string = sConfig.name,
-                cursorRequest: IDBRequest =
-                    db.transaction(storeName, 'readonly')
-                        .objectStore(storeName).openCursor(null, 'prev');
-
-            cursorRequest.onsuccess = (event: IDBEvent) => {
-                let cursor: IDBCursorWithValue = cursorRequest.result;
-                if (cursor) {
-                    // add 1 because this.storeKeys always has next key to save
-                    this.storeKeys[storeName] = cursor.key + 1;
-                }
-                else {
-                    // no cursor, meaning store is empty
-                    this.storeKeys[storeName] = 1;
-                }
-                nCursorsProcessed++;
-                callObserver();
-            };
-
-            cursorRequest.onerror = (event: IDBErrorEvent) => {
-                errorsFound = true;
-                nCursorsProcessed++;
-                callObserver();
-            };
-        });
-    }
-
-    /**
-     * Create data stores from scratch
-     * @param {StoreConfig[]} a verified StoreConfig array
-     * @param {IDBOpenDBRequest} an open database request object
-     * @returns {void}
-     */
-    private createStores(
-        storeConfigs: StoreConfig[],
-        openRequest: IDBOpenDBRequest
-    ): void {
-        storeConfigs.forEach((sConfig: StoreConfig) => {
-            let store: IDBObjectStore =
-                openRequest.result.createObjectStore(sConfig.name);
-            sConfig.indexConfigs.forEach((iConfig: StoreIndexConfig) => {
-                store.createIndex(
-                    iConfig.name,
-                    iConfig.name,
-                    { unique: iConfig.unique });
-            });
-        });
-    }
-
-    /**
-     * Open the DB and set it up for use.
-     * @returns {Observable<IDBDatabase>} Observable that emits the database
-     * when it's ready for use.
-     */
-    private openDB(config: IdbConfig): Observable<IDBDatabase> {
-        let source: Observable<IDBDatabase> = Observable.create((observer) => {
-            let openRequest: IDBOpenDBRequest = indexedDB.open(
-                config.name, config.version);
-
-            openRequest.onsuccess = (event: Event) => {
-                // console.log('indexedDB.open():onsuccess()');
-                this.initStoreKeys(config.storeConfigs, openRequest, observer);
-            };
-
-            openRequest.onerror = (event: IDBErrorEvent) => {
-                observer.error('in openRequest.onerror');
-            };
-
-            openRequest.onblocked = (event: IDBErrorEvent) => {
-                observer.error('in openRequest.onblocked');
-            };
-
-            // This function is called when the database doesn't exist
-            openRequest.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-                console.log('indexedDB.open():onupgradeended()');
-                try {
-                    this.createStores(config.storeConfigs, openRequest);
-                }
-                catch (error) {
-                    let ex: DOMException = error;
-                    observer.error('in openRequest.onupgradeended: ' +
-                        'code=' + ex.code + ' - ' + ex.message);
-                }
-            }; // openRequest.onupgradeneeded = ..
-        });
-        return source;
-    }
-
-    /**
-     * Ask for a specific db store by name (IDBObjectStore)
-     * @param {string} storeName - the name of the store to get
-     * @param {string} mode - either 'readonly' or 'readwrite'
-     * @returns {Observable<IDBObjectStore>} Observable that emits the object
-     * store obtained via a DB request, when it's ready for use.
-     */
-    private getStore(
-        storeName: string,
-        mode: string
-    ): Observable<IDBObjectStore> {
-        let source: Observable<IDBObjectStore> =
-            Observable.create((observer) => {
-                this.waitForDB().subscribe(
-                    (db: IDBDatabase) => {
-                        observer.next(db.transaction(
-                            storeName,
-                            mode
-                        ).objectStore(storeName));
-                        observer.complete();
-                    },
-                    (error) => {
-                        observer.error('Idb:getStore(): ' + error);
-                    }
-                ); // this.waitForDB().subscribe(
-            });
-        return source;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Public API
-    ///////////////////////////////////////////////////////////////////////////
-
-    public static deleteDb(dbName: string): void {
-        let request: IDBOpenDBRequest = indexedDB.deleteDatabase(dbName);
-
-        request.onsuccess = function (): void {
-            // console.log('deleteDatabase: SUCCESS');
-        };
-
-        request.onerror = function (): void {
-            console.warn('deleteDatabase: ERROR');
-        };
-
-        request.onblocked = function (): void {
-            console.warn('deleteDatabase: BLOCKED');
-        };
     }
 
     /**
@@ -488,6 +353,155 @@ export class Idb {
                 observer.error('invalid key: ' + key);
             }
         });
+        return source;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // END: Public API
+    ////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Initialize (find the last key of) all data stores
+     * @param {StoreConfig[]} a verified StoreConfig array
+     * @param {IDBOpenDBRequest} an open database request object
+     * @returns {void}
+     */
+    private initStoreKeys(
+        storeConfigs: StoreConfig[],
+        openRequest: IDBOpenDBRequest,
+        observer: any
+    ): void {
+        let nStores: number = storeConfigs.length,
+            db: IDBDatabase = openRequest.result,
+            errorsFound: boolean = false,
+            nCursorsProcessed: number = 0,
+            callObserver: () => void = () => {
+                if (nCursorsProcessed === nStores) {
+                    if (errorsFound) {
+                        observer.error('init store error');
+                    }
+                    else {
+                        observer.next(db);
+                        observer.complete();
+                    }
+                }
+            };
+        this.storeKeys = {};
+        storeConfigs.forEach((sConfig: StoreConfig) => {
+            let storeName: string = sConfig.name,
+                cursorRequest: IDBRequest =
+                    db.transaction(storeName, 'readonly')
+                        .objectStore(storeName).openCursor(null, 'prev');
+
+            cursorRequest.onsuccess = (event: IDBEvent) => {
+                let cursor: IDBCursorWithValue = cursorRequest.result;
+                if (cursor) {
+                    // add 1 because this.storeKeys always has next key to save
+                    this.storeKeys[storeName] = cursor.key + 1;
+                }
+                else {
+                    // no cursor, meaning store is empty
+                    this.storeKeys[storeName] = 1;
+                }
+                nCursorsProcessed++;
+                callObserver();
+            };
+
+            cursorRequest.onerror = (event: IDBErrorEvent) => {
+                errorsFound = true;
+                nCursorsProcessed++;
+                callObserver();
+            };
+        });
+    }
+
+    /**
+     * Create data stores from scratch
+     * @param {StoreConfig[]} a verified StoreConfig array
+     * @param {IDBOpenDBRequest} an open database request object
+     * @returns {void}
+     */
+    private createStores(
+        storeConfigs: StoreConfig[],
+        openRequest: IDBOpenDBRequest
+    ): void {
+        storeConfigs.forEach((sConfig: StoreConfig) => {
+            let store: IDBObjectStore =
+                openRequest.result.createObjectStore(sConfig.name);
+            sConfig.indexConfigs.forEach((iConfig: StoreIndexConfig) => {
+                store.createIndex(
+                    iConfig.name,
+                    iConfig.name,
+                    { unique: iConfig.unique });
+            });
+        });
+    }
+
+    /**
+     * Open the DB and set it up for use.
+     * @returns {Observable<IDBDatabase>} Observable that emits the database
+     * when it's ready for use.
+     */
+    private openDB(config: IdbConfig): Observable<IDBDatabase> {
+        let source: Observable<IDBDatabase> = Observable.create((observer) => {
+            let openRequest: IDBOpenDBRequest = indexedDB.open(
+                config.name, config.version);
+
+            openRequest.onsuccess = (event: Event) => {
+                // console.log('indexedDB.open():onsuccess()');
+                this.initStoreKeys(config.storeConfigs, openRequest, observer);
+            };
+
+            openRequest.onerror = (event: IDBErrorEvent) => {
+                observer.error('in openRequest.onerror');
+            };
+
+            openRequest.onblocked = (event: IDBErrorEvent) => {
+                observer.error('in openRequest.onblocked');
+            };
+
+            // This function is called when the database doesn't exist
+            openRequest.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+                console.log('indexedDB.open():onupgradeended()');
+                try {
+                    this.createStores(config.storeConfigs, openRequest);
+                }
+                catch (error) {
+                    let ex: DOMException = error;
+                    observer.error('in openRequest.onupgradeended: ' +
+                        'code=' + ex.code + ' - ' + ex.message);
+                }
+            }; // openRequest.onupgradeneeded = ..
+        });
+        return source;
+    }
+
+    /**
+     * Ask for a specific db store by name (IDBObjectStore)
+     * @param {string} storeName - the name of the store to get
+     * @param {string} mode - either 'readonly' or 'readwrite'
+     * @returns {Observable<IDBObjectStore>} Observable that emits the object
+     * store obtained via a DB request, when it's ready for use.
+     */
+    protected getStore(
+        storeName: string,
+        mode: string
+    ): Observable<IDBObjectStore> {
+        let source: Observable<IDBObjectStore> =
+            Observable.create((observer) => {
+                this.waitForDB().subscribe(
+                    (db: IDBDatabase) => {
+                        observer.next(db.transaction(
+                            storeName,
+                            mode
+                        ).objectStore(storeName));
+                        observer.complete();
+                    },
+                    (error) => {
+                        observer.error('Idb:getStore(): ' + error);
+                    }
+                ); // this.waitForDB().subscribe(
+            });
         return source;
     }
 }

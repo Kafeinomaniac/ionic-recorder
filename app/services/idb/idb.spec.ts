@@ -2,7 +2,8 @@
 
 import {
     Idb,
-    IdbConfig
+    IdbConfig,
+    deleteDb
 } from './idb';
 
 const IT_TIMEOUT_MSEC: number = 60;
@@ -33,7 +34,7 @@ const DB_CONFIG: IdbConfig = Idb.validateConfig(
     }
 );
 
-Idb.deleteDb('d');
+deleteDb('d');
 
 let idb: Idb = new Idb(DB_CONFIG),
     db: IDBDatabase = null,
@@ -260,7 +261,7 @@ describe('services/idb:Idb', () => {
                 idb2.create<Uint16Array>('s', item2).subscribe(
                     (key: number) => {
                         key2 = key;
-                        // tests that keys continue to get incremented 
+                        // tests that keys continue to get incremented
                         expect(key2).toEqual(6);
                         done();
                     });
