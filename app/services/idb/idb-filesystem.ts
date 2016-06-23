@@ -66,18 +66,25 @@ export class IdbFilesystem extends Idb {
             ]
         });
         this.rootFolderName = rootFolderName;
-        this.waitForFilesystem().subscribe();
+        this.waitForFilesystem().subscribe(
+            (rootFolderKey: number) => {
+                this.rootFolderKey = rootFolderKey;
+            },
+            (error) => {
+                throw Error('constructor(): ' + error);
+            }
+        );
     }
 
-    // read or create root folder
-    public waitForFilesystem(): Observable<void> {
-        let source: Observable<void> = Observable.create((observer) => {
+    // read or create root folder, returns its key
+    public waitForFilesystem(): Observable<number> {
+        let source: Observable<number> = Observable.create((observer) => {
             this.waitForDB().subscribe(
                 (db: IDBDatabase) => {
                     this.readNode(1).subscribe(
                         (rootNode: TreeNode) => {
                             if (rootNode) {
-                                observer.next();
+                                observer.next(1);
                                 observer.complete();
                             }
                             else {
@@ -87,7 +94,13 @@ export class IdbFilesystem extends Idb {
                                         this.rootFolderName)
                                 ).subscribe(
                                     (key: number) => {
-                                        this.rootFolderKey = key;
+                                        if (key !== 1) {
+                                            throw Error('rootFolder key != 1');
+                                        }
+                                        else {
+                                            observer.next(key);
+                                            observer.complete();
+                                        }
                                     },
                                     (error) => {
                                         observer.error(error);
