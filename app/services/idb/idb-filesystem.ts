@@ -211,20 +211,6 @@ export class IdbFilesystem extends Idb {
         return source;
     }
 
-    // same as createNode, but it will not create anything nor update anything
-    // if the node is already there - in that case it will just return it
-    public readOrCreateNode(
-        name: string,
-        parentKey: number,
-        data?: any
-    ): Observable<TreeNode> {
-        let source: Observable<TreeNode> = Observable.create((observer) => {
-            console.log('readOrCreateNode observable');
-
-        });
-        return source;
-    }
-
     // returns Observable<void> when done
     public updateNode(key: number, changes: Object): Observable<void> {
         return this.update(NODE_STORE, key, changes);
