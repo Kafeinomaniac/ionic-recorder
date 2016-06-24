@@ -23,7 +23,7 @@ export interface TreeNode {
     parentKey: number;
     timeStamp: number;
     data?: any;
-    childOrder?: number[];
+    childOrder?: Set<number>;
     path?: string;
 }
 
@@ -152,7 +152,7 @@ export class IdbFilesystem extends Idb {
         else {
             // this is a tree node
             treeNode.path = '';
-            treeNode.childOrder = [];
+            treeNode.childOrder = new Set<number>();
         }
         return treeNode;
     };
@@ -216,9 +216,37 @@ export class IdbFilesystem extends Idb {
     }
 
     // returns Observable<void> when done
-    public deleteNodes(keyDict: KeyDict): Observable<void> {
+    public deleteNodes(nodeKeys: Set<number>): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
-            console.log('deleteNodes observable');
+            this.detachForDeleteNodes(nodeKeys).subscribe(
+                // (detachedKeyDict: Object) => {
+                (detachedNodeKeys: Set<number>) => {
+                    let nDeleted: number = 0,
+                        nNodes: number = detachedNodeKeys.size;
+                    detachedNodeKeys.forEach((key: number) => {
+                        this.delete(NODE_STORE, key).subscribe(
+                            () => {
+                                nDeleted++;
+                            },
+                            (error) => {
+                                observer.error('deleteNodes():' +
+                                    'detachForDeleteNodes():delete(): ' +
+                                    error);
+                            },
+                            () => {
+                                if (nDeleted === nNodes) {
+                                    observer.next();
+                                    observer.complete();
+                                }
+                                else {
+                                    observer.error('deleteNodes(): could ' +
+                                        'not delete all detached nodes');
+                                }
+                            }
+                        );
+                    });
+                }
+            );
         });
         return source;
     }
@@ -322,7 +350,7 @@ export class IdbFilesystem extends Idb {
                 (parentNode: TreeNode) => {
                     // push newly created nodes to the front of
                     // the parent childOrder list
-                    parentNode.childOrder.unshift(childKey);
+                    parentNode.childOrder.add(childKey);
                     // now you update the node with new childOrder
                     this.update<TreeNode>(
                         NODE_STORE,
@@ -363,6 +391,367 @@ export class IdbFilesystem extends Idb {
                     observer.error('attachToParent():readNode(): ' + error);
                 }); // readNode().subscribe(
         });
+        return source;
+    }
+
+    /**
+     * Given a collection of unique TreeNodes provided as a dictionary,
+     * detach any of those nodes from any parents that aren't already a part
+     * of the original collection - detach only from parents outside the
+     * collection.
+     * @param {[id: string]: TreeNode} keyDict - collection of unique TreeNodes
+     * @returns {Observable<{[id: string]: TreeNode}>} - same type as input
+     * (keyDict) but expanded with potentially more (contained) nodes
+     */
+    private detachForDeleteNodes(
+        // keyDict: { [id: string]: TreeNode; }
+        nodeKeys: Set<number>
+    ): Observable<Object> {
+        let source: Observable<Object> = Observable.create((observer) => {
+            // this.expandKeyDict(keyDict).subscribe(
+            //     (expandedKeyDict: Object) => {
+            //         let i: number,
+            //             keys: string[] = Object.keys(expandedKeyDict),
+            //             nNodes: number = keys.length,
+            //             node: TreeNode,
+            //             toDetach: TreeNode[] = [];
+            //         // fill up toDetach and toNotDetach
+            //         for (i = 0; i < nNodes; i++) {
+            //             node = expandedKeyDict[keys[i]];
+            //             // check if any parent of any node in our
+            //             // delete list is *not* in the list
+            //             if (!expandedKeyDict[node.parentKey]) {
+            //                 // if a parent is not in the list it
+            //                 // needs to be updated (detached)
+            //                 toDetach.push(node);
+            //             }
+            //         }
+            //         // detach
+            //         this.detachNodesFromParents(toDetach).subscribe(
+            //             () => {
+            //                 observer.next(expandedKeyDict);
+            //                 observer.complete();
+            //             },
+            //             (error: any) => {
+            //                 observer.error(error);
+            //             }
+            //         ); // detachNodesFromParents().subscribe(
+            //     }
+            // );
+        });
+        return source;
+    }
+
+    /**
+     * Given a collection of unique TreeNodes provided as a dictionary,
+     * recursively expand the collection to include anything contained by the
+     * TreeNode collection
+     * @param {[id: string]: TreeNode} keyDict - collection of unique TreeNodes
+     * @returns {Observable<{[id: string]: TreeNode}>} - same type as input
+     * (keyDict) but expanded with potentially more (contained) nodes
+     */
+    // private expandKeyDict(
+    //     keyDict: { [id: string]: TreeNode; }
+    // ): Observable<Object> {
+    //     let source: Observable<Object> = Observable.create((observer) => {
+    //         // add nodes supplied argument nodes into the keyDict
+    //         // if a node is a folder node, we get its subtree and
+    //         // add those to the keydict as well, we're done when
+    //         // all folder nodes have been included in keyDict, this
+    //         // means we need two loops - the first one counts how
+    //         // many folders we have, the second one subscribes to
+    //         // the observables with a termination condition based
+    //         // on how many folders have been processed
+    //         let keys: string[] = Object.keys(keyDict),
+    //             nNodes: number = keys.length,
+    //             i: number, j: number,
+    //             nFolders: number = 0,
+    //             nFoldersProcessed: number = 0,
+    //             node: TreeNode;
+    //         // count nFolders
+    //         for (i = 0; i < nNodes; i++) {
+    //             node = keyDict[keys[i]];
+    //             if (this.isFolderNode(node)) {
+    //                 nFolders++;
+    //             }
+    //         }
+    //         // second loop - subscribe and add
+    //         for (i = 0; i < nNodes; i++) {
+    //             node = keyDict[keys[i]];
+    //             if (this.isFolderNode(node)) {
+    //                 // TODO: we can make things slightly more efficient here
+    //                 // by not calling anything if folder is empty
+    //                 this.getSubtreeNodesArray(node).subscribe(
+    //                     (subtreeNodes: TreeNode[]) => {
+    //                         for (j = 0; j < subtreeNodes.length; j++) {
+    //                             node = subtreeNodes[j];
+    //                             keyDict[node[DB_KEY_PATH]] = node;
+    //                         }
+    //                         nFoldersProcessed++;
+    //                         if (nFoldersProcessed === nFolders) {
+    //                             observer.next(keyDict);
+    //                             observer.complete();
+    //                         }
+    //                     },
+    //                     (error: any) => {
+    //                         observer.error(error);
+    //                     }
+    //                 ); // getSubtreeNodesArray(node).subscribe(
+    //             }
+    //             else {
+    //                 // for data nodes we just return keyDict as is
+    //                 // i.e. we do nothing
+    //                 observer.next(keyDict);
+    //                 observer.complete();
+    //             }
+    //         } // if (this.isFolderNode(node)) { .. else { ..
+    //     });
+    //     return source;
+    // }
+
+    private expandKeyDict(
+        nodeKeys: Set<number>
+    ): Observable<Object> {
+        let source: Observable<Set<number>> = Observable.create((observer) => {
+            // add nodes supplied argument nodes into the keyDict
+            // if a node is a folder node, we get its subtree and
+            // add those to the keydict as well, we're done when
+            // all folder nodes have been included in keyDict, this
+            // means we need two loops - the first one counts how
+            // many folders we have, the second one subscribes to
+            // the observables with a termination condition based
+            // on how many folders have been processed
+            let nFolders: number = 0,
+                nFoldersProcessed: number = 0,
+                node: TreeNode;
+            nodeKeys.forEach((key: number) => {
+                if (IdbFilesystem.isFolderNode(node)) {
+                    nFolders++;
+                }
+            });
+            // second loop - subscribe and add
+            nodeKeys.forEach((key: number) => {
+                if (IdbFilesystem.isFolderNode(node)) {
+                    // TODO: we can make things slightly more efficient here
+                    // by not calling anything if folder is empty
+                    this.getSubtreeNodesArray(node).subscribe(
+                        (subtreeNodes: TreeNode[]) => {
+                            for (j = 0; j < subtreeNodes.length; j++) {
+                                node = subtreeNodes[j];
+                                keyDict[node[DB_KEY_PATH]] = node;
+                            }
+                            nFoldersProcessed++;
+                            if (nFoldersProcessed === nFolders) {
+                                observer.next(keyDict);
+                                observer.complete();
+                            }
+                        },
+                        (error: any) => {
+                            observer.error(error);
+                        }
+                    ); // getSubtreeNodesArray(node).subscribe(
+
+                }
+                else {
+                    observer.next(nodeKeys);
+                    observer.complete();
+                }
+            });
+        });
+        return source;
+    }
+
+    private detachNodesFromParent(
+        childNodes: TreeNode[]
+    ): Observable<TreeNode> {
+        let source: Observable<TreeNode> = Observable.create((observer) => {
+            let nNodes: number = childNodes.length;
+            if (nNodes === 0) {
+                // verify that some nodes were supplied
+                observer.error('called detach with empty list');
+            }
+            else {
+                // verify all nodes have the same parent
+                let parentKey: number = childNodes[0].parentKey;
+                if (childNodes.filter(x => x.parentKey === parentKey).length
+                    !== nNodes) {
+                    observer.error('not all children have same parent');
+                }
+                else {
+                    this.readNode(parentKey).subscribe(
+                        (parentNode: TreeNode) => {
+                            let i: number,
+                                childOrder: number[] = parentNode.childOrder,
+                                childIndex: number = -1,
+                                childKey: number,
+                                errorFound: boolean;
+                            for (i = 0; i < nNodes; i++) {
+                                childKey = childNodes[i][DB_KEY_PATH];
+                                childIndex = childOrder.indexOf(childKey);
+                                if (childIndex === -1) {
+                                    errorFound = true;
+                                    break;
+                                }
+                                else {
+                                    // shorten parent's childOrder
+                                    childOrder.splice(childIndex, 1);
+                                }
+                            }
+                            if (errorFound) {
+                                observer.error('child not in parent!');
+                            }
+                            else {
+                                parentNode.childOrder = childOrder;
+                                // now you update the node with new childOrder
+                                this.update<TreeNode>(parentNode).subscribe(
+                                    () => {
+                                        observer.next(parentNode);
+                                        observer.complete();
+                                    },
+                                    (error: any) => {
+                                        observer.error(error);
+                                    }
+                                ); // updateNode().subscribe(
+                            }
+                        },
+                        (error: any) => {
+                            observer.error(error);
+                        }
+                    ); // readNode().subscribe(
+                }
+            }
+        });
+        return source;
+    }
+
+    /**
+     * Returns a stream Observable<TreeNode> that emits a new TreeNode
+     * that is one of the input's childern (obviously, input must be a
+     * folder TreeNode then) - the stream of observables is of children
+     * of the given TreeNode.
+     * @param {TreeNode} node - the node to list
+     * @returns {Observable<TreeNode>} observable that emits one at a
+     * time the children of 'node'
+     */
+    private lsNode(node: TreeNode): Observable<TreeNode> {
+        return this.ls<TreeNode>(NODE_STORE, Array.from(node.childOrder));
+    }
+
+    /**
+     * Returns whether the input (TreeNode) is a leaf node or not.  A leaf
+     * node is one that's either an empty folder or a data node.
+     * @param {TreeNode} node - the node to check
+     * @returns {boolean} whether the node is a leaf node or not
+     */
+    private isLeaf(node: TreeNode): boolean {
+        // returns true or false depending on if it's a leaf node.
+        // a leaf node is either a data node or an empty folder node
+        return IdbFilesystem.isDataNode(node) || !node.childOrder.size;
+    }
+
+    /**
+     * Traverses a tree recursively. Based on
+     * https://www.reddit.com/r/javascript/comments/3abv2k/ ...
+     *      ... /how_can_i_do_a_recursive_readdir_with_rxjs_or_any/
+     * @returns Observable<TreeNode> Observable of all subtree nodes of
+     * input folder TreeNode
+     */
+    private getSubtreeNodes(node: TreeNode): Observable<TreeNode> {
+        return this.lsNode(node)
+            .expand<TreeNode>((childNode: TreeNode) =>
+                this.isLeaf(childNode) ?
+                    <Observable<TreeNode>>Observable.empty() :
+                    this.lsNode(childNode));
+    }
+
+    /**
+     * Same as getSubtreeNodes(), but instead of returning an observable stream
+     * collects the entire list of subtree nodes and returns them in one single
+     * array, emitted by an observable when all its elements are available.
+     * @param {TreeNode} node - the node whose subtree we're getting
+     * @return Observable<TreeNode[]> Observable that emits when the array of
+     * all subtree nodes has been traversed in the db.
+     */
+    public getSubtreeNodesArray(node: TreeNode): Observable<TreeNode[]> {
+        let source: Observable<TreeNode[]> = Observable.create((observer) => {
+            let nodes: TreeNode[] = [];
+            this.getSubtreeNodes(node).subscribe(
+                (subtreeNode: TreeNode) => {
+                    nodes.push(subtreeNode);
+                },
+                (error: any) => {
+                    observer.error(error);
+                },
+                () => {
+                    observer.next(nodes);
+                    observer.complete();
+                }
+            );
+        });
+        return source;
+    }
+
+    private detachNodesFromParents(nodes: TreeNode[]): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
+            // 1) group parents
+            let i: number,
+                childNode: TreeNode,
+                nNodes: number = nodes.length,
+                parentsDetachers: { [id: string]: TreeNode[] } = {};
+            for (i = 0; i < nNodes; i++) {
+                childNode = nodes[i];
+                if (!positiveWholeNumber(childNode.parentKey)) {
+                    // this child has no parent so skip it.  an example of a
+                    // child that has no parents is a folder created at the
+                    // root level
+
+                    // TODO: this no longer ever happens in the current 
+                    // setup, make sure we can get rid of this block
+                    continue;
+                }
+                if (!parentsDetachers[childNode.parentKey]) {
+                    parentsDetachers[childNode.parentKey] = [childNode];
+                }
+                else {
+                    parentsDetachers[childNode.parentKey].push(childNode);
+                }
+            }
+            // 2) go through parents, fix'em up (childOrder fix)
+            // read parents one by one, fix them one by one,
+            // update them one by one - there is no reason to do
+            // things in batch here because there is nothing that can
+            // be done more efficiently in batch here anyway
+            let parentKeys: string[] = Object.keys(parentsDetachers),
+                nParents: number = parentKeys.length,
+                nParentsProcessed: number = 0;
+
+            // it is possible, with the filtering (of child nodes at root)
+            // done above, that there is no parent to detach from ...
+            if (nParents) {
+                for (i = 0; i < nParents; i++) {
+                    // INV: parentsDetachers[parentKeys[i]] is always
+                    // going to be a non empty array
+                    this.detachNodesFromParent(parentsDetachers[parentKeys[i]])
+                        .subscribe(
+                        () => {
+                            nParentsProcessed++;
+                            if (nParentsProcessed === nParents) {
+                                observer.next();
+                                observer.complete();
+                            }
+                        },
+                        (error: any) => {
+                            observer.error(error);
+                        }
+                        );
+                } // for
+            }
+            else {
+                observer.next();
+                observer.complete();
+            }
+        });
+
         return source;
     }
 }

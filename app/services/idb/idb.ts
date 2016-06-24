@@ -250,20 +250,20 @@ export class Idb {
     }
 
     /**
-     * Read a collection of nodes, designated by their keys in 'nodeKeys'
+     * Read a collection of nodes, designated by their keys in 'keys'
      * @param {string} storeName - the name of the db store where the
-     * @param {number[]} nodeKeys an array of node keys
+     * @param {number[]} keys an array of node keys
      * @returns {Observable<T[]>} observable of an array of T
-     * objects whose ids are in nodeKeys
+     * objects whose ids are in keys
      */
     public multiRead<T>(
         storeName: string,
-        nodeKeys: number[]
+        keys: Set<number>
     ): Observable<T[]> {
         let source: Observable<T[]> = Observable.create((observer) => {
             let childNodes: T[] = [];
-            // asynchronously read childOrder array  nodes, emits T[]
-            this.ls<T>(storeName, nodeKeys).subscribe(
+            // asynchronously read childOrder array, emits T[]
+            this.ls<T>(storeName, Array.from(keys)).subscribe(
                 (node: T) => {
                     childNodes.push(node);
                 },
@@ -537,12 +537,12 @@ export class Idb {
 
     /**
      * Returns a stream Observable<T> that emits a new T on
-     * each request that's got the key of one of the nodeKeys keys
+     * each request that's got the key of one of the keys keys
      * @returns {Observable<T>} observable that emits one at a
-     * time one of the nodes with keys in 'nodeKeys'
+     * time one of the nodes with keys in 'keys'
      */
-    private ls<T>(storeName: string, nodeKeys: number[]): Observable<T> {
-        return <Observable<T>>Observable.from(nodeKeys)
+    protected ls<T>(storeName: string, keys: Array<number>): Observable<T> {
+        return <Observable<T>>Observable.from(keys)
             .flatMap((key: number) => this.read<T>(storeName, key));
     }
 
