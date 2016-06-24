@@ -16,12 +16,44 @@ export function copyFromObject(src: Object, dest: Object): Object {
     return dest;
 }
 
+export function has(obj: any, prop: any): boolean {
+    'use strict';
+    return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+/**
+ * Checks if the given argument is a function.
+ * @function
+ */
+export function isFunction(func: any): boolean {
+    'use strict';
+    return (typeof func) === 'function';
+}
+
+/**
+ * Checks if the given argument is undefined.
+ * @function
+ */
+export function isUndefined(obj: any): boolean {
+    'use strict';
+    return (typeof obj) === 'undefined';
+}
+
+/**
+ * Checks if the given argument is a string.
+ * @function
+ */
+export function isString(obj: any): boolean {
+    'use strict';
+    return Object.prototype.toString.call(obj) === '[object String]';
+}
+
 /**
  * Positive whole number test
  * @param {number} the number we're verifying
  * @returns {boolean} whether argument is a positive whole number
  */
-export function positiveWholeNumber(num: number): boolean {
+export function isPositiveWholeNumber(num: number): boolean {
     'use strict';
     return (
         num &&
@@ -31,6 +63,22 @@ export function positiveWholeNumber(num: number): boolean {
     );
 }
 
+/**
+ * Convert any object to a string.
+ * @function
+ */
+export function toString(item: any): string {
+    'use strict';
+    if (item === null) {
+        return 'COLLECTION_NULL';
+    } else if (isUndefined(item)) {
+        return 'COLLECTION_UNDEFINED';
+    } else if (isString(item)) {
+        return '$s' + item;
+    } else {
+        return '$o' + item.toString();
+    }
+}
 /**
  * format time into H*:MM:SS.CC
  * @param {number} - number of seconds, float

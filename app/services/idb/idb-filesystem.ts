@@ -215,20 +215,24 @@ export class IdbFilesystem extends Idb {
         return this.update(NODE_STORE, key, changes);
     }
 
-    // returns Observable<void> when done
-    public deleteNodes(nodeKeys: Set<number>): Observable<void> {
+    /**
+     * Delete a collection of unique TreeNodes provided as a dictionary
+     * @param {[id: string]: TreeNode} keyDict - collection of unique TreeNodes
+     * @returns {Observable<void>} - observable that emits after deletion has
+     * completed successfully
+     */
+    public deleteNodes(keyDict: KeyDict): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
-            this.detachForDeleteNodes(nodeKeys).subscribe(
-                // (detachedKeyDict: Object) => {
-                (detachedNodeKeys: Set<number>) => {
-                    let nDeleted: number = 0,
-                        nNodes: number = detachedNodeKeys.size;
-                    detachedNodeKeys.forEach((key: number) => {
-                        this.delete(NODE_STORE, key).subscribe(
+            this.detachForDeleteNodes(keyDict).subscribe(
+                (detachedKeyDict: Object) => {
+                    let nNodes: number = Object.keys(keyDict).length,
+                        nDeleted: number = 0;
+                    for (let key: string in keyDict) {
+                        this.delete(NODE_STORE, parseInt(key)).subscribe(
                             () => {
                                 nDeleted++;
                             },
-                            (error) => {
+                            (error: any) => {
                                 observer.error('deleteNodes():' +
                                     'detachForDeleteNodes():delete(): ' +
                                     error);
@@ -239,12 +243,13 @@ export class IdbFilesystem extends Idb {
                                     observer.complete();
                                 }
                                 else {
-                                    observer.error('deleteNodes(): could ' +
-                                        'not delete all detached nodes');
+                                    observer.error('deleteNodes():' +
+                                        'detachForDeleteNodes():delete(): ' +
+                                        'could not delete all nodes');
                                 }
                             }
                         );
-                    });
+                    }
                 }
             );
         });
@@ -403,41 +408,38 @@ export class IdbFilesystem extends Idb {
      * @returns {Observable<{[id: string]: TreeNode}>} - same type as input
      * (keyDict) but expanded with potentially more (contained) nodes
      */
-    private detachForDeleteNodes(
-        // keyDict: { [id: string]: TreeNode; }
-        nodeKeys: Set<number>
-    ): Observable<Object> {
+    private detachForDeleteNodes(keyDict: KeyDict): Observable<Object> {
         let source: Observable<Object> = Observable.create((observer) => {
-            // this.expandKeyDict(keyDict).subscribe(
-            //     (expandedKeyDict: Object) => {
-            //         let i: number,
-            //             keys: string[] = Object.keys(expandedKeyDict),
-            //             nNodes: number = keys.length,
-            //             node: TreeNode,
-            //             toDetach: TreeNode[] = [];
-            //         // fill up toDetach and toNotDetach
-            //         for (i = 0; i < nNodes; i++) {
-            //             node = expandedKeyDict[keys[i]];
-            //             // check if any parent of any node in our
-            //             // delete list is *not* in the list
-            //             if (!expandedKeyDict[node.parentKey]) {
-            //                 // if a parent is not in the list it
-            //                 // needs to be updated (detached)
-            //                 toDetach.push(node);
-            //             }
-            //         }
-            //         // detach
-            //         this.detachNodesFromParents(toDetach).subscribe(
-            //             () => {
-            //                 observer.next(expandedKeyDict);
-            //                 observer.complete();
-            //             },
-            //             (error: any) => {
-            //                 observer.error(error);
-            //             }
-            //         ); // detachNodesFromParents().subscribe(
-            //     }
-            // );
+            this.expandKeyDict(keyDict).subscribe(
+                (expandedKeyDict: Object) => {
+                    let i: number,
+                        keys: string[] = Object.keys(expandedKeyDict),
+                        nNodes: number = keys.length,
+                        node: TreeNode,
+                        toDetach: TreeNode[] = [];
+                    // fill up toDetach and toNotDetach
+                    for (i = 0; i < nNodes; i++) {
+                        node = expandedKeyDict[keys[i]];
+                        // check if any parent of any node in our
+                        // delete list is *not* in the list
+                        if (!expandedKeyDict[node.parentKey]) {
+                            // if a parent is not in the list it
+                            // needs to be updated (detached)
+                            toDetach.push(node);
+                        }
+                    }
+                    // detach
+                    this.detachNodesFromParents(toDetach).subscribe(
+                        () => {
+                            observer.next(expandedKeyDict);
+                            observer.complete();
+                        },
+                        (error: any) => {
+                            observer.error(error);
+                        }
+                    ); // detachNodesFromParents().subscribe(
+                }
+            );
         });
         return source;
     }
@@ -450,69 +452,8 @@ export class IdbFilesystem extends Idb {
      * @returns {Observable<{[id: string]: TreeNode}>} - same type as input
      * (keyDict) but expanded with potentially more (contained) nodes
      */
-    // private expandKeyDict(
-    //     keyDict: { [id: string]: TreeNode; }
-    // ): Observable<Object> {
-    //     let source: Observable<Object> = Observable.create((observer) => {
-    //         // add nodes supplied argument nodes into the keyDict
-    //         // if a node is a folder node, we get its subtree and
-    //         // add those to the keydict as well, we're done when
-    //         // all folder nodes have been included in keyDict, this
-    //         // means we need two loops - the first one counts how
-    //         // many folders we have, the second one subscribes to
-    //         // the observables with a termination condition based
-    //         // on how many folders have been processed
-    //         let keys: string[] = Object.keys(keyDict),
-    //             nNodes: number = keys.length,
-    //             i: number, j: number,
-    //             nFolders: number = 0,
-    //             nFoldersProcessed: number = 0,
-    //             node: TreeNode;
-    //         // count nFolders
-    //         for (i = 0; i < nNodes; i++) {
-    //             node = keyDict[keys[i]];
-    //             if (this.isFolderNode(node)) {
-    //                 nFolders++;
-    //             }
-    //         }
-    //         // second loop - subscribe and add
-    //         for (i = 0; i < nNodes; i++) {
-    //             node = keyDict[keys[i]];
-    //             if (this.isFolderNode(node)) {
-    //                 // TODO: we can make things slightly more efficient here
-    //                 // by not calling anything if folder is empty
-    //                 this.getSubtreeNodesArray(node).subscribe(
-    //                     (subtreeNodes: TreeNode[]) => {
-    //                         for (j = 0; j < subtreeNodes.length; j++) {
-    //                             node = subtreeNodes[j];
-    //                             keyDict[node[DB_KEY_PATH]] = node;
-    //                         }
-    //                         nFoldersProcessed++;
-    //                         if (nFoldersProcessed === nFolders) {
-    //                             observer.next(keyDict);
-    //                             observer.complete();
-    //                         }
-    //                     },
-    //                     (error: any) => {
-    //                         observer.error(error);
-    //                     }
-    //                 ); // getSubtreeNodesArray(node).subscribe(
-    //             }
-    //             else {
-    //                 // for data nodes we just return keyDict as is
-    //                 // i.e. we do nothing
-    //                 observer.next(keyDict);
-    //                 observer.complete();
-    //             }
-    //         } // if (this.isFolderNode(node)) { .. else { ..
-    //     });
-    //     return source;
-    // }
-
-    private expandKeyDict(
-        nodeKeys: Set<number>
-    ): Observable<Object> {
-        let source: Observable<Set<number>> = Observable.create((observer) => {
+    private expandKeyDict(keyDict: KeyDict): Observable<Object> {
+        let source: Observable<Object> = Observable.create((observer) => {
             // add nodes supplied argument nodes into the keyDict
             // if a node is a folder node, we get its subtree and
             // add those to the keydict as well, we're done when
@@ -521,16 +462,22 @@ export class IdbFilesystem extends Idb {
             // many folders we have, the second one subscribes to
             // the observables with a termination condition based
             // on how many folders have been processed
-            let nFolders: number = 0,
+            let keys: string[] = Object.keys(keyDict),
+                nNodes: number = keys.length,
+                i: number, j: number,
+                nFolders: number = 0,
                 nFoldersProcessed: number = 0,
                 node: TreeNode;
-            nodeKeys.forEach((key: number) => {
+            // count nFolders
+            for (i = 0; i < nNodes; i++) {
+                node = keyDict[keys[i]];
                 if (IdbFilesystem.isFolderNode(node)) {
                     nFolders++;
                 }
-            });
+            }
             // second loop - subscribe and add
-            nodeKeys.forEach((key: number) => {
+            for (i = 0; i < nNodes; i++) {
+                node = keyDict[keys[i]];
                 if (IdbFilesystem.isFolderNode(node)) {
                     // TODO: we can make things slightly more efficient here
                     // by not calling anything if folder is empty
@@ -550,76 +497,14 @@ export class IdbFilesystem extends Idb {
                             observer.error(error);
                         }
                     ); // getSubtreeNodesArray(node).subscribe(
-
                 }
                 else {
-                    observer.next(nodeKeys);
+                    // for data nodes we just return keyDict as is
+                    // i.e. we do nothing
+                    observer.next(keyDict);
                     observer.complete();
                 }
-            });
-        });
-        return source;
-    }
-
-    private detachNodesFromParent(
-        childNodes: TreeNode[]
-    ): Observable<TreeNode> {
-        let source: Observable<TreeNode> = Observable.create((observer) => {
-            let nNodes: number = childNodes.length;
-            if (nNodes === 0) {
-                // verify that some nodes were supplied
-                observer.error('called detach with empty list');
-            }
-            else {
-                // verify all nodes have the same parent
-                let parentKey: number = childNodes[0].parentKey;
-                if (childNodes.filter(x => x.parentKey === parentKey).length
-                    !== nNodes) {
-                    observer.error('not all children have same parent');
-                }
-                else {
-                    this.readNode(parentKey).subscribe(
-                        (parentNode: TreeNode) => {
-                            let i: number,
-                                childOrder: number[] = parentNode.childOrder,
-                                childIndex: number = -1,
-                                childKey: number,
-                                errorFound: boolean;
-                            for (i = 0; i < nNodes; i++) {
-                                childKey = childNodes[i][DB_KEY_PATH];
-                                childIndex = childOrder.indexOf(childKey);
-                                if (childIndex === -1) {
-                                    errorFound = true;
-                                    break;
-                                }
-                                else {
-                                    // shorten parent's childOrder
-                                    childOrder.splice(childIndex, 1);
-                                }
-                            }
-                            if (errorFound) {
-                                observer.error('child not in parent!');
-                            }
-                            else {
-                                parentNode.childOrder = childOrder;
-                                // now you update the node with new childOrder
-                                this.update<TreeNode>(parentNode).subscribe(
-                                    () => {
-                                        observer.next(parentNode);
-                                        observer.complete();
-                                    },
-                                    (error: any) => {
-                                        observer.error(error);
-                                    }
-                                ); // updateNode().subscribe(
-                            }
-                        },
-                        (error: any) => {
-                            observer.error(error);
-                        }
-                    ); // readNode().subscribe(
-                }
-            }
+            } // if (IdbFilesystem.isFolderNode(node)) { .. else { ..
         });
         return source;
     }
@@ -691,6 +576,70 @@ export class IdbFilesystem extends Idb {
         return source;
     }
 
+    private detachNodesFromParent(
+        childNodes: TreeNode[]
+    ): Observable<TreeNode> {
+        let source: Observable<TreeNode> = Observable.create((observer) => {
+            let nNodes: number = childNodes.length;
+            if (nNodes === 0) {
+                // verify that some nodes were supplied
+                observer.error('called detach with empty list');
+            }
+            else {
+                // verify all nodes have the same parent
+                let parentKey: number = childNodes[0].parentKey;
+                if (childNodes.filter(x => x.parentKey === parentKey).length
+                    !== nNodes) {
+                    observer.error('not all children have same parent');
+                }
+                else {
+                    this.readNode(parentKey).subscribe(
+                        (parentNode: TreeNode) => {
+                            let i: number,
+                                childOrder: number[] =
+                                    Array.from(parentNode.childOrder),
+                                childIndex: number = -1,
+                                childKey: number,
+                                errorFound: boolean;
+                            for (i = 0; i < nNodes; i++) {
+                                childKey = childNodes[i][DB_KEY_PATH];
+                                childIndex = childOrder.indexOf(childKey);
+                                if (childIndex === -1) {
+                                    errorFound = true;
+                                    break;
+                                }
+                                else {
+                                    // shorten parent's childOrder
+                                    childOrder.splice(childIndex, 1);
+                                }
+                            }
+                            if (errorFound) {
+                                observer.error('child not in parent!');
+                            }
+                            else {
+                                parentNode.childOrder = childOrder;
+                                // now you update the node with new childOrder
+                                this.updateNode(parentNode).subscribe(
+                                    () => {
+                                        observer.next(parentNode);
+                                        observer.complete();
+                                    },
+                                    (error: any) => {
+                                        observer.error(error);
+                                    }
+                                ); // updateNode().subscribe(
+                            }
+                        },
+                        (error: any) => {
+                            observer.error(error);
+                        }
+                    ); // readNode().subscribe(
+                }
+            }
+        });
+        return source;
+    }
+
     private detachNodesFromParents(nodes: TreeNode[]): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
             // 1) group parents
@@ -704,9 +653,6 @@ export class IdbFilesystem extends Idb {
                     // this child has no parent so skip it.  an example of a
                     // child that has no parents is a folder created at the
                     // root level
-
-                    // TODO: this no longer ever happens in the current 
-                    // setup, make sure we can get rid of this block
                     continue;
                 }
                 if (!parentsDetachers[childNode.parentKey]) {
@@ -744,7 +690,7 @@ export class IdbFilesystem extends Idb {
                             observer.error(error);
                         }
                         );
-                } // for
+                } // for (i = 0; i < nParents; i++) {
             }
             else {
                 observer.next();
@@ -754,4 +700,4 @@ export class IdbFilesystem extends Idb {
 
         return source;
     }
-}
+
