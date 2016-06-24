@@ -9,7 +9,7 @@ import {
 } from 'rxjs/Rx';
 
 import {
-    positiveWholeNumber
+    isPositiveWholeNumber
 } from '../../services/utils/utils';
 
 const NODE_STORE: string = 'fileSystem';
@@ -140,7 +140,7 @@ export class IdbFilesystem extends Idb {
             timeStamp: Date.now()
         };
         if (parentKey) {
-            if (!positiveWholeNumber(parentKey)) {
+            if (!isPositiveWholeNumber(parentKey)) {
                 throw Error('makeTreeNode(): invalid parentKey');
             }
             treeNode.parentKey = parentKey;
@@ -227,7 +227,7 @@ export class IdbFilesystem extends Idb {
                 (detachedKeyDict: Object) => {
                     let nNodes: number = Object.keys(keyDict).length,
                         nDeleted: number = 0;
-                    for (let key: string in keyDict) {
+                    for (let key in keyDict) {
                         this.delete(NODE_STORE, parseInt(key)).subscribe(
                             () => {
                                 nDeleted++;
@@ -485,7 +485,8 @@ export class IdbFilesystem extends Idb {
                         (subtreeNodes: TreeNode[]) => {
                             for (j = 0; j < subtreeNodes.length; j++) {
                                 node = subtreeNodes[j];
-                                keyDict[node[DB_KEY_PATH]] = node;
+                                // TODO: we have a problem on next line ...
+                                // keyDict[node[DB_KEY_PATH]] = node;
                             }
                             nFoldersProcessed++;
                             if (nFoldersProcessed === nFolders) {
@@ -602,7 +603,8 @@ export class IdbFilesystem extends Idb {
                                 childKey: number,
                                 errorFound: boolean;
                             for (i = 0; i < nNodes; i++) {
-                                childKey = childNodes[i][DB_KEY_PATH];
+                                // TODO: we have a problem on next line ...
+                                // childKey = childNodes[i][DB_KEY_PATH];
                                 childIndex = childOrder.indexOf(childKey);
                                 if (childIndex === -1) {
                                     errorFound = true;
@@ -617,17 +619,21 @@ export class IdbFilesystem extends Idb {
                                 observer.error('child not in parent!');
                             }
                             else {
-                                parentNode.childOrder = childOrder;
+                                // TODO: we have a problem on next line ...
+                                // parentNode.childOrder = childOrder;
+
                                 // now you update the node with new childOrder
-                                this.updateNode(parentNode).subscribe(
-                                    () => {
-                                        observer.next(parentNode);
-                                        observer.complete();
-                                    },
-                                    (error: any) => {
-                                        observer.error(error);
-                                    }
-                                ); // updateNode().subscribe(
+
+                                // TODO: we have a problem on next line ...
+                                // this.updateNode(parentNode).subscribe(
+                                //     () => {
+                                //         observer.next(parentNode);
+                                //         observer.complete();
+                                //     },
+                                //     (error: any) => {
+                                //         observer.error(error);
+                                //     }
+                                // ); // updateNode().subscribe(
                             }
                         },
                         (error: any) => {
@@ -649,7 +655,7 @@ export class IdbFilesystem extends Idb {
                 parentsDetachers: { [id: string]: TreeNode[] } = {};
             for (i = 0; i < nNodes; i++) {
                 childNode = nodes[i];
-                if (!positiveWholeNumber(childNode.parentKey)) {
+                if (!isPositiveWholeNumber(childNode.parentKey)) {
                     // this child has no parent so skip it.  an example of a
                     // child that has no parents is a folder created at the
                     // root level
@@ -701,3 +707,4 @@ export class IdbFilesystem extends Idb {
         return source;
     }
 
+}

@@ -5,7 +5,7 @@ import {
 } from 'rxjs/Rx';
 
 import {
-    positiveWholeNumber
+    isPositiveWholeNumber
 } from '../utils/utils';
 
 // wait time between checks that the db is initialized
@@ -103,7 +103,7 @@ export class Idb {
         if (typeof config['version'] === 'undefined') {
             throw Error('No DB version in DB config');
         }
-        if (!positiveWholeNumber(config['version'])) {
+        if (!isPositiveWholeNumber(config['version'])) {
             throw Error('Malformed DB version number in DB config');
         }
         if (typeof config['storeConfigs'] === 'undefined' ||
@@ -220,7 +220,7 @@ export class Idb {
         key: number
     ): Observable<T> {
         let source: Observable<T> = Observable.create((observer) => {
-            if (positiveWholeNumber(key)) {
+            if (isPositiveWholeNumber(key)) {
                 this.getStore(storeName, 'readonly').subscribe(
                     (store: IDBObjectStore) => {
                         let getRequest: IDBRequest = store.get(key);
@@ -241,7 +241,7 @@ export class Idb {
                         observer.error('in getStore: ' + error);
                     }
                 ); // this.getStore(storeName, 'readonly').subscribe(
-            } // if (positiveWholeNumber(key)) {
+            } // if (isPositiveWholeNumber(key)) {
             else {
                 observer.error('invalid key: ' + key);
             }
@@ -294,7 +294,7 @@ export class Idb {
         newItem: T
     ): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
-            if (positiveWholeNumber(key)) {
+            if (isPositiveWholeNumber(key)) {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
                         let getRequest: IDBRequest = store.get(key);
@@ -340,7 +340,7 @@ export class Idb {
                         observer.error(getStoreError);
                     }
                 ); // this.getStore(storeName, 'readwrite').subscribe(
-            } // if (positiveWholeNumber(key)) {
+            } // if (isPositiveWholeNumber(key)) {
             else {
                 observer.error('invalid key: ' + key);
             }
@@ -360,7 +360,7 @@ export class Idb {
         key: number
     ): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
-            if (positiveWholeNumber(key)) {
+            if (isPositiveWholeNumber(key)) {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
                         let deleteRequest: IDBRequest = store.delete(key);
@@ -378,7 +378,7 @@ export class Idb {
                         observer.error(error);
                     }
                 ); // this.getStore(storeName, 'readwrite').subscribe(
-            } // if (positiveWholeNumber(key)) {
+            } // if (isPositiveWholeNumber(key)) {
             else {
                 observer.error('invalid key: ' + key);
             }

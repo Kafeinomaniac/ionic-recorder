@@ -1,15 +1,15 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    positiveWholeNumber
+    isPositiveWholeNumber
 } from './utils';
 
-describe('utils/utils:positiveWholeNumber()', () => {
+describe('utils/utils:isPositiveWholeNumber()', () => {
     it('works as expected', (done) => {
-        expect(positiveWholeNumber(1)).toBeTruthy();
-        expect(positiveWholeNumber(0)).toBeFalsy();
-        expect(positiveWholeNumber(-1)).toBeFalsy();
-        expect(positiveWholeNumber(1.1)).toBeFalsy();
+        expect(isPositiveWholeNumber(1)).toBeTruthy();
+        expect(isPositiveWholeNumber(0)).toBeFalsy();
+        expect(isPositiveWholeNumber(-1)).toBeFalsy();
+        expect(isPositiveWholeNumber(1.1)).toBeFalsy();
         done();
     });
 });

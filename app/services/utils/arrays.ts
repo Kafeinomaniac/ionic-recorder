@@ -2,28 +2,37 @@
 // github.com/basarat/typescript-collections/blob/release/src/lib/arrays.ts
 
 import {
-    defaultEquals,
     IEqualsFunction,
     ILoopFunction
 } from './utils';
+
+/**
+ * Default function to test equality.
+ * @function
+ */
+function defaultEquals<T>(a: T, b: T): boolean {
+    'use strict';
+    return a === b;
+}
 
 /**
  * Returns the position of the first occurrence of the specified item
  * within the specified array.4
  * @param {*} array the array in which to search the element.
  * @param {Object} item the element to search.
- * @param {function(Object,Object):boolean=} equalsFunction optional function used to
- * check equality between 2 elements.
- * @return {number} the position of the first occurrence of the specified element
- * within the specified array, or -1 if not found.
+ * @param {function(Object,Object):boolean=} equalsFunction optional
+ * function used to check equality between 2 elements.
+ * @return {number} the position of the first occurrence of the
+ * specified element within the specified array, or -1 if not found.
  */
 export function indexOf<T>(
     array: T[], item: T,
     equalsFunction?: IEqualsFunction<T>
 ): number {
-    const equals = equalsFunction || defaultEquals;
-    const length = array.length;
-    for (let i = 0; i < length; i++) {
+    'use strict';
+    const equals: IEqualsFunction<T> = equalsFunction || defaultEquals;
+    const length: number = array.length;
+    for (let i: number = 0; i < length; i++) {
         if (equals(array[i], item)) {
             return i;
         }
@@ -36,7 +45,8 @@ export function indexOf<T>(
  * within the specified array.
  * @param {*} array the array in which to search the element.
  * @param {Object} item the element to search.
- * @param {function(Object,Object):boolean=} equalsFunction optional function used to
+ * @param {function(Object,Object):boolean=} equalsFunction optional
+ * function used to
  * check equality between 2 elements.
  * @return {number} the position of the last occurrence of the specified element
  * within the specified array or -1 if not found.
@@ -46,14 +56,19 @@ export function lastIndexOf<T>(
     item: T,
     equalsFunction?: IEqualsFunction<T>
 ): number {
-    const equals = equalsFunction || defaultEquals;
-    const length = array.length;
-    for (let i = length - 1; i >= 0; i--) {
-        if (equals(array[i], item)) {
-            return i;
+    'use strict';
+    if (!equalsFunction) {
+        equalsFunction = defaultEquals;
+    }
+    const length: number = array.length;
+    let i: number,
+        iFound: number = -1;
+    for (i = 0; i < length; i++) {
+        if (equalsFunction(array[i], item)) {
+            iFound = i;
         }
     }
-    return -1;
+    return iFound;
 }
 
 /**
@@ -69,16 +84,17 @@ export function contains<T>(
     item: T,
     equalsFunction?: IEqualsFunction<T>
 ): boolean {
+    'use strict';
     return indexOf(array, item, equalsFunction) >= 0;
 }
 
-
 /**
- * Removes the first ocurrence of the specified element from the specified array.
+ * Removes the first ocurrence of the specified element from the
+ * specified array.
  * @param {*} array the array in which to search element.
  * @param {Object} item the element to search.
- * @param {function(Object,Object):boolean=} equalsFunction optional function to
- * check equality between 2 elements.
+ * @param {function(Object,Object):boolean=} equalsFunction optional
+ * function to check equality between 2 elements.
  * @return {boolean} true if the array changed after this call.
  */
 export function remove<T>(
@@ -86,7 +102,8 @@ export function remove<T>(
     item: T,
     equalsFunction?: IEqualsFunction<T>
 ): boolean {
-    const index = indexOf(array, item, equalsFunction);
+    'use strict';
+    const index: number = indexOf(array, item, equalsFunction);
     if (index < 0) {
         return false;
     }
@@ -97,10 +114,11 @@ export function remove<T>(
 /**
  * Returns the number of elements in the specified array equal
  * to the specified object.
- * @param {Array} array the array in which to determine the frequency of the element.
+ * @param {Array} array the array in which to determine the frequency
+ * of the element.
  * @param {Object} item the element whose frequency is to be determined.
- * @param {function(Object,Object):boolean=} equalsFunction optional function used to
- * check equality between 2 elements.
+ * @param {function(Object,Object):boolean=} equalsFunction optional
+ * function used to check equality between 2 elements.
  * @return {number} the number of elements in the specified array
  * equal to the specified object.
  */
@@ -109,10 +127,12 @@ export function frequency<T>(
     item: T,
     equalsFunction?: IEqualsFunction<T>
 ): number {
-    const equals = equalsFunction || defaultEquals;
-    const length = array.length;
-    let freq = 0;
-    for (let i = 0; i < length; i++) {
+    'use strict';
+    const equals: IEqualsFunction<T> = equalsFunction || defaultEquals;
+    const length: number = array.length;
+    let freq: number = 0,
+        i: number;
+    for (i = 0; i < length; i++) {
         if (equals(array[i], item)) {
             freq++;
         }
@@ -127,8 +147,8 @@ export function frequency<T>(
  * arrays are equal and are in the same order.
  * @param {Array} array1 one array to be tested for equality.
  * @param {Array} array2 the other array to be tested for equality.
- * @param {function(Object,Object):boolean=} equalsFunction optional function used to
- * check equality between elemements in the arrays.
+ * @param {function(Object,Object):boolean=} equalsFunction optional
+ * function used to check equality between elemements in the arrays.
  * @return {boolean} true if the two arrays are equal
  */
 export function equals<T>(
@@ -136,13 +156,14 @@ export function equals<T>(
     array2: T[],
     equalsFunction?: IEqualsFunction<T>
 ): boolean {
-    const equals = equalsFunction || defaultEquals;
+    'use strict';
+    const equals: IEqualsFunction<T> = equalsFunction || defaultEquals;
 
     if (array1.length !== array2.length) {
         return false;
     }
-    const length = array1.length;
-    for (let i = 0; i < length; i++) {
+    const length: number = array1.length;
+    for (let i: number = 0; i < length; i++) {
         if (!equals(array1[i], array2[i])) {
             return false;
         }
@@ -156,6 +177,7 @@ export function equals<T>(
  * @return {Array} a copy of the specified array
  */
 export function copy<T>(array: T[]): T[] {
+    'use strict';
     return array.concat();
 }
 
@@ -167,16 +189,18 @@ export function copy<T>(array: T[]): T[] {
  * @return {boolean} true if the array is defined and the indexes are valid.
  */
 export function swap<T>(array: T[], i: number, j: number): boolean {
+    'use strict';
     if (i < 0 || i >= array.length || j < 0 || j >= array.length) {
         return false;
     }
-    const temp = array[i];
+    const temp: T = array[i];
     array[i] = array[j];
     array[j] = temp;
     return true;
 }
 
 export function toString<T>(array: T[]): string {
+    'use strict';
     return '[' + array.toString() + ']';
 }
 
@@ -189,8 +213,9 @@ export function toString<T>(array: T[]): string {
  * optionally return false.
  */
 export function forEach<T>(array: T[], callback: ILoopFunction<T>): void {
-    for (const ele of array) {
-        if (callback(ele) === false) {
+    'use strict';
+    for (const element of array) {
+        if (callback(element) === false) {
             return;
         }
     }

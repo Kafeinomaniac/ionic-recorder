@@ -140,24 +140,15 @@ export function makeSecondsTimestamp(): string {
 }
 
 /**
-* Function signature for checking equality
-*/
+ * Function signature for checking equality
+ */
 export interface IEqualsFunction<T> {
     (a: T, b: T): boolean;
 }
 
 /**
-* Function signature for Iterations. Return false to break from loop
-*/
+ * Function signature for Iterations. Return false to break from loop
+ */
 export interface ILoopFunction<T> {
     (a: T): boolean | void;
-}
-
-
-/**
- * Default function to test equality.
- * @function
- */
-export function defaultEquals<T>(a: T, b: T): boolean {
-    return a === b;
 }
