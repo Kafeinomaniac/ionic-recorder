@@ -5,13 +5,13 @@
 // } from './idb';
 
 import {
-    IdbFilesystem,
+    IdbFS,
     TreeNode
-} from './idb-filesystem';
+} from './idb-fs';
 
 const IT_TIMEOUT_MSEC: number = 60;
 
-let idbFS: IdbFilesystem = new IdbFilesystem(
+let idbFS: IdbFS = new IdbFS(
     'f',
     1,
     'root'
@@ -34,7 +34,7 @@ beforeEach((done: Function) => {
 
 // jasmine.DEFAULT_TIMEOUT_INTERVAL = IT_TIMEOUT_MSEC;
 
-describe('services/idb:IdbFilesystem', () => {
+describe('services/idb:IdbFS', () => {
     it('initializes', (done) => {
         setTimeout(
             () => {
@@ -49,30 +49,30 @@ describe('services/idb:IdbFilesystem', () => {
         setTimeout(
             () => {
                 // verify folder node creation
-                let node: TreeNode = IdbFilesystem.makeTreeNode('test');
-                expect(IdbFilesystem.isFolderNode(node)).toEqual(true);
-                expect(IdbFilesystem.isDataNode(node)).toEqual(false);
+                let node: TreeNode = IdbFS.makeTreeNode('test');
+                expect(IdbFS.isFolderNode(node)).toEqual(true);
+                expect(IdbFS.isDataNode(node)).toEqual(false);
                 expect(node['parentKey']).toEqual(undefined);
                 expect(node['data']).toEqual(undefined);
 
                 // invalid parentKey tests
                 node['parentKey'] = 0;
                 try {
-                    IdbFilesystem.makeTreeNode('test', 0, 'data');
+                    IdbFS.makeTreeNode('test', 0, 'data');
                 }
                 catch (error) {
                     expect(error.toString())
                         .toEqual('Error: makeTreeNode(): invalid parentKey');
                 }
                 try {
-                    IdbFilesystem.makeTreeNode('test', 1.1, 'data');
+                    IdbFS.makeTreeNode('test', 1.1, 'data');
                 }
                 catch (error) {
                     expect(error.toString())
                         .toEqual('Error: makeTreeNode(): invalid parentKey');
                 }
                 try {
-                    IdbFilesystem.makeTreeNode('test', Infinity, 'data');
+                    IdbFS.makeTreeNode('test', Infinity, 'data');
                 }
                 catch (error) {
                     expect(error.toString())
@@ -80,9 +80,9 @@ describe('services/idb:IdbFilesystem', () => {
                 }
 
                 // verify data node creation
-                node = IdbFilesystem.makeTreeNode('test', 111, 'data');
-                expect(IdbFilesystem.isFolderNode(node)).toEqual(false);
-                expect(IdbFilesystem.isDataNode(node)).toEqual(true);
+                node = IdbFS.makeTreeNode('test', 111, 'data');
+                expect(IdbFS.isFolderNode(node)).toEqual(false);
+                expect(IdbFS.isDataNode(node)).toEqual(true);
                 expect(node.parentKey).toEqual(111);
                 expect(node.data).toEqual('data');
                 done();

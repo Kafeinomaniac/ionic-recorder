@@ -36,7 +36,7 @@ export interface KeyDict {
     [id: string]: TreeNode;
 }
 
-export class IdbFilesystem extends Idb {
+export class IdbFS extends Idb {
     private rootFolderName: string;
     private rootFolderKey: number;
 
@@ -93,7 +93,7 @@ export class IdbFilesystem extends Idb {
                             else {
                                 this.create<TreeNode>(
                                     NODE_STORE,
-                                    IdbFilesystem.makeTreeNode(
+                                    IdbFS.makeTreeNode(
                                         this.rootFolderName)
                                 ).subscribe(
                                     (key: number) => {
@@ -173,7 +173,7 @@ export class IdbFilesystem extends Idb {
     ): Observable<ParentChild> {
         let source: Observable<ParentChild> = Observable.create((observer) => {
             let childNode: TreeNode =
-                IdbFilesystem.makeTreeNode(name, parentKey, data);
+                IdbFS.makeTreeNode(name, parentKey, data);
             this.create<TreeNode>(NODE_STORE, childNode).subscribe(
                 (childKey: number) => {
                     this.attachToParent(childKey, childNode).subscribe(
@@ -363,7 +363,7 @@ export class IdbFilesystem extends Idb {
                         parentNode).subscribe(
                         () => {
                             // update childNode's path
-                            if (IdbFilesystem.isFolderNode(childNode)) {
+                            if (IdbFS.isFolderNode(childNode)) {
                                 childNode.path = parentNode.path + '/' +
                                     parentNode.name;
                                 this.update<TreeNode>(
@@ -471,14 +471,14 @@ export class IdbFilesystem extends Idb {
             // count nFolders
             for (i = 0; i < nNodes; i++) {
                 node = keyDict[keys[i]];
-                if (IdbFilesystem.isFolderNode(node)) {
+                if (IdbFS.isFolderNode(node)) {
                     nFolders++;
                 }
             }
             // second loop - subscribe and add
             for (i = 0; i < nNodes; i++) {
                 node = keyDict[keys[i]];
-                if (IdbFilesystem.isFolderNode(node)) {
+                if (IdbFS.isFolderNode(node)) {
                     // TODO: we can make things slightly more efficient here
                     // by not calling anything if folder is empty
                     this.getSubtreeNodesArray(node).subscribe(
@@ -505,7 +505,7 @@ export class IdbFilesystem extends Idb {
                     observer.next(keyDict);
                     observer.complete();
                 }
-            } // if (IdbFilesystem.isFolderNode(node)) { .. else { ..
+            } // if (IdbFS.isFolderNode(node)) { .. else { ..
         });
         return source;
     }
@@ -532,7 +532,7 @@ export class IdbFilesystem extends Idb {
     private isLeaf(node: TreeNode): boolean {
         // returns true or false depending on if it's a leaf node.
         // a leaf node is either a data node or an empty folder node
-        return IdbFilesystem.isDataNode(node) || !node.childOrder.size;
+        return IdbFS.isDataNode(node) || !node.childOrder.size;
     }
 
     /**
