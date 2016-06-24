@@ -13,6 +13,7 @@ import {
 } from '../../services/utils/utils';
 
 const NODE_STORE: string = 'fileSystem';
+const DB_KEY_PATH: string = 'id';
 
 ///////////////////////////////////////////////////////////////////////////////
 /// START: Public API
@@ -174,7 +175,14 @@ export class IdbFS extends Idb {
         let source: Observable<ParentChild> = Observable.create((observer) => {
             let childNode: TreeNode =
                 IdbFS.makeTreeNode(name, parentKey, data);
-            this.create<TreeNode>(NODE_STORE, childNode).subscribe(
+            this.create<TreeNode>(
+                NODE_STORE,
+                childNode,
+                (node: TreeNode, key: number) => {
+                    node[DB_KEY_PATH] = key;
+                    return node;
+                }
+            ).subscribe(
                 (childKey: number) => {
                     this.attachToParent(childKey, childNode).subscribe(
                         (parentNode: TreeNode) => {
@@ -205,7 +213,7 @@ export class IdbFS extends Idb {
     // returns Observable<TreeNode[]>
     public readChildNodes(folderNode: TreeNode): Observable<TreeNode[]> {
         let source: Observable<TreeNode[]> = Observable.create((observer) => {
-            return this.multiRead<TreeNode>(NODE_STORE, folderNode.childOrder);
+            return this.readMany<TreeNode>(NODE_STORE, folderNode.childOrder);
         });
         return source;
     }
@@ -232,7 +240,7 @@ export class IdbFS extends Idb {
                             () => {
                                 nDeleted++;
                             },
-                            (error: any) => {
+                            (error) => {
                                 observer.error('deleteNodes():' +
                                     'detachForDeleteNodes():delete(): ' +
                                     error);
@@ -434,7 +442,7 @@ export class IdbFS extends Idb {
                             observer.next(expandedKeyDict);
                             observer.complete();
                         },
-                        (error: any) => {
+                        (error) => {
                             observer.error(error);
                         }
                     ); // detachNodesFromParents().subscribe(
@@ -485,8 +493,7 @@ export class IdbFS extends Idb {
                         (subtreeNodes: TreeNode[]) => {
                             for (j = 0; j < subtreeNodes.length; j++) {
                                 node = subtreeNodes[j];
-                                // TODO: we have a problem on next line ...
-                                // keyDict[node[DB_KEY_PATH]] = node;
+                                keyDict[node[DB_KEY_PATH]] = node;
                             }
                             nFoldersProcessed++;
                             if (nFoldersProcessed === nFolders) {
@@ -494,7 +501,7 @@ export class IdbFS extends Idb {
                                 observer.complete();
                             }
                         },
-                        (error: any) => {
+                        (error) => {
                             observer.error(error);
                         }
                     ); // getSubtreeNodesArray(node).subscribe(
@@ -565,7 +572,7 @@ export class IdbFS extends Idb {
                 (subtreeNode: TreeNode) => {
                     nodes.push(subtreeNode);
                 },
-                (error: any) => {
+                (error) => {
                     observer.error(error);
                 },
                 () => {
@@ -603,8 +610,7 @@ export class IdbFS extends Idb {
                                 childKey: number,
                                 errorFound: boolean;
                             for (i = 0; i < nNodes; i++) {
-                                // TODO: we have a problem on next line ...
-                                // childKey = childNodes[i][DB_KEY_PATH];
+                                childKey = childNodes[i][DB_KEY_PATH];
                                 childIndex = childOrder.indexOf(childKey);
                                 if (childIndex === -1) {
                                     errorFound = true;
@@ -630,13 +636,13 @@ export class IdbFS extends Idb {
                                 //         observer.next(parentNode);
                                 //         observer.complete();
                                 //     },
-                                //     (error: any) => {
+                                //     (error) => {
                                 //         observer.error(error);
                                 //     }
                                 // ); // updateNode().subscribe(
                             }
                         },
-                        (error: any) => {
+                        (error) => {
                             observer.error(error);
                         }
                     ); // readNode().subscribe(
@@ -692,7 +698,7 @@ export class IdbFS extends Idb {
                                 observer.complete();
                             }
                         },
-                        (error: any) => {
+                        (error) => {
                             observer.error(error);
                         }
                         );

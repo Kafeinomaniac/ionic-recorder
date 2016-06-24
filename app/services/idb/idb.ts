@@ -165,20 +165,30 @@ export class Idb {
      * @param {string} storeName - the name of the db store where we're
      * creating the item
      * @param {T} item - the item we're about to store in the db store
+     * @param {(key: number, item: T) => void} itemCB specifies a
+     * callback that runs on both the key we are to add with, and the
+     * item to add - typically this callback is used to set the key in
+     * the item when the item is an object
      * @returns {Observable<number>} Observable that emits the item key
      * that was automatically incremented for the newly created (stored) item.
      */
     public create<T>(
         storeName: string,
-        item: T
+        item: T,
+        itemCB?: (item: T, key?: number) => T
     ): Observable<number> {
         let source: Observable<number> = Observable.create((observer) => {
             if (typeof item !== 'undefined' && item) {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
                         let key: number = this.storeKeys[storeName],
-                            addRequest: IDBRequest = store.add(item, key);
+                            addRequest: IDBRequest;
 
+                        if (itemCB) {
+                            item = itemCB(item, key);
+                        }
+
+                        addRequest = store.add(item, key);
                         addRequest.onsuccess = (event: IDBEvent) => {
                             if (addRequest.result !== key) {
                                 observer.error('addRequest key mismatch');
@@ -256,7 +266,7 @@ export class Idb {
      * @returns {Observable<T[]>} observable of an array of T
      * objects whose ids are in keys
      */
-    public multiRead<T>(
+    public readMany<T>(
         storeName: string,
         keys: Set<number>
     ): Observable<T[]> {
