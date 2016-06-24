@@ -100,17 +100,19 @@ export class Idb {
         'use strict';
         // NOTE:this loop should only repeat a handful of times or so
         let source: Observable<void> = Observable.create((observer) => {
-            let repeat: () => void = () => {
-                try {
-                    Idb.deleteDb(dbName);
-                }
-                catch (error) {
-                    console.log('Error: ' + error);
-                    setTimeout(repeat, WAIT_MSEC);
-                }
-                observer.next();
-                observer.complete();
-            };
+            let timerId: NodeJS.Timer,
+                repeat: () => void = () => {
+                    try {
+                        Idb.deleteDb(dbName);
+                    }
+                    catch (error) {
+                        console.log('Error: ' + error);
+                        timerId = setTimeout(repeat, WAIT_MSEC);
+                    }
+                    clearTimeout(timerId);
+                    observer.next();
+                    observer.complete();
+                };
             repeat();
         });
         return source;

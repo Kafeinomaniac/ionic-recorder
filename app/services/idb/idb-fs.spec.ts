@@ -23,10 +23,10 @@ let idbFS: IdbFS = new IdbFS(
 );
 
 let db: IDBDatabase,
-    folder1: TreeNode;
-// folder3: TreeNode,
-// folder5: TreeNode,
-// item2: TreeNode,
+    folder1: TreeNode,
+    // folder3: TreeNode,
+    // folder5: TreeNode,
+    item2: TreeNode;
 // item4: TreeNode,
 // item6: TreeNode,
 // item7: TreeNode;
@@ -136,19 +136,32 @@ describe('services/idb:IdbFS', () => {
             WAIT_MSEC);
     });
 
-    // it('can create item2 - folder1, child of folder1', (done) => {
-    //     setTimeout(
-    //         () => {
-    //             idbFS.createNode('folder1', 1).subscribe(
-    //                 (parentChild: ParentChild) => {
-    //                     expect(parentChild.parent[DB_KEY_PATH]).toBe(1);
-    //                     done();
-    //                 },
-    //                 (error) => {
-    //                     fail(error);
-    //                 });
-    //         },
-    //         WAIT_MSEC);
-    // });
+    it('can create item2, child of folder1', (done) => {
+        setTimeout(
+            () => {
+                idbFS.createNode(
+                    'item2',
+                    folder1[DB_KEY_PATH],
+                    'i am the datum'
+                ).subscribe(
+                    (parentChild: ParentChild) => {
+                        item2 = parentChild.child;
+                        expect(item2.parentKey).toBe(folder1[DB_KEY_PATH]);
+                        folder1 = parentChild.parent;
+                        expect(item2['data']).toBe('i am the datum');
+                        expect(item2.timeStamp).not.toBeFalsy();
+                        expect(folder1.childOrder).toEqual([
+                            item2[DB_KEY_PATH]
+                        ]);
+                        expect(item2[DB_KEY_PATH]).toBe(3);
+
+                        done();
+                    },
+                    (error) => {
+                        fail(error);
+                    });
+            },
+            WAIT_MSEC);
+    });
 
 });
