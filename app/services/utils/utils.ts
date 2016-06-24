@@ -138,17 +138,3 @@ export function makeSecondsTimestamp(): string {
         now.toLocaleTimeString()
     ].join('');
 }
-
-/**
- * Function signature for checking equality
- */
-export interface IEqualsFunction<T> {
-    (a: T, b: T): boolean;
-}
-
-/**
- * Function signature for Iterations. Return false to break from loop
- */
-export interface ILoopFunction<T> {
-    (a: T): boolean | void;
-}
