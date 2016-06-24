@@ -122,3 +122,34 @@ export function makeSecondsTimestamp(): string {
         now.toLocaleTimeString()
     ].join('');
 }
+
+/**
+ * objectInspector digs through a Javascript object
+ * to display all its properties
+ *
+ * @param object - a Javascript object to inspect
+ *
+ * @return result - the concatenated description of all object properties
+ */
+export function objectInspector(object: Object): string {
+    'use strict';
+    let rows: Array<String> = [],
+        key: string,
+        count: number = 0;
+    for (key in object) {
+        rows.push([key, typeof object[key]].join(': '));
+        count++;
+    }
+    return [
+        'Type: ' + typeof object,
+        'Length: ' + count,
+        rows.join(' // ')
+    ].join('\n');
+}
+
+export function prependArray(value: any, arr: any[]): any[] {
+    'use strict';
+    let newArray: any[] = arr.slice(0);
+    newArray.unshift(value);
+    return newArray;
+}

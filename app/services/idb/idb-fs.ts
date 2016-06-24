@@ -9,11 +9,14 @@ import {
 } from 'rxjs/Rx';
 
 import {
-    isPositiveWholeNumber
+    isPositiveWholeNumber,
+    isUndefined,
+    prependArray
 } from '../../services/utils/utils';
 
 const NODE_STORE: string = 'fileSystem';
-const DB_KEY_PATH: string = 'id';
+
+export const DB_KEY_PATH: string = 'id';
 
 ///////////////////////////////////////////////////////////////////////////////
 /// START: Public API
@@ -24,7 +27,7 @@ export interface TreeNode {
     parentKey: number;
     timeStamp: number;
     data?: any;
-    childOrder?: Set<number>;
+    childOrder?: number[];
     path?: string;
 }
 
@@ -39,7 +42,6 @@ export interface KeyDict {
 
 export class IdbFS extends Idb {
     private rootFolderName: string;
-    private rootFolderKey: number;
 
     constructor(dbName: string, dbVersion: number, rootFolderName: string) {
         super({
@@ -68,38 +70,42 @@ export class IdbFS extends Idb {
 
         this.rootFolderName = rootFolderName;
         this.waitForFilesystem().subscribe(
-            (rootFolderKey: number) => {
-                if (rootFolderKey !== 1) {
-                    throw Error('rootFolder key is not 1');
-                }
-                this.rootFolderKey = rootFolderKey;
-            },
+            null,
             (error) => {
                 throw Error('constructor(): ' + error);
             }
         );
     }
 
-    // read or create root folder, returns its key
-    public waitForFilesystem(): Observable<number> {
-        let source: Observable<number> = Observable.create((observer) => {
+    // read or create root folder, returns Observable<void> that ends
+    // when filesystem is ready for use
+    public waitForFilesystem(): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
             this.waitForDB().subscribe(
                 (db: IDBDatabase) => {
                     this.readNode(1).subscribe(
                         (rootNode: TreeNode) => {
                             if (rootNode) {
-                                observer.next(1);
+                                observer.next();
                                 observer.complete();
                             }
                             else {
-                                this.create<TreeNode>(
-                                    NODE_STORE,
-                                    IdbFS.makeTreeNode(
-                                        this.rootFolderName)
-                                ).subscribe(
+                                let newNode: TreeNode =
+                                    IdbFS.makeTreeNode(this.rootFolderName);
+                                newNode[DB_KEY_PATH] = 1;
+                                if (!newNode.childOrder) {
+                                    console.warn('no childor in roo');
+                                }
+                                this.create<TreeNode>(NODE_STORE, newNode)
+                                    .subscribe(
                                     (key: number) => {
-                                        observer.next(key);
-                                        observer.complete();
+                                        if (key !== 1) {
+                                            observer.error('root key not 1');
+                                        }
+                                        else {
+                                            observer.next();
+                                            observer.complete();
+                                        }
                                     },
                                     (error) => {
                                         observer.error('waitForFilesystem():' +
@@ -121,11 +127,11 @@ export class IdbFS extends Idb {
     }
 
     public static isDataNode(treeNode: TreeNode): boolean {
-        return treeNode['data'] !== undefined;
+        return !IdbFS.isFolderNode(treeNode);
     }
 
     public static isFolderNode(treeNode: TreeNode): boolean {
-        return treeNode['data'] === undefined;
+        return isUndefined(treeNode['data']);
     }
 
     // if you supply data it's a data node, otherwise it's a folder node
@@ -140,12 +146,9 @@ export class IdbFS extends Idb {
             parentKey: parentKey,
             timeStamp: Date.now()
         };
-        if (parentKey) {
-            if (!isPositiveWholeNumber(parentKey)) {
-                throw Error('makeTreeNode(): invalid parentKey');
-            }
-            treeNode.parentKey = parentKey;
-        }
+        treeNode.parentKey = isPositiveWholeNumber(parentKey) ?
+            parentKey : null;
+
         if (data) {
             // this is a data node
             treeNode.data = data;
@@ -153,7 +156,7 @@ export class IdbFS extends Idb {
         else {
             // this is a tree node
             treeNode.path = '';
-            treeNode.childOrder = new Set<number>();
+            treeNode.childOrder = [];
         }
         return treeNode;
     };
@@ -363,7 +366,9 @@ export class IdbFS extends Idb {
                 (parentNode: TreeNode) => {
                     // push newly created nodes to the front of
                     // the parent childOrder list
-                    parentNode.childOrder.add(childKey);
+                    parentNode.childOrder = prependArray(
+                        childNode[DB_KEY_PATH],
+                        parentNode.childOrder);
                     // now you update the node with new childOrder
                     this.update<TreeNode>(
                         NODE_STORE,
@@ -539,7 +544,7 @@ export class IdbFS extends Idb {
     private isLeaf(node: TreeNode): boolean {
         // returns true or false depending on if it's a leaf node.
         // a leaf node is either a data node or an empty folder node
-        return IdbFS.isDataNode(node) || !node.childOrder.size;
+        return IdbFS.isDataNode(node) || !node.childOrder.length;
     }
 
     /**
@@ -604,25 +609,29 @@ export class IdbFS extends Idb {
                     this.readNode(parentKey).subscribe(
                         (parentNode: TreeNode) => {
                             let i: number,
-                                childOrder: Set<number> = parentNode.childOrder,
+                                childOrder: number[] = parentNode.childOrder,
+                                childIndex: number = -1,
                                 childKey: number,
-                                bErrorFound: boolean;
+                                errorFound: boolean;
                             for (i = 0; i < nNodes; i++) {
                                 childKey = childNodes[i][DB_KEY_PATH];
-                                if (childOrder.has(childKey)) {
-                                    childOrder.delete(childKey);
-                                }
-                                else {
-                                    bErrorFound = true;
+                                childIndex = childOrder.indexOf(childKey);
+                                if (childIndex === -1) {
+                                    errorFound = true;
                                     break;
                                 }
+                                else {
+                                    // shorten parent's childOrder
+                                    childOrder.splice(childIndex, 1);
+                                }
                             }
-
-                            if (bErrorFound) {
+                            if (errorFound) {
                                 observer.error('child not in parent!');
                             }
                             else {
                                 parentNode.childOrder = childOrder;
+                                // now you update the node with new childOrder
+                                // this.updateNode(parentNode).subscribe(
                                 this.update<TreeNode>(
                                     NODE_STORE,
                                     parentNode[DB_KEY_PATH],
@@ -632,12 +641,12 @@ export class IdbFS extends Idb {
                                         observer.next(parentNode);
                                         observer.complete();
                                     },
-                                    (error) => {
+                                    (error: any) => {
                                         observer.error(error);
                                     }); // updateNode().subscribe(
                             }
                         },
-                        (error) => {
+                        (error: any) => {
                             observer.error(error);
                         }
                     ); // readNode().subscribe(

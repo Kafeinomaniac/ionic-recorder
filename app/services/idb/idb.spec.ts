@@ -5,15 +5,18 @@ import {
     IdbConfig
 } from './idb';
 
-const IT_TIMEOUT_MSEC: number = 60;
+const WAIT_MSEC: number = 60;
+const DB_NAME: string = 'd';
+const DB_VERSION: number = 3;
+const STORE_NAME: string = 's';
 
 const DB_CONFIG: IdbConfig = Idb.validateConfig(
     {
-        name: 'd',
-        version: 1,
+        name: DB_NAME,
+        version: DB_VERSION,
         storeConfigs: [
             {
-                name: 's',
+                name: STORE_NAME,
                 indexConfigs: [
                     {
                         name: 'name',
@@ -33,7 +36,7 @@ const DB_CONFIG: IdbConfig = Idb.validateConfig(
     }
 );
 
-Idb.deleteDb('d');
+Idb.persistentDeleteDb(DB_NAME).subscribe();
 
 let idb: Idb = new Idb(DB_CONFIG),
     db: IDBDatabase = null,
@@ -86,7 +89,7 @@ beforeEach((done: Function) => {
         });
 });
 
-// jasmine.DEFAULT_TIMEOUT_INTERVAL = IT_TIMEOUT_MSEC;
+// jasmine.DEFAULT_TIMEOUT_INTERVAL = WAIT_MSEC;
 
 describe('services/idb:Idb', () => {
     it('initializes', (done) => {
@@ -96,7 +99,7 @@ describe('services/idb:Idb', () => {
                 expect(db).not.toBeFalsy();
                 done();
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can create(item1), key == 1', (done) => {
@@ -110,7 +113,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can create(item2), key == 2', (done) => {
@@ -124,7 +127,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can clear the store', (done) => {
@@ -136,7 +139,7 @@ describe('services/idb:Idb', () => {
                     }
                 );
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can create(item1), key == 3', (done) => {
@@ -149,7 +152,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can create(item2), key == 4', (done) => {
@@ -162,7 +165,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can read(item1)', (done) => {
@@ -175,7 +178,7 @@ describe('services/idb:Idb', () => {
                     }
                 );
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can delete(item1)', (done) => {
@@ -191,7 +194,7 @@ describe('services/idb:Idb', () => {
                             });
                     });
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can read(item2)', (done) => {
@@ -204,7 +207,7 @@ describe('services/idb:Idb', () => {
                     }
                 );
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can create(item1) again, key == 5', (done) => {
@@ -217,7 +220,7 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can update(key1, item2)', (done) => {
@@ -233,7 +236,7 @@ describe('services/idb:Idb', () => {
                             });
                     });
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can update(key2, item1)', (done) => {
@@ -249,7 +252,7 @@ describe('services/idb:Idb', () => {
                             });
                     });
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can initialize 2nd Idb and create item2 in it', (done) => {
@@ -265,6 +268,20 @@ describe('services/idb:Idb', () => {
                         done();
                     });
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
+
+    // it('can clear store: ' + STORE_NAME, (done) => {
+    //     setTimeout(
+    //         () => {
+    //             idb.clearStore(STORE_NAME).subscribe(
+    //                 null,
+    //                 (error) => {
+    //                     fail(error);
+    //                 });
+    //             done();
+    //         },
+    //         WAIT_MSEC);
+    // });
+
 });

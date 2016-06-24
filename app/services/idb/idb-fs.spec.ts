@@ -1,30 +1,40 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-// import {
-//     deleteDb
-// } from './idb';
-
 import {
     IdbFS,
-    TreeNode
+    TreeNode,
+    DB_KEY_PATH,
+    ParentChild
 } from './idb-fs';
 
-const IT_TIMEOUT_MSEC: number = 60;
+const WAIT_MSEC: number = 60;
+
+const ROOT_FOLDER_NAME: string = 'root';
+
+const DB_NAME: string = 'f';
+const DB_VERSION: number = 3;
+
+IdbFS.persistentDeleteDb(DB_NAME).subscribe();
 
 let idbFS: IdbFS = new IdbFS(
-    'f',
-    1,
-    'root'
+    DB_NAME,
+    DB_VERSION,
+    ROOT_FOLDER_NAME
 );
 
-// deleteDb('f');
-
-let dbFS: IDBDatabase;
+let db: IDBDatabase,
+    folder1: TreeNode;
+// folder3: TreeNode,
+// folder5: TreeNode,
+// item2: TreeNode,
+// item4: TreeNode,
+// item6: TreeNode,
+// item7: TreeNode;
 
 beforeEach((done: Function) => {
     idbFS.waitForDB().subscribe(
         (database: IDBDatabase) => {
-            dbFS = database;
+            db = database;
             done();
         },
         (error) => {
@@ -32,17 +42,17 @@ beforeEach((done: Function) => {
         });
 });
 
-// jasmine.DEFAULT_TIMEOUT_INTERVAL = IT_TIMEOUT_MSEC;
+// jasmine.DEFAULT_TIMEOUT_INTERVAL = WAIT_MSEC;
 
 describe('services/idb:IdbFS', () => {
     it('initializes', (done) => {
         setTimeout(
             () => {
                 expect(idbFS).not.toBeFalsy();
-                expect(dbFS).not.toBeFalsy();
+                expect(db).not.toBeFalsy();
                 done();
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
 
     it('can make nodes and test them', (done) => {
@@ -50,10 +60,11 @@ describe('services/idb:IdbFS', () => {
             () => {
                 // verify folder node creation
                 let node: TreeNode = IdbFS.makeTreeNode('test');
-                expect(IdbFS.isFolderNode(node)).toEqual(true);
-                expect(IdbFS.isDataNode(node)).toEqual(false);
-                expect(node['parentKey']).toEqual(undefined);
-                expect(node['data']).toEqual(undefined);
+                expect(IdbFS.isFolderNode(node)).toBe(true);
+                expect(IdbFS.isDataNode(node)).toBe(false);
+                expect(node['parentKey']).toBe(null);
+                expect(node['data']).toBe(undefined);
+                expect(node[DB_KEY_PATH]).toBeUndefined();
 
                 // invalid parentKey tests
                 node['parentKey'] = 0;
@@ -87,6 +98,57 @@ describe('services/idb:IdbFS', () => {
                 expect(node.data).toEqual('data');
                 done();
             },
-            IT_TIMEOUT_MSEC);
+            WAIT_MSEC);
     });
+
+    it('can read root folder (' + ROOT_FOLDER_NAME + ')', (done) => {
+        setTimeout(
+            () => {
+                idbFS.readNode(1).subscribe(
+                    (rootNode: TreeNode) => {
+                        expect(rootNode.childOrder).toBeDefined();
+                        expect(rootNode[DB_KEY_PATH]).toBe(1);
+                    },
+                    (error) => {
+                        fail(error);
+                    }
+                );
+                done();
+            },
+            WAIT_MSEC);
+    });
+
+    it('can create folder1, child of ' + ROOT_FOLDER_NAME, (done) => {
+        setTimeout(
+            () => {
+                idbFS.createNode('folder1', 1).subscribe(
+                    (parentChild: ParentChild) => {
+                        folder1 = parentChild.child;
+                        expect(folder1.parentKey).toBe(1);
+                        expect(folder1.data).toBeUndefined();
+                        expect(parentChild.parent[DB_KEY_PATH]).toBe(1);
+                        done();
+                    },
+                    (error) => {
+                        fail(error);
+                    });
+            },
+            WAIT_MSEC);
+    });
+
+    // it('can create item2 - folder1, child of folder1', (done) => {
+    //     setTimeout(
+    //         () => {
+    //             idbFS.createNode('folder1', 1).subscribe(
+    //                 (parentChild: ParentChild) => {
+    //                     expect(parentChild.parent[DB_KEY_PATH]).toBe(1);
+    //                     done();
+    //                 },
+    //                 (error) => {
+    //                     fail(error);
+    //                 });
+    //         },
+    //         WAIT_MSEC);
+    // });
+
 });

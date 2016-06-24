@@ -9,7 +9,7 @@ import {
 } from '../utils/utils';
 
 // wait time between checks that the db is initialized
-const WAIT_FOR_DB_MSEC: number = 60;
+const WAIT_MSEC: number = 60;
 
 interface StoreKeys {
     [storeName: string]: number;
@@ -90,6 +90,32 @@ export class Idb {
         };
     }
 
+    /**
+     * Same as deleteDb, but keeps trying if there is an error
+     * @params {string} dbName - the name of the database to delete
+     * @returns {Observable<void>} Observable that yields when the 
+     * delete operation returns without error
+     */
+    public static persistentDeleteDb(dbName: string): Observable<void> {
+        'use strict';
+        // NOTE:this loop should only repeat a handful of times or so
+        let source: Observable<void> = Observable.create((observer) => {
+            let repeat: () => void = () => {
+                try {
+                    Idb.deleteDb(dbName);
+                }
+                catch (error) {
+                    console.log('Error: ' + error);
+                    setTimeout(repeat, WAIT_MSEC);
+                }
+                observer.next();
+                observer.complete();
+            };
+            repeat();
+        });
+        return source;
+    }
+
     // we make this a static function because it needs to be called
     // before class construction sometimes
     public static validateConfig(config: IdbConfig): IdbConfig {
@@ -128,7 +154,7 @@ export class Idb {
                     observer.complete();
                 }
                 else {
-                    setTimeout(repeat, WAIT_FOR_DB_MSEC);
+                    setTimeout(repeat, WAIT_MSEC);
                 }
             };
             repeat();
@@ -268,12 +294,12 @@ export class Idb {
      */
     public readMany<T>(
         storeName: string,
-        keys: Set<number>
+        keys: number[]
     ): Observable<T[]> {
         let source: Observable<T[]> = Observable.create((observer) => {
             let childNodes: T[] = [];
             // asynchronously read childOrder array, emits T[]
-            this.ls<T>(storeName, Array.from(keys)).subscribe(
+            this.ls<T>(storeName, keys).subscribe(
                 (node: T) => {
                     childNodes.push(node);
                 },
