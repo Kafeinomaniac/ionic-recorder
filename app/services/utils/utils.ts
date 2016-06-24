@@ -8,9 +8,9 @@
  */
 export function copyFromObject(src: Object, dest: Object): Object {
     'use strict';
-    for (let i in src) {
-        if (src.hasOwnProperty(i)) {
-            dest[i] = src[i];
+    for (let prop in src) {
+        if (has(src, prop)) {
+            dest[prop] = src[prop];
         }
     }
     return dest;
@@ -63,22 +63,6 @@ export function isPositiveWholeNumber(num: number): boolean {
     );
 }
 
-/**
- * Convert any object to a string.
- * @function
- */
-export function toString(item: any): string {
-    'use strict';
-    if (item === null) {
-        return 'COLLECTION_NULL';
-    } else if (isUndefined(item)) {
-        return 'COLLECTION_UNDEFINED';
-    } else if (isString(item)) {
-        return '$s' + item;
-    } else {
-        return '$o' + item.toString();
-    }
-}
 /**
  * format time into H*:MM:SS.CC
  * @param {number} - number of seconds, float
