@@ -604,42 +604,37 @@ export class IdbFS extends Idb {
                     this.readNode(parentKey).subscribe(
                         (parentNode: TreeNode) => {
                             let i: number,
-                                childOrder: number[] =
-                                    Array.from(parentNode.childOrder),
-                                childIndex: number = -1,
+                                childOrder: Set<number> = parentNode.childOrder,
                                 childKey: number,
-                                errorFound: boolean;
+                                bErrorFound: boolean;
                             for (i = 0; i < nNodes; i++) {
                                 childKey = childNodes[i][DB_KEY_PATH];
-                                childIndex = childOrder.indexOf(childKey);
-                                if (childIndex === -1) {
-                                    errorFound = true;
-                                    break;
+                                if (childOrder.has(childKey)) {
+                                    childOrder.delete(childKey);
                                 }
                                 else {
-                                    // shorten parent's childOrder
-                                    childOrder.splice(childIndex, 1);
+                                    bErrorFound = true;
+                                    break;
                                 }
                             }
-                            if (errorFound) {
+
+                            if (bErrorFound) {
                                 observer.error('child not in parent!');
                             }
                             else {
-                                // TODO: we have a problem on next line ...
-                                // parentNode.childOrder = childOrder;
-
-                                // now you update the node with new childOrder
-
-                                // TODO: we have a problem on next line ...
-                                // this.updateNode(parentNode).subscribe(
-                                //     () => {
-                                //         observer.next(parentNode);
-                                //         observer.complete();
-                                //     },
-                                //     (error) => {
-                                //         observer.error(error);
-                                //     }
-                                // ); // updateNode().subscribe(
+                                parentNode.childOrder = childOrder;
+                                this.update<TreeNode>(
+                                    NODE_STORE,
+                                    parentNode[DB_KEY_PATH],
+                                    parentNode
+                                ).subscribe(
+                                    () => {
+                                        observer.next(parentNode);
+                                        observer.complete();
+                                    },
+                                    (error) => {
+                                        observer.error(error);
+                                    }); // updateNode().subscribe(
                             }
                         },
                         (error) => {
