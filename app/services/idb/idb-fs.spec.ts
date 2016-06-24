@@ -24,7 +24,7 @@ let idbFS: IdbFS = new IdbFS(
 
 let db: IDBDatabase,
     folder1: TreeNode,
-    // folder3: TreeNode,
+    folder3: TreeNode,
     // folder5: TreeNode,
     item2: TreeNode;
 // item4: TreeNode,
@@ -147,14 +147,40 @@ describe('services/idb:IdbFS', () => {
                     (parentChild: ParentChild) => {
                         item2 = parentChild.child;
                         expect(item2.parentKey).toBe(folder1[DB_KEY_PATH]);
-                        folder1 = parentChild.parent;
                         expect(item2['data']).toBe('i am the datum');
                         expect(item2.timeStamp).not.toBeFalsy();
+                        folder1 = parentChild.parent;
                         expect(folder1.childOrder).toEqual([
                             item2[DB_KEY_PATH]
                         ]);
                         expect(item2[DB_KEY_PATH]).toBe(3);
 
+                        done();
+                    },
+                    (error) => {
+                        fail(error);
+                    });
+            },
+            WAIT_MSEC);
+    });
+
+    it('can create folder3, child of folder1', (done) => {
+        setTimeout(
+            () => {
+                idbFS.createNode(
+                    'folder3',
+                    folder1[DB_KEY_PATH]).subscribe(
+                    (parentChild: ParentChild) => {
+                        folder3 = parentChild.child;
+                        expect(folder3.parentKey).toBe(folder1[DB_KEY_PATH]);
+                        expect(folder3['data']).toBeUndefined();
+                        expect(folder3.name).toEqual('folder3');
+                        expect(folder3.timeStamp).not.toBeFalsy();
+                        folder1 = parentChild.parent;
+                        expect(folder1.childOrder).toEqual([
+                            folder3[DB_KEY_PATH],
+                            item2[DB_KEY_PATH]
+                        ]);
                         done();
                     },
                     (error) => {
