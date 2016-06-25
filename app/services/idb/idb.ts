@@ -71,24 +71,24 @@ export class Idb {
      * @returns {void} We assume the delete just works but we get an
      * error thrown if it does not.
      */
-    public static deleteDb(dbName: string): void {
-        'use strict';
-        let request: IDBOpenDBRequest = indexedDB.deleteDatabase(dbName);
+    // public static deleteDb(dbName: string): void {
+    //     'use strict';
+    //     let request: IDBOpenDBRequest = indexedDB.deleteDatabase(dbName);
 
-        request.onsuccess = function (): void {
-            // console.log('deleteDatabase: SUCCESS');
-        };
+    //     request.onsuccess = function (): void {
+    //         // console.log('deleteDatabase: SUCCESS');
+    //     };
 
-        request.onerror = function (): void {
-            console.warn('deleteDatabase: ERROR');
-            throw Error('Idb:deleteDb() request error');
-        };
+    //     request.onerror = function (): void {
+    //         console.warn('deleteDatabase: ERROR');
+    //         throw Error('Idb:deleteDb() request error');
+    //     };
 
-        request.onblocked = function (): void {
-            console.warn('deleteDatabase: BLOCKED');
-            throw Error('Idb:deleteDb() request blocked error');
-        };
-    }
+    //     request.onblocked = function (): void {
+    //         console.warn('deleteDatabase: BLOCKED');
+    //         throw Error('Idb:deleteDb() request blocked error');
+    //     };
+    // }
 
     /**
      * Same as deleteDb, but keeps trying if there is an error
@@ -96,15 +96,26 @@ export class Idb {
      * @returns {Observable<void>} Observable that yields when the 
      * delete operation returns without error
      */
-    public static persistentDeleteDb(dbName: string): Observable<void> {
+    public static deleteDb(dbName: string): Observable<void> {
         'use strict';
-        // NOTE:this loop should only repeat a handful of times or so
-        let source: Observable<void> = Observable.create((observer) => {
+        let deleteDbOnce: () => void = () => {
+            let request: IDBOpenDBRequest =
+                indexedDB.deleteDatabase(dbName);
+            request.onsuccess = function (): void {
+                // console.log('deleteDatabase: SUCCESS');
+            };
+            request.onerror = function (): void {
+                console.warn('deleteDatabase: ERROR');
+                throw Error('Idb:deleteDb() request error');
+            };
+            request.onblocked = function (): void {
+                console.warn('deleteDatabase: BLOCKED');
+                throw Error('Idb:deleteDb() request blocked error');
+            };
+        }, source: Observable<void> = Observable.create((observer) => {
             let timerId: NodeJS.Timer,
                 repeat: () => void = () => {
-                    try {
-                        Idb.deleteDb(dbName);
-                    }
+                    try { deleteDbOnce(); }
                     catch (error) {
                         console.log('Error: ' + error);
                         timerId = setTimeout(repeat, WAIT_MSEC);
@@ -257,7 +268,7 @@ export class Idb {
         storeName: string,
         key: number
     ): Observable<T> {
-        console.log('hi 3: ' + key);
+        console.log('read(' + key + ')');
         let source: Observable<T> = Observable.create((observer) => {
             if (isPositiveWholeNumber(key)) {
                 this.getStore(storeName, 'readonly').subscribe(
@@ -265,7 +276,8 @@ export class Idb {
                         let getRequest: IDBRequest = store.get(key);
 
                         getRequest.onsuccess = (event: IDBEvent) => {
-                            console.log('hi 4: ' + getRequest.result);
+                            console.log('read.get success: ' +
+                                JSON.stringify(getRequest.result));
                             // we return success even if not found
                             // but in that case return a falsy value
                             // otherwise return node on success
@@ -300,6 +312,7 @@ export class Idb {
         storeName: string,
         keys: number[]
     ): Observable<T[]> {
+        console.log('readMany(' + keys + ')');
         let source: Observable<T[]> = Observable.create((observer) => {
             let childNodes: T[] = [];
             // asynchronously read childOrder array, emits T[]
@@ -585,7 +598,7 @@ export class Idb {
      * time one of the nodes with keys in 'keys'
      */
     protected ls<T>(storeName: string, keys: number[]): Observable<T> {
-        console.log('hi 2: ' + keys);
+        console.log('ls(' + keys + ')');
 
         return <Observable<T>>Observable.from(keys)
             .flatMap((key: number) => this.read<T>(storeName, key));

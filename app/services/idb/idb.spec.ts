@@ -36,7 +36,7 @@ const DB_CONFIG: IdbConfig = Idb.validateConfig(
     }
 );
 
-Idb.persistentDeleteDb(DB_NAME).subscribe();
+Idb.deleteDb(DB_NAME).subscribe();
 
 let idb: Idb = new Idb(DB_CONFIG),
     db: IDBDatabase = null,

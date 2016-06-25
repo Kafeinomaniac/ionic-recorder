@@ -216,6 +216,8 @@ export class IdbFS extends Idb {
     // returns Observable<TreeNode[]>
     public readChildNodes(folderNode: TreeNode): Observable<TreeNode[]> {
         let source: Observable<TreeNode[]> = Observable.create((observer) => {
+            console.log('readChildNodes(' + JSON.stringify(folderNode)
+                + ')');
             return this.readMany<TreeNode>(NODE_STORE, folderNode.childOrder);
         });
         return source;
