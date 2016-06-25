@@ -5,6 +5,8 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Compare the idb-fs bug with local-db, which tesets perfectly.
+  For this, first make the folder names the same: 'unfiled1', 'folder1', ...
 * Get the loading page to load localDB and appState and to push to the 
   rootpage after it's done loading what is needed
 * style loading page properly - add a spinner
