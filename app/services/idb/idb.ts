@@ -257,6 +257,7 @@ export class Idb {
         storeName: string,
         key: number
     ): Observable<T> {
+        console.log('hi 3: ' + key);
         let source: Observable<T> = Observable.create((observer) => {
             if (isPositiveWholeNumber(key)) {
                 this.getStore(storeName, 'readonly').subscribe(
@@ -264,6 +265,7 @@ export class Idb {
                         let getRequest: IDBRequest = store.get(key);
 
                         getRequest.onsuccess = (event: IDBEvent) => {
+                            console.log('hi 4: ' + getRequest.result);
                             // we return success even if not found
                             // but in that case return a falsy value
                             // otherwise return node on success
@@ -304,11 +306,14 @@ export class Idb {
             this.ls<T>(storeName, keys).subscribe(
                 (node: T) => {
                     childNodes.push(node);
+                    console.log('hi 5 good: ' + childNodes);
                 },
-                (error: any) => {
+                (error) => {
+                    console.log('hi 5 error: ' + error.message);
                     observer.error(error);
                 },
                 () => {
+                    console.log('hi 5 done: ' + childNodes);
                     observer.next(childNodes);
                     observer.complete();
                 }
@@ -579,7 +584,9 @@ export class Idb {
      * @returns {Observable<T>} observable that emits one at a
      * time one of the nodes with keys in 'keys'
      */
-    protected ls<T>(storeName: string, keys: Array<number>): Observable<T> {
+    protected ls<T>(storeName: string, keys: number[]): Observable<T> {
+        console.log('hi 2: ' + keys);
+
         return <Observable<T>>Observable.from(keys)
             .flatMap((key: number) => this.read<T>(storeName, key));
     }
