@@ -65,33 +65,7 @@ export class Idb {
     }
 
     /**
-     * Delete entire database. Exported global because we may call it
-     * before constructing an Idb object.
-     * @params {string} dbName - the name of the database to delete
-     * @returns {void} We assume the delete just works but we get an
-     * error thrown if it does not.
-     */
-    // public static deleteDb(dbName: string): void {
-    //     'use strict';
-    //     let request: IDBOpenDBRequest = indexedDB.deleteDatabase(dbName);
-
-    //     request.onsuccess = function (): void {
-    //         // console.log('deleteDatabase: SUCCESS');
-    //     };
-
-    //     request.onerror = function (): void {
-    //         console.warn('deleteDatabase: ERROR');
-    //         throw Error('Idb:deleteDb() request error');
-    //     };
-
-    //     request.onblocked = function (): void {
-    //         console.warn('deleteDatabase: BLOCKED');
-    //         throw Error('Idb:deleteDb() request blocked error');
-    //     };
-    // }
-
-    /**
-     * Same as deleteDb, but keeps trying if there is an error
+     * Delete entire DB, keep trying if there is an error.
      * @params {string} dbName - the name of the database to delete
      * @returns {Observable<void>} Observable that yields when the 
      * delete operation returns without error
@@ -117,7 +91,7 @@ export class Idb {
                 repeat: () => void = () => {
                     try { deleteDbOnce(); }
                     catch (error) {
-                        console.log('Error: ' + error);
+                        console.warn('Error: ' + error);
                         timerId = setTimeout(repeat, WAIT_MSEC);
                     }
                     clearTimeout(timerId);
@@ -268,7 +242,6 @@ export class Idb {
         storeName: string,
         key: number
     ): Observable<T> {
-        console.log('read(' + key + ')');
         let source: Observable<T> = Observable.create((observer) => {
             if (isPositiveWholeNumber(key)) {
                 this.getStore(storeName, 'readonly').subscribe(
@@ -276,8 +249,6 @@ export class Idb {
                         let getRequest: IDBRequest = store.get(key);
 
                         getRequest.onsuccess = (event: IDBEvent) => {
-                            console.log('read.get success: ' +
-                                JSON.stringify(getRequest.result));
                             // we return success even if not found
                             // but in that case return a falsy value
                             // otherwise return node on success
@@ -301,41 +272,6 @@ export class Idb {
         return source;
     }
 
-    /**
-     * Read a collection of nodes, designated by their keys in 'keys'
-     * @param {string} storeName - the name of the db store where the
-     * @param {number[]} keys an array of node keys
-     * @returns {Observable<T[]>} observable of an array of T
-     * objects whose ids are in keys
-     */
-    /*
-    public readMany<T>(
-        storeName: string,
-        keys: number[]
-    ): Observable<T[]> {
-        console.log('readMany(' + keys + ')');
-        let source: Observable<T[]> = Observable.create((observer) => {
-            let childNodes: T[] = [];
-            // asynchronously read childOrder array, emits T[]
-            this.ls<T>(storeName, keys).subscribe(
-                (node: T) => {
-                    childNodes.push(node);
-                    console.log('hi 5 good: ' + childNodes);
-                },
-                (error) => {
-                    console.log('hi 5 error: ' + error.message);
-                    observer.error(error);
-                },
-                () => {
-                    console.log('hi 5 done: ' + childNodes);
-                    observer.next(childNodes);
-                    observer.complete();
-                }
-            );
-        });
-        return source;
-    }
-    */
     /**
      * Update an item already in a db store with new values
      * @param {string} storeName - the name of the db store where the

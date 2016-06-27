@@ -96,7 +96,6 @@ describe('services/idb:IdbFS', () => {
                 expect(IdbFS.isDataNode(node)).toEqual(true);
                 expect(node.parentKey).toEqual(4444);
                 expect(node.data).toEqual('testData');
-
                 done();
             },
             WAIT_MSEC);
@@ -110,7 +109,6 @@ describe('services/idb:IdbFS', () => {
                         rootFolder = rootNode;
                         expect(rootFolder.childOrder).toBeDefined();
                         expect(rootFolder[DB_KEY_PATH]).toBe(1);
-
                         done();
                     },
                     (error) => {
@@ -134,7 +132,6 @@ describe('services/idb:IdbFS', () => {
                         expect(rootFolder.childOrder).toEqual([
                             folder1[DB_KEY_PATH]
                         ]);
-
                         done();
                     },
                     (error) => {
@@ -162,7 +159,6 @@ describe('services/idb:IdbFS', () => {
                             item2[DB_KEY_PATH]
                         ]);
                         expect(item2[DB_KEY_PATH]).toBe(3);
-
                         done();
                     },
                     (error) => {
@@ -189,7 +185,6 @@ describe('services/idb:IdbFS', () => {
                             folder3[DB_KEY_PATH],
                             item2[DB_KEY_PATH]
                         ]);
-
                         done();
                     },
                     (error) => {
@@ -216,7 +211,6 @@ describe('services/idb:IdbFS', () => {
                         expect(folder3.childOrder).toEqual([
                             item4[DB_KEY_PATH]
                         ]);
-
                         done();
                     },
                     (error) => {
@@ -245,7 +239,6 @@ describe('services/idb:IdbFS', () => {
                             folder5[DB_KEY_PATH],
                             item4[DB_KEY_PATH]
                         ]);
-
                         done();
                     },
                     (error) => {
@@ -264,7 +257,6 @@ describe('services/idb:IdbFS', () => {
                         expect(childNodes.length).toEqual(2);
                         expect(childNodes).toContain(item4);
                         expect(childNodes).toContain(folder5);
-
                         done();
                     },
                     (error) => {
@@ -290,7 +282,6 @@ describe('services/idb:IdbFS', () => {
                         expect(folder5.childOrder).toEqual([
                             item6[DB_KEY_PATH]
                         ]);
-
                         done();
                     },
                     (error) => {
@@ -319,7 +310,6 @@ describe('services/idb:IdbFS', () => {
                             item7[DB_KEY_PATH],
                             item6[DB_KEY_PATH]
                         ]);
-
                         done();
                     },
                     (error) => {
@@ -349,7 +339,6 @@ describe('services/idb:IdbFS', () => {
                             item7[DB_KEY_PATH],
                             item6[DB_KEY_PATH]
                         ]);
-
                         done();
                     },
                     (error) => {
@@ -414,7 +403,6 @@ describe('services/idb:IdbFS', () => {
                         expect(nodes).toContain(item6);
                         expect(nodes).toContain(item7);
                         expect(nodes).toContain(folder8);
-
                         done();
                     },
                     (error) => {
@@ -441,158 +429,155 @@ describe('services/idb:IdbFS', () => {
             WAIT_MSEC);
     });
 
-    // it(
-    //     'can get child nodes of folder3 and verify them but not folder5',
-    //     (done) => {
-    //         setTimeout(
-    //             () => {
-    //                 // verify detachment correctly updated childOrder
-    //                 idbFS.readNode(folder3[DB_KEY_PATH]).subscribe(
-    //                     (node: TreeNode) => {
-    //                         folder3 = node;
-    //                         expect(node.childOrder.length).toEqual(1);
-    //                         expect(node.childOrder).toContain(
-    //                             item4[DB_KEY_PATH]);
-    //                         expect(node.childOrder).not.toContain(
-    //                             folder5[DB_KEY_PATH]);
-    //                         done();
-    //                     }
-    //                 );
-    //             },
-    //             WAIT_MSEC);
-    //     });
+    it('folder3 now has no child folder5', (done) => {
+        setTimeout(
+            () => {
+                idbFS.readNode(folder3[DB_KEY_PATH]).subscribe(
+                    (treeNode: TreeNode) => {
+                        expect(treeNode[DB_KEY_PATH]).not.toBeFalsy();
+                        expect(treeNode[DB_KEY_PATH]).toEqual(
+                            folder3[DB_KEY_PATH]);
+                        expect(treeNode.childOrder).toEqual([
+                            item4[DB_KEY_PATH]
+                        ]);
+                        done();
+                    },
+                    (error) => {
+                        fail(error);
+                    });
+            },
+            WAIT_MSEC);
+    });
 
-    // it('cannot now read folder5', (done) => {
-    //     setTimeout(
-    //         () => {
-    //             idbFS.readNode(folder5[DB_KEY_PATH]).subscribe(
-    //                 (treeNode: TreeNode) => {
-    //                     fail('expected an error');
-    //                 },
-    //                 (error) => {
-    //                     expect(error).toEqual('node does not exist');
-    //                     done();
-    //                 }
-    //             );
-    //         },
-    //         WAIT_MSEC);
-    // });
+    it('cannot now read folder5', (done) => {
+        setTimeout(
+            () => {
+                idbFS.readNode(folder5[DB_KEY_PATH]).subscribe(
+                    (treeNode: TreeNode) => {
+                        fail('expected an error');
+                    },
+                    (error) => {
+                        expect(error).toEqual('node does not exist');
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
 
-    // it('cannot now read item6', (done) => {
-    //     setTimeout(
-    //         () => {
-    //             idbFS.readNode(item6[DB_KEY_PATH]).subscribe(
-    //                 (treeNode: TreeNode) => {
-    //                     fail('expected an error');
-    //                 },
-    //                 (error) => {
-    //                     expect(error).toEqual('node does not exist');
-    //                     done();
-    //                 }
-    //             );
-    //         },
-    //         WAIT_MSEC);
-    // });
+    it('cannot now read item6', (done) => {
+        setTimeout(
+            () => {
+                idbFS.readNode(item6[DB_KEY_PATH]).subscribe(
+                    (treeNode: TreeNode) => {
+                        fail('expected an error');
+                    },
+                    (error) => {
+                        expect(error).toEqual('node does not exist');
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
 
-    // it('cannot now read item7', (done) => {
-    //     setTimeout(
-    //         () => {
-    //             idbFS.readNode(item7[DB_KEY_PATH]).subscribe(
-    //                 (treeNode: TreeNode) => {
-    //                     fail('expected an error');
-    //                 },
-    //                 (error) => {
-    //                     expect(error).toEqual('node does not exist');
-    //                     done();
-    //                 }
-    //             );
-    //         },
-    //         WAIT_MSEC);
-    // });
+    it('cannot now read item7', (done) => {
+        setTimeout(
+            () => {
+                idbFS.readNode(item7[DB_KEY_PATH]).subscribe(
+                    (treeNode: TreeNode) => {
+                        fail('expected an error');
+                    },
+                    (error) => {
+                        expect(error).toEqual('node does not exist');
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
 
-    // it(
-    //     'can delete ' + UNFILED_FOLDER_NAME + ' folder recursively',
-    //     (done) => {
-    //         setTimeout(
-    //             () => {
-    //                 let keyDict: { [id: string]: TreeNode; } = {};
-    //                 keyDict[unfiledFolder[DB_KEY_PATH]] = unfiledFolder;
-    //                 idbFS.deleteNodes(keyDict).subscribe(
-    //                     () => {
-    //                         done();
-    //                     },
-    //                     (error) => {
-    //                         fail(error);
-    //                     }
-    //                 );
-    //             },
-    //             WAIT_MSEC);
-    //     });
+    it(
+        'can delete root folder recursively', (done) => {
+            setTimeout(
+                () => {
+                    let keyDict: KeyDict = {};
+                    keyDict[rootFolder[DB_KEY_PATH]] = rootFolder;
+                    idbFS.deleteNodes(keyDict).subscribe(
+                        () => {
+                            done();
+                        },
+                        (error) => {
+                            fail(error);
+                        }
+                    );
+                },
+                WAIT_MSEC);
+        });
 
-    // it(
-    //     'cannot now read ' + UNFILED_FOLDER_NAME + ' folder (at root)',
-    //     (done) => {
-    //         setTimeout(
-    //             () => {
-    //                 idbFS.readNode(unfiledFolder[DB_KEY_PATH]).subscribe(
-    //                     (treeNode: TreeNode) => {
-    //                         fail('expected an error');
-    //                     },
-    //                     (error) => {
-    //                         expect(error).toEqual('node does not exist');
-    //                         done();
-    //                     }
-    //                 );
-    //             },
-    //             WAIT_MSEC);
-    //     });
+    it(
+        'cannot now read root folder', (done) => {
+            setTimeout(
+                () => {
+                    idbFS.readNode(rootFolder[DB_KEY_PATH]).subscribe(
+                        (treeNode: TreeNode) => {
+                            fail('expected an error');
+                        },
+                        (error) => {
+                            expect(error).toEqual('node does not exist');
+                            done();
+                        }
+                    );
+                },
+                WAIT_MSEC);
+        });
 
-    // it('cannot now read item2', (done) => {
-    //     setTimeout(
-    //         () => {
-    //             idbFS.readNode(item2[DB_KEY_PATH]).subscribe(
-    //                 (treeNode: TreeNode) => {
-    //                     fail('expected an error');
-    //                 },
-    //                 (error) => {
-    //                     expect(error).toEqual('node does not exist');
-    //                     done();
-    //                 }
-    //             );
-    //         },
-    //         WAIT_MSEC);
-    // });
+    it('cannot now read item2', (done) => {
+        setTimeout(
+            () => {
+                idbFS.readNode(item2[DB_KEY_PATH]).subscribe(
+                    (treeNode: TreeNode) => {
+                        fail('expected an error');
+                    },
+                    (error) => {
+                        expect(error).toEqual('node does not exist');
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
 
-    // it('cannot now read folder3', (done) => {
-    //     setTimeout(
-    //         () => {
-    //             idbFS.readNode(folder3[DB_KEY_PATH]).subscribe(
-    //                 (treeNode: TreeNode) => {
-    //                     fail('expected an error');
-    //                 },
-    //                 (error) => {
-    //                     expect(error).toEqual('node does not exist');
-    //                     done();
-    //                 }
-    //             );
-    //         },
-    //         WAIT_MSEC);
-    // });
+    it('cannot now read folder3', (done) => {
+        setTimeout(
+            () => {
+                idbFS.readNode(folder3[DB_KEY_PATH]).subscribe(
+                    (treeNode: TreeNode) => {
+                        fail('expected an error');
+                    },
+                    (error) => {
+                        expect(error).toEqual('node does not exist');
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
 
-    // it('cannot now read item4', (done) => {
-    //     setTimeout(
-    //         () => {
-    //             idbFS.readNode(item4[DB_KEY_PATH]).subscribe(
-    //                 (treeNode: TreeNode) => {
-    //                     fail('expected an error');
-    //                 },
-    //                 (error) => {
-    //                     expect(error).toEqual('node does not exist');
-    //                     done();
-    //                 }
-    //             );
-    //         },
-    //         WAIT_MSEC);
-    // });
+    it('cannot now read item4', (done) => {
+        setTimeout(
+            () => {
+                idbFS.readNode(item4[DB_KEY_PATH]).subscribe(
+                    (treeNode: TreeNode) => {
+                        fail('expected an error');
+                    },
+                    (error) => {
+                        expect(error).toEqual('node does not exist');
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
 
 });

@@ -83,7 +83,8 @@ export class IdbFS extends Idb {
         let source: Observable<void> = Observable.create((observer) => {
             this.waitForDB().subscribe(
                 (db: IDBDatabase) => {
-                    this.readNode(1).subscribe(
+                    // this.readNode(1).subscribe(
+                    this.read<TreeNode>(NODE_STORE, 1).subscribe(
                         (rootNode: TreeNode) => {
                             if (rootNode) {
                                 observer.next();
@@ -209,8 +210,32 @@ export class IdbFS extends Idb {
     }
 
     // returns Observable<TreeNode>
+    // public readNode(key: number): Observable<TreeNode> {
+    //     return this.read<TreeNode>(NODE_STORE, key);
+    // }
+    /**
+     * Reads a node into memory from db, by key
+     * @param {number} key - the key of the node to read from db
+     * @returns {Observable<TreeNode>} an observable that emits the
+     * TreeNode read.
+     */
     public readNode(key: number): Observable<TreeNode> {
-        return this.read<TreeNode>(NODE_STORE, key);
+        let source: Observable<TreeNode> = Observable.create((observer) => {
+            this.read<TreeNode>(NODE_STORE, key).subscribe(
+                (treeNode: TreeNode) => {
+                    if (treeNode === undefined || !treeNode) {
+                        observer.error('node does not exist');
+                    }
+                    // treeNode[DB_KEY_PATH] = key;
+                    observer.next(treeNode);
+                    observer.complete();
+                },
+                (error) => {
+                    observer.error(error);
+                }
+            ); // this.read().subscribe(
+        });
+        return source;
     }
 
     /**
@@ -233,13 +258,9 @@ export class IdbFS extends Idb {
      * completed successfully
      */
     public deleteNodes(keyDict: KeyDict): Observable<void> {
-        console.log('KEYDICT: ' + JSON.stringify(keyDict));
         let source: Observable<void> = Observable.create((observer) => {
             this.detachForDeleteNodes(keyDict).subscribe(
                 (detachedKeyDict: Object) => {
-                    console.log('detachedKeyDict: ' + JSON.stringify(
-                        detachedKeyDict
-                    ));
                     let nNodes: number = Object.keys(keyDict).length,
                         nDeleted: number = 0;
                     for (let key in keyDict) {
