@@ -228,11 +228,12 @@ export class IdbFS extends Idb {
 
     /**
      * Delete a collection of unique TreeNodes provided as a dictionary
-     * @param {[id: string]: TreeNode} keyDict - collection of unique TreeNodes
+     * @param {KeyDict} keyDict - collection of unique TreeNodes
      * @returns {Observable<void>} - observable that emits after deletion has
      * completed successfully
      */
     public deleteNodes(keyDict: KeyDict): Observable<void> {
+        console.log('KEYDICT: ' + JSON.stringify(keyDict));
         let source: Observable<void> = Observable.create((observer) => {
             this.detachForDeleteNodes(keyDict).subscribe(
                 (detachedKeyDict: Object) => {
@@ -245,24 +246,15 @@ export class IdbFS extends Idb {
                         this.delete(NODE_STORE, parseInt(key)).subscribe(
                             () => {
                                 nDeleted++;
+                                if (nDeleted === nNodes) {
+                                    observer.next();
+                                    observer.complete();
+                                }
                             },
                             (error) => {
                                 observer.error('deleteNodes():' +
                                     'detachForDeleteNodes():delete(): ' +
                                     error);
-                            },
-                            () => {
-                                if (nDeleted === nNodes) {
-                                    observer.next();
-                                    observer.complete();
-                                }
-                                else {
-                                    console.log('nDeleted = ' + nDeleted +
-                                        ' - ' + 'nNodes = ' + nNodes);
-                                    observer.error('deleteNodes():' +
-                                        'detachForDeleteNodes():delete(): ' +
-                                        'could not delete all nodes');
-                                }
                             }
                         );
                     }
@@ -447,14 +439,14 @@ export class IdbFS extends Idb {
      * detach any of those nodes from any parents that aren't already a part
      * of the original collection - detach only from parents outside the
      * collection.
-     * @param {[id: string]: TreeNode} keyDict - collection of unique TreeNodes
-     * @returns {Observable<{[id: string]: TreeNode}>} - same type as input
+     * @param {KeyDict} keyDict - collection of unique TreeNodes
+     * @returns {Observable<KeyDict>} - same type as input
      * (keyDict) but expanded with potentially more (contained) nodes
      */
-    private detachForDeleteNodes(keyDict: KeyDict): Observable<Object> {
-        let source: Observable<Object> = Observable.create((observer) => {
+    private detachForDeleteNodes(keyDict: KeyDict): Observable<KeyDict> {
+        let source: Observable<KeyDict> = Observable.create((observer) => {
             this.expandKeyDict(keyDict).subscribe(
-                (expandedKeyDict: Object) => {
+                (expandedKeyDict: KeyDict) => {
                     let i: number,
                         keys: string[] = Object.keys(expandedKeyDict),
                         nNodes: number = keys.length,
@@ -491,12 +483,12 @@ export class IdbFS extends Idb {
      * Given a collection of unique TreeNodes provided as a dictionary,
      * recursively expand the collection to include anything contained by the
      * TreeNode collection
-     * @param {[id: string]: TreeNode} keyDict - collection of unique TreeNodes
-     * @returns {Observable<{[id: string]: TreeNode}>} - same type as input
+     * @param {KeyDict} keyDict - collection of unique TreeNodes
+     * @returns {Observable<KeyDict>} - same type as input
      * (keyDict) but expanded with potentially more (contained) nodes
      */
-    private expandKeyDict(keyDict: KeyDict): Observable<Object> {
-        let source: Observable<Object> = Observable.create((observer) => {
+    private expandKeyDict(keyDict: KeyDict): Observable<KeyDict> {
+        let source: Observable<KeyDict> = Observable.create((observer) => {
             // add nodes supplied argument nodes into the keyDict
             // if a node is a folder node, we get its subtree and
             // add those to the keydict as well, we're done when
