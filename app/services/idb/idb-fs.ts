@@ -213,16 +213,14 @@ export class IdbFS extends Idb {
         return this.read<TreeNode>(NODE_STORE, key);
     }
 
-    // returns Observable<TreeNode[]>
-    public readChildNodes(folderNode: TreeNode): Observable<TreeNode[]> {
-        let source: Observable<TreeNode[]> = Observable.create((observer) => {
-            console.log('readChildNodes(' + JSON.stringify(folderNode)
-                + ')');
-            return this.readMany<TreeNode>(NODE_STORE, folderNode.childOrder);
-        });
-        return source;
+    /**
+     * @param {TreeNode} parent node
+     * @returns {Observable<TreeNode[]>} observable of an array of TreeNode
+     * objects whose ids are children of parentNode
+     */
+    public readChildNodes(parentNode: TreeNode): Observable<TreeNode[]> {
+        return this.readNodesById(parentNode.childOrder);
     }
-
     // returns Observable<void> when done
     public updateNode(key: number, changes: Object): Observable<void> {
         return this.update(NODE_STORE, key, changes);
@@ -238,6 +236,9 @@ export class IdbFS extends Idb {
         let source: Observable<void> = Observable.create((observer) => {
             this.detachForDeleteNodes(keyDict).subscribe(
                 (detachedKeyDict: Object) => {
+                    console.log('detachedKeyDict: ' + JSON.stringify(
+                        detachedKeyDict
+                    ));
                     let nNodes: number = Object.keys(keyDict).length,
                         nDeleted: number = 0;
                     for (let key in keyDict) {
@@ -256,6 +257,8 @@ export class IdbFS extends Idb {
                                     observer.complete();
                                 }
                                 else {
+                                    console.log('nDeleted = ' + nDeleted +
+                                        ' - ' + 'nNodes = ' + nNodes);
                                     observer.error('deleteNodes():' +
                                         'detachForDeleteNodes():delete(): ' +
                                         'could not delete all nodes');
@@ -263,6 +266,31 @@ export class IdbFS extends Idb {
                             }
                         );
                     }
+                }
+            );
+        });
+        return source;
+    }
+
+    /**
+     * @param {number[]} nodeKeys an array of node keys
+     * @returns {Observable<TreeNode[]>} observable of an array of TreeNode
+     * objects whose ids are in nodeKeys
+     */
+    private readNodesById(nodeKeys: number[]): Observable<TreeNode[]> {
+        let source: Observable<TreeNode[]> = Observable.create((observer) => {
+            let childNodes: TreeNode[] = [];
+            // asynchronously read childOrder array  nodes, emits TreeNode[]
+            this.ls(nodeKeys).subscribe(
+                (node: TreeNode) => {
+                    childNodes.push(node);
+                },
+                (error: any) => {
+                    observer.error(error);
+                },
+                () => {
+                    observer.next(childNodes);
+                    observer.complete();
                 }
             );
         });
@@ -534,7 +562,7 @@ export class IdbFS extends Idb {
      * time the children of 'node'
      */
     private lsNode(node: TreeNode): Observable<TreeNode> {
-        return this.ls<TreeNode>(NODE_STORE, Array.from(node.childOrder));
+        return this.ls(node.childOrder);
     }
 
     /**
@@ -717,6 +745,17 @@ export class IdbFS extends Idb {
         });
 
         return source;
+    }
+
+    /**
+     * Returns a stream Observable<TreeNode> that emits a new TreeNode on
+     * each request that's got the key of one of the nodeKeys keys
+     * @returns {Observable<TreeNode>} observable that emits one at a
+     * time one of the nodes with keys in 'nodeKeys'
+     */
+    private ls(nodeKeys: number[]): Observable<TreeNode> {
+        return <Observable<TreeNode>>Observable.from(nodeKeys)
+            .flatMap((key: number) => this.readNode(key));
     }
 
 }

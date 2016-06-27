@@ -308,6 +308,7 @@ export class Idb {
      * @returns {Observable<T[]>} observable of an array of T
      * objects whose ids are in keys
      */
+    /*
     public readMany<T>(
         storeName: string,
         keys: number[]
@@ -334,7 +335,7 @@ export class Idb {
         });
         return source;
     }
-
+    */
     /**
      * Update an item already in a db store with new values
      * @param {string} storeName - the name of the db store where the
@@ -589,19 +590,6 @@ export class Idb {
                 ); // this.waitForDB().subscribe(
             });
         return source;
-    }
-
-    /**
-     * Returns a stream Observable<T> that emits a new T on
-     * each request that's got the key of one of the keys keys
-     * @returns {Observable<T>} observable that emits one at a
-     * time one of the nodes with keys in 'keys'
-     */
-    protected ls<T>(storeName: string, keys: number[]): Observable<T> {
-        console.log('ls(' + keys + ')');
-
-        return <Observable<T>>Observable.from(keys)
-            .flatMap((key: number) => this.read<T>(storeName, key));
     }
 
 }
