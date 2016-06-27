@@ -16,6 +16,8 @@ import {
 
 const NODE_STORE: string = 'fileSystem';
 
+const ROOT_FOLDER_NAME: string = 'root';
+
 export const DB_KEY_PATH: string = 'id';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,9 +43,8 @@ export interface KeyDict {
 }
 
 export class IdbFS extends Idb {
-    private rootFolderName: string;
-
-    constructor(dbName: string, dbVersion: number, rootFolderName: string) {
+    
+    constructor(dbName: string, dbVersion: number) {
         super({
             name: dbName,
             version: dbVersion,
@@ -68,7 +69,6 @@ export class IdbFS extends Idb {
             ]
         });
 
-        this.rootFolderName = rootFolderName;
         this.waitForFilesystem().subscribe(
             null,
             (error) => {
@@ -92,7 +92,7 @@ export class IdbFS extends Idb {
                             }
                             else {
                                 let newNode: TreeNode =
-                                    IdbFS.makeTreeNode(this.rootFolderName);
+                                    IdbFS.makeTreeNode(ROOT_FOLDER_NAME);
                                 newNode[DB_KEY_PATH] = 1;
                                 if (!newNode.childOrder) {
                                     console.warn('no childor in roo');

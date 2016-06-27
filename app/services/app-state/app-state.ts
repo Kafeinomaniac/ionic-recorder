@@ -9,18 +9,46 @@ import {
 } from 'rxjs/Rx';
 
 import {
-    IdbFS,
-    TreeNode,
-    DB_KEY_PATH,
-} from '../idb/idb-fs';
+    IdbDict
+} from '../idb/idb-dict';
 
 export interface GainState {
     factor: number;
     maxFactor: number;
 }
 
-export const STATE_NODE_NAME: string = 'app-state';
-export const ROOT_FOLDER_NAME: string = 'root';
+// AppState - should it have the unfiled folder name?
+// it is supposed to save state to db
+// unfiled folder name: is that "state"?  we could 
+// easily have record.ts hold the constant of that folder
+// name and then have library get the constant from record.ts.
+//
+// app state keeps track of:
+// last open app tab (record / library / about / settings)
+// last viewed folder (for library tab/page)
+// selected nodes
+// gain
+// any other settings from the settings page
+//
+// the cool thing about app-state is that it opens its own 
+// database and connection, so that any changes to it do not
+// affect the other db read/writes.
+// 
+// we don't need any fancy data structures, just a set 
+// that contains the keys we're going to use - even that's 
+// hardly needed.
+//
+// when app state is initialized, it loads the saved app
+// state from the db. so yes, it needs to know what to load, so
+// it needs at least the keys. and for the memory retrieval part, 
+// it needs the values.  so it might as well have a data structures
+// for the key-value pairs in memory.
+//
+// if an update is called and nothing has changed, then appState
+// does nothing, just returns the thing from memory
+// it needs to be able to save any value, so it may use JSON.
+// stringify() for the value() part.
+
 export const UNFILED_FOLDER_NAME: string = 'Unfiled';
 
 interface State {
@@ -49,127 +77,14 @@ const DEFAULT_STATE: State = {
  */
 @Injectable()
 export class AppState {
-    private idbFS: IdbFS;
-    private treeNode: TreeNode;
-    private dataNode: DataNode;
+    private idbDict: IdbDict;
 
     /**
      * @constructor
      */
-    constructor(idbFS: IdbFS) {
+    constructor(idbDict: IdbDict) {
         console.log('constructor():AppState');
-        this.idbFS = idbFS;
-        // Create root folder
-        this.idbFS.readOrCreateFolderNode(ROOT_FOLDER_NAME, DB_NO_KEY)
-            .subscribe(
-            (rootFolderNode: TreeNode) => {
-                let rootNodeKey: number = rootFolderNode[DB_KEY_PATH];
-                DEFAULT_STATE['rootFolderKey'] = rootNodeKey;
-                // Create Unfiled folder as child of root using root's key
-                this.idbFS.readOrCreateFolderNode(
-                    UNFILED_FOLDER_NAME, rootNodeKey)
-                    .subscribe(
-                    (unfiledFolderNode: TreeNode) => {
-                        DEFAULT_STATE['unfiledFolderKey'] =
-                            unfiledFolderNode[DB_KEY_PATH];
-                        // create default state data node after it's
-                        // been updated with the correct keys for
-                        // both root and unfiled folders
-                        this.idbFS.readOrCreateDataNode(
-                            STATE_NODE_NAME, DB_NO_KEY, DEFAULT_STATE)
-                            .subscribe(
-                            (result: any) => {
-                                this.treeNode = result.treeNode;
-                                this.dataNode = result.dataNode;
-                            },
-                            (error: any) => {
-                                throw new Error(error);
-                            }
-                            ); // readOrCreateDataNode().subscribe(
-                    },
-                    (error: any) => {
-                        throw new Error(error);
-                    }
-                    ); // readOrCreateFolderNode().subscribe(
-            },
-            (error: any) => {
-                throw new Error(error);
-            }
-            ); // readOrCreateFolderNode().subscribe(
-    }
-
-    /**
-     * Get the key of the last viewed folder from the local DB
-     * @returns {Observable<number>} Observable of last viewed folder's key
-     */
-    public getLastViewedFolderKey(): Observable<number> {
-        let source: Observable<number> = Observable.create((observer) => {
-            this.getProperty('lastViewedFolderKey').subscribe(
-                (lastViewedFolderKey: number) => {
-                    if (lastViewedFolderKey === DB_NO_KEY) {
-                        // we have not yet set the lastViewedFolderKey
-                        // here we set it to the default, which is root folder
-                        this.getProperty('rootFolderKey').subscribe(
-                            (rootFolderKey: number) => {
-                                // set the lastViewedFolder to be root folder
-                                this.updateProperty(
-                                    'lastViewedFolder',
-                                    rootFolderKey)
-                                    .subscribe(
-                                    () => {
-                                        observer.next(rootFolderKey);
-                                        observer.complete();
-                                    },
-                                    (error: any) => {
-                                        observer.error(error);
-                                    }
-                                    ); // updateProperty.subscribe(
-                            },
-                            (error: any) => {
-                                observer.error(error);
-                            }
-                        ); // getProperty().subscribe(
-                    }
-                    else {
-                        observer.next(lastViewedFolderKey);
-                        observer.complete();
-                    }
-                },
-                (error: any) => {
-                    observer.error(error);
-                }
-            ); // getProperty().subscribe(
-        });
-        return source;
-    }
-
-    // Creates the following folders in a newly initialized app:
-    //   1) root folder '/'
-    //   2) unfiled folder 'Unfiled', under root
-    //   3) favorites folder 'Favorites', under root
-    //   4) recent folder 'Recent',under root
-    // private createInitialFolderStructure() {
-    // }
-
-    /**
-     * Returns an observable that emits when this class is ready for use
-     * @returns {Observable<void>} Observable, emits after this class is ready
-     */
-    public waitForAppState(): Observable<void> {
-        let source: Observable<void> = Observable.create((observer) => {
-            let repeat: () => void = () => {
-                if (this.treeNode && this.dataNode) {
-                    observer.next();
-                    observer.complete();
-                }
-                else {
-                    // console.warn('... no STATE yet ...');
-                    setTimeout(repeat, MAX_DB_INIT_TIME / 10);
-                }
-            };
-            repeat();
-        });
-        return source;
+        this.idbDict = idbDict;
     }
 
     /**
@@ -178,22 +93,6 @@ export class AppState {
      */
     public getProperty(propertyName: string): Observable<any> {
         let source: Observable<any> = Observable.create((observer) => {
-            this.waitForAppState().subscribe(
-                () => {
-                    if (!this.dataNode || !this.dataNode.data) {
-                        observer.error('app state not properly read');
-                    }
-                    if (!this.dataNode.data.hasOwnProperty(propertyName)) {
-                        observer.error("no property by name '" +
-                            propertyName + "' in dataNode");
-                    }
-                    observer.next(this.dataNode.data[propertyName]);
-                    observer.complete();
-                },
-                (error: any) => {
-                    observer.error(error);
-                }
-            ); // waitAppState().subscribe(
         });
         return source;
     }
@@ -209,50 +108,6 @@ export class AppState {
         propertyValue: any
     ): Observable<boolean> {
         let source: Observable<boolean> = Observable.create((observer) => {
-            this.waitForAppState().subscribe(
-                () => {
-                    if (!this.dataNode) {
-                        // we expected to have read the state at least once
-                        // before calling update, which sets this.dataNode
-                        observer.error('state has no data node in update');
-                    }
-                    else if (!this.dataNode[DB_KEY_PATH]) {
-                        // we expected to have read the state at least once
-                        // before calling update, which tags on the property
-                        // DB_KEY_PATH onto the this.state's State object
-                        observer.error('state has no key path in update');
-                    }
-                    else if (!this.treeNode) {
-                        // we expected to have read the state at least once
-                        // before calling update, which sets this.treeNode
-                        observer.error('state has no tree node in update');
-                    }
-                    else if (
-                        this.getProperty(propertyName) !== propertyValue) {
-                        // only update if propertyValue is different
-                        // update in memory:
-                        this.dataNode.data[propertyName] = propertyValue;
-                        // update in DB:
-                        this.idbFS.updateNodeData(
-                            this.treeNode, this.dataNode.data).subscribe(
-                            () => {
-                                observer.next(true);
-                                observer.complete();
-                            },
-                            (error: any) => {
-                                observer.error(error);
-                            }
-                            ); // updateNodeData().subscribe(
-                    }
-                    else {
-                        observer.next(false);
-                        observer.complete();
-                    }
-                },
-                (error) => {
-                    alert('error waiting for app state: ' + error);
-                }
-            ); // waitForAppState().subscribe(
         });
         return source;
     }

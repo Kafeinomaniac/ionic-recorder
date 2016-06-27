@@ -29,8 +29,7 @@ let rootFolder: TreeNode,
     item7: TreeNode,
     idbFS: IdbFS = new IdbFS(
         DB_NAME,
-        DB_VERSION,
-        ROOT_FOLDER_NAME
+        DB_VERSION
     );
 
 beforeEach((done: Function) => {
@@ -101,7 +100,7 @@ describe('services/idb:IdbFS', () => {
             WAIT_MSEC);
     });
 
-    it('can read root folder (' + ROOT_FOLDER_NAME + ')', (done) => {
+    it('can read root folder', (done) => {
         setTimeout(
             () => {
                 idbFS.readNode(1).subscribe(
@@ -119,7 +118,7 @@ describe('services/idb:IdbFS', () => {
             WAIT_MSEC);
     });
 
-    it('can create folder1, child of ' + ROOT_FOLDER_NAME, (done) => {
+    it('can create folder1, child of root', (done) => {
         setTimeout(
             () => {
                 idbFS.createNode('folder1', 1).subscribe(

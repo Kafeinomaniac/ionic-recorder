@@ -22,8 +22,7 @@ import {
 } from '../../services/utils/utils';
 
 import {
-    AppState,
-    ROOT_FOLDER_NAME
+    AppState
 } from '../../services/app-state/app-state';
 
 import {
@@ -83,35 +82,35 @@ export class LibraryPage {
      */
     public ionViewDidEnter(): void {
         // switch folders, via AppState
-        this.appState.getLastViewedFolderKey().subscribe(
-            (lastViewedFolderKey: number) => {
-                // this is it!  here's where we enter the last viewed folder
-                this.switchFolder(lastViewedFolderKey, false);
-                this.appState.getProperty('selectedNodes').subscribe(
-                    (selectedNodes: { [id: string]: TreeNode }) => {
-                        this.selectedNodes = selectedNodes;
-                        if (!selectedNodes) {
-                            alert('no selected nodes! ' + selectedNodes);
-                        }
-                        this.appState.getProperty('unfiledFolderKey')
-                            .subscribe(
-                            (unfiledFolderKey: number) => {
-                                this.unfiledFolderKey = unfiledFolderKey;
-                            },
-                            (error: any) => {
-                                alert('in getProperty: ' + error);
-                            }
-                            ); // getProperty().subscribe(
-                    },
-                    (error: any) => {
-                        alert('in getProperty: ' + error);
-                    }
-                ); // getProperty().subscribe(
-            },
-            (error: any) => {
-                alert('in getProperty: ' + error);
-            }
-        ); // getProperty().subscbribe(
+        // this.appState.getLastViewedFolderKey().subscribe(
+        //     (lastViewedFolderKey: number) => {
+        //         // this is it!  here's where we enter the last viewed folder
+        //         this.switchFolder(lastViewedFolderKey, false);
+        //         this.appState.getProperty('selectedNodes').subscribe(
+        //             (selectedNodes: { [id: string]: TreeNode }) => {
+        //                 this.selectedNodes = selectedNodes;
+        //                 if (!selectedNodes) {
+        //                     alert('no selected nodes! ' + selectedNodes);
+        //                 }
+        //                 this.appState.getProperty('unfiledFolderKey')
+        //                     .subscribe(
+        //                     (unfiledFolderKey: number) => {
+        //                         this.unfiledFolderKey = unfiledFolderKey;
+        //                     },
+        //                     (error: any) => {
+        //                         alert('in getProperty: ' + error);
+        //                     }
+        //                     ); // getProperty().subscribe(
+        //             },
+        //             (error: any) => {
+        //                 alert('in getProperty: ' + error);
+        //             }
+        //         ); // getProperty().subscribe(
+        //     },
+        //     (error: any) => {
+        //         alert('in getProperty: ' + error);
+        //     }
+        // ); // getProperty().subscbribe(
     }
 
     /**
@@ -119,14 +118,15 @@ export class LibraryPage {
      * @returns {string} folder path, represented as a string
      */
     public getPath(): string {
-        let path: string = this.folderNode.path + '/' + this.folderNode.name,
-            rootPath: string = '/' + ROOT_FOLDER_NAME;
-        if (path === rootPath) {
-            return '/';
-        }
-        else {
-            return path.slice(rootPath.length);
-        }
+        // let path: string = this.folderNode.path + '/' + this.folderNode.name,
+        //     rootPath: string = '/' + ROOT_FOLDER_NAME;
+        // if (path === rootPath) {
+        //     return '/';
+        // }
+        // else {
+        //     return path.slice(rootPath.length);
+        // }
+        return '';
     }
 
     /**
