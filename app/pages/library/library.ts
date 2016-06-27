@@ -11,12 +11,15 @@ import {
 } from 'ionic-angular';
 
 import {
-    LocalDB,
+    IdbFS,
     TreeNode,
-    DataNode,
     ParentChild,
     DB_KEY_PATH
-} from '../../services/local-db/local-db';
+} from '../../services/idb/idb-fs';
+
+import {
+    isPositiveWholeNumber
+} from '../../services/utils/utils';
 
 import {
     AppState,
@@ -43,7 +46,7 @@ import {
 })
 export class LibraryPage {
     private nav: NavController;
-    private localDB: LocalDB;
+    private idbFS: IdbFS;
     private appState: AppState;
     private folderNode: TreeNode;
     private folderItems: { [id: string]: TreeNode; };
@@ -59,13 +62,13 @@ export class LibraryPage {
      */
     constructor(
         nav: NavController,
-        localDB: LocalDB,
+        idbFS: IdbFS,
         appState: AppState
     ) {
         console.log('constructor():LibraryPage');
 
         this.nav = nav;
-        this.localDB = localDB;
+        this.idbFS = idbFS;
         this.appState = appState;
 
         this.folderNode = null;
@@ -236,7 +239,7 @@ export class LibraryPage {
             'Ok', () => {
                 console.log('Library::deleteNodes(): deleting ' + nNodes +
                     ' selected items ...');
-                this.localDB.deleteNodes(keyDict).subscribe(
+                this.idbFS.deleteNodes(keyDict).subscribe(
                     () => {
                         let i: number,
                             bSelectionChanged: boolean = false,
@@ -405,7 +408,7 @@ export class LibraryPage {
     // if updateState is true, update the app state
     // property 'lastViewedFolderKey'
     private switchFolder(key: number, updateState: boolean): void {
-        if (!this.localDB.validateKey(key)) {
+        if (!isPositiveWholeNumber(key)) {
             alert('switchFolder -- invalid key!');
             return;
         }
@@ -420,7 +423,7 @@ export class LibraryPage {
         // console.log('switchFolder(' + key + ', ' + updateState + ')');
 
         // for non-root folders, we set this.folderNode here
-        this.localDB.readNode(key).subscribe(
+        this.idbFS.readNode(key).subscribe(
             (folderNode: TreeNode) => {
                 if (folderNode[DB_KEY_PATH] !== key) {
                     alert('in readNode: key mismatch');
@@ -428,7 +431,7 @@ export class LibraryPage {
                 // we read all child nodes of the folder we're
                 // switching to in order to fill up this.folderItems
                 let newFolderItems: { [id: string]: TreeNode } = {};
-                this.localDB.readChildNodes(folderNode).subscribe(
+                this.idbFS.readChildNodes(folderNode).subscribe(
                     (childNodes: TreeNode[]) => {
                         this.folderItems = {};
                         // we found all children of the node we're
@@ -507,7 +510,8 @@ export class LibraryPage {
      * @returns {void}
      */
     public onClickListItem(node: TreeNode): void {
-        if (this.localDB.isFolderNode(node)) {
+        const nodeKey: number = node[DB_KEY_PATH];
+        if (IdbFS.isFolderNode(node)) {
             // it's a folder! switch to it
             this.switchFolder(node[DB_KEY_PATH], true);
         }
@@ -517,15 +521,15 @@ export class LibraryPage {
             // setting this.playerTitle triggers the audio
             // player to make itself visible
             this.playerTitle = node.name;
-            this.localDB.readNodeData(node).subscribe(
-                (dataNode: DataNode) => {
+            this.idbFS.readNode(nodeKey).subscribe(
+                (readNode: TreeNode) => {
                     // dataNode.data is the Blob object to play
                     // setting this.playerBlob triggers the audio
                     // player ngOnChanges to load/play the blob
-                    this.playerBlob = dataNode.data;
+                    this.playerBlob = readNode.data;
                 }
             ); // readNodeData(node).subscribe(
-        } // if (this.localDB.isFolderNode(node)) { .. else { ..
+        } // if (IdbFS.isFolderNode(node)) { .. else { ..
     }
 
     /**
@@ -556,9 +560,10 @@ export class LibraryPage {
                 // data is new folder's name returned from addFolderModal
                 console.log('got folderName back: ' + folderName);
                 // create a node for added folder childNode
-                this.localDB.createFolderNode(
+                this.idbFS.createNode(
                     folderName,
-                    this.folderNode[DB_KEY_PATH]).subscribe(
+                    this.folderNode[DB_KEY_PATH]
+                ).subscribe(
                     (parentChild: ParentChild) => {
                         let childNode: TreeNode = parentChild.child,
                             parentNode: TreeNode = parentChild.parent,

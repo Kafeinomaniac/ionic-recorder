@@ -2,18 +2,18 @@
 
 // import {
 //     MAX_DB_INIT_TIME,
-//     LocalDB
+//     IdbFS
 // } from '../local-db/local-db';
 
 // import {
 //     AppState
 // } from './app-state';
 
-// let localDB: LocalDB = new LocalDB(),
-//     appState: AppState = new AppState(localDB);
+// let idbFS: IdbFS = new IdbFS(),
+//     appState: AppState = new AppState(idbFS);
 
 // beforeEach((done: Function) => {
-//     localDB.waitForDB().subscribe(
+//     idbFS.waitForDB().subscribe(
 //         (database: IDBDatabase) => {
 //             done();
 //         },

@@ -19,7 +19,7 @@ import {
 } from 'ionic-native';
 
 import {
-    LocalDB
+    IdbFS
 } from './services/local-db/local-db';
 
 import {
@@ -193,7 +193,7 @@ ionicBootstrap(
     [
         provide(ExceptionHandler, { useClass: AppExceptionHandler }),
         AppState,
-        LocalDB
+        IdbFS
     ],
     {});
 

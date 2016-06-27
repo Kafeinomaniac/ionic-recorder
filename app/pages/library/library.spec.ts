@@ -15,7 +15,7 @@ import {
 } from '../../services/test-utils/test-utils';
 
 import {
-    LocalDB
+    IdbFS
 } from '../../services/local-db/local-db';
 
 import {
@@ -33,7 +33,7 @@ let instanceFixture: InstanceFixture = null;
 xdescribe('pages/library:LibraryPage', () => {
     instanceFixture = beforeEachDI(
         LibraryPage,
-        [LocalDB, AppState, configProvider, navControllerProvider],
+        [IdbFS, AppState, configProvider, navControllerProvider],
         true,
         null
     );

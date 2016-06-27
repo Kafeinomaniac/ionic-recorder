@@ -9,13 +9,10 @@ import {
 } from 'rxjs/Rx';
 
 import {
-    LocalDB,
+    IdbFS,
     TreeNode,
-    DataNode,
-    DB_NO_KEY,
     DB_KEY_PATH,
-    MAX_DB_INIT_TIME
-} from '../local-db/local-db';
+} from '../idb/idb-fs';
 
 export interface GainState {
     factor: number;
@@ -37,9 +34,9 @@ interface State {
 
 const DEFAULT_STATE: State = {
     lastTabIndex: 1,
-    lastViewedFolderKey: DB_NO_KEY,
-    rootFolderKey: DB_NO_KEY,
-    unfiledFolderKey: DB_NO_KEY,
+    lastViewedFolderKey: 0,
+    rootFolderKey: 0,
+    unfiledFolderKey: 0,
     selectedNodes: {},
     gain: { factor: 1.0, maxFactor: 2.0 }
 };
@@ -52,24 +49,24 @@ const DEFAULT_STATE: State = {
  */
 @Injectable()
 export class AppState {
-    private localDB: LocalDB;
+    private idbFS: IdbFS;
     private treeNode: TreeNode;
     private dataNode: DataNode;
 
     /**
      * @constructor
      */
-    constructor(localDB: LocalDB) {
+    constructor(idbFS: IdbFS) {
         console.log('constructor():AppState');
-        this.localDB = localDB;
+        this.idbFS = idbFS;
         // Create root folder
-        this.localDB.readOrCreateFolderNode(ROOT_FOLDER_NAME, DB_NO_KEY)
+        this.idbFS.readOrCreateFolderNode(ROOT_FOLDER_NAME, DB_NO_KEY)
             .subscribe(
             (rootFolderNode: TreeNode) => {
                 let rootNodeKey: number = rootFolderNode[DB_KEY_PATH];
                 DEFAULT_STATE['rootFolderKey'] = rootNodeKey;
                 // Create Unfiled folder as child of root using root's key
-                this.localDB.readOrCreateFolderNode(
+                this.idbFS.readOrCreateFolderNode(
                     UNFILED_FOLDER_NAME, rootNodeKey)
                     .subscribe(
                     (unfiledFolderNode: TreeNode) => {
@@ -78,7 +75,7 @@ export class AppState {
                         // create default state data node after it's
                         // been updated with the correct keys for
                         // both root and unfiled folders
-                        this.localDB.readOrCreateDataNode(
+                        this.idbFS.readOrCreateDataNode(
                             STATE_NODE_NAME, DB_NO_KEY, DEFAULT_STATE)
                             .subscribe(
                             (result: any) => {
@@ -236,7 +233,7 @@ export class AppState {
                         // update in memory:
                         this.dataNode.data[propertyName] = propertyValue;
                         // update in DB:
-                        this.localDB.updateNodeData(
+                        this.idbFS.updateNodeData(
                             this.treeNode, this.dataNode.data).subscribe(
                             () => {
                                 observer.next(true);

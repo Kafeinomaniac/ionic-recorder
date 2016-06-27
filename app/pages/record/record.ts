@@ -19,8 +19,8 @@ import {
 } from '../../services/web-audio/web-audio-recorder';
 
 import {
-    LocalDB
-} from '../../services/local-db/local-db';
+    IdbFS
+} from '../../services/idb/idb-fs';
 
 import {
     ProgressSlider
@@ -40,7 +40,7 @@ const PAUSE_ICON: string = 'pause';
     directives: [VuGauge, ProgressSlider]
 })
 export class RecordPage {
-    private localDB: LocalDB;
+    private idbFS: IdbFS;
     private appState: AppState;
     private webAudioRecorder: WebAudioRecorder;
     private recordButtonIcon: string = START_RESUME_ICON;
@@ -53,13 +53,13 @@ export class RecordPage {
      * @constructor
      */
     constructor(
-        localDB: LocalDB,
+        idbFS: IdbFS,
         appState: AppState,
         webAudioRecorder: WebAudioRecorder
     ) {
         console.log('constructor():RecordPage');
 
-        this.localDB = localDB;
+        this.idbFS = idbFS;
         this.appState = appState;
         this.webAudioRecorder = webAudioRecorder;
 

@@ -13,7 +13,7 @@ import {
 } from '../../services/test-utils/test-utils';
 
 import {
-    LocalDB
+    IdbFS
 } from '../../services/local-db/local-db';
 
 import {
@@ -35,7 +35,7 @@ let instanceFixture: InstanceFixture = null;
 xdescribe('pages/record:RecordPage', () => {
     instanceFixture = beforeEachDI(
         RecordPage,
-        [LocalDB, AppState, WebAudioRecorder],
+        [IdbFS, AppState, WebAudioRecorder],
         true,
         null
     );
