@@ -28,7 +28,7 @@ interface State {
 const DEFAULT_STATE: State = {
     lastTabIndex: 1,
     lastViewedFolderKey: 0,
-    unfiledFolderKey: 0,
+    unfiledFolderKey: 2,
     selectedNodes: {},
     gain: { factor: 1.0, maxFactor: 2.0 }
 };
@@ -57,6 +57,7 @@ export class AppState {
             this.idbDict.getOrAddValue(key, value).subscribe(
                 (dbValue: any) => {
                     if (dbValue !== value) {
+                        console.log('dbValue: ' + dbValue);
                         this.cachedState[key] = dbValue;
                     }
                 },

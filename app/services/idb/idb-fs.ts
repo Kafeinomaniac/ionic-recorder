@@ -14,9 +14,9 @@ import {
     prependArray
 } from '../../services/utils/utils';
 
-const NODE_STORE: string = 'fileSystem';
+const NODE_STORE: string = 'storeIdbFS';
 
-const ROOT_FOLDER_NAME: string = 'root';
+const ROOT_FOLDER_NAME: string = 'rootFolder';
 
 export const DB_KEY_PATH: string = 'id';
 

@@ -13,7 +13,7 @@ import {
     // isPositiveWholeNumber
 } from '../utils/utils';
 
-const DICT_STORE: string = 'dict';
+const DICT_STORE: string = 'storeDict';
 
 interface KeyValuePair {
     key: string;
@@ -111,8 +111,8 @@ export class IdbDict extends Idb {
         let source: Observable<any> = Observable.create((observer) => {
             // first we try to get the value
             this.getValue(key).subscribe(
-                (gotValue: any) => {
-                    if (isUndefined(value)) {
+                (dbValue: any) => {
+                    if (isUndefined(dbValue)) {
                         // value isn't there, so add the (key, value) pair
                         this.addKeyValue(key, value).subscribe(
                             (addedKey: number) => {
@@ -120,13 +120,13 @@ export class IdbDict extends Idb {
                                 observer.complete();
                             },
                             (error) => {
-                                observer.error('getOrAddPair():getValue():' +
+                                observer.error('getValue():' +
                                     'addPair(): ' + error);
                             });
                     }
                     else {
                         // value is there, return it
-                        observer.next(gotValue);
+                        observer.next(dbValue);
                         observer.complete();
                     }
                 },

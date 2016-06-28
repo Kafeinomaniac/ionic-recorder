@@ -224,7 +224,7 @@ export class Idb {
                         };
 
                         addRequest.onerror = (event: IDBEvent) => {
-                            observer.error('addRequest.onerror ' +
+                            observer.error('addRequest.onerror: ' +
                                 JSON.stringify(event));
                         };
                     },

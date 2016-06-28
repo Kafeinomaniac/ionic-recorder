@@ -6,11 +6,11 @@ import {
 } from './idb';
 
 const WAIT_MSEC: number = 60;
-const DB_NAME: string = 'd';
-const DB_VERSION: number = 3;
-const STORE_NAME: string = 's';
+const DB_NAME: string = 'testIdb';
+const DB_VERSION: number = 1;
+const STORE_NAME: string = 'storeIdb';
 
-Idb.deleteDb(DB_NAME).subscribe();
+// Idb.deleteDb(DB_NAME).subscribe();
 
 const DB_CONFIG: IdbConfig = Idb.validateConfig(
     {

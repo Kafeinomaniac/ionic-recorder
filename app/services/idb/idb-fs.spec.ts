@@ -8,8 +8,8 @@ import {
     ParentChild
 } from './idb-fs';
 
-const DB_NAME: string = 'f';
-const DB_VERSION: number = 3;
+const DB_NAME: string = 'testIdbFS';
+const DB_VERSION: number = 1;
 const WAIT_MSEC: number = 60;
 
 // IdbFS.deleteDb(DB_NAME).subscribe();
