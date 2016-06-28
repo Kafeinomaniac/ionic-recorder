@@ -5,6 +5,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* library: get UNFILED_FOLDER_NAME FROM record.ts, use app-state
+  to save (a) selected nodes, (b) last folder visited - every time
+  we switch folders
+* record: have UNFILED_FOLDER_NAME set there instead of app-state
+* web-audio-recorder: do not use DB, use callbacks for that
 * app-state: convert to idb use
 * Compare the idb-fs bug with local-db, which tesets perfectly.
   For this, first make the folder names the same: 'unfiled1', 'folder1', ...

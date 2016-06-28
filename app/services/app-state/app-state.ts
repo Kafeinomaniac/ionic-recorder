@@ -49,7 +49,7 @@ export interface GainState {
 // it needs to be able to save any value, so it may use JSON.
 // stringify() for the value() part.
 
-export const UNFILED_FOLDER_NAME: string = 'Unfiled';
+// export const UNFILED_FOLDER_NAME: string = 'Unfiled';
 
 interface State {
     lastTabIndex: number;
@@ -85,6 +85,13 @@ export class AppState {
     constructor(idbDict: IdbDict) {
         console.log('constructor():AppState');
         this.idbDict = idbDict;
+        this.loadSavedState();
+    }
+
+    private loadSavedState() {
+        // go through Object.keys(DEFAULT_STATE) and load
+        // them all.  but make sure you either can load all
+        // of them or none of them.
     }
 
     /**
