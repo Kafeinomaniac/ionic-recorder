@@ -267,11 +267,7 @@ export class LibraryPage {
                         if (bSelectionChanged) {
                             this.appState.updateProperty(
                                 'selectedNodes',
-                                this.selectedNodes).subscribe(
-                                () => {
-                                    console.log('SUCCESS DELETING ALL');
-                                }
-                                );
+                                this.selectedNodes);
                         }
                         else {
                             console.log('SUCCESS DELETING ALL');
@@ -456,8 +452,7 @@ export class LibraryPage {
 
         // update last viewed folder state in DB
         if (updateState) {
-            this.appState.updateProperty('lastViewedFolderKey', key)
-                .subscribe();
+            this.appState.updateProperty('lastViewedFolderKey', key);
         }
     }
 
@@ -502,7 +497,7 @@ export class LibraryPage {
         // update state with new list of selected nodes
         this.appState.updateProperty(
             'selectedNodes',
-            this.selectedNodes).subscribe();
+            this.selectedNodes);
     }
 
     /**
@@ -632,7 +627,7 @@ export class LibraryPage {
             // update state with new list of selected nodes
             this.appState.updateProperty(
                 'selectedNodes',
-                this.selectedNodes).subscribe();
+                this.selectedNodes);
         }
     }
 

@@ -8,15 +8,11 @@ import {
     ParentChild
 } from './idb-fs';
 
+const DB_NAME: string = 'f';
+const DB_VERSION: number = 3;
 const WAIT_MSEC: number = 60;
 
-const ROOT_FOLDER_NAME: string = 'root';
-
-const DB_NAME: string = 'f';
-
-const DB_VERSION: number = 3;
-
-IdbFS.deleteDb(DB_NAME).subscribe();
+// IdbFS.deleteDb(DB_NAME).subscribe();
 
 let rootFolder: TreeNode,
     folder1: TreeNode,
@@ -27,10 +23,7 @@ let rootFolder: TreeNode,
     item4: TreeNode,
     item6: TreeNode,
     item7: TreeNode,
-    idbFS: IdbFS = new IdbFS(
-        DB_NAME,
-        DB_VERSION
-    );
+    idbFS: IdbFS = new IdbFS(DB_NAME, DB_VERSION);
 
 beforeEach((done: Function) => {
     idbFS.waitForDB().subscribe(

@@ -43,7 +43,7 @@ export interface KeyDict {
 }
 
 export class IdbFS extends Idb {
-    
+
     constructor(dbName: string, dbVersion: number) {
         super({
             name: dbName,

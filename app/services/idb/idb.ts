@@ -159,9 +159,19 @@ export class Idb {
         let source: Observable<void> = Observable.create((observer) => {
             this.getStore(storeName, 'readwrite').subscribe(
                 (store: IDBObjectStore) => {
-                    store.clear();
-                    observer.next();
-                    observer.complete();
+                    let clearRequest: IDBRequest = store.clear();
+
+                    clearRequest['oncomplete'] = (event: IDBEvent) => {
+                        observer.next();
+                        observer.complete();
+                    };
+
+                    clearRequest.onsuccess = clearRequest['oncomplete'];
+
+                    clearRequest['onerror'] = (event: IDBEvent) => {
+                        observer.error('clearRequest.onerror' +
+                            event.target);
+                    };
                 },
                 (error) => {
                     observer.error('Idb:clearStore(): ' + error);
@@ -215,7 +225,7 @@ export class Idb {
 
                         addRequest.onerror = (event: IDBEvent) => {
                             observer.error('addRequest.onerror ' +
-                                event.target);
+                                JSON.stringify(event));
                         };
                     },
                     (error) => {

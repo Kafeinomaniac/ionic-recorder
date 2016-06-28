@@ -101,7 +101,7 @@ export class RecordPage {
         this.appState.updateProperty('gain', {
             factor: this.gainFactor,
             maxFactor: this.maxGainFactor
-        }).subscribe();
+        });
     }
 
     /**

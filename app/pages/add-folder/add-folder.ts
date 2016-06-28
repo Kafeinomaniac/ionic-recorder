@@ -17,8 +17,8 @@ import {
 } from '@angular/common';
 
 import {
-    TreeNode
-} from '../../services/local-db/local-db';
+    KeyDict
+} from '../../services/idb/idb-fs';
 
 interface ValidationResult {
     [key: string]: boolean;
@@ -87,8 +87,7 @@ export class AddFolderPage {
             // already in this.navParams.data.parentItems, but we have
             // to search it by name
             let newName: string = control.value,
-                parentItems: { [id: string]: TreeNode } =
-                    this.navParams.data.parentItems,
+                parentItems: KeyDict = this.navParams.data.parentItems,
                 parentKeys: string[] = Object.keys(parentItems),
                 key: number;
             for (key = 0; key < parentKeys.length; key++) {

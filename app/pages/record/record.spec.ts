@@ -14,7 +14,7 @@ import {
 
 import {
     IdbFS
-} from '../../services/local-db/local-db';
+} from '../../services/idb/idb-fs';
 
 import {
     AppState

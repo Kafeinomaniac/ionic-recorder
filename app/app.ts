@@ -19,10 +19,6 @@ import {
 } from 'ionic-native';
 
 import {
-    IdbFS
-} from './services/local-db/local-db';
-
-import {
     AppState
 } from './services/app-state/app-state';
 
@@ -45,22 +41,6 @@ import {
 import {
     AboutPage
 } from './pages/about/about';
-
-// Uncomment this block to completely erase browser's IndexedDB
-// (but only the DB created by this app gets erased)
-import {
-    DB_NAME
-} from './services/local-db/local-db';
-let request: IDBOpenDBRequest = indexedDB.deleteDatabase(DB_NAME);
-request.onsuccess = function(): void {
-    console.log('deleteDatabase: SUCCESS');
-};
-request.onerror = function(): void {
-    console.log('deleteDatabase: ERROR');
-};
-request.onblocked = function(): void {
-    console.log('deleteDatabase: BLOCKED');
-};
 
 // Global catch-all exception handler for this app - any error thrown
 // will be handled by this function.
@@ -152,6 +132,7 @@ export class IonicRecorderApp {
         let tabIndex: number = selectedTab.index;
         // console.log('onTabChange: ' + tabIndex);
         if (tabIndex === 0) {
+            // 
             // hide tab 0 dynamically because if we hide it in the
             // template with [show]="false" then tabs automatically
             // select tab 1 instead.  at this point, tab 0 has already
@@ -159,10 +140,10 @@ export class IonicRecorderApp {
             // to hide it
             selectedTab.show = false;
         }
-        if (tabIndex > 0) {
+        else {
             // save in the DB the 'lastTabIndex' so that if we restart the app
             // it starts with the last tab you've visited last time you used it
-            this.appState.updateProperty('lastTabIndex', tabIndex).subscribe();
+            this.appState.updateProperty('lastTabIndex', tabIndex);
         }
     }
 
@@ -192,8 +173,7 @@ ionicBootstrap(
     IonicRecorderApp,
     [
         provide(ExceptionHandler, { useClass: AppExceptionHandler }),
-        AppState,
-        IdbFS
+        AppState
     ],
     {});
 

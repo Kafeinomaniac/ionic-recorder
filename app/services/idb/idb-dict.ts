@@ -9,14 +9,15 @@ import {
 } from 'rxjs/Rx';
 
 import {
-    isUndefined
+    isUndefined // ,
+    // isPositiveWholeNumber
 } from '../utils/utils';
 
 const DICT_STORE: string = 'dict';
 
-export interface KeyValuePair {
+interface KeyValuePair {
     key: string;
-    value: any
+    value: any;
 }
 
 export class IdbDict extends Idb {
@@ -46,9 +47,18 @@ export class IdbDict extends Idb {
     }
 
     /**
+     * Clear entire data store.
+     * @returns {Observable<void>} - observable that completes when the
+     * data store has been totally cleared.
+     */
+    public clearAll(): Observable<void> {
+        return this.clearStore(DICT_STORE);
+    }
+
+    /**
      * Read and return value from DB, given its key.
      * @param {string} key - the key of the vfalue we're reading
-    */
+     */
     public getValue(key: string): any {
         let source: Observable<any> = Observable.create((observer) => {
             this.getStore(DICT_STORE, 'readonly').subscribe(
@@ -60,7 +70,6 @@ export class IdbDict extends Idb {
                     cursorRequest.onsuccess = (event: IDBEvent) => {
                         let cursor: IDBCursorWithValue = cursorRequest.result;
                         if (cursor) {
-                            // cursor.value is a KeyValuePair, return value
                             observer.next(cursor.value.value);
                             // cursor.continue();
                         }
@@ -80,11 +89,14 @@ export class IdbDict extends Idb {
         return source;
     }
 
-    public addKeyValue(key: string, value: any) {
+    public addKeyValue(key: string, value: any): Observable<number> {
         let source: Observable<number> = Observable.create((observer) => {
-            this.create<KeyValuePair>(DICT_STORE, { key: key, value: value })
-                .subscribe(
+            this.create<KeyValuePair>(DICT_STORE, {
+                key: key,
+                value: value
+            }).subscribe(
                 (dbKey: number) => {
+                    console.log('CREATE CB CALLED!');
                     observer.next(dbKey);
                     observer.complete();
                 },
@@ -95,7 +107,7 @@ export class IdbDict extends Idb {
         return source;
     }
 
-    public getOrAddValue(key: string, value: any) {
+    public getOrAddValue(key: string, value: any): Observable<any> {
         let source: Observable<any> = Observable.create((observer) => {
             // first we try to get the value
             this.getValue(key).subscribe(
@@ -125,7 +137,7 @@ export class IdbDict extends Idb {
         return source;
     }
 
-    public updateValue(key: string, value: any) {
+    public updateValue(key: string, value: any): Observable<void> {
         // we will need to first find the value by using the index on key
         // then once we find it, we know what the db key (int) is and we
         // can use the 
@@ -134,13 +146,22 @@ export class IdbDict extends Idb {
                 (store: IDBObjectStore) => {
                     let index: IDBIndex = store.index('key'),
                         keyRange: IDBKeyRange = IDBKeyRange.only(key),
-                        cursorRequest: IDBRequest = index.openCursor(keyRange);
+                        cursorRequest: IDBRequest =
+                            index.openCursor(keyRange);
 
                     cursorRequest.onsuccess = (event: IDBEvent) => {
-                        let cursor: IDBCursorWithValue = cursorRequest.result;
+                        let cursor: IDBCursorWithValue =
+                            cursorRequest.result;
                         if (cursor) {
                             // found value to update it is a KeyValuePair
-                            this.update(DICT_STORE, cursor.value.key, {
+
+                            // console.log('cursor: ' + JSON.stringify(
+                            //     cursor));
+                            console.log('cursor.primaryKey: ' +
+                                cursor.primaryKey);
+
+                            // this.update(DICT_STORE, cursor.value.key, {
+                            this.update(DICT_STORE, cursor.primaryKey, {
                                 key: key,
                                 value: value
                             }).subscribe(
@@ -150,8 +171,8 @@ export class IdbDict extends Idb {
                                 },
                                 (error) => {
                                     observer.error('updateValue():' +
-                                        'getStore():openCursor():update(): ' +
-                                        error);
+                                        'getStore():openCursor():' +
+                                        'update(): ' + error);
                                 });
                         }
                         else {
@@ -159,7 +180,7 @@ export class IdbDict extends Idb {
                         }
                     };
                     cursorRequest.onerror = (event: IDBErrorEvent) => {
-                        observer.error('getValue():getStore(): cursor error');
+                        observer.error('getValue():getStore(): cursor');
                     };
                 },
                 (error) => {
@@ -168,4 +189,5 @@ export class IdbDict extends Idb {
         });
         return source;
     }
+
 }
