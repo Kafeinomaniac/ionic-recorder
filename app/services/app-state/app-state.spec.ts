@@ -54,37 +54,3 @@ describe('When appState initialized', () => {
             WAIT_MSEC);
     });
 });
-
-//     it('update again lastTabIndex to be 1 does nothing', (done) => {
-//         setTimeout(
-//             () => {
-//                 appState.updateProperty('lastTabIndex', 1).subscribe(
-//                     (updated: boolean) => {
-//                         expect(updated).toBe(true);
-//                         done();
-//                     },
-//                     (error) => {
-//                         fail(error);
-//                     }
-//                 );
-//             },
-//             WAIT_MSEC);
-//     });
-
-//     it('can read lastTabIndex to be 1', (done) => {
-//         setTimeout(
-//             () => {
-//                 appState.getProperty('lastTabIndex').subscribe(
-//                     (tabIndex: number) => {
-//                         expect(tabIndex).toBe(1);
-//                         done();
-//                     },
-//                     (error: any) => {
-//                         fail(error);
-//                     }
-//                 );
-//             },
-//             WAIT_MSEC);
-//     });
-
-// });
