@@ -13,6 +13,7 @@ import {
 import {
     IdbFS,
     TreeNode,
+    KeyDict,
     ParentChild,
     DB_KEY_PATH
 } from '../../services/idb/idb-fs';
@@ -48,8 +49,8 @@ export class LibraryPage {
     private idbFS: IdbFS;
     private appState: AppState;
     private folderNode: TreeNode;
-    private folderItems: { [id: string]: TreeNode; };
-    private selectedNodes: { [id: string]: TreeNode; };
+    private folderItems: KeyDict;
+    private selectedNodes: KeyDict;
     private totalSelectedCounter: number;
     private unfiledFolderKey: number;
     private playerTitle: string;
@@ -81,36 +82,16 @@ export class LibraryPage {
      * @returns {void}
      */
     public ionViewDidEnter(): void {
-        // switch folders, via AppState
-        // this.appState.getLastViewedFolderKey().subscribe(
-        //     (lastViewedFolderKey: number) => {
-        //         // this is it!  here's where we enter the last viewed folder
-        //         this.switchFolder(lastViewedFolderKey, false);
-        //         this.appState.getProperty('selectedNodes').subscribe(
-        //             (selectedNodes: { [id: string]: TreeNode }) => {
-        //                 this.selectedNodes = selectedNodes;
-        //                 if (!selectedNodes) {
-        //                     alert('no selected nodes! ' + selectedNodes);
-        //                 }
-        //                 this.appState.getProperty('unfiledFolderKey')
-        //                     .subscribe(
-        //                     (unfiledFolderKey: number) => {
-        //                         this.unfiledFolderKey = unfiledFolderKey;
-        //                     },
-        //                     (error: any) => {
-        //                         alert('in getProperty: ' + error);
-        //                     }
-        //                     ); // getProperty().subscribe(
-        //             },
-        //             (error: any) => {
-        //                 alert('in getProperty: ' + error);
-        //             }
-        //         ); // getProperty().subscribe(
-        //     },
-        //     (error: any) => {
-        //         alert('in getProperty: ' + error);
-        //     }
-        // ); // getProperty().subscbribe(
+        this.selectedNodes =
+            this.appState.getProperty('selectedNodes');
+
+        this.unfiledFolderKey =
+            this.appState.getProperty('unfiledFolderKey');
+
+        // swich folders, according to AppState
+        this.switchFolder(
+            this.appState.getProperty('lastViewedFolderKey'),
+            false);
     }
 
     /**
@@ -204,13 +185,13 @@ export class LibraryPage {
 
     /**
      * Returns dictionary of nodes selected in current folder
-     * @returns {{ [id: string]: TreeNode; }} dictionary of nodes selected here
+     * @returns {KeyDict} dictionary of nodes selected here
      */
-    private selectedNodesHere(): { [id: string]: TreeNode; } {
+    private selectedNodesHere(): KeyDict {
         let key: string,
             i: number,
             nodeHere: TreeNode,
-            keyDict: { [id: string]: TreeNode; } = {},
+            keyDict: KeyDict = {},
             keys: string[] = Object.keys(this.selectedNodes);
         for (i = 0; i < keys.length; i++) {
             key = keys[i];
@@ -224,10 +205,10 @@ export class LibraryPage {
 
     /**
      * Delete nodes from  UI and from local DB
-     * @param {{ [id: string]: TreeNode; }} dictionary of nodes to delete
+     * @param {KeyDict} dictionary of nodes to delete
      * @returns {void}
      */
-    private deleteNodes(keyDict: { [id: string]: TreeNode; }): void {
+    private deleteNodes(keyDict: KeyDict): void {
         let keys: string[] = Object.keys(keyDict),
             nNodes: number = keys.length;
         if (!nNodes) {
@@ -284,7 +265,7 @@ export class LibraryPage {
      */
     private checkIfDeletingInOtherFolders(): void {
         let nSelectedNodes: number = Object.keys(this.selectedNodes).length,
-            selectedNodesHere: { [id: string]: TreeNode; } =
+            selectedNodesHere: KeyDict =
                 this.selectedNodesHere(),
             nSelectedNodesHere: number =
                 Object.keys(selectedNodesHere).length,
@@ -495,9 +476,7 @@ export class LibraryPage {
         }
 
         // update state with new list of selected nodes
-        this.appState.updateProperty(
-            'selectedNodes',
-            this.selectedNodes);
+        this.appState.updateProperty('selectedNodes', this.selectedNodes);
     }
 
     /**
@@ -625,9 +604,7 @@ export class LibraryPage {
         }
         if (changed) {
             // update state with new list of selected nodes
-            this.appState.updateProperty(
-                'selectedNodes',
-                this.selectedNodes);
+            this.appState.updateProperty('selectedNodes', this.selectedNodes);
         }
     }
 

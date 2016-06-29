@@ -8,6 +8,10 @@ import {
     IdbDict
 } from '../idb/idb-dict';
 
+import {
+    KeyDict
+} from '../idb/idb-fs';
+
 const DB_NAME: string = 'appStateIdbDict';
 const DB_VERSION: number = 1;
 
@@ -20,7 +24,7 @@ interface State {
     lastTabIndex: number;
     lastViewedFolderKey: number;
     unfiledFolderKey: number;
-    selectedNodes: { [id: string]: boolean };
+    selectedNodes: KeyDict;
     gain: GainState;
 }
 
@@ -52,6 +56,8 @@ export class AppState extends IdbDict {
     private loadFromDb(): void {
         for (let key in DEFAULT_STATE) {
             let value: any = DEFAULT_STATE[key];
+            // next line: initialize with defaults
+            this.cachedState[key] = value;
             this.getOrAddValue(key, value).subscribe(
                 (dbValue: any) => {
                     if (dbValue !== value) {

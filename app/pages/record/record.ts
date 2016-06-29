@@ -64,21 +64,16 @@ export class RecordPage {
         this.webAudioRecorder = webAudioRecorder;
 
         // initialize with "remembered" gain values
-        this.appState.getProperty('gain').subscribe(
-            (gain: GainState) => {
-                this.maxGainFactor = gain.maxFactor;
-                // this call, duplicated below, sets up the gain
-                // slider to show what we're setting gain to once
-                // the audio is ready.  before the audio is ready
-                // we still want to show the previous gain value.
-                // if we don't have this line below then it will
-                // always show up as gain == 0.
-                this.onGainChange(gain.factor / gain.maxFactor);
-            },
-            (error: any) => {
-                console.error('AppState:getProperty() error: ' + error);
-            }
-        ); // getProperty('gain').subscribe(
+        let gain: GainState = this.appState.getProperty('gain');
+        this.gainFactor = gain.factor;
+        this.maxGainFactor = gain.maxFactor;
+        // this call, duplicated below, sets up the gain
+        // slider to show what we're setting gain to once
+        // the audio is ready.  before the audio is ready
+        // we still want to show the previous gain value.
+        // if we don't have this line below then it will
+        // always show up as gain == 0.
+        this.onGainChange(gain.factor / gain.maxFactor);
     }
 
     /**

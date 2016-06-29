@@ -42,6 +42,10 @@ export interface KeyDict {
     [id: string]: TreeNode;
 }
 
+export interface KeysDict {
+    [id: string]: TreeNode[];
+}
+
 export class IdbFS extends Idb {
 
     constructor(dbName: string, dbVersion: number) {
@@ -705,7 +709,7 @@ export class IdbFS extends Idb {
             let i: number,
                 childNode: TreeNode,
                 nNodes: number = nodes.length,
-                parentsDetachers: { [id: string]: TreeNode[] } = {};
+                parentsDetachers: KeysDict = {};
             for (i = 0; i < nNodes; i++) {
                 childNode = nodes[i];
                 if (!isPositiveWholeNumber(childNode.parentKey)) {

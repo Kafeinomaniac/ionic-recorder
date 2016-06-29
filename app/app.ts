@@ -115,12 +115,7 @@ export class IonicRecorderApp {
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
 
-            this.appState.getProperty('lastTabIndex').subscribe(
-                (tabIndex: number) => {
-                    console.log('lastTabIndex = ' + tabIndex +
-                        ', this.tabs = ' + this.tabs);
-                    this.tabs.select(tabIndex);
-                });
+            this.tabs.select(this.appState.getProperty('lastTabIndex'));
         });
     }
 
