@@ -14,13 +14,13 @@ import {
     MenuController
 } from 'ionic-angular';
 
-import {
-    StatusBar
-} from 'ionic-native';
+// import {
+//     StatusBar
+// } from 'ionic-native';
 
 import {
-    AppState
-} from './services/app-state/app-state';
+    IdbAppState
+} from './services/idb-app-state/idb-app-state';
 
 import {
     IdbAppData
@@ -29,10 +29,6 @@ import {
 import {
     IdbAppFS
 } from './services/idb-app-fs/idb-app-fs';
-
-import {
-    IdbAppState
-} from './services/idb-app-state/idb-app-state';
 
 import {
     LoadingPage
@@ -70,7 +66,7 @@ interface TabPage {
 
 @Component({
     templateUrl: 'build/app.html',
-    providers: [AppState]
+    providers: [IdbAppState]
 })
 export class IonicRecorderApp {
     // NOTE: either one of these @ViewChild declarations works, use only one ..
@@ -79,19 +75,19 @@ export class IonicRecorderApp {
 
     private platform: Platform;
     private menu: MenuController;
-    private appState: AppState;
+    private idbAppState: IdbAppState;
     private rootPage: Type;
     private pages: TabPage[];
 
     constructor(
         platform: Platform,
         menu: MenuController,
-        appState: AppState
+        idbAppState: IdbAppState
     ) {
         console.log('constructor(): IonicRecorderApp');
         this.platform = platform;
         this.menu = menu;
-        this.appState = appState;
+        this.idbAppState = idbAppState;
 
         // set root of the hidden (first, default) tab
         this.rootPage = LoadingPage;
@@ -125,7 +121,7 @@ export class IonicRecorderApp {
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
 
-            this.tabs.select(this.appState.getProperty('lastTabIndex'));
+            this.tabs.select(this.idbAppState.getProperty('lastTabIndex'));
         });
     }
 
@@ -148,7 +144,7 @@ export class IonicRecorderApp {
         else {
             // save in the DB the 'lastTabIndex' so that if we restart the app
             // it starts with the last tab you've visited last time you used it
-            this.appState.updateProperty('lastTabIndex', tabIndex);
+            this.idbAppState.updateProperty('lastTabIndex', tabIndex);
         }
     }
 
@@ -178,10 +174,9 @@ ionicBootstrap(
     IonicRecorderApp,
     [
         provide(ExceptionHandler, { useClass: AppExceptionHandler }),
-        AppState,
+        IdbAppState,
         IdbAppData,
-        IdbAppFS,
-        IdbAppState
+        IdbAppFS
     ],
     {});
 

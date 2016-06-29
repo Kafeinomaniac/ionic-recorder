@@ -9,9 +9,9 @@ import {
 } from '../../components/vu-gauge/vu-gauge';
 
 import {
-    AppState,
+    IdbAppState,
     GainState
-} from '../../services/app-state/app-state';
+} from '../../services/idb-app-state/idb-app-state';
 
 import {
     WebAudioRecorder,
@@ -40,7 +40,7 @@ const PAUSE_ICON: string = 'pause';
     directives: [VuGauge, ProgressSlider]
 })
 export class RecordPage {
-    private appState: AppState;
+    private idbAppState: IdbAppState;
     private idbAppFS: IdbAppFS;
     private webAudioRecorder: WebAudioRecorder;
     private recordButtonIcon: string = START_RESUME_ICON;
@@ -53,18 +53,18 @@ export class RecordPage {
      * @constructor
      */
     constructor(
-        appState: AppState,
+        idbAppState: IdbAppState,
         idbAppFS: IdbAppFS,
         webAudioRecorder: WebAudioRecorder
     ) {
         console.log('constructor():RecordPage');
 
-        this.appState = appState;
+        this.idbAppState = idbAppState;
         this.idbAppFS = idbAppFS;
         this.webAudioRecorder = webAudioRecorder;
 
         // initialize with "remembered" gain values
-        let gain: GainState = this.appState.getProperty('gain');
+        let gain: GainState = this.idbAppState.getProperty('gain');
         this.gainFactor = gain.factor;
         this.maxGainFactor = gain.maxFactor;
         // this call, duplicated below, sets up the gain
@@ -93,7 +93,7 @@ export class RecordPage {
      */
     public onGainChangeEnd(position: number): void {
         this.onGainChange(position);
-        this.appState.updateProperty('gain', {
+        this.idbAppState.updateProperty('gain', {
             factor: this.gainFactor,
             maxFactor: this.maxGainFactor
         });

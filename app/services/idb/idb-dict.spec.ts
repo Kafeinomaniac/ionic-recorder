@@ -12,6 +12,8 @@ const DB_NAME: string = 'testIdbDict';
 const DB_VERSION: number = 1;
 const WAIT_MSEC: number = 60;
 
+// IdbDict.deleteDb(DB_NAME).subscribe();
+
 let idbDict: IdbDict = new IdbDict(DB_NAME, DB_VERSION),
     testKey: string = 'a',
     testValue: any = { a: 1, b: 2 },

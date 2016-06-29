@@ -13,7 +13,7 @@ import {
     IdbConfig
 } from '../idb/idb';
 
-const DB_NAME: string = 'WebAudioRecordings';
+const DB_NAME: string = 'IdbAppData';
 const DB_VERSION: number = 1;
 const STORE_NAME: string = 'RecordedChunks';
 

@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 
 import {
-    AppState
-} from '../../services/app-state/app-state';
+    IdbAppState
+} from '../../services/idb-app-state/idb-app-state';
 
 /**
  * @name SettingsPage
@@ -17,14 +17,14 @@ import {
     templateUrl: 'build/pages/settings/settings.html'
 })
 export class SettingsPage {
-    private appState: AppState;
+    private idbAppState: IdbAppState;
 
     /**
      * @constructor
      * @param {NavController} nav
      */
-    constructor(appState: AppState) {
+    constructor(idbAppState: IdbAppState) {
         console.log('constructor():SettingsPage');
-        this.appState = appState;
+        this.idbAppState = idbAppState;
     }
 }

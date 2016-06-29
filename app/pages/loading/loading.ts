@@ -7,7 +7,8 @@ import {
 /**
  * @name LoadingPage
  * @description
- * Load initial page, first wait for DB and AppState singletons to initialize.
+ * Load initial page, first wait for DB and IdbAppState singletons 
+ * to initialize.
  */
 @Component({
     templateUrl: 'build/pages/loading/loading.html'

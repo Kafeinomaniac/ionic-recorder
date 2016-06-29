@@ -19,8 +19,8 @@ import {
 } from '../../services/idb-app-fs/idb-app-fs';
 
 import {
-    AppState
-} from '../../services/app-state/app-state';
+    IdbAppState
+} from '../../services/idb-app-state/idb-app-state';
 
 import {
     LibraryPage
@@ -33,7 +33,7 @@ let instanceFixture: InstanceFixture = null;
 describe('pages/library:LibraryPage', () => {
     instanceFixture = beforeEachDI(
         LibraryPage,
-        [IdbAppFS, AppState, configProvider, navControllerProvider],
+        [IdbAppFS, IdbAppState, configProvider, navControllerProvider],
         true,
         null
     );

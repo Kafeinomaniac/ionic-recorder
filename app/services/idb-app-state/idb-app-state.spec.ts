@@ -1,15 +1,15 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    AppState
-} from '../app-state/app-state';
+    IdbAppState
+} from './idb-app-state';
 
 const WAIT_MSEC: number = 60;
 
-let appState: AppState = new AppState();
+let idbAppState: IdbAppState = new IdbAppState();
 
 beforeEach((done: Function) => {
-    appState.waitForDB().subscribe(
+    idbAppState.waitForDB().subscribe(
         (database: IDBDatabase) => {
             done();
         },
@@ -18,11 +18,11 @@ beforeEach((done: Function) => {
         });
 });
 
-describe('When appState initialized', () => {
-    it('appState is not falsy', (done) => {
+describe('When idbAppState initialized', () => {
+    it('idbAppState is not falsy', (done) => {
         setTimeout(
             () => {
-                expect(appState).not.toBeFalsy();
+                expect(idbAppState).not.toBeFalsy();
                 done();
             },
             WAIT_MSEC);
@@ -31,7 +31,7 @@ describe('When appState initialized', () => {
     it('can read lastTabIndex to be 1', (done) => {
         setTimeout(
             () => {
-                expect(appState.getProperty('lastTabIndex')).toBe(1);
+                expect(idbAppState.getProperty('lastTabIndex')).toBe(1);
                 done();
             },
             WAIT_MSEC);
@@ -40,8 +40,8 @@ describe('When appState initialized', () => {
     it('can update unfiledFolderKey to be 0', (done) => {
         setTimeout(
             () => {
-                appState.updateProperty('unfiledFolderKey', 0);
-                expect(appState.getProperty('unfiledFolderKey')).toBe(0);
+                idbAppState.updateProperty('unfiledFolderKey', 0);
+                expect(idbAppState.getProperty('unfiledFolderKey')).toBe(0);
                 done();
             },
             WAIT_MSEC);

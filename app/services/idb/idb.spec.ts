@@ -9,9 +9,6 @@ const WAIT_MSEC: number = 60;
 const DB_NAME: string = 'testIdb';
 const DB_VERSION: number = 1;
 const STORE_NAME: string = 'storeIdb';
-
-// Idb.deleteDb(DB_NAME).subscribe();
-
 const DB_CONFIG: IdbConfig = Idb.validateConfig(
     {
         name: DB_NAME,
@@ -37,6 +34,8 @@ const DB_CONFIG: IdbConfig = Idb.validateConfig(
         ]
     }
 );
+
+// Idb.deleteDb(DB_NAME).subscribe();
 
 let idb: Idb = new Idb(DB_CONFIG),
     db: IDBDatabase = null,

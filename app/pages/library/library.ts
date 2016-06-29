@@ -26,8 +26,8 @@ import {
 } from '../../services/utils/utils';
 
 import {
-    AppState
-} from '../../services/app-state/app-state';
+    IdbAppState
+} from '../../services/idb-app-state/idb-app-state';
 
 import {
     AddFolderPage
@@ -50,7 +50,7 @@ import {
 export class LibraryPage {
     private nav: NavController;
     private idbAppFS: IdbAppFS;
-    private appState: AppState;
+    private idbAppState: IdbAppState;
     private folderNode: TreeNode;
     private folderItems: KeyDict;
     private selectedNodes: KeyDict;
@@ -66,13 +66,13 @@ export class LibraryPage {
     constructor(
         nav: NavController,
         idbAppFS: IdbAppFS,
-        appState: AppState
+        idbAppState: IdbAppState
     ) {
         console.log('constructor():LibraryPage');
 
         this.nav = nav;
         this.idbAppFS = idbAppFS;
-        this.appState = appState;
+        this.idbAppState = idbAppState;
 
         this.folderNode = null;
         this.folderItems = {};
@@ -86,15 +86,19 @@ export class LibraryPage {
      */
     public ionViewDidEnter(): void {
         this.selectedNodes =
-            this.appState.getProperty('selectedNodes');
+            this.idbAppState.getProperty('selectedNodes');
 
         this.unfiledFolderKey =
-            this.appState.getProperty('unfiledFolderKey');
+            this.idbAppState.getProperty('unfiledFolderKey');
 
-        // swich folders, according to AppState
+        // swich folders, according to IdbAppState
         this.switchFolder(
-            this.appState.getProperty('lastViewedFolderKey'),
+            this.idbAppState.getProperty('lastViewedFolderKey'),
             false);
+        console.log(
+            'LibraryPage:ionViewDidEnter(): unfiledFolderKey=' +
+            this.unfiledFolderKey + ', lastViewedFolderKey=' +
+            this.idbAppState.getProperty('lastViewedFolderKey'));
     }
 
     /**
@@ -110,7 +114,10 @@ export class LibraryPage {
         // else {
         //     return path.slice(rootPath.length);
         // }
-        return '';
+
+        // return '';
+
+        return this.folderNode.path + '/' + this.folderNode.name;
     }
 
     /**
@@ -249,7 +256,7 @@ export class LibraryPage {
                             }
                         } // for (i = 0; i < nNodes; i++) {
                         if (bSelectionChanged) {
-                            this.appState.updateProperty(
+                            this.idbAppState.updateProperty(
                                 'selectedNodes',
                                 this.selectedNodes);
                         }
@@ -436,7 +443,7 @@ export class LibraryPage {
 
         // update last viewed folder state in DB
         if (updateState) {
-            this.appState.updateProperty('lastViewedFolderKey', key);
+            this.idbAppState.updateProperty('lastViewedFolderKey', key);
         }
     }
 
@@ -479,7 +486,7 @@ export class LibraryPage {
         }
 
         // update state with new list of selected nodes
-        this.appState.updateProperty('selectedNodes', this.selectedNodes);
+        this.idbAppState.updateProperty('selectedNodes', this.selectedNodes);
     }
 
     /**
@@ -607,7 +614,9 @@ export class LibraryPage {
         }
         if (changed) {
             // update state with new list of selected nodes
-            this.appState.updateProperty('selectedNodes', this.selectedNodes);
+            this.idbAppState.updateProperty(
+                'selectedNodes',
+                this.selectedNodes);
         }
     }
 
