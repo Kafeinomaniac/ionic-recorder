@@ -15,5 +15,6 @@ const DB_VERSION: number = 1;
 export class IdbAppFS extends IdbFS {
     constructor() {
         super(DB_NAME, DB_VERSION);
+        console.log('constructor():IdbAppFS');
     }
 }

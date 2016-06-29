@@ -28,5 +28,6 @@ const DB_CONFIG: IdbConfig = {
 export class IdbAppData extends Idb {
     constructor() {
         super(DB_CONFIG);
+        console.log('constructor():IdbAppData');
     }
 }

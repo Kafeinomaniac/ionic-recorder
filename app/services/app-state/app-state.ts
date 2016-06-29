@@ -61,7 +61,6 @@ export class AppState extends IdbAppState {
             this.getOrAddValue(key, value).subscribe(
                 (dbValue: any) => {
                     if (dbValue !== value) {
-                        console.log('loadFromDb():dbValue: ' + dbValue);
                         this.cachedState[key] = dbValue;
                     }
                 },

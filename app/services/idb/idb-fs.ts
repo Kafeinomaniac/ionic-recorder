@@ -92,7 +92,6 @@ export class IdbFS extends Idb {
         let source: Observable<void> = Observable.create((observer) => {
             this.waitForDB().subscribe(
                 (db: IDBDatabase) => {
-                    // this.readNode(1).subscribe(
                     this.read<TreeNode>(NODE_STORE, 1).subscribe(
                         (rootNode: TreeNode) => {
                             if (rootNode) {
@@ -104,7 +103,7 @@ export class IdbFS extends Idb {
                                     IdbFS.makeTreeNode(ROOT_FOLDER_NAME);
                                 newNode[DB_KEY_PATH] = 1;
                                 if (!newNode.childOrder) {
-                                    console.warn('no childor in roo');
+                                    console.warn('no childOrder in root!');
                                 }
                                 this.create<TreeNode>(NODE_STORE, newNode)
                                     .subscribe(
