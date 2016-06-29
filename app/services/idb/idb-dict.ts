@@ -60,6 +60,7 @@ export class IdbDict extends Idb {
      * @param {string} key - the key of the vfalue we're reading
      */
     public getValue(key: string): any {
+        console.log('getValue(' + key + ')');
         let source: Observable<any> = Observable.create((observer) => {
             this.getStore(DICT_STORE, 'readonly').subscribe(
                 (store: IDBObjectStore) => {
@@ -90,13 +91,14 @@ export class IdbDict extends Idb {
     }
 
     public addKeyValue(key: string, value: any): Observable<number> {
+        console.log('addKeyValue(' + key + ', ' + value + ')');
         let source: Observable<number> = Observable.create((observer) => {
             this.create<KeyValuePair>(DICT_STORE, {
                 key: key,
                 value: value
             }).subscribe(
                 (dbKey: number) => {
-                    console.log('CREATE CB CALLED!');
+                    console.log('CREATE CB: dbKey=' + dbKey);
                     observer.next(dbKey);
                     observer.complete();
                 },
@@ -108,10 +110,12 @@ export class IdbDict extends Idb {
     }
 
     public getOrAddValue(key: string, value: any): Observable<any> {
+        console.log('getOrAddValue(' + key + ', ' + value + ')');
         let source: Observable<any> = Observable.create((observer) => {
             // first we try to get the value
             this.getValue(key).subscribe(
                 (dbValue: any) => {
+                    console.log('getValue():dbValue: ' + dbValue);
                     if (isUndefined(dbValue)) {
                         // value isn't there, so add the (key, value) pair
                         this.addKeyValue(key, value).subscribe(

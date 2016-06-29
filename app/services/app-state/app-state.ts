@@ -4,13 +4,12 @@ import {
     Injectable
 } from '@angular/core';
 
-// import {
-//     Observable
-// } from 'rxjs/Rx';
-
 import {
     IdbDict
 } from '../idb/idb-dict';
+
+const DB_NAME: string = 'appStateIdbDict';
+const DB_VERSION: number = 1;
 
 export interface GainState {
     factor: number;
@@ -38,26 +37,25 @@ const DEFAULT_STATE: State = {
  * @description
  */
 @Injectable()
-export class AppState {
-    private idbDict: IdbDict;
+export class AppState extends IdbDict {
     private cachedState: Object = DEFAULT_STATE;
 
     /**
      * @constructor
      */
-    constructor(idbDict: IdbDict) {
+    constructor(dbName: string = DB_NAME, dbVersion: number = DB_VERSION) {
+        super(dbName, dbVersion);
         console.log('constructor():AppState');
-        this.idbDict = idbDict;
         this.loadFromDb();
     }
 
     private loadFromDb(): void {
         for (let key in DEFAULT_STATE) {
             let value: any = DEFAULT_STATE[key];
-            this.idbDict.getOrAddValue(key, value).subscribe(
+            this.getOrAddValue(key, value).subscribe(
                 (dbValue: any) => {
                     if (dbValue !== value) {
-                        console.log('dbValue: ' + dbValue);
+                        console.log('loadFromDb():dbValue: ' + dbValue);
                         this.cachedState[key] = dbValue;
                     }
                 },
@@ -88,7 +86,7 @@ export class AppState {
         }
         else {
             this.cachedState[key] = value;
-            this.idbDict.updateValue(key, value).subscribe(
+            this.updateValue(key, value).subscribe(
                 null,
                 (error) => {
                     throw Error('updateProperty(): ' + error);
