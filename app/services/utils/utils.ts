@@ -133,7 +133,7 @@ export function makeSecondsTimestamp(): string {
  */
 export function objectInspector(object: Object): string {
     'use strict';
-    let rows: Array<String> = [],
+    let rows: string[] = [],
         key: string,
         count: number = 0;
     for (key in object) {
