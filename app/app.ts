@@ -80,21 +80,18 @@ export class IonicRecorderApp {
     private platform: Platform;
     private menu: MenuController;
     private appState: AppState;
-    // private idbFS: IdbFS;
     private rootPage: Type;
     private pages: TabPage[];
 
     constructor(
         platform: Platform,
         menu: MenuController,
-        appState: AppState // ,
-        // idbFS: IdbFS
+        appState: AppState
     ) {
         console.log('constructor(): IonicRecorderApp');
         this.platform = platform;
         this.menu = menu;
         this.appState = appState;
-        // this.idbFS = idbFS;
 
         // set root of the hidden (first, default) tab
         this.rootPage = LoadingPage;

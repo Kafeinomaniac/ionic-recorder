@@ -1,6 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
+    Observable
+} from 'rxjs/Rx';
+
+import {
     Injectable
 } from '@angular/core';
 
@@ -29,5 +33,12 @@ export class IdbAppData extends Idb {
     constructor() {
         super(DB_CONFIG);
         console.log('constructor():IdbAppData');
+    }
+
+    public addRecording(
+        item: Uint16Array,
+        itemCB?: (item: Uint16Array, key?: number) => Uint16Array
+    ): Observable<number> {
+        return this.create<Uint16Array>(STORE_NAME, item, itemCB);
     }
 }

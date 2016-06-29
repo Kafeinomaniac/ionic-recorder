@@ -5,8 +5,10 @@ import {
 } from '@angular/core';
 
 import {
-    IDB,
-    IDB_STORE_NAME,
+    IdbAppData
+} from '../idb-app-data/idb-app-data';
+
+import {
     AUDIO_CONTEXT
 } from './web-audio-common';
 
@@ -62,6 +64,7 @@ export enum RecorderStatus {
  */
 @Injectable()
 export class WebAudioRecorder {
+    private idb: IdbAppData;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
     private scriptProcessorNode: ScriptProcessorNode;
@@ -84,10 +87,11 @@ export class WebAudioRecorder {
     public percentPeaksAtMax: string;
 
     // this is how we signal
-    constructor() {
+    constructor(idb: IdbAppData) {
         console.log('constructor():WebAudioRecorder');
+        this.idb = idb;
 
-        if (!IDB) {
+        if (!this.idb) {
             this.status = RecorderStatus.NO_DB_ERROR;
             return;
         }
@@ -107,7 +111,7 @@ export class WebAudioRecorder {
         this.initAudio();
 
         this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
-            IDB.create(IDB_STORE_NAME, this.setter.activeBuffer).subscribe(
+            this.idb.addRecording(this.setter.activeBuffer).subscribe(
                 (key: number) => {
                     // increment the buffers-saved counter
                     this.dbKeys.push(key);
@@ -392,8 +396,7 @@ export class WebAudioRecorder {
             return;
         }
         // save leftover partial buffer
-        IDB.create(
-            IDB_STORE_NAME,
+        this.idb.addRecording(
             this.setter.activeBuffer.subarray(0, this.setter.bufferIndex)
         ).subscribe(
             (key: number) => {

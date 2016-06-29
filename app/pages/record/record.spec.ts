@@ -17,6 +17,10 @@ import {
 } from '../../services/idb-app-fs/idb-app-fs';
 
 import {
+    IdbAppData
+} from '../../services/idb-app-data/idb-app-data';
+
+import {
     AppState
 } from '../../services/app-state/app-state';
 
@@ -35,7 +39,7 @@ let instanceFixture: InstanceFixture = null;
 describe('pages/record:RecordPage', () => {
     instanceFixture = beforeEachDI(
         RecordPage,
-        [IdbAppFS, AppState, WebAudioRecorder],
+        [IdbAppData, IdbAppFS, AppState, WebAudioRecorder],
         true,
         null
     );

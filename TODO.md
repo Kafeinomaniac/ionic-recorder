@@ -5,6 +5,8 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* web-audio-common does not initialize db correctly - have it use
+  idb-app-data
 * library: get UNFILED_FOLDER_NAME FROM record.ts, use app-state
   to save (a) selected nodes, (b) last folder visited - every time
   we switch folders
