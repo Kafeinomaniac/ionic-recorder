@@ -12,9 +12,6 @@ import {
     KeyDict
 } from '../idb/idb-fs';
 
-// const DB_NAME: string = 'appStateIdbDict';
-// const DB_VERSION: number = 1;
-
 export interface GainState {
     factor: number;
     maxFactor: number;
