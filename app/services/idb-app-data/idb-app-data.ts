@@ -28,6 +28,8 @@ const DB_CONFIG: IdbConfig = {
     ]
 };
 
+Idb.deleteDb(DB_NAME);
+
 @Injectable()
 export class IdbAppData extends Idb {
     constructor() {

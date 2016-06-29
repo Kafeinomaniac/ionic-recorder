@@ -31,8 +31,10 @@ const DEFAULT_STATE: State = {
     gain: { factor: 1.0, maxFactor: 2.0 }
 };
 
-const DB_NAME: string = 'idbAppState';
+const DB_NAME: string = 'IdbAppState';
 const DB_VERSION: number = 1;
+
+IdbDict.deleteDb(DB_NAME);
 
 /**
  * @name IdbAppState
