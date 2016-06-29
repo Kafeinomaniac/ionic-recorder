@@ -389,7 +389,7 @@ export class LibraryPage {
     // property 'lastViewedFolderKey'
     private switchFolder(key: number, updateState: boolean): void {
         if (!isPositiveWholeNumber(key)) {
-            alert('switchFolder -- invalid key!');
+            alert('switchFolder -- invalid key! key=' + key);
             return;
         }
         /*

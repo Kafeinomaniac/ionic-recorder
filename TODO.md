@@ -5,6 +5,9 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* sliders
+* fix library page issues
+* merge app-state and idb-app-state?
 * web-audio-common does not initialize db correctly - have it use
   idb-app-data
 * library: get UNFILED_FOLDER_NAME FROM record.ts, use app-state

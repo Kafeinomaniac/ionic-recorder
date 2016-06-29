@@ -114,14 +114,11 @@ export class IonicRecorderApp {
      * @returns {void}
      */
     public initializeApp(): void {
-        // NOTE: this.tabs @ViewChild property is undefined here
-        console.log('initializeApp()');
-        console.log('this.platform.ready: ' + this.platform.ready);
         this.platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
-            StatusBar.styleDefault();
+            // StatusBar.styleDefault();
 
             // NOTE: this.tabs @ViewChild property is *defined* here
 

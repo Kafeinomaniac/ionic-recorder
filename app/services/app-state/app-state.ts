@@ -27,7 +27,7 @@ interface State {
 
 const DEFAULT_STATE: State = {
     lastTabIndex: 1,
-    lastViewedFolderKey: 0,
+    lastViewedFolderKey: 2,
     unfiledFolderKey: 2,
     selectedNodes: {},
     gain: { factor: 1.0, maxFactor: 2.0 }
