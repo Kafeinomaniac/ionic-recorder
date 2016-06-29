@@ -23,6 +23,18 @@ import {
 } from './services/app-state/app-state';
 
 import {
+    IdbAppData
+} from './services/idb-app-data/idb-app-data';
+
+import {
+    IdbAppFS
+} from './services/idb-app-fs/idb-app-fs';
+
+import {
+    IdbAppState
+} from './services/idb-app-state/idb-app-state';
+
+import {
     LoadingPage
 } from './pages/loading/loading';
 
@@ -57,7 +69,8 @@ interface TabPage {
 }
 
 @Component({
-    templateUrl: 'build/app.html'
+    templateUrl: 'build/app.html',
+    providers: [AppState]
 })
 export class IonicRecorderApp {
     // NOTE: either one of these @ViewChild declarations works, use only one ..
@@ -67,18 +80,21 @@ export class IonicRecorderApp {
     private platform: Platform;
     private menu: MenuController;
     private appState: AppState;
+    // private idbFS: IdbFS;
     private rootPage: Type;
     private pages: TabPage[];
 
     constructor(
         platform: Platform,
         menu: MenuController,
-        appState: AppState
+        appState: AppState // ,
+        // idbFS: IdbFS
     ) {
         console.log('constructor(): IonicRecorderApp');
         this.platform = platform;
         this.menu = menu;
         this.appState = appState;
+        // this.idbFS = idbFS;
 
         // set root of the hidden (first, default) tab
         this.rootPage = LoadingPage;
@@ -168,7 +184,10 @@ ionicBootstrap(
     IonicRecorderApp,
     [
         provide(ExceptionHandler, { useClass: AppExceptionHandler }),
-        AppState
+        AppState,
+        IdbAppData,
+        IdbAppFS,
+        IdbAppState
     ],
     {});
 

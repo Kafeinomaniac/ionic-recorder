@@ -1,6 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
+    Injectable
+} from '@angular/core';
+
+import {
     Idb
 } from './idb';
 
@@ -20,6 +24,7 @@ interface KeyValuePair {
     value: any;
 }
 
+@Injectable()
 export class IdbDict extends Idb {
     constructor(dbName: string, dbVersion: number) {
         super({

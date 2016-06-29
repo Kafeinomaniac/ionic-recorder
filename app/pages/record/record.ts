@@ -19,8 +19,8 @@ import {
 } from '../../services/web-audio/web-audio-recorder';
 
 import {
-    IdbFS
-} from '../../services/idb/idb-fs';
+    IdbAppFS
+} from '../../services/idb-app-fs/idb-app-fs';
 
 import {
     ProgressSlider
@@ -40,8 +40,8 @@ const PAUSE_ICON: string = 'pause';
     directives: [VuGauge, ProgressSlider]
 })
 export class RecordPage {
-    private idbFS: IdbFS;
     private appState: AppState;
+    private idbAppFS: IdbAppFS;
     private webAudioRecorder: WebAudioRecorder;
     private recordButtonIcon: string = START_RESUME_ICON;
     private percentGain: string;
@@ -53,14 +53,14 @@ export class RecordPage {
      * @constructor
      */
     constructor(
-        idbFS: IdbFS,
         appState: AppState,
+        idbAppFS: IdbAppFS,
         webAudioRecorder: WebAudioRecorder
     ) {
         console.log('constructor():RecordPage');
 
-        this.idbFS = idbFS;
         this.appState = appState;
+        this.idbAppFS = idbAppFS;
         this.webAudioRecorder = webAudioRecorder;
 
         // initialize with "remembered" gain values

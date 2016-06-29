@@ -1,4 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
+import {
+    Injectable
+} from '@angular/core';
 
 import {
     Observable
@@ -40,6 +43,7 @@ export interface IdbConfig {
  * @description
  * Basic IndexedDB wrapper for setup and CRUD functions with arbitrary objects
  */
+@Injectable()
 export class Idb {
     private db: IDBDatabase;
     private storeKeys: StoreKeys;

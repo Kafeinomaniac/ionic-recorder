@@ -11,12 +11,15 @@ import {
 } from 'ionic-angular';
 
 import {
-    IdbFS,
     TreeNode,
     KeyDict,
     ParentChild,
     DB_KEY_PATH
 } from '../../services/idb/idb-fs';
+
+import {
+    IdbAppFS
+} from '../../services/idb-app-fs/idb-app-fs';
 
 import {
     isPositiveWholeNumber
@@ -46,7 +49,7 @@ import {
 })
 export class LibraryPage {
     private nav: NavController;
-    private idbFS: IdbFS;
+    private idbAppFS: IdbAppFS;
     private appState: AppState;
     private folderNode: TreeNode;
     private folderItems: KeyDict;
@@ -62,13 +65,13 @@ export class LibraryPage {
      */
     constructor(
         nav: NavController,
-        idbFS: IdbFS,
+        idbAppFS: IdbAppFS,
         appState: AppState
     ) {
         console.log('constructor():LibraryPage');
 
         this.nav = nav;
-        this.idbFS = idbFS;
+        this.idbAppFS = idbAppFS;
         this.appState = appState;
 
         this.folderNode = null;
@@ -220,7 +223,7 @@ export class LibraryPage {
             'Ok', () => {
                 console.log('Library::deleteNodes(): deleting ' + nNodes +
                     ' selected items ...');
-                this.idbFS.deleteNodes(keyDict).subscribe(
+                this.idbAppFS.deleteNodes(keyDict).subscribe(
                     () => {
                         let i: number,
                             bSelectionChanged: boolean = false,
@@ -400,7 +403,7 @@ export class LibraryPage {
         // console.log('switchFolder(' + key + ', ' + updateState + ')');
 
         // for non-root folders, we set this.folderNode here
-        this.idbFS.readNode(key).subscribe(
+        this.idbAppFS.readNode(key).subscribe(
             (folderNode: TreeNode) => {
                 if (folderNode[DB_KEY_PATH] !== key) {
                     alert('in readNode: key mismatch');
@@ -408,7 +411,7 @@ export class LibraryPage {
                 // we read all child nodes of the folder we're
                 // switching to in order to fill up this.folderItems
                 let newFolderItems: { [id: string]: TreeNode } = {};
-                this.idbFS.readChildNodes(folderNode).subscribe(
+                this.idbAppFS.readChildNodes(folderNode).subscribe(
                     (childNodes: TreeNode[]) => {
                         this.folderItems = {};
                         // we found all children of the node we're
@@ -485,7 +488,7 @@ export class LibraryPage {
      */
     public onClickListItem(node: TreeNode): void {
         const nodeKey: number = node[DB_KEY_PATH];
-        if (IdbFS.isFolderNode(node)) {
+        if (IdbAppFS.isFolderNode(node)) {
             // it's a folder! switch to it
             this.switchFolder(node[DB_KEY_PATH], true);
         }
@@ -495,7 +498,7 @@ export class LibraryPage {
             // setting this.playerTitle triggers the audio
             // player to make itself visible
             this.playerTitle = node.name;
-            this.idbFS.readNode(nodeKey).subscribe(
+            this.idbAppFS.readNode(nodeKey).subscribe(
                 (readNode: TreeNode) => {
                     // dataNode.data is the Blob object to play
                     // setting this.playerBlob triggers the audio
@@ -503,7 +506,7 @@ export class LibraryPage {
                     this.playerBlob = readNode.data;
                 }
             ); // readNodeData(node).subscribe(
-        } // if (IdbFS.isFolderNode(node)) { .. else { ..
+        } // if (IdbAppFS.isFolderNode(node)) { .. else { ..
     }
 
     /**
@@ -534,7 +537,7 @@ export class LibraryPage {
                 // data is new folder's name returned from addFolderModal
                 console.log('got folderName back: ' + folderName);
                 // create a node for added folder childNode
-                this.idbFS.createNode(
+                this.idbAppFS.createNode(
                     folderName,
                     this.folderNode[DB_KEY_PATH]
                 ).subscribe(

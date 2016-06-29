@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    xdescribe,
+    describe,
     expect,
     it
 } from '@angular/core/testing';
@@ -13,8 +13,8 @@ import {
 } from '../../services/test-utils/test-utils';
 
 import {
-    IdbFS
-} from '../../services/idb/idb-fs';
+    IdbAppFS
+} from '../../services/idb-app-fs/idb-app-fs';
 
 import {
     AppState
@@ -32,10 +32,10 @@ setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 
-xdescribe('pages/record:RecordPage', () => {
+describe('pages/record:RecordPage', () => {
     instanceFixture = beforeEachDI(
         RecordPage,
-        [IdbFS, AppState, WebAudioRecorder],
+        [IdbAppFS, AppState, WebAudioRecorder],
         true,
         null
     );

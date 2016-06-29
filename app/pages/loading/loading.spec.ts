@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    xdescribe,
+    describe,
     expect,
     it
 } from '@angular/core/testing';
@@ -20,7 +20,7 @@ setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 
-xdescribe('pages/loading:LoadingPage', () => {
+describe('pages/loading:LoadingPage', () => {
     instanceFixture = beforeEachDI(
         LoadingPage,
         [],

@@ -1,6 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
+    Injectable
+} from '@angular/core';
+
+import {
     Idb
 } from './idb';
 
@@ -46,6 +50,7 @@ export interface KeysDict {
     [id: string]: TreeNode[];
 }
 
+@Injectable()
 export class IdbFS extends Idb {
 
     constructor(dbName: string, dbVersion: number) {

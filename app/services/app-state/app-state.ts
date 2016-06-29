@@ -5,15 +5,15 @@ import {
 } from '@angular/core';
 
 import {
-    IdbDict
-} from '../idb/idb-dict';
+    IdbAppState
+} from '../idb-app-state/idb-app-state';
 
 import {
     KeyDict
 } from '../idb/idb-fs';
 
-const DB_NAME: string = 'appStateIdbDict';
-const DB_VERSION: number = 1;
+// const DB_NAME: string = 'appStateIdbDict';
+// const DB_VERSION: number = 1;
 
 export interface GainState {
     factor: number;
@@ -41,14 +41,14 @@ const DEFAULT_STATE: State = {
  * @description
  */
 @Injectable()
-export class AppState extends IdbDict {
+export class AppState extends IdbAppState {
     private cachedState: Object = DEFAULT_STATE;
 
     /**
      * @constructor
      */
-    constructor(dbName: string = DB_NAME, dbVersion: number = DB_VERSION) {
-        super(dbName, dbVersion);
+    constructor() {
+        super();
         console.log('constructor():AppState');
         this.loadFromDb();
     }
