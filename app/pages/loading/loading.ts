@@ -7,7 +7,7 @@ import {
 /**
  * @name LoadingPage
  * @description
- * Load initial page, first wait for DB and IdbAppState singletons 
+ * Load initial page, first wait for DB and IdbAppState singletons
  * to initialize.
  */
 @Component({

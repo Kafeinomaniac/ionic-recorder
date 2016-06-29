@@ -249,6 +249,37 @@ export class IdbFS extends Idb {
     public readChildNodes(parentNode: TreeNode): Observable<TreeNode[]> {
         return this.readNodesById(parentNode.childOrder);
     }
+
+    public readOrCreateNode(
+        key: number,
+        name: string,
+        parentKey: number
+    ): Observable<TreeNode> {
+        let source: Observable<TreeNode> = Observable.create((observer) => {
+            // first we try to get the value
+            this.readNode(key).subscribe(
+                (readNode: TreeNode) => {
+                    if (readNode) {
+                        observer.next(readNode);
+                        observer.complete();
+                    }
+                    else {
+                        this.createNode(name, parentKey).subscribe(
+                            (parentChild: ParentChild) => {
+                                observer.next(parentChild.child);
+                                observer.complete();
+                            },
+                            (error) => {
+                                observer.error('readOrCreateNode(): ' +
+                                    error);
+                            });
+                    }
+                }
+            );
+        });
+        return source;
+    }
+
     // returns Observable<void> when done
     public updateNode(key: number, changes: Object): Observable<void> {
         return this.update(NODE_STORE, key, changes);

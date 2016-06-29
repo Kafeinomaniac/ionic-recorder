@@ -49,7 +49,7 @@
     "typings": "1.3.0"
   },
   "name": "ionic-recorder",
-  "version": "0.0.8-alpha.13",
+  "version": "0.0.8-alpha.14",
   "description": "ionic-recorder: An Ionic2 / WebAudioApi recorder app",
   "cordovaPlugins": [
     "cordova-plugin-device",

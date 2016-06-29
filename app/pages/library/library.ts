@@ -18,7 +18,8 @@ import {
 } from '../../services/idb/idb-fs';
 
 import {
-    IdbAppFS
+    IdbAppFS,
+    UNFILED_FOLDER_KEY
 } from '../../services/idb-app-fs/idb-app-fs';
 
 import {
@@ -55,7 +56,6 @@ export class LibraryPage {
     private folderItems: KeyDict;
     private selectedNodes: KeyDict;
     private totalSelectedCounter: number;
-    private unfiledFolderKey: number;
     private playerTitle: string;
     private playerBlob: Blob;
 
@@ -88,16 +88,12 @@ export class LibraryPage {
         this.selectedNodes =
             this.idbAppState.getProperty('selectedNodes');
 
-        this.unfiledFolderKey =
-            this.idbAppState.getProperty('unfiledFolderKey');
-
         // swich folders, according to IdbAppState
         this.switchFolder(
             this.idbAppState.getProperty('lastViewedFolderKey'),
             false);
         console.log(
-            'LibraryPage:ionViewDidEnter(): unfiledFolderKey=' +
-            this.unfiledFolderKey + ', lastViewedFolderKey=' +
+            'LibraryPage:ionViewDidEnter(): lastViewedFolderKey=' +
             this.idbAppState.getProperty('lastViewedFolderKey'));
     }
 
@@ -331,7 +327,7 @@ export class LibraryPage {
      * @returns {void}
      */
     public onClickDeleteButton(): void {
-        if (this.selectedNodes[this.unfiledFolderKey]) {
+        if (this.selectedNodes[UNFILED_FOLDER_KEY]) {
 
             this.alertAndDo(
                 [
@@ -341,7 +337,7 @@ export class LibraryPage {
                 ].join(''),
                 'Yes',
                 () => {
-                    delete this.selectedNodes[this.unfiledFolderKey];
+                    delete this.selectedNodes[UNFILED_FOLDER_KEY];
                     this.checkIfDeletingInOtherFolders();
                 }
             );
@@ -380,7 +376,7 @@ export class LibraryPage {
      * @returns {boolean}
      */
     public deleteButtonDisabled(): boolean {
-        // return this.selectedNodes[this.unfiledFolderKey];
+        // return this.selectedNodes[UNFILED_FOLDER_KEY];
         return false;
     }
 
