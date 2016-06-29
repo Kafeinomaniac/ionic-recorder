@@ -71,7 +71,7 @@ export class Idb {
     /**
      * Delete entire DB, keep trying if there is an error.
      * @params {string} dbName - the name of the database to delete
-     * @returns {Observable<void>} Observable that yields when the 
+     * @returns {Observable<void>} Observable that yields when the
      * delete operation returns without error
      */
     public static deleteDb(dbName: string): Observable<void> {

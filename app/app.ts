@@ -143,7 +143,7 @@ export class IonicRecorderApp {
         let tabIndex: number = selectedTab.index;
         // console.log('onTabChange: ' + tabIndex);
         if (tabIndex === 0) {
-            // 
+            //
             // hide tab 0 dynamically because if we hide it in the
             // template with [show]="false" then tabs automatically
             // select tab 1 instead.  at this point, tab 0 has already

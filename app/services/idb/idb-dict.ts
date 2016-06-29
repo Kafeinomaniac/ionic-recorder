@@ -149,7 +149,7 @@ export class IdbDict extends Idb {
     public updateValue(key: string, value: any): Observable<void> {
         // we will need to first find the value by using the index on key
         // then once we find it, we know what the db key (int) is and we
-        // can use the 
+        // can use the
         let source: Observable<void> = Observable.create((observer) => {
             this.getStore(DICT_STORE, 'readonly').subscribe(
                 (store: IDBObjectStore) => {
