@@ -7,7 +7,6 @@ import {
 } from '@angular/core/testing';
 
 import {
-    setUpBaseTestProviders,
     configProvider,
     navControllerProvider,
     InstanceFixture,
@@ -25,8 +24,6 @@ import {
 import {
     LibraryPage
 } from './library';
-
-setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 

@@ -7,7 +7,6 @@ import {
 } from '@angular/core/testing';
 
 import {
-    setUpBaseTestProviders,
     InstanceFixture,
     beforeEachDI
 } from '../../services/test-utils/test-utils';
@@ -32,14 +31,17 @@ import {
     RecordPage
 } from './record';
 
-setUpBaseTestProviders();
-
 let instanceFixture: InstanceFixture = null;
 
 describe('pages/record:RecordPage', () => {
     instanceFixture = beforeEachDI(
         RecordPage,
-        [IdbAppData, IdbAppFS, IdbAppState, WebAudioRecorder],
+        [
+            IdbAppData,
+            IdbAppFS,
+            IdbAppState,
+            WebAudioRecorder
+        ],
         true,
         null
     );

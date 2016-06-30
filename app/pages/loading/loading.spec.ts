@@ -7,7 +7,6 @@ import {
 } from '@angular/core/testing';
 
 import {
-    setUpBaseTestProviders,
     InstanceFixture,
     beforeEachDI
 } from '../../services/test-utils/test-utils';
@@ -15,8 +14,6 @@ import {
 import {
     LoadingPage
 } from './loading';
-
-setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 

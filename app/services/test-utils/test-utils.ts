@@ -3,7 +3,8 @@
 // Based on: https://github.com/lathonez/clicker - app/test/diExports.ts
 
 import {
-    AbstractControl
+    AbstractControl,
+    Control
 } from '@angular/common';
 
 import {
@@ -26,46 +27,29 @@ import {
 
 import {
     Provider,
-    provide
+    provide,
+    Renderer
 } from '@angular/core';
 
 import {
     Config,
     MenuController,
-    NavController
+    NavController,
+    App,
+    Form,
+    Item,
+    Platform,
+    Range
 } from 'ionic-angular';
 
-// next 3 imports are for setUpBaseTestProviders()
-
 import {
-    ADDITIONAL_TEST_BROWSER_PROVIDERS,
-    TEST_BROWSER_STATIC_PLATFORM_PROVIDERS
-} from '@angular/platform-browser/testing/browser_static';
-
-import {
-    BROWSER_APP_DYNAMIC_PROVIDERS
-} from '@angular/platform-browser-dynamic';
-
-import {
-    resetBaseTestProviders,
-    setBaseTestProviders
-} from '@angular/core/testing';
+    NG_VALUE_ACCESSOR,
+    CORE_DIRECTIVES
+} from '@angular/common';
 
 ///////////////////////////////////////////////////////////////////////////////
 // utility functions and interfaces
 ///////////////////////////////////////////////////////////////////////////////
-
-export function setUpBaseTestProviders(): void {
-    'use strict';
-    resetBaseTestProviders();
-    setBaseTestProviders(
-        TEST_BROWSER_STATIC_PLATFORM_PROVIDERS,
-        [
-            BROWSER_APP_DYNAMIC_PROVIDERS,
-            ADDITIONAL_TEST_BROWSER_PROVIDERS
-        ]
-    );
-}
 
 // bit of a hack here to reset the validation / state on the
 // control as well as the value expecting a Control.reset() method
@@ -99,42 +83,6 @@ export function eventFire(el: any, etype: string): void {
         evObj.initEvent(etype, true, false);
         el.dispatchEvent(evObj);
     }
-}
-
-export interface InstanceFixture {
-    instance: Type;
-    fixture: ComponentFixture<Type>;
-}
-
-export function beforeEachDI(
-    component: Type,
-    providers: any[],
-    detectChanges: boolean,
-    beforeEachCB: Function
-): InstanceFixture {
-    'use strict';
-    let instance: Type,
-        fixture: ComponentFixture<Type>;
-    if (providers && providers.length) {
-        beforeEachProviders(() => providers);
-    }
-    beforeEach(injectAsync(
-        [TestComponentBuilder],
-        (testComponentBuilder: TestComponentBuilder) => {
-            return testComponentBuilder
-                .createAsync(component)
-                .then((componentFixture: ComponentFixture<Type>) => {
-                    fixture = componentFixture;
-                    instance = componentFixture.componentInstance;
-                    if (detectChanges) componentFixture.detectChanges();
-                    if (beforeEachCB) beforeEachCB(fixture);
-                })
-                .catch(promiseCatchHandler);
-        }));
-    return {
-        instance: instance,
-        fixture: fixture
-    };
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -203,3 +151,62 @@ export const menuControllerProvider: Provider =
 
 export const navControllerProvider: Provider =
     provide(NavController, { useClass: NavMock });
+
+export interface InstanceFixture {
+    instance: Type;
+    fixture: ComponentFixture<Type>;
+}
+
+// note: probably none of these are needed below - they didn't solve
+// the ngModel problem which we're still trying to solve
+const DEFAULT_PROVIDERS: any[] = [
+    new Provider(NG_VALUE_ACCESSOR, {}),
+    new Provider(CORE_DIRECTIVES, {}),
+    Form,
+    Item,
+    Range,
+    Renderer,
+    provide(Config, { useClass: ConfigMock }),
+    provide(App, { useClass: ConfigMock }),
+    provide(NavController, { useClass: NavMock }),
+    provide(Platform, { useClass: ConfigMock })
+];
+
+///////////////////////////////////////////////////////////////////////////////
+// replace beforeEach() with beforeEachDI(), which injects stuff
+///////////////////////////////////////////////////////////////////////////////
+
+export function beforeEachDI(
+    component: Type,
+    providers: any[],
+    detectChanges: boolean,
+    beforeEachCB: Function
+): InstanceFixture {
+    'use strict';
+    let instance: Type,
+        fixture: ComponentFixture<Type>;
+    if (providers && providers.length) {
+        beforeEachProviders(() => providers.concat(DEFAULT_PROVIDERS));
+    }
+    else {
+        beforeEachProviders(() => DEFAULT_PROVIDERS);
+    }
+    beforeEach(injectAsync(
+        [TestComponentBuilder],
+        (testComponentBuilder: TestComponentBuilder) => {
+            return testComponentBuilder
+                .createAsync(component)
+                .then((componentFixture: ComponentFixture<Type>) => {
+                    fixture = componentFixture;
+                    instance = componentFixture.componentInstance;
+                    instance['control'] = new Control('');
+                    if (detectChanges) componentFixture.detectChanges();
+                    if (beforeEachCB) beforeEachCB(fixture);
+                })
+                .catch(promiseCatchHandler);
+        }));
+    return {
+        instance: instance,
+        fixture: fixture
+    };
+}

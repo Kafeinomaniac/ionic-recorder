@@ -7,7 +7,6 @@ import {
 } from '@angular/core/testing';
 
 import {
-    setUpBaseTestProviders,
     menuControllerProvider,
     InstanceFixture,
     beforeEachDI
@@ -16,8 +15,6 @@ import {
 import {
     AboutPage
 } from './about';
-
-setUpBaseTestProviders();
 
 let instanceFixture: InstanceFixture = null;
 
