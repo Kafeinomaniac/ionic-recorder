@@ -18,11 +18,11 @@ const NODE_STORE: string = 'storeIdbFS';
 
 const ROOT_FOLDER_NAME: string = 'rootFolder';
 
-export const DB_KEY_PATH: string = 'id';
-
 ///////////////////////////////////////////////////////////////////////////////
 /// START: Public API
 ///////////////////////////////////////////////////////////////////////////////
+
+export const DB_KEY_PATH: string = 'id';
 
 export interface TreeNode {
     name: string;
@@ -324,7 +324,7 @@ export class IdbFS extends Idb {
      * @returns {Observable<TreeNode[]>} observable of an array of TreeNode
      * objects whose ids are in nodeKeys
      */
-    private readNodesById(nodeKeys: number[]): Observable<TreeNode[]> {
+    public readNodesById(nodeKeys: number[]): Observable<TreeNode[]> {
         let source: Observable<TreeNode[]> = Observable.create((observer) => {
             let childNodes: TreeNode[] = [];
             // asynchronously read childOrder array  nodes, emits TreeNode[]
@@ -423,6 +423,33 @@ export class IdbFS extends Idb {
                     observer.error('getNodesByNameInParent(): ' + error);
                 }
             ); // readNodesByName().subscribe(
+        });
+        return source;
+    }
+
+    /**
+     * Same as getSubtreeNodes(), but instead of returning an observable stream
+     * collects the entire list of subtree nodes and returns them in one single
+     * array, emitted by an observable when all its elements are available.
+     * @param {TreeNode} node - the node whose subtree we're getting
+     * @return Observable<TreeNode[]> Observable that emits when the array of
+     * all subtree nodes has been traversed in the db.
+     */
+    public getSubtreeNodesArray(node: TreeNode): Observable<TreeNode[]> {
+        let source: Observable<TreeNode[]> = Observable.create((observer) => {
+            let nodes: TreeNode[] = [];
+            this.getSubtreeNodes(node).subscribe(
+                (subtreeNode: TreeNode) => {
+                    nodes.push(subtreeNode);
+                },
+                (error) => {
+                    observer.error(error);
+                },
+                () => {
+                    observer.next(nodes);
+                    observer.complete();
+                }
+            );
         });
         return source;
     }
@@ -637,33 +664,6 @@ export class IdbFS extends Idb {
                 this.isLeaf(childNode) ?
                     <Observable<TreeNode>>Observable.empty() :
                     this.lsNode(childNode));
-    }
-
-    /**
-     * Same as getSubtreeNodes(), but instead of returning an observable stream
-     * collects the entire list of subtree nodes and returns them in one single
-     * array, emitted by an observable when all its elements are available.
-     * @param {TreeNode} node - the node whose subtree we're getting
-     * @return Observable<TreeNode[]> Observable that emits when the array of
-     * all subtree nodes has been traversed in the db.
-     */
-    public getSubtreeNodesArray(node: TreeNode): Observable<TreeNode[]> {
-        let source: Observable<TreeNode[]> = Observable.create((observer) => {
-            let nodes: TreeNode[] = [];
-            this.getSubtreeNodes(node).subscribe(
-                (subtreeNode: TreeNode) => {
-                    nodes.push(subtreeNode);
-                },
-                (error) => {
-                    observer.error(error);
-                },
-                () => {
-                    observer.next(nodes);
-                    observer.complete();
-                }
-            );
-        });
-        return source;
     }
 
     private detachNodesFromParent(

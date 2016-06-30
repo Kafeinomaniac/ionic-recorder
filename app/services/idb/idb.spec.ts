@@ -44,15 +44,6 @@ let idb: Idb = new Idb(DB_CONFIG),
     key1: number,
     key2: number;
 
-// Idb.deleteDb('IdbAppData');
-// Idb.deleteDb('IdbAppFS');
-// Idb.deleteDb('IdbAppState');
-// Idb.deleteDb('idbAppState');
-// Idb.deleteDb('WebAudioRecordings');
-// Idb.deleteDb('AppStateIdbDict');
-// Idb.deleteDb('idbAppState');
-// Idb.deleteDb('ionic-recorder-db');
-
 // fill up item1 and item2 with unique data per element
 item1[0] = 11;
 item1[1] = 12;
