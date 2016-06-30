@@ -1,23 +1,26 @@
 <!-- Copyright (c) 2016 Tracktunes Inc -->
 
-<ion-navbar *navbar almost-dark>
-    <button menuToggle>
+<ion-header>
+    <ion-navbar almost-dark>
+        <button menuToggle>
         <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>
-        About ionic-recorder
-    </ion-title>
-    <ion-buttons end>
-        <button (click)="onClickCancel()">Cancel</button>
-    </ion-buttons>
-</ion-navbar>
+        <ion-title>
+            About ionic-recorder
+        </ion-title>
+        <ion-buttons end>
+            <button (click)="onClickCancel()">Cancel</button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
 
 <ion-content padding>
     <h2>
         Version: {{version}}
     </h2>
     <h3>
-        ionic-recorder is an open source app, built with the Ionic2 / Angular2 frameworks, that allows you to record audio and organize your recordings. It works online or offline, on any smartphone with a recent browser.
+        ionic-recorder is an open source app, built with the Ionic2 / Angular2 frameworks, that allows you to record audio and organize
+        your recordings. It works online or offline, on any smartphone with a recent browser.
     </h3>
     <h4>
         For developers: this app demonstrates the browser's WebAudio API and IndexedDB built-in libraries.

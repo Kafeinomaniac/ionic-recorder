@@ -1,18 +1,20 @@
 <!-- Copyright (c) 2016 Tracktunes Inc -->
 
-<ion-navbar *navbar almost-dark>
-    <button menuToggle>
-        <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Record</ion-title>
-    <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
-        <button small (click)="recorder.resetPeaks()">
+<ion-header>
+    <ion-navbar no-border-bottom almost-dark>
+        <button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Record</ion-title>
+        <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
+            <button small (click)="recorder.resetPeaks()">
             <ion-badge darkest-gray item-right>
                 {{webAudioRecorder.percentPeaksAtMax}}% peaks @ max
             </ion-badge>
         </button>
-    </ion-buttons>
-</ion-navbar>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
 
 <ion-content padding>
     <vu-gauge height="2.5em" nbars="55" [value]="webAudioRecorder.currentVolume" [max]="webAudioRecorder.maxVolumeSinceReset">

@@ -23,9 +23,10 @@ ion-app {
             }
         }
     }
+
     // hide tabs (we only use them for in-program navigation, preloading pages and keeping them in memory while navigating, not for click-navigation)
     ion-tabs {
-        ion-tabbar-section {
+        ion-tabbar {
             display: none;
         }
         // remove the scrollbar when it's not needed, it seems to be there all the time otherwise ...
