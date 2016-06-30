@@ -22,10 +22,6 @@ import {
     IdbAppFS
 } from '../../services/idb-app-fs/idb-app-fs';
 
-import {
-    ProgressSlider
-} from '../../components/progress-slider/progress-slider';
-
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
 
@@ -37,17 +33,20 @@ const PAUSE_ICON: string = 'pause';
 @Component({
     templateUrl: 'build/pages/record/record.html',
     providers: [WebAudioRecorder],
-    directives: [VuGauge, ProgressSlider]
+    directives: [VuGauge]
 })
 export class RecordPage {
     private idbAppState: IdbAppState;
     private idbAppFS: IdbAppFS;
     private webAudioRecorder: WebAudioRecorder;
     private recordButtonIcon: string = START_RESUME_ICON;
+    // template members
     private percentGain: string;
     private maxGainFactor: number;
     private gainFactor: number;
     private decibels: string;
+
+    private gainRangeSliderValue: number;
 
     /**
      * @constructor
@@ -73,7 +72,8 @@ export class RecordPage {
         // we still want to show the previous gain value.
         // if we don't have this line below then it will
         // always show up as gain == 0.
-        this.onGainChange(gain.factor / gain.maxFactor);
+        this.gainRangeSliderValue = 100 * gain.factor / gain.maxFactor;
+        this.onGainChange(this.gainRangeSliderValue);
     }
 
     /**
@@ -85,26 +85,23 @@ export class RecordPage {
             this.webAudioRecorder.status === RecorderStatus.READY_STATE;
     }
 
-    /**
-     * Gets called with gain position (in [0, 1]) when we end sliding gain
-     * slider around, at the end of a drag / slide action, with the finally
-     * gain value released.
-     * @returns {void}
-     */
-    public onGainChangeEnd(position: number): void {
-        this.onGainChange(position);
-        this.idbAppState.updateProperty('gain', {
-            factor: this.gainFactor,
-            maxFactor: this.maxGainFactor
-        });
+    public onResetGain(): void {
+        console.log('onResetGain()');
+        this.gainRangeSliderValue = 50;
+        this.onGainChange(this.gainRangeSliderValue);
     }
 
-    /**
-     * Gets called with gain position (in [0, 1]) as we slide the gain
-     * slider around, during a drag, during the slide.
-     * @returns {void}
-     */
-    public onGainChange(position: number): void {
+    public onGainChange(value: number): void {
+        // if (isNaN(this.gainRangeSliderValue)) {
+        //     return;
+        // }
+        if (isNaN(value)) {
+            return;
+        }
+        // const position: number = this.gainRangeSliderValue / 100;
+        const position: number = value / 100;
+        console.log('onGainChange: ' + position);
+
         // convert fro position in [0, 1] to [0, this.maxGainFactor]
         this.gainFactor = position * this.maxGainFactor;
 
@@ -118,6 +115,11 @@ export class RecordPage {
                 (10.0 * Math.log10(this.gainFactor)).toFixed(2) + ' dB';
         }
         this.percentGain = (this.gainFactor * 100.0).toFixed(1);
+
+        this.idbAppState.updateProperty('gain', {
+            factor: this.gainFactor,
+            maxFactor: this.maxGainFactor
+        });
     }
 
     /**

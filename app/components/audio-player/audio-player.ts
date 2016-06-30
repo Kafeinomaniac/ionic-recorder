@@ -15,10 +15,6 @@ import {
     WebAudioPlayer
 } from '../../services/web-audio/web-audio-player';
 
-import {
-    ProgressSlider
-} from '../progress-slider/progress-slider';
-
 /**
  * @name AudioPlayer
  * @description
@@ -29,7 +25,7 @@ import {
     selector: 'audio-player',
     templateUrl: 'build/components/audio-player/audio-player.html',
     providers: [WebAudioPlayer],
-    directives: [IONIC_DIRECTIVES, ProgressSlider]
+    directives: [IONIC_DIRECTIVES]
 })
 export class AudioPlayer implements OnChanges {
     @Input() private title: string;

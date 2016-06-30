@@ -12,7 +12,7 @@
         <ion-col width-80 center>
             <ion-row>
                 <span class="time">{{player.getDisplayTime()}}</span>
-                <progress-slider [progress]="player.getProgress()" (changeEnd)="player.positionSeek($event)"></progress-slider>
+                <span></span>
                 <span class="duration">{{player.displayDuration}}</span>
             </ion-row>
         </ion-col>

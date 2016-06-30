@@ -84,7 +84,7 @@ export class IdbAppState extends IdbDict {
      * have made the update in the DB (emits true in that case)
      */
     public updateProperty(key: string, value: any): void {
-        console.log('updateProperty(' + key + ', ' + value + ')');
+        // console.log('updateProperty(' + key + ', ' + value + ')');
         if (this.cachedState[key] === value) {
             return;
         }

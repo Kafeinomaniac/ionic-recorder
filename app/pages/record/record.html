@@ -19,10 +19,12 @@
     </vu-gauge>
     <p class="gain-item-label">
         Gain: {{percentGain}}% ({{decibels}})
-        <button small almost-dark (click)="onGainChangeEnd(0.5)">Reset Gain</button>
+        <button small almost-dark (click)="onResetGain()">Reset Gain</button>
     </p>
-    <progress-slider [progress]="gainFactor/maxGainFactor" (change)="onGainChange($event)" (changeEnd)="onGainChangeEnd($event)">
-    </progress-slider>
+    <ion-range [(ngModel)]="gainRangeSliderValue" (ionChange)="onGainChange($event.value)">
+        <ion-icon range-left small name="mic-off"></ion-icon>
+        <ion-icon range-right name="mic"></ion-icon>
+    </ion-range>
     <div class="recording-time">
         {{webAudioRecorder.currentTime}}
     </div>
