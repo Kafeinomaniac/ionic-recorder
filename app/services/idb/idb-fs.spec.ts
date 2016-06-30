@@ -12,8 +12,6 @@ const DB_NAME: string = 'testIdbFS';
 const DB_VERSION: number = 1;
 const WAIT_MSEC: number = 60;
 
-// IdbFS.deleteDb(DB_NAME).subscribe();
-
 let rootFolder: TreeNode,
     folder1: TreeNode,
     folder3: TreeNode,
@@ -34,8 +32,6 @@ beforeEach((done: Function) => {
             fail(error);
         });
 });
-
-// jasmine.DEFAULT_TIMEOUT_INTERVAL = WAIT_MSEC;
 
 describe('services/idb:IdbFS', () => {
     it('initializes', (done) => {
@@ -446,11 +442,11 @@ describe('services/idb:IdbFS', () => {
             () => {
                 idbFS.readNode(folder5[DB_KEY_PATH]).subscribe(
                     (treeNode: TreeNode) => {
-                        fail('expected an error');
+                        expect(treeNode).toBeUndefined();
+                        done();
                     },
                     (error) => {
-                        expect(error).toEqual('node does not exist');
-                        done();
+                        fail(error);
                     }
                 );
             },
@@ -462,11 +458,11 @@ describe('services/idb:IdbFS', () => {
             () => {
                 idbFS.readNode(item6[DB_KEY_PATH]).subscribe(
                     (treeNode: TreeNode) => {
-                        fail('expected an error');
+                        expect(treeNode).toBeUndefined();
+                        done();
                     },
                     (error) => {
-                        expect(error).toEqual('node does not exist');
-                        done();
+                        fail(error);
                     }
                 );
             },
@@ -478,11 +474,11 @@ describe('services/idb:IdbFS', () => {
             () => {
                 idbFS.readNode(item7[DB_KEY_PATH]).subscribe(
                     (treeNode: TreeNode) => {
-                        fail('expected an error');
+                        expect(treeNode).toBeUndefined();
+                        done();
                     },
                     (error) => {
-                        expect(error).toEqual('node does not exist');
-                        done();
+                        fail(error);
                     }
                 );
             },
@@ -513,11 +509,11 @@ describe('services/idb:IdbFS', () => {
                 () => {
                     idbFS.readNode(rootFolder[DB_KEY_PATH]).subscribe(
                         (treeNode: TreeNode) => {
-                            fail('expected an error');
+                            expect(treeNode).toBeUndefined();
+                            done();
                         },
                         (error) => {
-                            expect(error).toEqual('node does not exist');
-                            done();
+                            fail(error);
                         }
                     );
                 },
@@ -529,11 +525,11 @@ describe('services/idb:IdbFS', () => {
             () => {
                 idbFS.readNode(item2[DB_KEY_PATH]).subscribe(
                     (treeNode: TreeNode) => {
-                        fail('expected an error');
+                        expect(treeNode).toBeUndefined();
+                        done();
                     },
                     (error) => {
-                        expect(error).toEqual('node does not exist');
-                        done();
+                        fail(error);
                     }
                 );
             },
@@ -545,11 +541,11 @@ describe('services/idb:IdbFS', () => {
             () => {
                 idbFS.readNode(folder3[DB_KEY_PATH]).subscribe(
                     (treeNode: TreeNode) => {
-                        fail('expected an error');
+                        expect(treeNode).toBeUndefined();
+                        done();
                     },
                     (error) => {
-                        expect(error).toEqual('node does not exist');
-                        done();
+                        fail(error);
                     }
                 );
             },
@@ -561,11 +557,11 @@ describe('services/idb:IdbFS', () => {
             () => {
                 idbFS.readNode(item4[DB_KEY_PATH]).subscribe(
                     (treeNode: TreeNode) => {
-                        fail('expected an error');
+                        expect(treeNode).toBeUndefined();
+                        done();
                     },
                     (error) => {
-                        expect(error).toEqual('node does not exist');
-                        done();
+                        fail(error);
                     }
                 );
             },

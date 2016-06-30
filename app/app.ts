@@ -18,19 +18,6 @@ import {
 //     StatusBar
 // } from 'ionic-native';
 
-// import {
-//     Idb
-// } from './services/idb/idb';
-
-// Idb.deleteDb('IdbAppData');
-// Idb.deleteDb('IdbAppFS');
-// Idb.deleteDb('IdbAppState');
-// Idb.deleteDb('idbAppState');
-// Idb.deleteDb('WebAudioRecordings');
-// Idb.deleteDb('AppStateIdbDict');
-// Idb.deleteDb('idbAppState');
-// Idb.deleteDb('ionic-recorder-db');
-
 import {
     IdbAppState
 } from './services/idb-app-state/idb-app-state';

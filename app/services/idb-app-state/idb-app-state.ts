@@ -34,8 +34,6 @@ const DEFAULT_STATE: State = {
 const DB_NAME: string = 'IdbAppState';
 const DB_VERSION: number = 1;
 
-IdbDict.deleteDb(DB_NAME);
-
 /**
  * @name IdbAppState
  * @description
@@ -86,6 +84,7 @@ export class IdbAppState extends IdbDict {
      * have made the update in the DB (emits true in that case)
      */
     public updateProperty(key: string, value: any): void {
+        console.log('updateProperty(' + key + ', ' + value + ')');
         if (this.cachedState[key] === value) {
             return;
         }

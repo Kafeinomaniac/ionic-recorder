@@ -16,8 +16,6 @@ const DB_VERSION: number = 1;
 export const UNFILED_FOLDER_NAME: string = 'Unfiled';
 export const UNFILED_FOLDER_KEY: number = 2;
 
-IdbFS.deleteDb(DB_NAME);
-
 @Injectable()
 export class IdbAppFS extends IdbFS {
     constructor() {

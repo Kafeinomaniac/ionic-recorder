@@ -72,6 +72,7 @@ export class Idb {
      */
     public static deleteDb(dbName: string): Observable<void> {
         'use strict';
+        console.log('deleteDb(' + dbName + ')');
         let deleteDbOnce: () => void = () => {
             let request: IDBOpenDBRequest =
                 indexedDB.deleteDatabase(dbName);
@@ -89,7 +90,10 @@ export class Idb {
         }, source: Observable<void> = Observable.create((observer) => {
             let timerId: NodeJS.Timer,
                 repeat: () => void = () => {
-                    try { deleteDbOnce(); }
+                    try {
+                        console.log('trying to delete ' + dbName + ' ...');
+                        deleteDbOnce();
+                    }
                     catch (error) {
                         console.warn('Error: ' + error);
                         timerId = setTimeout(repeat, WAIT_MSEC);
@@ -225,7 +229,7 @@ export class Idb {
 
                         addRequest.onerror = (event: IDBEvent) => {
                             observer.error('addRequest.onerror: ' +
-                                JSON.stringify(event));
+                                JSON.stringify(event.returnValue));
                         };
                     },
                     (error) => {
@@ -539,5 +543,3 @@ export class Idb {
     }
 
 }
-
-

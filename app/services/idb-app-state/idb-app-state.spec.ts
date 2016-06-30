@@ -37,13 +37,33 @@ describe('When idbAppState initialized', () => {
             WAIT_MSEC);
     });
 
-    it('can update unfiledFolderKey to be 0', (done) => {
+    it('can update lastTabIndex to be 2', (done) => {
         setTimeout(
             () => {
-                idbAppState.updateProperty('unfiledFolderKey', 0);
-                expect(idbAppState.getProperty('unfiledFolderKey')).toBe(0);
+                idbAppState.updateProperty('lastTabIndex', 2);
+                expect(idbAppState.getProperty('lastTabIndex')).toBe(2);
                 done();
             },
             WAIT_MSEC);
     });
+
+    it('can read lastTabIndex to be 2', (done) => {
+        setTimeout(
+            () => {
+                expect(idbAppState.getProperty('lastTabIndex')).toBe(2);
+                done();
+            },
+            WAIT_MSEC);
+    });
+
+    it('can update lastTabIndex to be 1', (done) => {
+        setTimeout(
+            () => {
+                idbAppState.updateProperty('lastTabIndex', 1);
+                expect(idbAppState.getProperty('lastTabIndex')).toBe(1);
+                done();
+            },
+            WAIT_MSEC);
+    });
+
 });

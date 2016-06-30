@@ -226,9 +226,9 @@ export class IdbFS extends Idb {
         let source: Observable<TreeNode> = Observable.create((observer) => {
             this.read<TreeNode>(NODE_STORE, key).subscribe(
                 (treeNode: TreeNode) => {
-                    if (treeNode === undefined || !treeNode) {
-                        observer.error('node does not exist');
-                    }
+                    // if (treeNode === undefined || !treeNode) {
+                    //     observer.error('node does not exist');
+                    // }
                     // treeNode[DB_KEY_PATH] = key;
                     observer.next(treeNode);
                     observer.complete();

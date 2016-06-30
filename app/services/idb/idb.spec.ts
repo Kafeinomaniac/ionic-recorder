@@ -35,8 +35,6 @@ const DB_CONFIG: IdbConfig = Idb.validateConfig(
     }
 );
 
-// Idb.deleteDb(DB_NAME).subscribe();
-
 let idb: Idb = new Idb(DB_CONFIG),
     db: IDBDatabase = null,
     item1len: number = 3,
@@ -45,6 +43,15 @@ let idb: Idb = new Idb(DB_CONFIG),
     item2: Uint16Array = new Uint16Array(item2len),
     key1: number,
     key2: number;
+
+// Idb.deleteDb('IdbAppData');
+// Idb.deleteDb('IdbAppFS');
+// Idb.deleteDb('IdbAppState');
+// Idb.deleteDb('idbAppState');
+// Idb.deleteDb('WebAudioRecordings');
+// Idb.deleteDb('AppStateIdbDict');
+// Idb.deleteDb('idbAppState');
+// Idb.deleteDb('ionic-recorder-db');
 
 // fill up item1 and item2 with unique data per element
 item1[0] = 11;
@@ -87,8 +94,6 @@ beforeEach((done: Function) => {
             fail(error);
         });
 });
-
-// jasmine.DEFAULT_TIMEOUT_INTERVAL = WAIT_MSEC;
 
 describe('services/idb:Idb', () => {
     it('initializes', (done) => {
