@@ -167,11 +167,9 @@ export function beforeEachDI(
     let instance: Type,
         fixture: ComponentFixture<Type>;
     if (providers && providers.length) {
-        console.log(providers.concat(DEFAULT_PROVIDERS));
         beforeEachProviders(() => providers.concat(DEFAULT_PROVIDERS));
     }
     else {
-        console.log(DEFAULT_PROVIDERS);
         beforeEachProviders(() => DEFAULT_PROVIDERS);
     }
     beforeEach(injectAsync(

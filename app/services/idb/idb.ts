@@ -547,9 +547,3 @@ export class Idb {
 // Idb.deleteDb('IdbAppData').subscribe();
 // Idb.deleteDb('IdbAppFS').subscribe();
 // Idb.deleteDb('IdbAppState').subscribe();
-// Idb.deleteDb('idbAppState').subscribe();
-// Idb.deleteDb('WebAudioRecordings').subscribe();
-// Idb.deleteDb('AppStateIdbDict').subscribe();
-// Idb.deleteDb('idbAppState').subscribe();
-// Idb.deleteDb('ionic-recorder-db').subscribe();
-// Idb.deleteDb('appStateIdbDict').subscribe();

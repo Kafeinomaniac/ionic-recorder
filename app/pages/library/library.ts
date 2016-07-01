@@ -102,18 +102,13 @@ export class LibraryPage {
      * @returns {string} folder path, represented as a string
      */
     public getPath(): string {
-        // let path: string = this.folderNode.path + '/' + this.folderNode.name,
-        //     rootPath: string = '/' + ROOT_FOLDER_NAME;
-        // if (path === rootPath) {
-        //     return '/';
-        // }
-        // else {
-        //     return path.slice(rootPath.length);
-        // }
-
-        // return '';
-
-        return this.folderNode.path + '/' + this.folderNode.name;
+        let path: string = this.folderNode.path + '/' + this.folderNode.name;
+        if (path === '/') {
+            return '/';
+        }
+        else {
+            return path.slice(1);
+        }
     }
 
     /**

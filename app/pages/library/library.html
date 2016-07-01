@@ -54,6 +54,9 @@
 
 <ion-content>
     <ion-list *ngIf="folderNode" class="file-folder-list">
+        <ion-list-header *ngIf="folderNode" class="library-page-path-message">
+            Folder:&nbsp;<span>{{getPath()}}</span>
+        </ion-list-header>
         <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
             <ion-label button clear (click)="onClickListItem(folderItems[i])">
                 <span *ngIf="folderItems[i].dataKey">
