@@ -103,12 +103,7 @@ export class LibraryPage {
      */
     public getPath(): string {
         let path: string = this.folderNode.path + '/' + this.folderNode.name;
-        if (path === '/') {
-            return '/';
-        }
-        else {
-            return path.slice(1);
-        }
+        return (path === '/') ? path : path.slice(1);
     }
 
     /**
