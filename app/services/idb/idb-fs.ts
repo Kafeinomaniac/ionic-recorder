@@ -16,7 +16,7 @@ import {
 
 const NODE_STORE: string = 'storeIdbFS';
 
-const ROOT_FOLDER_NAME: string = 'rootFolder';
+// const ROOT_FOLDER_NAME: string = 'rootFolder';
 
 ///////////////////////////////////////////////////////////////////////////////
 /// START: Public API
@@ -94,8 +94,7 @@ export class IdbFS extends Idb {
                                 observer.complete();
                             }
                             else {
-                                let newNode: TreeNode =
-                                    IdbFS.makeTreeNode(ROOT_FOLDER_NAME);
+                                let newNode: TreeNode = IdbFS.makeTreeNode('');
                                 newNode[DB_KEY_PATH] = 1;
                                 if (!newNode.childOrder) {
                                     console.warn('no childOrder in root!');

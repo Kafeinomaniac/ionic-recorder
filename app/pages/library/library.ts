@@ -20,7 +20,7 @@ import {
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-} from '../../services/idb-app-fs/idb-app-fs';
+} from '../../providers/idb-app-fs/idb-app-fs';
 
 import {
     isPositiveWholeNumber
@@ -28,7 +28,7 @@ import {
 
 import {
     IdbAppState
-} from '../../services/idb-app-state/idb-app-state';
+} from '../../providers/idb-app-state/idb-app-state';
 
 import {
     AddFolderPage
@@ -84,7 +84,7 @@ export class LibraryPage {
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
      * @returns {void}
      */
-    public ionViewDidEnter(): void {
+    public ionViewWillEnter(): void {
         this.selectedNodes =
             this.idbAppState.getProperty('selectedNodes');
 
@@ -93,7 +93,7 @@ export class LibraryPage {
             this.idbAppState.getProperty('lastViewedFolderKey'),
             false);
         console.log(
-            'LibraryPage:ionViewDidEnter(): lastViewedFolderKey=' +
+            'LibraryPage:ionViewWillEnter(): lastViewedFolderKey=' +
             this.idbAppState.getProperty('lastViewedFolderKey'));
     }
 

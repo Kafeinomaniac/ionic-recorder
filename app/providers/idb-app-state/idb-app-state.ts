@@ -6,11 +6,11 @@ import {
 
 import {
     IdbDict
-} from '../idb/idb-dict';
+} from '../../services/idb/idb-dict';
 
 import {
     KeyDict
-} from '../idb/idb-fs';
+} from '../../services/idb/idb-fs';
 
 export interface GainState {
     factor: number;

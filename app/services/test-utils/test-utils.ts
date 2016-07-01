@@ -8,6 +8,8 @@ import {
 } from '@angular/common';
 
 import {
+    Provider,
+    provide,
     Type
 } from '@angular/core';
 
@@ -17,19 +19,10 @@ import {
 } from '@angular/compiler/testing';
 
 import {
+    beforeEachProviders,
+    beforeEach,
     injectAsync
 } from '@angular/core/testing';
-
-import {
-    beforeEach,
-    beforeEachProviders
-} from '@angular/core/testing';
-
-import {
-    Provider,
-    provide,
-    Renderer
-} from '@angular/core';
 
 import {
     Config,
@@ -37,15 +30,8 @@ import {
     NavController,
     App,
     Form,
-    Item,
-    Platform,
-    Range
+    Platform
 } from 'ionic-angular';
-
-import {
-    NG_VALUE_ACCESSOR,
-    CORE_DIRECTIVES
-} from '@angular/common';
 
 ///////////////////////////////////////////////////////////////////////////////
 // utility functions and interfaces
@@ -160,12 +146,7 @@ export interface InstanceFixture {
 // note: probably none of these are needed below - they didn't solve
 // the ngModel problem which we're still trying to solve
 const DEFAULT_PROVIDERS: any[] = [
-    new Provider(NG_VALUE_ACCESSOR, {}),
-    new Provider(CORE_DIRECTIVES, {}),
     Form,
-    Item,
-    Range,
-    Renderer,
     provide(Config, { useClass: ConfigMock }),
     provide(App, { useClass: ConfigMock }),
     provide(NavController, { useClass: NavMock }),
@@ -186,9 +167,11 @@ export function beforeEachDI(
     let instance: Type,
         fixture: ComponentFixture<Type>;
     if (providers && providers.length) {
+        console.log(providers.concat(DEFAULT_PROVIDERS));
         beforeEachProviders(() => providers.concat(DEFAULT_PROVIDERS));
     }
     else {
+        console.log(DEFAULT_PROVIDERS);
         beforeEachProviders(() => DEFAULT_PROVIDERS);
     }
     beforeEach(injectAsync(

@@ -14,12 +14,12 @@ import {
 
 import {
     DoubleBufferSetter
-} from '../utils/double-buffer';
+} from '../../services/utils/double-buffer';
 
 import {
     formatTime,
     makeSecondsTimestamp
-} from '../utils/utils';
+} from '../../services/utils/utils';
 
 // sets the frame-rate at which either the volume monitor or the progress bar
 // is updated when it changes on the screen.

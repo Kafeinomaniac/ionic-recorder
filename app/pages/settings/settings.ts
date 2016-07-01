@@ -6,7 +6,7 @@ import {
 
 import {
     IdbAppState
-} from '../../services/idb-app-state/idb-app-state';
+} from '../../providers/idb-app-state/idb-app-state';
 
 /**
  * @name SettingsPage

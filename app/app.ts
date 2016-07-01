@@ -20,15 +20,15 @@ import {
 
 import {
     IdbAppState
-} from './services/idb-app-state/idb-app-state';
+} from './providers/idb-app-state/idb-app-state';
 
 import {
     IdbAppData
-} from './services/idb-app-data/idb-app-data';
+} from './providers/idb-app-data/idb-app-data';
 
 import {
     IdbAppFS
-} from './services/idb-app-fs/idb-app-fs';
+} from './providers/idb-app-fs/idb-app-fs';
 
 import {
     LoadingPage
@@ -154,7 +154,7 @@ export class IonicRecorderApp {
      */
     public goToPage(page: TabPage): void {
         let tabIndex: number = page.tabIndex;
-        console.log('goToPage: ' + tabIndex);
+        console.log('goToPage: ' + tabIndex + ', tabs: ' + this.tabs);
         if (typeof this.tabs !== undefined) {
             // we need this conditional because @ViewChild does not work
             // when karma and this.tabs ends up undefined in karma

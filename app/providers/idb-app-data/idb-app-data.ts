@@ -11,7 +11,7 @@ import {
 import {
     Idb,
     IdbConfig
-} from '../idb/idb';
+} from '../../services/idb/idb';
 
 const DB_NAME: string = 'IdbAppData';
 const DB_VERSION: number = 1;

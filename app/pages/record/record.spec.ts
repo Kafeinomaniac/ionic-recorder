@@ -13,19 +13,19 @@ import {
 
 import {
     IdbAppFS
-} from '../../services/idb-app-fs/idb-app-fs';
+} from '../../providers/idb-app-fs/idb-app-fs';
 
 import {
     IdbAppData
-} from '../../services/idb-app-data/idb-app-data';
+} from '../../providers/idb-app-data/idb-app-data';
 
 import {
     IdbAppState
-} from '../../services/idb-app-state/idb-app-state';
+} from '../../providers/idb-app-state/idb-app-state';
 
 import {
     WebAudioRecorder
-} from '../../services/web-audio/web-audio-recorder';
+} from '../../providers/web-audio/web-audio-recorder';
 
 import {
     RecordPage

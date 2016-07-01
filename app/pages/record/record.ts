@@ -11,16 +11,16 @@ import {
 import {
     IdbAppState,
     GainState
-} from '../../services/idb-app-state/idb-app-state';
+} from '../../providers/idb-app-state/idb-app-state';
 
 import {
     WebAudioRecorder,
     RecorderStatus
-} from '../../services/web-audio/web-audio-recorder';
+} from '../../providers/web-audio/web-audio-recorder';
 
 import {
     IdbAppFS
-} from '../../services/idb-app-fs/idb-app-fs';
+} from '../../providers/idb-app-fs/idb-app-fs';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';

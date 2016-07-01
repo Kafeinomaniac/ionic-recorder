@@ -13,7 +13,7 @@ import {
 
 import {
     WebAudioPlayer
-} from '../../services/web-audio/web-audio-player';
+} from '../../providers/web-audio/web-audio-player';
 
 /**
  * @name AudioPlayer

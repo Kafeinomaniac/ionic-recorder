@@ -15,39 +15,41 @@
         </ion-buttons>
     </ion-navbar>
 
-    <audio-player [title]="playerTitle" [blob]="playerBlob">
-    </audio-player>
+    <!--audio-player [title]="playerTitle" [blob]="playerBlob">
+    </audio-player-->
 
-    <span *ngIf="folderNode" class="library-page-path-message">
+    <!--span *ngIf="folderNode" class="library-page-path-message">
         Folder:&nbsp;<span>{{getPath()}}</span>
-    </span>
+    </span-->
 
-    <div class="buttonbar3">
-        <button almost-dark (click)="onClickSelectButton()" ion-row center>
-            <ion-col>
-                <ion-icon name="radio-button-off"></ion-icon>
-                <ion-icon name="md-arrow-dropdown"></ion-icon>
-                <br> Selection
-                <br>
-            </ion-col>
+    <toolbar>
+        <div class="buttonbar3">
+            <button almost-dark (click)="onClickSelectButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="radio-button-off"></ion-icon>
+                    <ion-icon name="md-arrow-dropdown"></ion-icon>
+                    <br> Selection
+                    <br>
+                </ion-col>
+            </button>
+            <button almost-dark (click)="onClickParentButton()" [disabled]="parentButtonDisabled()" ion-row center>
+                <ion-col>
+                    <ion-icon name="arrow-up"></ion-icon>
+                    <ion-icon name="folder"></ion-icon>
+                    <br> Go to parent
+                    <br>
+                </ion-col>
+            </button>
+            <button almost-dark (click)="onClickAddButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="add"></ion-icon>
+                    <ion-icon name="folder"></ion-icon>
+                    <br> New folder
+                    <br>
+                </ion-col>
         </button>
-        <button almost-dark (click)="onClickParentButton()" [disabled]="parentButtonDisabled()" ion-row center>
-            <ion-col>
-                <ion-icon name="arrow-up"></ion-icon>
-                <ion-icon name="folder"></ion-icon>
-                <br> Go to parent
-                <br>
-            </ion-col>
-        </button>
-        <button almost-dark (click)="onClickAddButton()" ion-row center>
-            <ion-col>
-                <ion-icon name="add"></ion-icon>
-                <ion-icon name="folder"></ion-icon>
-                <br> New folder
-                <br>
-            </ion-col>
-        </button>
-    </div>
+        </div>
+    </toolbar>
 </ion-header>
 
 <ion-content>

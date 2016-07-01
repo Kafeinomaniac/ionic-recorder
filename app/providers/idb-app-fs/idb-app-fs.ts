@@ -8,7 +8,7 @@ import {
     IdbFS,
     TreeNode,
     DB_KEY_PATH
-} from '../idb/idb-fs';
+} from '../../services/idb/idb-fs';
 
 const DB_NAME: string = 'IdbAppFS';
 const DB_VERSION: number = 1;
