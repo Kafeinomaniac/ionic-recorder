@@ -22,7 +22,7 @@
         Folder:&nbsp;<span>{{getPath()}}</span>
     </span-->
 
-    <toolbar>
+    <ion-toolbar position="top" almost-dark>
         <div class="buttonbar3">
             <button almost-dark (click)="onClickSelectButton()" ion-row center>
                 <ion-col>
@@ -47,9 +47,9 @@
                     <br> New folder
                     <br>
                 </ion-col>
-        </button>
+            </button>
         </div>
-    </toolbar>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -81,42 +81,44 @@
 </ion-content>
 
 <ion-footer>
-    <div class="buttonbar5" *ngIf="nSelectedNodes()">
-        <button almost-dark (click)="onClickInfoButton()" ion-row center>
-            <ion-col>
-                <ion-icon name="information-circle"></ion-icon>
-                <br> Info
-                <br>
-            </ion-col>
-        </button>
-        <button almost-dark (click)="onClickMoveButton()" [disabled]="moveButtonDisabled()" ion-row center>
-            <ion-col>
-                <ion-icon name="share-alt"></ion-icon>
-                <ion-icon name="folder"></ion-icon>
-                <br> Move
-                <br>
-            </ion-col>
-        </button>
-        <button almost-dark (click)="onClickDeleteButton()" [disabled]="deleteButtonDisabled()" ion-row center>
-            <ion-col>
-                <ion-icon name="trash"></ion-icon>
-                <br> Delete
-                <br>
-            </ion-col>
-        </button>
-        <button almost-dark (click)="onClickShareButton()" ion-row center>
-            <ion-col>
-                <ion-icon name="md-share"></ion-icon>
-                <br> Share
-                <br>
-            </ion-col>
-        </button>
-        <button almost-dark (click)="onClickMoreButton()" ion-row center>
-            <ion-col>
-                <ion-icon name="more"></ion-icon>
-                <br> More
-                <br>
-            </ion-col>
-        </button>
-    </div>
+    <ion-toolbar position="bottom" almost-dark *ngIf="nSelectedNodes()">
+        <div class="buttonbar5">
+            <button almost-dark (click)="onClickInfoButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="information-circle"></ion-icon>
+                    <br> Info
+                    <br>
+                </ion-col>
+            </button>
+            <button almost-dark (click)="onClickMoveButton()" [disabled]="moveButtonDisabled()" ion-row center>
+                <ion-col>
+                    <ion-icon name="share-alt"></ion-icon>
+                    <ion-icon name="folder"></ion-icon>
+                    <br> Move
+                    <br>
+                </ion-col>
+            </button>
+            <button almost-dark (click)="onClickDeleteButton()" [disabled]="deleteButtonDisabled()" ion-row center>
+                <ion-col>
+                    <ion-icon name="trash"></ion-icon>
+                    <br> Delete
+                    <br>
+                </ion-col>
+            </button>
+            <button almost-dark (click)="onClickShareButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="md-share"></ion-icon>
+                    <br> Share
+                    <br>
+                </ion-col>
+            </button>
+            <button almost-dark (click)="onClickMoreButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="more"></ion-icon>
+                    <br> More
+                    <br>
+                </ion-col>
+            </button>
+        </div>
+    </ion-toolbar>
 </ion-footer>

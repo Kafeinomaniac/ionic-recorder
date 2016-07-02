@@ -85,16 +85,21 @@ export class LibraryPage {
      * @returns {void}
      */
     public ionViewWillEnter(): void {
-        this.selectedNodes =
-            this.idbAppState.getProperty('selectedNodes');
-
-        // swich folders, according to IdbAppState
-        this.switchFolder(
-            this.idbAppState.getProperty('lastViewedFolderKey'),
-            false);
-        console.log(
-            'LibraryPage:ionViewWillEnter(): lastViewedFolderKey=' +
-            this.idbAppState.getProperty('lastViewedFolderKey'));
+        this.idbAppState.getProperty('selectedNodes').subscribe(
+            (selectedNodes: any) => {
+                this.selectedNodes = selectedNodes;
+                this.idbAppState.getProperty('lastViewedFolderKey')
+                    .subscribe(
+                    (lastViewedFolderKey: any) => {
+                        // swich folders, according to IdbAppState
+                        this.switchFolder(lastViewedFolderKey, false);
+                        console.log(
+                            'LibraryPage:ionViewWillEnter(): ' +
+                            'lastViewedFolderKey=' +
+                            lastViewedFolderKey);
+                    });
+            }
+        );
     }
 
     /**
@@ -244,7 +249,7 @@ export class LibraryPage {
                         if (bSelectionChanged) {
                             this.idbAppState.updateProperty(
                                 'selectedNodes',
-                                this.selectedNodes);
+                                this.selectedNodes).subscribe();
                         }
                         else {
                             console.log('SUCCESS DELETING ALL');
@@ -429,7 +434,8 @@ export class LibraryPage {
 
         // update last viewed folder state in DB
         if (updateState) {
-            this.idbAppState.updateProperty('lastViewedFolderKey', key);
+            this.idbAppState.updateProperty('lastViewedFolderKey', key)
+                .subscribe();
         }
     }
 
@@ -472,7 +478,8 @@ export class LibraryPage {
         }
 
         // update state with new list of selected nodes
-        this.idbAppState.updateProperty('selectedNodes', this.selectedNodes);
+        this.idbAppState.updateProperty('selectedNodes', this.selectedNodes)
+            .subscribe();
     }
 
     /**
@@ -602,7 +609,7 @@ export class LibraryPage {
             // update state with new list of selected nodes
             this.idbAppState.updateProperty(
                 'selectedNodes',
-                this.selectedNodes);
+                this.selectedNodes).subscribe();
         }
     }
 

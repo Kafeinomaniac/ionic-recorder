@@ -121,7 +121,13 @@ export class IonicRecorderApp {
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
 
-            this.tabs.select(this.idbAppState.getProperty('lastTabIndex'));
+            this.idbAppState.getProperty('lastTabIndex').subscribe(
+                (lastTabIndex: number) => {
+                    console.log('initializeApp():lastTabIndex = ' +
+                        lastTabIndex);
+                    this.tabs.select(lastTabIndex);
+                }
+            );
         });
     }
 
@@ -131,7 +137,7 @@ export class IonicRecorderApp {
      */
     public onTabChange(selectedTab: Tab): void {
         let tabIndex: number = selectedTab.index;
-        // console.log('onTabChange: ' + tabIndex);
+        console.log('onTabChange: ' + tabIndex);
         if (tabIndex === 0) {
             //
             // hide tab 0 dynamically because if we hide it in the
@@ -144,7 +150,8 @@ export class IonicRecorderApp {
         else {
             // save in the DB the 'lastTabIndex' so that if we restart the app
             // it starts with the last tab you've visited last time you used it
-            this.idbAppState.updateProperty('lastTabIndex', tabIndex);
+            this.idbAppState.updateProperty('lastTabIndex', tabIndex)
+                .subscribe();
         }
     }
 

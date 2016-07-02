@@ -63,17 +63,20 @@ export class RecordPage {
         this.webAudioRecorder = webAudioRecorder;
 
         // initialize with "remembered" gain values
-        let gain: GainState = this.idbAppState.getProperty('gain');
-        this.gainFactor = gain.factor;
-        this.maxGainFactor = gain.maxFactor;
-        // this call, duplicated below, sets up the gain
-        // slider to show what we're setting gain to once
-        // the audio is ready.  before the audio is ready
-        // we still want to show the previous gain value.
-        // if we don't have this line below then it will
-        // always show up as gain == 0.
-        this.gainRangeSliderValue = 100 * gain.factor / gain.maxFactor;
-        this.onGainChange(this.gainRangeSliderValue);
+        this.idbAppState.getProperty('gain').subscribe(
+            (gain: GainState) => {
+                this.gainFactor = gain.factor;
+                this.maxGainFactor = gain.maxFactor;
+                // this call, duplicated below, sets up the gain
+                // slider to show what we're setting gain to once
+                // the audio is ready.  before the audio is ready
+                // we still want to show the previous gain value.
+                // if we don't have this line below then it will
+                // always show up as gain == 0.
+                this.gainRangeSliderValue = 100 * gain.factor / gain.maxFactor;
+                this.onGainChange(this.gainRangeSliderValue);
+            }
+        );
     }
 
     /**
@@ -119,7 +122,7 @@ export class RecordPage {
         this.idbAppState.updateProperty('gain', {
             factor: this.gainFactor,
             maxFactor: this.maxGainFactor
-        });
+        }).subscribe();
     }
 
     /**
