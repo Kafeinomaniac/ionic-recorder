@@ -1,8 +1,13 @@
 // Copyright (c) 2016 Tracktunes Inc
 
+// import {
+//     Observable
+// } from 'rxjs/Rx';
+
 import {
-    Observable
-} from 'rxjs/Rx';
+    Observable,
+    Subscribable
+} from 'rxjs/Observable';
 
 import {
     Injectable
@@ -57,6 +62,12 @@ export class IdbAppState extends IdbDict {
         this.loadFromDb().subscribe(
             () => {
                 this.isReady = true;
+            },
+            (error) => {
+                throw Error('IdbAppState():loadFromDb():' + error);
+            },
+            () => {
+                console.log('IdbAppState() done loading!');
             }
         );
     }
@@ -147,35 +158,22 @@ export class IdbAppState extends IdbDict {
         let source: Observable<void> = Observable.create((observer) => {
             this.waitForDB().subscribe(
                 () => {
-                    let keys: string[] = Object.keys(DEFAULT_STATE),
-                        key: string,
-                        value: any,
-                        nKeys: number = keys.length,
-                        i: number,
-                        nLoaded: number = 0;
-                    for (i = 0; i < nKeys; i++) {
-                        key = keys[i];
-                        value = DEFAULT_STATE[key];
-                        this.cachedState[key] = value;
-                        this.getOrAddValue(key, value).subscribe(
-                            (dbValue: any) => {
-                                if (dbValue !== value) {
+                    Observable.from(Object.keys(DEFAULT_STATE))
+                        .flatMap(key => {
+                            return this.getOrAddValue(key, DEFAULT_STATE[key])
+                                .map(dbValue => {
+                                    console.log('MAPPING!');
                                     this.cachedState[key] = dbValue;
-                                }
-                                nLoaded++;
-                                if (nLoaded === nKeys) {
-                                    observer.next();
-                                    observer.complete();
-                                }
-                            },
-                            (error) => {
-                                observer.error('loadFromDB():waitForDB():' +
-                                    'getOrAddValue(): ' + error);
-                            });
-                    }
+                                    return;
+                                });
+                        }).subscribe();
                 },
                 (error) => {
-                    observer.error('loadFromDB():waitForDB(): ' + error);
+                    observer.error('loadFromDb():waitForDb(): ' + error);
+                },
+                () => {
+                    observer.next();
+                    observer.complete();
                 });
         });
         return source;
