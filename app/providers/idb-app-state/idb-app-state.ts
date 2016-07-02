@@ -116,7 +116,7 @@ export class IdbAppState extends IdbDict {
                 () => {
                     if (this.cachedState[key] === value) {
                         observer.next(false);
-                        observer.continue();
+                        observer.complete();
                     }
                     else {
                         this.cachedState[key] = value;
