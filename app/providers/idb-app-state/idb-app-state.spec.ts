@@ -31,8 +31,12 @@ describe('When idbAppState initialized', () => {
     it('can read lastTabIndex to be 1', (done) => {
         setTimeout(
             () => {
-                expect(idbAppState.getProperty('lastTabIndex')).toBe(1);
-                done();
+                idbAppState.getProperty('lastTabIndex').subscribe(
+                    (idx: number) => {
+                        expect(idx).toBe(1);
+                        done();
+                    }
+                );
             },
             WAIT_MSEC);
     });
@@ -40,28 +44,15 @@ describe('When idbAppState initialized', () => {
     it('can update lastTabIndex to be 2', (done) => {
         setTimeout(
             () => {
-                idbAppState.updateProperty('lastTabIndex', 2);
-                expect(idbAppState.getProperty('lastTabIndex')).toBe(2);
-                done();
-            },
-            WAIT_MSEC);
-    });
-
-    it('can read lastTabIndex to be 2', (done) => {
-        setTimeout(
-            () => {
-                expect(idbAppState.getProperty('lastTabIndex')).toBe(2);
-                done();
-            },
-            WAIT_MSEC);
-    });
-
-    it('can update lastTabIndex to be 1', (done) => {
-        setTimeout(
-            () => {
-                idbAppState.updateProperty('lastTabIndex', 1);
-                expect(idbAppState.getProperty('lastTabIndex')).toBe(1);
-                done();
+                idbAppState.updateProperty('lastTabIndex', 2).subscribe(
+                    (bUpdated: boolean) => {
+                        expect(bUpdated).toBe(true);
+                        idbAppState.getProperty('lastTabIndex').subscribe(
+                            (prop: any) => {
+                                expect(prop).toBe(2);
+                                done();
+                            });
+                    });
             },
             WAIT_MSEC);
     });
