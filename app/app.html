@@ -12,8 +12,10 @@
     </ion-content>
 </ion-menu>
 
-<!-- commenting next line out, no longer preloading tabs, see
-     https://github.com/driftyco/ionic/issues/7109
+<!-- 
+    no longer preloading tabs, see
+    https://github.com/driftyco/ionic/issues/7109
+
 <ion-tabs #navTabs preloadTabs="true" (ionChange)="onTabChange($event)" [selectedIndex]="0">
 -->
 <ion-tabs #navTabs preloadTabs="false" (ionChange)="onTabChange($event)" [selectedIndex]="0">

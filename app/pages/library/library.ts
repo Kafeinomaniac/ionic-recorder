@@ -6,8 +6,7 @@ import {
 
 import {
     NavController,
-    Modal,
-    Alert
+    Modal
 } from 'ionic-angular';
 
 import {
@@ -25,6 +24,10 @@ import {
 import {
     isPositiveWholeNumber
 } from '../../services/utils/utils';
+
+import {
+    askAndDo
+} from '../../services/utils/alerts';
 
 import {
     IdbAppState
@@ -120,47 +123,6 @@ export class LibraryPage {
     }
 
     /**
-     * Helper function to pop up questions and act upon user choice
-     * @param {string} question
-     * @param {string} button1Text
-     * @param {()=>void} action1
-     * @param {string} button2Text
-     * @param {()=>void} action2
-     * @returns {void}
-     */
-    private alertAndDo(
-        question: string,
-        button1Text: string,
-        action1: () => void,
-        button2Text?: string,
-        action2?: () => void
-    ): void {
-
-        let alert: Alert = Alert.create();
-
-        alert.setTitle(question);
-
-        if (!action2) {
-            alert.addButton('Cancel');
-        }
-
-        alert.addButton({
-            text: button1Text,
-            handler: action1()
-        });
-
-        if (action2) {
-            alert.addButton({
-                text: button2Text,
-                handler: action2()
-            });
-            alert.addButton('Cancel');
-        }
-        // TODO: check if we need the empty call to .then() here
-        this.nav.present(alert).then();
-    }
-
-    /**
      * Moves items in DB and in UI when move button is clicked
      * @returns {void}
      */
@@ -215,7 +177,8 @@ export class LibraryPage {
         if (!nNodes) {
             alert('wow no way!');
         }
-        this.alertAndDo(
+        askAndDo(
+            this.nav,
             'Permanently delete ' + nNodes + ' item' +
             (nNodes > 1 ? 's?' : '?'),
             'Ok', () => {
@@ -282,7 +245,8 @@ export class LibraryPage {
 
         if (nSelectedNodesNotHere) {
             if (nSelectedNodesHere) {
-                this.alertAndDo(
+                askAndDo(
+                    this.nav,
                     [
                         'You have ', nSelectedNodesNotHere,
                         ' selected item',
@@ -323,8 +287,9 @@ export class LibraryPage {
      */
     public onClickDeleteButton(): void {
         if (this.selectedNodes[UNFILED_FOLDER_KEY]) {
-
-            this.alertAndDo(
+            console.log('onClickDeleteButton()');
+            askAndDo(
+                this.nav,
                 [
                     'The Unfiled folder is selected for deletion, ',
                     'but the Unfiled folder cannot be deleted. Unselect it ',
@@ -529,6 +494,7 @@ export class LibraryPage {
             parentPath: this.getPath(),
             parentItems: this.folderItems
         });
+        console.log('onClickAddButton() - nav: ' + this.nav);
 
         this.nav.present(addFolderModal);
 
@@ -634,7 +600,8 @@ export class LibraryPage {
      * @returns {void}
      */
     public onClickSelectButton(): void {
-        this.alertAndDo(
+        askAndDo(
+            this.nav,
             'Select which, in<br> ' + this.folderNode.name,
             'All',
             () => {

@@ -1,12 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-// import {
-//     Observable
-// } from 'rxjs/Rx';
-
 import {
-    Observable,
-    Subscribable
+    Observable
 } from 'rxjs/Observable';
 
 import {

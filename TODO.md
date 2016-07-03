@@ -5,6 +5,8 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* save files to app fs from record.ts, then work on audio player
+  interface, then on web-audio-player - get playback to work.
 * sliders
 * fix library page issues
 * merge app-state and idb-app-state?

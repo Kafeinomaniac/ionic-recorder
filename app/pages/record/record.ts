@@ -22,6 +22,10 @@ import {
     IdbAppFS
 } from '../../providers/idb-app-fs/idb-app-fs';
 
+import {
+    Range
+} from 'ionic-angular';
+
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
 
@@ -33,7 +37,7 @@ const PAUSE_ICON: string = 'pause';
 @Component({
     templateUrl: 'build/pages/record/record.html',
     providers: [WebAudioRecorder],
-    directives: [VuGauge]
+    directives: [VuGauge, Range]
 })
 export class RecordPage {
     private idbAppState: IdbAppState;
