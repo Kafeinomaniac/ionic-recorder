@@ -19,7 +19,8 @@ import {
 } from '../../providers/web-audio/web-audio-recorder';
 
 import {
-    IdbAppFS
+    IdbAppFS,
+    UNFILED_FOLDER_KEY
 } from '../../providers/idb-app-fs/idb-app-fs';
 
 import {
@@ -165,6 +166,11 @@ export class RecordPage {
                 this.webAudioRecorder.dbFileName +
                 ', nChunks=' + this.webAudioRecorder.dbKeys.length +
                 ', chunks=' + this.webAudioRecorder.dbKeys);
+                this.idbAppFS.createNode(
+                    this.webAudioRecorder.dbFileName,
+                    UNFILED_FOLDER_KEY,
+                    this.webAudioRecorder.dbKeys
+                ).subscribe();
         });
     }
 }
