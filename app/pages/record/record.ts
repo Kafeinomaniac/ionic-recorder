@@ -15,7 +15,8 @@ import {
 
 import {
     WebAudioRecorder,
-    RecorderStatus
+    RecorderStatus,
+    RecordingInfo
 } from '../../providers/web-audio/web-audio-recorder';
 
 import {
@@ -161,22 +162,15 @@ export class RecordPage {
      */
     public onClickStopButton(): void {
         this.recordButtonIcon = START_RESUME_ICON;
-        this.webAudioRecorder.stop().subscribe(() => {
-            console.log('Done recording, filname=' +
-                this.webAudioRecorder.dbFileName +
-                ', nChunks=' + this.webAudioRecorder.dbKeys.length +
-                ', chunks=' + this.webAudioRecorder.dbKeys);
-            let keys: number[] = this.webAudioRecorder.dbKeys,
-                firstKey: number = keys[0],
-                keyRange: number[] = [
-                    firstKey,
-                    firstKey + keys.length
-                ];
-            this.idbAppFS.createNode(
-                this.webAudioRecorder.dbFileName,
-                UNFILED_FOLDER_KEY,
-                keyRange
-            ).subscribe();
-        });
+        this.webAudioRecorder.stop().subscribe(
+            (recordingInfo: RecordingInfo) => {
+                let fileName: string = recordingInfo.fileName;
+                delete recordingInfo['fileName'];
+                this.idbAppFS.createNode(
+                    fileName,
+                    UNFILED_FOLDER_KEY,
+                    recordingInfo
+                ).subscribe();
+            });
     }
 }

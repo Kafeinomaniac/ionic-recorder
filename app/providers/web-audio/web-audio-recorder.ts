@@ -61,6 +61,15 @@ export enum RecorderStatus {
     READY_STATE
 }
 
+export interface RecordingInfo {
+    fileName: string;
+    sampleRate: number;
+    nSamples: number;
+    iStartChunk: number;
+    nChunks: number;
+    iLastSample: number;
+}
+
 /**
  * @name WebAudioRecorder
  * @description
@@ -77,8 +86,8 @@ export class WebAudioRecorder {
     private intervalId: NodeJS.Timer;
     private nRecordedProcessingBuffers: number;
     private nRecordedSamples: number;
-    public dbFileName: string;
-    public dbKeys: number[];
+    private dbFileName: string;
+    private dbKeys: number[];
     private setter: DoubleBufferSetter;
 
     public status: RecorderStatus;
@@ -390,15 +399,23 @@ export class WebAudioRecorder {
      * Stop recording
      * @returns {void}
      */
-    public stop(): Observable<void> {
+    public stop(): Observable<RecordingInfo> {
         this.isRecording = false;
         this.isInactive = true;
         this.nRecordedProcessingBuffers = 0;
-        let source: Observable<void> = Observable.create((observer) => {
+        let src: Observable<RecordingInfo> = Observable.create((observer) => {
+            let recordingInfo: RecordingInfo = {
+                fileName: this.dbFileName,
+                sampleRate: this.sampleRate,
+                nSamples: this.nRecordedSamples,
+                iStartChunk: this.dbKeys[0],
+                nChunks: this.dbKeys.length,
+                iLastSample: this.setter.bufferIndex
+            };
             if (this.setter.bufferIndex === 0) {
                 // no leftovers: rare that we reach here due to no leftovers
                 // but we also reach here during the constructor call
-                observer.next();
+                observer.next(recordingInfo);
                 observer.complete();
             }
             // save leftover partial buffer
@@ -408,11 +425,12 @@ export class WebAudioRecorder {
                 (key: number) => {
                     // increment the buffers-saved counter
                     this.dbKeys.push(key);
+                    recordingInfo.nChunks++;
                     console.log('saved final chunk ' + this.dbKeys.length);
-                    observer.next();
+                    observer.next(recordingInfo);
                     observer.complete();
                 });
         });
-        return source;
+        return src;
     }
 }
