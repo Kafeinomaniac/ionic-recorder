@@ -177,8 +177,7 @@ export class LibraryPage {
         if (!nNodes) {
             alert('wow no way!');
         }
-        askAndDo(
-            this.nav,
+        this.nav.present(askAndDo(
             'Permanently delete ' + nNodes + ' item' +
             (nNodes > 1 ? 's?' : '?'),
             'Ok', () => {
@@ -219,7 +218,7 @@ export class LibraryPage {
                         }
                     }
                 );
-            });
+            }));
     }
 
     /**
@@ -245,8 +244,7 @@ export class LibraryPage {
 
         if (nSelectedNodesNotHere) {
             if (nSelectedNodesHere) {
-                askAndDo(
-                    this.nav,
+                this.nav.present(askAndDo(
                     [
                         'You have ', nSelectedNodesNotHere,
                         ' selected item',
@@ -268,7 +266,7 @@ export class LibraryPage {
                         console.log('yes action');
                         this.deleteNodes(selectedNodesHere);
                     }
-                );
+                ));
             }
             else {
                 // nothing selected in this folder, but stuff selected outside
@@ -288,8 +286,7 @@ export class LibraryPage {
     public onClickDeleteButton(): void {
         if (this.selectedNodes[UNFILED_FOLDER_KEY]) {
             console.log('onClickDeleteButton()');
-            askAndDo(
-                this.nav,
+            this.nav.present(askAndDo(
                 [
                     'The Unfiled folder is selected for deletion, ',
                     'but the Unfiled folder cannot be deleted. Unselect it ',
@@ -300,7 +297,7 @@ export class LibraryPage {
                     delete this.selectedNodes[UNFILED_FOLDER_KEY];
                     this.checkIfDeletingInOtherFolders();
                 }
-            );
+            ));
         }
         else {
             this.checkIfDeletingInOtherFolders();
@@ -600,8 +597,7 @@ export class LibraryPage {
      * @returns {void}
      */
     public onClickSelectButton(): void {
-        askAndDo(
-            this.nav,
+        this.nav.present(askAndDo(
             'Select which, in<br> ' + this.folderNode.name,
             'All',
             () => {
@@ -610,6 +606,6 @@ export class LibraryPage {
             'None',
             () => {
                 this.selectNoneInFolder();
-            });
+            }));
     }
 }

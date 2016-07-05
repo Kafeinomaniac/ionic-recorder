@@ -1,7 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    NavController,
     Alert
 } from 'ionic-angular';
 
@@ -15,13 +14,12 @@ import {
  * @returns {void}
  */
 export function askAndDo(
-    nav: NavController,
     question: string,
     button1Text: string,
     action1: () => void,
     button2Text?: string,
     action2?: () => void
-): void {
+): Alert {
     'use strict';
 
     let alert: Alert = Alert.create();
@@ -45,5 +43,5 @@ export function askAndDo(
         alert.addButton('Cancel');
     }
 
-    nav.present(alert);
+    return alert;
 }
