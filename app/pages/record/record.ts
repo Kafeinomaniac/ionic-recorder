@@ -166,11 +166,17 @@ export class RecordPage {
                 this.webAudioRecorder.dbFileName +
                 ', nChunks=' + this.webAudioRecorder.dbKeys.length +
                 ', chunks=' + this.webAudioRecorder.dbKeys);
-                this.idbAppFS.createNode(
-                    this.webAudioRecorder.dbFileName,
-                    UNFILED_FOLDER_KEY,
-                    this.webAudioRecorder.dbKeys
-                ).subscribe();
+            let keys: number[] = this.webAudioRecorder.dbKeys,
+                firstKey: number = keys[0],
+                keyRange: number[] = [
+                    firstKey,
+                    firstKey + keys.length
+                ];
+            this.idbAppFS.createNode(
+                this.webAudioRecorder.dbFileName,
+                UNFILED_FOLDER_KEY,
+                keyRange
+            ).subscribe();
         });
     }
 }
