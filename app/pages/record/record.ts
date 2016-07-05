@@ -159,7 +159,12 @@ export class RecordPage {
      * @returns {void}
      */
     public onClickStopButton(): void {
-        this.webAudioRecorder.stop();
         this.recordButtonIcon = START_RESUME_ICON;
+        this.webAudioRecorder.stop().subscribe(() => {
+            console.log('Done recording, filname=' +
+                this.webAudioRecorder.dbFileName +
+                ', nChunks=' + this.webAudioRecorder.dbKeys.length +
+                ', chunks=' + this.webAudioRecorder.dbKeys);
+        });
     }
 }

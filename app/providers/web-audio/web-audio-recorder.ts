@@ -1,6 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
+    Observable
+} from 'rxjs/Rx';
+
+import {
     Injectable
 } from '@angular/core';
 
@@ -73,8 +77,8 @@ export class WebAudioRecorder {
     private intervalId: NodeJS.Timer;
     private nRecordedProcessingBuffers: number;
     private nRecordedSamples: number;
-    private dbFileName: string;
-    private dbKeys: number[];
+    public dbFileName: string;
+    public dbKeys: number[];
     private setter: DoubleBufferSetter;
 
     public status: RecorderStatus;
@@ -386,23 +390,29 @@ export class WebAudioRecorder {
      * Stop recording
      * @returns {void}
      */
-    public stop(): void {
+    public stop(): Observable<void> {
         this.isRecording = false;
         this.isInactive = true;
         this.nRecordedProcessingBuffers = 0;
-        if (this.setter.bufferIndex === 0) {
-            // no leftovers: rare that we reach here due to no leftovers
-            // but we also reach here during the constructor call
-            return;
-        }
-        // save leftover partial buffer
-        this.idb.addRecording(
-            this.setter.activeBuffer.subarray(0, this.setter.bufferIndex)
-        ).subscribe(
-            (key: number) => {
-                // increment the buffers-saved counter
-                this.dbKeys.push(key);
-                console.log('saved final chunk ' + this.dbKeys.length);
-            });
+        let source: Observable<void> = Observable.create((observer) => {
+            if (this.setter.bufferIndex === 0) {
+                // no leftovers: rare that we reach here due to no leftovers
+                // but we also reach here during the constructor call
+                observer.next();
+                observer.complete();
+            }
+            // save leftover partial buffer
+            this.idb.addRecording(
+                this.setter.activeBuffer.subarray(0, this.setter.bufferIndex)
+            ).subscribe(
+                (key: number) => {
+                    // increment the buffers-saved counter
+                    this.dbKeys.push(key);
+                    console.log('saved final chunk ' + this.dbKeys.length);
+                    observer.next();
+                    observer.complete();
+                });
+        });
+        return source;
     }
 }
