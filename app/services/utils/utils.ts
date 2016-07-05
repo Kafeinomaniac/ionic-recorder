@@ -55,7 +55,7 @@ export function isString(obj: any): boolean {
  */
 export function isPositiveWholeNumber(num: number): boolean {
     'use strict';
-    return (
+    return <boolean>(
         num &&
         !isNaN(num) &&
         num > 0 &&
@@ -99,7 +99,7 @@ export function formatTime(
             let nHours: number = Math.floor(nMinutes / 60.0);
             nMinutes -= nHours * 60;
             result = nHours.toString() + ':' + addZero(nMinutes) +
-                nMinutes.toString() + result;
+                nMinutes + result;
         }
     }
     return result;
