@@ -22,8 +22,7 @@ import {
 } from '../../providers/idb-app-fs/idb-app-fs';
 
 import {
-    isPositiveWholeNumber,
-    objectInspector
+    isPositiveWholeNumber
 } from '../../services/utils/utils';
 
 import {
