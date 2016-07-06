@@ -54,17 +54,26 @@
 
 <ion-content>
     <ion-list *ngIf="folderNode" class="file-folder-list">
-        <ion-list-header *ngIf="folderNode" class="library-page-path-message">
-            Folder:&nbsp;<span>{{getPath()}}</span>
+        <ion-list-header almost-dark *ngIf="folderNode" class="library-page-path-message">
+            <div>
+                <button almost-dark (click)="onClickAddButton()" ion-row center>
+                    <ion-icon name="square-outline"></ion-icon>
+                    &nbsp;&nbsp;
+                    <ion-icon name="md-arrow-dropdown"></ion-icon>
+                </button>
+                <span class="list-header-path">
+                    {{getPath()}}
+                </span>
+            </div>
         </ion-list-header>
         <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
             <ion-label button clear (click)="onClickListItem(folderItems[i])">
-                <span *ngIf="folderItems[i].dataKey">
+                <span *ngIf="folderItems[i].data">
                 <ion-icon name="play" medium-gray>
                 </ion-icon>
                 &nbsp;
                 </span>
-                <ion-icon *ngIf="!folderItems[i].dataKey" name="folder" medium-gray>
+                <ion-icon *ngIf="!folderItems[i].data" name="folder" medium-gray>
                 </ion-icon>
                 {{folderItems[i].name}}
             </ion-label>

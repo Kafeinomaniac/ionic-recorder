@@ -7,7 +7,7 @@
         </button>
         <ion-title>Record</ion-title>
         <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
-            <button small (click)="recorder.resetPeaks()">
+            <button small (click)="webAudioRecorder.resetPeaks()">
             <ion-badge darkest-gray item-right>
                 {{webAudioRecorder.percentPeaksAtMax}}% peaks @ max
             </ion-badge>

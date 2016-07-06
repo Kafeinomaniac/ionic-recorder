@@ -108,6 +108,20 @@ ion-content ion-list.file-folder-list {
         color: map-get($colors, logo-orange);
     }
 }
+ion-content ion-list ion-list-header div {
+    ion-label {
+        // this makes the list header vertically thinner
+        margin: 0;
+    }
+
+    span.list-header-path {
+        cursor: arrow;
+        display: inline-block;
+        text-align: center;
+        line-height: 34px;
+        width: 100%;
+    }
+}
 
 #audio-player-audio-tag {
     // padding: 1em;

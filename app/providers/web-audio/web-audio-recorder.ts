@@ -217,8 +217,8 @@ export class WebAudioRecorder {
                 this.currentVolume = absValue;
             }
 
-            // fill up double-buffer active buffer if recording and
-            // save each time a fill-up occurs
+            // fill up double-buffer active buffer if recording (and
+            // save every time a fill-up occurs)
             if (this.isRecording) {
                 this.setter.setNext(value * 0x7FFF);
                 this.nRecordedSamples++;

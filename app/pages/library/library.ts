@@ -22,7 +22,8 @@ import {
 } from '../../providers/idb-app-fs/idb-app-fs';
 
 import {
-    isPositiveWholeNumber
+    isPositiveWholeNumber,
+    objectInspector
 } from '../../services/utils/utils';
 
 import {
@@ -72,11 +73,9 @@ export class LibraryPage {
         idbAppState: IdbAppState
     ) {
         console.log('constructor():LibraryPage');
-
         this.nav = nav;
         this.idbAppFS = idbAppFS;
         this.idbAppState = idbAppState;
-
         this.folderNode = null;
         this.folderItems = {};
         this.selectedNodes = {};
@@ -180,7 +179,8 @@ export class LibraryPage {
         this.nav.present(askAndDo(
             'Permanently delete ' + nNodes + ' item' +
             (nNodes > 1 ? 's?' : '?'),
-            'Ok', () => {
+            'Ok',
+            () => {
                 console.log('Library::deleteNodes(): deleting ' + nNodes +
                     ' selected items ...');
                 this.idbAppFS.deleteNodes(keyDict).subscribe(
@@ -491,7 +491,9 @@ export class LibraryPage {
             parentPath: this.getPath(),
             parentItems: this.folderItems
         });
-        console.log('onClickAddButton() - nav: ' + this.nav);
+
+        console.log('onClickAddButton() - nav: ' +
+            this.nav);
 
         this.nav.present(addFolderModal);
 
@@ -597,15 +599,19 @@ export class LibraryPage {
      * @returns {void}
      */
     public onClickSelectButton(): void {
-        this.nav.present(askAndDo(
-            'Select which, in<br> ' + this.folderNode.name,
-            'All',
-            () => {
-                this.selectAllInFolder();
-            },
-            'None',
-            () => {
-                this.selectNoneInFolder();
-            }));
+        console.log('onClickSelectButton()');
+        this.nav.present(
+            askAndDo(
+                'Select which, in<br>' + this.folderNode.name,
+                'All',
+                () => {
+                    console.log('action1 doing it now');
+                    this.selectAllInFolder();
+                },
+                'None',
+                () => {
+                    console.log('action2 doing it now');
+                    this.selectNoneInFolder();
+                }));
     }
 }

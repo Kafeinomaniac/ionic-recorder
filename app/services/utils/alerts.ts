@@ -8,10 +8,10 @@ import {
  * Helper function to pop up questions and act upon user choice
  * @param {string} question
  * @param {string} button1Text
- * @param {()=>void} action1
+ * @param {() => void} action1
  * @param {string} button2Text
- * @param {()=>void} action2
- * @returns {void}
+ * @param {() => void} action2
+ * @returns {Alert}
  */
 export function askAndDo(
     question: string,
@@ -21,6 +21,13 @@ export function askAndDo(
     action2?: () => void
 ): Alert {
     'use strict';
+
+    console.log('askAndDo(' + question + ')');
+    // console.log('question: ' + question);
+    // console.log('button1Text: ' + button1Text);
+    // console.log('action1: ' + action1);
+    // console.log('button2Text: ' + button2Text);
+    // console.log('action2: ' + action2);
 
     let alert: Alert = Alert.create();
 
@@ -32,13 +39,13 @@ export function askAndDo(
 
     alert.addButton({
         text: button1Text,
-        handler: action1()
+        handler: action1
     });
 
     if (action2) {
         alert.addButton({
             text: button2Text,
-            handler: action2()
+            handler: action2
         });
         alert.addButton('Cancel');
     }
