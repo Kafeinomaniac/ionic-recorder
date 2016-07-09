@@ -60,7 +60,7 @@ export class LibraryPage {
     private selectedNodes: KeyDict;
     private totalSelectedCounter: number;
     private playerTitle: string;
-    private playerBlob: Blob;
+    // private playerBlob: Blob;
 
     /**
      * @constructor
@@ -449,7 +449,7 @@ export class LibraryPage {
      */
     public onClickListItem(node: TreeNode): void {
         console.log('onClickListItem');
-        const nodeKey: number = node[DB_KEY_PATH];
+        // const nodeKey: number = node[DB_KEY_PATH];
         if (IdbAppFS.isFolderNode(node)) {
             // it's a folder! switch to it
             this.switchFolder(node[DB_KEY_PATH], true);
