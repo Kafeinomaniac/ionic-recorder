@@ -59,7 +59,7 @@ export class AudioPlayer implements OnChanges {
         this.hidden = true;
     }
 
-    public onPositionChange(position: number) {
+    public onPositionChange(position: number): void {
         console.log('onPositionChange(' + position + ')');
     }
 
