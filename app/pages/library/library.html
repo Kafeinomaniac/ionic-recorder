@@ -2,16 +2,21 @@
 
 <ion-header>
     <ion-navbar no-border-bottom almost-dark>
+
         <button menuToggle>
-        <ion-icon name="menu"></ion-icon>
-    </button>
-        <ion-title>Library</ion-title>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+
+        <ion-title *ngIf="folderNode">
+            Library
+        </ion-title>
+
         <ion-buttons end *ngIf="nSelectedNodes()">
             <button small (click)="onClickTotalSelected()">
-            <ion-badge darkest-gray item-right>
-                {{nSelectedNodes()}} selected
-            </ion-badge>
-        </button>
+                <ion-badge darkest-gray item-right>
+                    {{nSelectedNodes()}} selected
+                </ion-badge>
+            </button>
         </ion-buttons>
     </ion-navbar>
 
@@ -24,19 +29,26 @@
 
     <ion-toolbar position="top" almost-dark>
         <div class="buttonbar3">
-            <button almost-dark (click)="onClickSelectButton()" ion-row center>
+            <button almost-dark (click)="onClickHomeButton()" ion-row center>
                 <ion-col>
-                    <ion-icon name="radio-button-off"></ion-icon>
+                    <ion-icon name="home"></ion-icon>
+                    <br> Home
+                    <br>
+                </ion-col>
+            </button>
+            <!--<button almost-dark (click)="onClickSelectButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="square-outline"></ion-icon>
                     <ion-icon name="md-arrow-dropdown"></ion-icon>
                     <br> Selection
                     <br>
                 </ion-col>
-            </button>
+            </button>-->
             <button almost-dark (click)="onClickParentButton()" [disabled]="parentButtonDisabled()" ion-row center>
                 <ion-col>
                     <ion-icon name="arrow-up"></ion-icon>
                     <ion-icon name="folder"></ion-icon>
-                    <br> Go to parent
+                    <br> To parent
                     <br>
                 </ion-col>
             </button>
@@ -54,38 +66,38 @@
 
 <ion-content>
     <ion-list *ngIf="folderNode" class="file-folder-list">
-        <ion-list-header almost-dark *ngIf="folderNode" class="library-page-path-message">
-            <div>
-                <button almost-dark (click)="onClickAddButton()" ion-row center>
+        <ion-item-group>
+            <ion-item-divider sticky dark *ngIf="folderNode">
+                <button dark (click)="onClickAddButton()" ion-row center>
                     <ion-icon name="square-outline"></ion-icon>
                     &nbsp;&nbsp;
                     <ion-icon name="md-arrow-dropdown"></ion-icon>
                 </button>
-                <span class="list-header-path">
+                <button clear>
                     {{getPath()}}
-                </span>
-            </div>
-        </ion-list-header>
-        <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
-            <ion-label button clear (click)="onClickListItem(folderItems[i])">
-                <span *ngIf="folderItems[i].data">
+                </button>
+            </ion-item-divider>
+            <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
+                <ion-label button clear (click)="onClickListItem(folderItems[i])">
+                    <span *ngIf="folderItems[i].data">
                 <ion-icon name="play" medium-gray>
                 </ion-icon>
                 &nbsp;
                 </span>
-                <ion-icon *ngIf="!folderItems[i].data" name="folder" medium-gray>
-                </ion-icon>
-                {{folderItems[i].name}}
-            </ion-label>
-            <ion-checkbox [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])" medium-gray item-left>
-            </ion-checkbox>
-            <button clear item-right>
+                    <ion-icon *ngIf="!folderItems[i].data" name="folder" medium-gray>
+                    </ion-icon>
+                    {{folderItems[i].name}}
+                </ion-label>
+                <ion-checkbox [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])" medium-gray item-left>
+                </ion-checkbox>
+                <button clear item-right>
                 <ion-icon name="more"></ion-icon>
             </button>
-        </ion-item>
-        <ion-item class="library-empty-folder-message" *ngIf="!folderNode.childOrder.length">
-            <h2>This folder is empty</h2>
-        </ion-item>
+            </ion-item>
+            <ion-item class="library-empty-folder-message" *ngIf="!folderNode.childOrder.length">
+                <h2>This folder is empty</h2>
+            </ion-item>
+        </ion-item-group>
     </ion-list>
 </ion-content>
 

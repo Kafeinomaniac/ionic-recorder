@@ -35,10 +35,7 @@ export class IdbAppData extends Idb {
         console.log('constructor():IdbAppData');
     }
 
-    public addRecording(
-        item: Uint16Array,
-        itemCB?: (item: Uint16Array, key?: number) => Uint16Array
-    ): Observable<number> {
-        return this.create<Uint16Array>(STORE_NAME, item, itemCB);
+    public addChunk(item: Uint16Array): Observable<number> {
+        return this.create<Uint16Array>(STORE_NAME, item);
     }
 }

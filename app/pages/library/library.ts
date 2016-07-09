@@ -108,7 +108,7 @@ export class LibraryPage {
      * @returns {string} folder path, represented as a string
      */
     public getPath(): string {
-        let path: string = this.folderNode.path + '/' + this.folderNode.name;
+        const path: string = this.folderNode.path + '/' + this.folderNode.name;
         return (path === '/') ? path : path.slice(1);
     }
 
@@ -448,6 +448,7 @@ export class LibraryPage {
      * @returns {void}
      */
     public onClickListItem(node: TreeNode): void {
+        console.log('onClickListItem');
         const nodeKey: number = node[DB_KEY_PATH];
         if (IdbAppFS.isFolderNode(node)) {
             // it's a folder! switch to it
@@ -459,14 +460,14 @@ export class LibraryPage {
             // setting this.playerTitle triggers the audio
             // player to make itself visible
             this.playerTitle = node.name;
-            this.idbAppFS.readNode(nodeKey).subscribe(
-                (readNode: TreeNode) => {
-                    // dataNode.data is the Blob object to play
-                    // setting this.playerBlob triggers the audio
-                    // player ngOnChanges to load/play the blob
-                    this.playerBlob = readNode.data;
-                }
-            ); // readNodeData(node).subscribe(
+            // this.idbAppFS.readNode(nodeKey).subscribe(
+            //     (readNode: TreeNode) => {
+            //         // dataNode.data is the Blob object to play
+            //         // setting this.playerBlob triggers the audio
+            //         // player ngOnChanges to load/play the blob
+            //         this.playerBlob = readNode.data;
+            //     }
+            // ); // readNodeData(node).subscribe(
         } // if (IdbAppFS.isFolderNode(node)) { .. else { ..
     }
 

@@ -124,7 +124,7 @@ export class WebAudioRecorder {
         this.initAudio();
 
         this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
-            this.idb.addRecording(this.setter.activeBuffer).subscribe(
+            this.idb.addChunk(this.setter.activeBuffer).subscribe(
                 (key: number) => {
                     // increment the buffers-saved counter
                     this.dbKeys.push(key);
@@ -419,7 +419,7 @@ export class WebAudioRecorder {
                 observer.complete();
             }
             // save leftover partial buffer
-            this.idb.addRecording(
+            this.idb.addChunk(
                 this.setter.activeBuffer.subarray(0, this.setter.bufferIndex)
             ).subscribe(
                 (key: number) => {

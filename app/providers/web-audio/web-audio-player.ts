@@ -12,37 +12,33 @@ import {
     formatTime
 } from '../../services/utils/utils';
 
-///////////////////////////////////////////////////////////////////////////////
-// PLAYER
-///////////////////////////////////////////////////////////////////////////////
-
-function setString(dataView: DataView, offset: number, str: string): void {
-    'use strict';
-    let len: number = str.length, i: number;
-    for (i = 0; i < len; i++) {
-        dataView.setUint8(offset + i, str.charCodeAt(i));
-    }
-}
-
-export function uint16ArrayToBlobWAV(uint16Array: Uint16Array): Blob {
-    'use strict';
-    let arrayByteLength: number = uint16Array.byteLength,
-        headerView: DataView = new DataView(new ArrayBuffer(44));
-    setString(headerView, 0, 'RIFF');
-    headerView.setUint32(4, 36 + arrayByteLength);
-    setString(headerView, 8, 'WAVE');
-    setString(headerView, 12, 'fmt ');
-    headerView.setUint32(16, 16, true);
-    headerView.setUint16(20, 1, true);
-    headerView.setUint16(22, this.numChannels, true);
-    headerView.setUint32(24, this.sampleRate, true);
-    headerView.setUint32(28, this.sampleRate * 4, true);
-    headerView.setUint16(32, this.numChannels * 2, true);
-    headerView.setUint16(34, 16, true);
-    setString(headerView, 36, 'data');
-    headerView.setUint32(40, arrayByteLength, true);
-    return new Blob([headerView, uint16Array], { type: 'audio/wav' });
-}
+// function uint16ArrayToBlobWAV(uint16Array: Uint16Array): Blob {
+//     'use strict';
+//     let arrayByteLength: number = uint16Array.byteLength,
+//         headerView: DataView = new DataView(new ArrayBuffer(44)),
+//         setString: (dataView: DataView, offset: number, str: string) => void =
+//             (dataView: DataView, offset: number, str: string) => {
+//                 let len: number = str.length, i: number;
+//                 for (i = 0; i < len; i++) {
+//                     dataView.setUint8(offset + i, str.charCodeAt(i));
+//                 }
+//             },
+//         nChannels: number = 1;
+//     setString(headerView, 0, 'RIFF');
+//     headerView.setUint32(4, 36 + arrayByteLength);
+//     setString(headerView, 8, 'WAVE');
+//     setString(headerView, 12, 'fmt ');
+//     headerView.setUint32(16, 16, true);
+//     headerView.setUint16(20, 1, true);
+//     headerView.setUint16(22, nChannels, true);
+//     headerView.setUint32(24, AUDIO_CONTEXT.sampleRate, true);
+//     headerView.setUint32(28, AUDIO_CONTEXT.sampleRate * 4, true);
+//     headerView.setUint16(32, nChannels * 2, true);
+//     headerView.setUint16(34, 16, true);
+//     setString(headerView, 36, 'data');
+//     headerView.setUint32(40, arrayByteLength, true);
+//     return new Blob([headerView, uint16Array], { type: 'audio/wav' });
+// }
 
 /**
  * @name WebAudioPlayer
@@ -238,5 +234,22 @@ export class WebAudioPlayer {
      */
     public positionSeek(position: number): void {
         this.timeSeek(position * this.duration);
+    }
+
+    // TODO: functions below are just games doing a top-down design for multi-
+    // buffer playback.  we're now going to audio-player.ts to implement the ux
+    // first.
+
+    public playFromBuffer(
+        iStart: number,
+        dbKeys: number[],
+        offset: number
+    ): void {
+        console.log('playFromBuffer(), offset: ' + offset);
+    }
+
+    public playFromTime(time: number, dbKeys: number[]): void {
+        console.log('playFromTime()');
+
     }
 }

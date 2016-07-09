@@ -2,29 +2,19 @@
 
 // library.scss
 
-.toolbar-content {
+// .toolbar-content {
     // this fixes some line-wrappping issues in Android
     // - the title and right badge were vertically placed
     // not on the same vertical center (staggered) and
     // this fixes them to be at the same vertical center
-    display: inline-flex;
-}
+ //   display: inline-flex;
+// }
 
-// the path text <span> above the buttons
-span.library-page-path-message {
-    background-color: map-get($colors, almost-dark);
-    color: $text-color;
-    font-size: $toolbar-title-font-size;
-    text-align: center;
-    word-wrap: break-word;
-    padding-left: 1em;
-    padding-right: 1em;
-    padding-top: 4px;
-    padding-bottom: 0;
-    margin: 0;
-    span {
-        color: map-get($colors, logo-orange);
-    }
+ion-header ion-navbar ion-title.path-title {
+    max-width: 70%;
+    text-align: right;
+    direction: rtl;
+    text-overflow: ellipsis;
 }
 
 // appearance of buttonbars
@@ -94,11 +84,19 @@ div.buttonbar5 button {
 
 // control appearance of the text that says a folder is empty
 ion-content ion-list.file-folder-list {
-    ion-item.library-item ion-label.button span.button-inner {
-        text-align: left;
-        justify-content: left;
-        ion-icon {
-            font-size: 1.3em;
+    ion-item.library-item {
+        ion-checkbox {
+            // margin-right was too large by default, creating
+            // too much of a space between checkbox and item text
+            margin-right: .5em;
+        }
+        ion-label.button span.button-inner {
+            text-transform: none;
+            text-align: left;
+            justify-content: left;
+            ion-icon {
+                font-size: 1.4em;
+            }
         }
     }
 
@@ -108,6 +106,7 @@ ion-content ion-list.file-folder-list {
         color: map-get($colors, logo-orange);
     }
 }
+/*
 ion-content ion-list ion-list-header div {
     ion-label {
         // this makes the list header vertically thinner
@@ -126,4 +125,19 @@ ion-content ion-list ion-list-header div {
 #audio-player-audio-tag {
     // padding: 1em;
     width: 100%;
+}
+*/
+ion-content ion-list ion-item-group ion-item-divider {
+    // use padding-left to center checkbox over checkboxes below
+    padding-left: 14px;
+    ion-label {
+        // margin: 0 shrinks height of item divider by a lot
+        margin: 0;
+        button {
+            
+            span.button-inner {
+                text-transform: none;
+            }
+        }
+    }
 }
