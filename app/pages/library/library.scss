@@ -83,7 +83,7 @@ div.buttonbar5 button {
 }
 
 // control appearance of the text that says a folder is empty
-ion-content ion-list.file-folder-list {
+.library-page ion-content ion-list.file-folder-list {
     ion-item.library-item {
         ion-checkbox {
             // margin-right was too large by default, creating
@@ -93,7 +93,9 @@ ion-content ion-list.file-folder-list {
         ion-label.button span.button-inner {
             text-transform: none;
             text-align: left;
-            justify-content: left;
+            // justify-content: unset is needed for label
+            // text to not be centered and go to the left
+            justify-content: unset;
             ion-icon {
                 font-size: 1.4em;
             }

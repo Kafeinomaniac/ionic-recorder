@@ -60,6 +60,8 @@ export class WebAudioPlayer {
 
     constructor() {
         console.log('constructor():WebAudioPlayer');
+        this.duration = 0;
+        this.displayDuration = formatTime(0, 0);
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
@@ -79,7 +81,7 @@ export class WebAudioPlayer {
             res = AUDIO_CONTEXT.currentTime - this.startedAt;
         }
         if (res >= this.duration) {
-            console.log('res: ' + res + ', dur: ' + this.duration);
+            // console.log('res: ' + res + ', dur: ' + this.duration);
             // res = this.duration;
             this.stop();
             res = 0;

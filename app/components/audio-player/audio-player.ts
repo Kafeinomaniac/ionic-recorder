@@ -59,6 +59,10 @@ export class AudioPlayer implements OnChanges {
         this.hidden = true;
     }
 
+    public onPositionChange(position: number) {
+        console.log('onPositionChange(' + position + ')');
+    }
+
     /**
      * Handle changes (play new song) when a new song (url) is loaded
      * @returns {void}
@@ -67,13 +71,13 @@ export class AudioPlayer implements OnChanges {
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['title']) {
-            // console.log('AudioPlayer:ngOnChanges(): title: ' + this.title);
+            console.log('AudioPlayer:ngOnChanges(): title: ' + this.title);
             if (this.title !== undefined) {
                 this.show();
             }
         }
         if (changeRecord['blob']) {
-            // console.log('AudioPlayer:ngOnChanges(): blob: ' + this.blob);
+            console.log('AudioPlayer:ngOnChanges(): blob: ' + this.blob);
             if (this.blob !== undefined) {
                 this.player.loadAndDecode(
                     this.blob,

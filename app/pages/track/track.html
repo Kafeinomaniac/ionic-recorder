@@ -8,21 +8,107 @@
         <ion-title>
             Track
         </ion-title>
+        <ion-buttons end>
+            <button (click)="onClickCancel()">Back</button>
+        </ion-buttons>
     </ion-navbar>
+
+    <ion-toolbar almost dark>
+        <audio-player [title]="title">
+        </audio-player>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-    <h2>
-        Version: {{version}}
-    </h2>
-    <h3>
-        ionic-recorder is an open source app, built with the Ionic2 / Angular2 frameworks, that allows you to record audio and organize
-        your recordings. It works online or offline, on any smartphone with a recent browser.
-    </h3>
-    <h4>
-        For developers: this app demonstrates the browser's WebAudio API and IndexedDB built-in libraries.
-    </h4>
-    <p>
-        This is a web-app, meaning it runs in a browser by visiting a web page, it does not require installation.
-    </p>
+    <ion-card>
+        <ion-card-header>
+            Title:
+        </ion-card-header>
+        <ion-card-content>
+            {{title}}
+        </ion-card-content>
+    </ion-card>
+    <ion-card>
+        <ion-card-header>
+            Filename:
+        </ion-card-header>
+        <ion-card-content>
+            {{fileName}}
+        </ion-card-content>
+    </ion-card>
+    <ion-card>
+        <ion-card-header>
+            Folder path:
+        </ion-card-header>
+        <ion-card-content>
+            {{folderPath}}
+        </ion-card-content>
+    </ion-card>
+    <ion-list>
+        <ion-item>
+            <p>
+                <span style="float: left;">Created on:</span>
+                <span style="float:right;">{{dateCreated}}</span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">Duration:</span>
+                <span style="float:right;">{{displayDuration}}</span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">Size:</span>
+                <span style="float:right;">{{size}}</span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">Encoding:</span>
+                <span style="float:right;">{{encoding}}</span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">Sampling rate:</span>
+                <span style="float:right;">{{samplingRate}} Hz</span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;"># of samples:</span>
+                <span style="float:right;">{{nSamples}}</span>
+            </p>
+        </ion-item>
+    </ion-list>
 </ion-content>
+
+<ion-footer>
+    <ion-toolbar position="bottom" almost-dark>
+        <div class="buttonbar3">
+            <button almost-dark (click)="onClickMoveButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="share-alt"></ion-icon>
+                    <ion-icon name="folder"></ion-icon>
+                    <br> Move
+                    <br>
+                </ion-col>
+            </button>
+            <button almost-dark (click)="onClickDeleteButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="trash"></ion-icon>
+                    <br> Delete
+                    <br>
+                </ion-col>
+            </button>
+            <button almost-dark (click)="onClickShareButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="md-share"></ion-icon>
+                    <br> Share
+                    <br>
+                </ion-col>
+            </button>
+        </div>
+    </ion-toolbar>
+</ion-footer>

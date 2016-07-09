@@ -20,22 +20,8 @@
         </ion-buttons>
     </ion-navbar>
 
-    <!--audio-player [title]="playerTitle" [blob]="playerBlob">
-    </audio-player-->
-
-    <!--span *ngIf="folderNode" class="library-page-path-message">
-        Folder:&nbsp;<span>{{getPath()}}</span>
-    </span-->
-
     <ion-toolbar position="top" almost-dark>
         <div class="buttonbar3">
-            <button almost-dark (click)="onClickHomeButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="home"></ion-icon>
-                    <br> Home
-                    <br>
-                </ion-col>
-            </button>
             <!--<button almost-dark (click)="onClickSelectButton()" ion-row center>
                 <ion-col>
                     <ion-icon name="square-outline"></ion-icon>
@@ -44,6 +30,13 @@
                     <br>
                 </ion-col>
             </button>-->
+            <button almost-dark (click)="onClickHomeButton()" ion-row center>
+                <ion-col>
+                    <ion-icon name="home"></ion-icon>
+                    <br> Home
+                    <br>
+                </ion-col>
+            </button>
             <button almost-dark (click)="onClickParentButton()" [disabled]="parentButtonDisabled()" ion-row center>
                 <ion-col>
                     <ion-icon name="arrow-up"></ion-icon>
