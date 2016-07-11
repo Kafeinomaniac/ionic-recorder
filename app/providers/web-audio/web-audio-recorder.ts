@@ -21,8 +21,7 @@ import {
 } from '../../services/utils/double-buffer';
 
 import {
-    formatTime,
-    makeSecondsTimestamp
+    formatTime
 } from '../../services/utils/utils';
 
 // sets the frame-rate at which either the volume monitor or the progress bar
@@ -62,12 +61,10 @@ export enum RecorderStatus {
 }
 
 export interface RecordingInfo {
-    fileName: string;
+    startTime: Date;
     sampleRate: number;
     nSamples: number;
-    iStartChunk: number;
-    nChunks: number;
-    iLastSample: number;
+    iStart: number;
 }
 
 /**
@@ -86,9 +83,10 @@ export class WebAudioRecorder {
     private intervalId: NodeJS.Timer;
     private nRecordedProcessingBuffers: number;
     private nRecordedSamples: number;
-    private dbFileName: string;
-    private dbKeys: number[];
+    // private dbKeys: number[];
     private setter: DoubleBufferSetter;
+    private startTime: Date;
+    private iStart: number;
 
     public status: RecorderStatus;
     public sampleRate: number;
@@ -123,12 +121,19 @@ export class WebAudioRecorder {
         // grab microphone, init nodes that rely on stream, connect nodes
         this.initAudio();
 
+        this.iStart = -1;
         this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
             this.idb.addChunk(this.setter.activeBuffer).subscribe(
                 (key: number) => {
+                    if (this.iStart < 0) {
+                        // first key encountered
+                        console.log('setting iStart to key');
+                        this.iStart = key;
+                    }
                     // increment the buffers-saved counter
-                    this.dbKeys.push(key);
-                    console.log('saved chunk ' + this.dbKeys.length);
+                    // this.dbKeys.push(key);
+                    // console.log('saved chunk ' + this.dbKeys.length);
+                    console.log('saved chunk ' + key);
                 });
         });
 
@@ -371,10 +376,10 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public start(): void {
-        this.dbFileName = makeSecondsTimestamp();
+        this.startTime = new Date();
         this.nRecordedProcessingBuffers = 0;
         this.nRecordedSamples = 0;
-        this.dbKeys = [];
+        // this.dbKeys = [];
         this.isRecording = true;
         this.isInactive = false;
     }
@@ -405,12 +410,11 @@ export class WebAudioRecorder {
         this.nRecordedProcessingBuffers = 0;
         let src: Observable<RecordingInfo> = Observable.create((observer) => {
             let recordingInfo: RecordingInfo = {
-                fileName: this.dbFileName,
+                startTime: this.startTime,
                 sampleRate: this.sampleRate,
                 nSamples: this.nRecordedSamples,
-                iStartChunk: this.dbKeys[0],
-                nChunks: this.dbKeys.length,
-                iLastSample: this.setter.bufferIndex
+                // iStart: this.dbKeys[0]
+                iStart: this.iStart
             };
             if (this.setter.bufferIndex === 0) {
                 // no leftovers: rare that we reach here due to no leftovers
@@ -424,9 +428,9 @@ export class WebAudioRecorder {
             ).subscribe(
                 (key: number) => {
                     // increment the buffers-saved counter
-                    this.dbKeys.push(key);
-                    recordingInfo.nChunks++;
-                    console.log('saved final chunk ' + this.dbKeys.length);
+                    // this.dbKeys.push(key);
+                    // console.log('saved final chunk ' + this.dbKeys.length);
+                    console.log('saved final chunk ' + key);
                     observer.next(recordingInfo);
                     observer.complete();
                 });

@@ -109,9 +109,8 @@ export function formatTime(
  * Create a string that reflects the time now, at 1 second resolution
  * @return {string} - human readable text representation of time now
  */
-export function makeSecondsTimestamp(): string {
+export function formatTime2(now: Date): string {
     'use strict';
-    let now: Date = new Date();
     return [
         now.getFullYear().toString(),
         '-',

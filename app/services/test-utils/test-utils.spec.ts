@@ -1,3 +1,7 @@
+// Copyright (c) 2016 Tracktunes Inc
+
+// Based on: https://github.com/lathonez/clicker - app/test/diExports.ts
+
 import {
     resetControl
 } from './test-utils';

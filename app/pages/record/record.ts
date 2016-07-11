@@ -5,6 +5,10 @@ import {
 } from '@angular/core';
 
 import {
+    Range
+} from 'ionic-angular';
+
+import {
     VuGauge
 } from '../../components/vu-gauge/vu-gauge';
 
@@ -25,8 +29,8 @@ import {
 } from '../../providers/idb-app-fs/idb-app-fs';
 
 import {
-    Range
-} from 'ionic-angular';
+    formatTime2
+} from '../../services/utils/utils';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
@@ -164,7 +168,8 @@ export class RecordPage {
         this.recordButtonIcon = START_RESUME_ICON;
         this.webAudioRecorder.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
-                let fileName: string = recordingInfo.fileName;
+                let fileName: string = formatTime2(
+                    recordingInfo.startTime);
                 delete recordingInfo['fileName'];
                 this.idbAppFS.createNode(
                     fileName,

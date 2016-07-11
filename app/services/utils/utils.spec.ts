@@ -5,7 +5,7 @@ import {
     objectInspector,
     prependArray,
     formatTime,
-    makeSecondsTimestamp,
+    formatTime2,
     copyFromObject,
     has,
     isFunction,
@@ -66,10 +66,9 @@ describe('utils/utils:isPositiveWholeNumber()', () => {
         expect(x).toEqual('15:25:55.12');
     });
 
-    it('can makeSecondsTimestamp', () => {
+    it('can formatTime2', () => {
         let now: Date = new Date(),
-            stamp: string = makeSecondsTimestamp(),
-            cmpStamp: string = [
+            fmt1: string = [
                 now.getFullYear().toString(),
                 '-',
                 (now.getMonth() + 1).toString(),
@@ -77,8 +76,9 @@ describe('utils/utils:isPositiveWholeNumber()', () => {
                 now.getDate().toString(),
                 ' -- ',
                 now.toLocaleTimeString()
-            ].join('');
-        expect(cmpStamp).toBe(stamp);
+            ].join(''),
+            fmt2: string = formatTime2(now);
+        expect(fmt1).toBe(fmt2);
     });
 
     it('can copyFromObject', () => {

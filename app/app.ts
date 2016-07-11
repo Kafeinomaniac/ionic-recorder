@@ -1,3 +1,5 @@
+// Copyright (c) 2016 Tracktunes Inc
+
 import {
     Component,
     ExceptionHandler,

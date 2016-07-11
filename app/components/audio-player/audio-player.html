@@ -3,9 +3,9 @@
 <div class="audio-player-component" [hidden]="hidden">
     <ion-range (ionChange)="onPositionChange($event.value)">
         <button range-left clear (click)="player.togglePlayPause()">
-                    <ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
-                    <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
-                </button>
+        	<ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
+        	 <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
+    	</button>
         <ion-label range-left class="small-text">
             {{player.getDisplayTime()}}
         </ion-label>
