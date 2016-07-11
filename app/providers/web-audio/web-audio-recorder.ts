@@ -64,7 +64,7 @@ export interface RecordingInfo {
     startTime: Date;
     sampleRate: number;
     nSamples: number;
-    iStart: number;
+    dbStartKey: number;
 }
 
 /**
@@ -86,7 +86,7 @@ export class WebAudioRecorder {
     // private dbKeys: number[];
     private setter: DoubleBufferSetter;
     private startTime: Date;
-    private iStart: number;
+    private dbStartKey: number;
 
     public status: RecorderStatus;
     public sampleRate: number;
@@ -121,14 +121,14 @@ export class WebAudioRecorder {
         // grab microphone, init nodes that rely on stream, connect nodes
         this.initAudio();
 
-        this.iStart = -1;
+        this.dbStartKey = -1;
         this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
             this.idb.addChunk(this.setter.activeBuffer).subscribe(
                 (key: number) => {
-                    if (this.iStart < 0) {
+                    if (this.dbStartKey < 0) {
                         // first key encountered
-                        console.log('setting iStart to key');
-                        this.iStart = key;
+                        console.log('setting dbStartKey to key');
+                        this.dbStartKey = key;
                     }
                     // increment the buffers-saved counter
                     // this.dbKeys.push(key);
@@ -413,8 +413,8 @@ export class WebAudioRecorder {
                 startTime: this.startTime,
                 sampleRate: this.sampleRate,
                 nSamples: this.nRecordedSamples,
-                // iStart: this.dbKeys[0]
-                iStart: this.iStart
+                // dbStartKey: this.dbKeys[0]
+                dbStartKey: this.dbStartKey
             };
             if (this.setter.bufferIndex === 0) {
                 // no leftovers: rare that we reach here due to no leftovers
