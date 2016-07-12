@@ -16,7 +16,7 @@ import {
 //     'use strict';
 //     let arrayByteLength: number = uint16Array.byteLength,
 //         headerView: DataView = new DataView(new ArrayBuffer(44)),
-//         setString: 
+//         setString:
 //             (dv: DataView, offset: number, str: string) => void =
 //             (dv: DataView, offset: number, str: string) => {
 //                 let len: number = str.length, i: number;

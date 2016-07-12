@@ -11,7 +11,7 @@ ABOUTFILE="app/pages/about/about.ts"
 
 # run unit tests 
 echo "Running unit tests ..."
-TEST_ERRORS="`npm test 2>&1  | grep gulp-tslint | grep error`"
+TEST_ERRORS="`npm test 2>&1  | grep gulp-tslint | grep -i error`"
 
 if [ "$TEST_ERRORS" != "" ]; then
     echo "Unit tests failed, please fix those and try again, errors:"
