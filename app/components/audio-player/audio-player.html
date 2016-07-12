@@ -5,21 +5,12 @@
         <button range-left clear (click)="player.togglePlayPause()">
         	<ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
         	 <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
-    	</button>
-        <!--ion-label range-left class="small-text">
-            {{player.getDisplayTime()}}
-        </ion-label-->       
+    	</button>   
         <ion-label range-left class="small-text">
             {{getTime()}}
         </ion-label>
-        <!--ion-label range-left class="small-text">
-            0.00
-        </ion-label-->
         <ion-label range-right>
             {{player.displayDuration}}
         </ion-label>
-        <!--ion-label range-right>
-            36.00
-        </ion-label-->
     </ion-range>
 </div>
