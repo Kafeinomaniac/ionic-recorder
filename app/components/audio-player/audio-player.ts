@@ -15,6 +15,10 @@ import {
     WebAudioPlayer
 } from '../../providers/web-audio/web-audio-player';
 
+import {
+    formatTime
+} from '../../services/utils/utils';
+
 /**
  * @name AudioPlayer
  * @description
@@ -32,6 +36,8 @@ export class AudioPlayer implements OnChanges {
     @Input() private blob: Blob;
     private player: WebAudioPlayer;
     private hidden: boolean;
+    private time: number;
+    private displayTime: string;
 
     /**
      * @constructor
@@ -41,6 +47,8 @@ export class AudioPlayer implements OnChanges {
         this.player = player;
         // player starts at hidden state
         this.hidden = true;
+        this.time = 0;
+        this.displayTime = formatTime(0, this.player.duration);
     }
 
     /**
@@ -57,6 +65,15 @@ export class AudioPlayer implements OnChanges {
      */
     public hide(): void {
         this.hidden = true;
+    }
+
+    public getTime(): string {
+        const time: number = this.player.getTime();
+        if (time !== this.time) {
+            this.time = time;
+            this.displayTime = formatTime(time, this.player.duration);
+        }
+        return this.displayTime;
     }
 
     public onPositionChange(position: number): void {

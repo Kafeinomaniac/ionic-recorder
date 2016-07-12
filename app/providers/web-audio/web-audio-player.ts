@@ -72,19 +72,23 @@ export class WebAudioPlayer {
      * Returns current playback time - position in song
      * @returns {number}
      */
-    private getTime(): number {
+    public getTime(): number {
         let res: number = 0;
         if (this.pausedAt) {
             res = this.pausedAt;
         }
-        if (this.startedAt) {
+        else if (this.startedAt) {
+            // not paused, and we have started, so playing now
             res = AUDIO_CONTEXT.currentTime - this.startedAt;
         }
-        if (res >= this.duration) {
-            // console.log('res: ' + res + ', dur: ' + this.duration);
-            // res = this.duration;
-            this.stop();
-            res = 0;
+        // if (res >= this.duration) {
+        //     // console.log('res: ' + res + ', dur: ' + this.duration);
+        //     // res = this.duration;
+        //     this.stop();
+        //     res = 0;
+        // }
+        if (res > this.duration) {
+            res = this.duration;
         }
         return res;
     }

@@ -36,7 +36,9 @@ const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 const PROCESSING_BUFFER_LENGTH: number = 256;
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH
-const DB_CHUNK_LENGTH: number = 256 * PROCESSING_BUFFER_LENGTH;
+// 256 x PROCESSING_BUFFER_LENGTH = 65536 and since it's WAV,
+// it will be 2 bytes each
+export const DB_CHUNK_LENGTH: number = 65536;
 
 // pre-allocate the double chunk buffers used for saving to DB
 const DB_CHUNK1: Uint16Array = new Uint16Array(DB_CHUNK_LENGTH);
@@ -368,7 +370,8 @@ export class WebAudioRecorder {
      * @returns {number} Time in seconds
      */
     private nBuffersToSeconds(nBuffers: number): number {
-        return this.nRecordedProcessingBuffers * 256.0 / this.sampleRate;
+        return this.nRecordedProcessingBuffers * PROCESSING_BUFFER_LENGTH /
+            this.sampleRate;
     }
 
     /**
@@ -413,7 +416,6 @@ export class WebAudioRecorder {
                 startTime: this.startTime,
                 sampleRate: this.sampleRate,
                 nSamples: this.nRecordedSamples,
-                // dbStartKey: this.dbKeys[0]
                 dbStartKey: this.dbStartKey
             };
             if (this.setter.bufferIndex === 0) {
