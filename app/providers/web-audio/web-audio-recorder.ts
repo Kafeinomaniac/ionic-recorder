@@ -63,7 +63,7 @@ export enum RecorderStatus {
 }
 
 export interface RecordingInfo {
-    startTime: Date;
+    startTime: number;
     sampleRate: number;
     nSamples: number;
     dbStartKey: number;
@@ -87,7 +87,7 @@ export class WebAudioRecorder {
     private nRecordedSamples: number;
     // private dbKeys: number[];
     private setter: DoubleBufferSetter;
-    private startTime: Date;
+    private startTime: number;
     private dbStartKey: number;
 
     public status: RecorderStatus;
@@ -379,7 +379,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public start(): void {
-        this.startTime = new Date();
+        this.startTime = Date.now();
         this.nRecordedProcessingBuffers = 0;
         this.nRecordedSamples = 0;
         // this.dbKeys = [];
