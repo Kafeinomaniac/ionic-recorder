@@ -3,10 +3,8 @@
 ion-app {
 
     ion-menu ion-content  {
-        // remove the scrollbar when it's not needed, it seems to be there all the time otherwise ...
         scroll-content {
-            overflow-y: auto;
-            // color the side-menu portion from below the bottommost item to the bottom of the page
+            overflow-y: hidden;
             background: map-get($colors, darkest-gray);        }
         ion-list {
             .item {
@@ -18,21 +16,20 @@ ion-app {
             .item:first-child, .item-inner, .item:last-child {
                 border: 0;
             }
+            // TODO: test below does not work - we want to change item-activated color
             button.item.activated {
                 background-color: map-get($colors, red);
             }
         }
     }
 
-    // hide tabs (we only use them for in-program navigation, preloading pages and keeping them in memory while navigating, not for click-navigation)
     ion-tabs {
         ion-tabbar {
+            // hide tabs
             display: none;
         }
-        // remove the scrollbar when it's not needed, it seems to be there all the time otherwise ...
         scroll-content {
             overflow-y: auto;
-            // color the side-menu portion from below the bottommost item to the bottom of the page
             background: map-get($colors, dark);
         }
     }

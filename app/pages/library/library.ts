@@ -59,7 +59,7 @@ export class LibraryPage {
     private folderItems: KeyDict;
     private selectedNodes: KeyDict;
     private totalSelectedCounter: number;
-    private playerTitle: string;
+    // private playerTitle: string;
     // private playerBlob: Blob;
 
     /**
@@ -455,19 +455,9 @@ export class LibraryPage {
             this.switchFolder(node[DB_KEY_PATH], true);
         }
         else {
-            // it's not a folder, it's a blob!
-            // here's where we initiate the player.
-            // setting this.playerTitle triggers the audio
-            // player to make itself visible
-            this.playerTitle = node.name;
-            // this.idbAppFS.readNode(nodeKey).subscribe(
-            //     (readNode: TreeNode) => {
-            //         // dataNode.data is the Blob object to play
-            //         // setting this.playerBlob triggers the audio
-            //         // player ngOnChanges to load/play the blob
-            //         this.playerBlob = readNode.data;
-            //     }
-            // ); // readNodeData(node).subscribe(
+            // it's not a folder, it's a playable file, play it
+            // TODO: see node.name, node[DB_KEY_PATH]
+            console.dir(node);
         } // if (IdbAppFS.isFolderNode(node)) { .. else { ..
     }
 
