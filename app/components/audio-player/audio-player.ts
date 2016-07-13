@@ -7,9 +7,9 @@ import {
     SimpleChange
 } from '@angular/core';
 
-import {
-    IONIC_DIRECTIVES
-} from 'ionic-angular';
+// import {
+//     IONIC_DIRECTIVES
+// } from 'ionic-angular';
 
 import {
     WebAudioPlayer
@@ -28,8 +28,8 @@ import {
 @Component({
     selector: 'audio-player',
     templateUrl: 'build/components/audio-player/audio-player.html',
-    providers: [WebAudioPlayer],
-    directives: [IONIC_DIRECTIVES]
+    providers: [WebAudioPlayer] // ,
+    // directives: [IONIC_DIRECTIVES]
 })
 export class AudioPlayer implements OnChanges {
     @Input() private title: string;
