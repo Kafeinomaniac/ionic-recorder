@@ -152,7 +152,7 @@ export class WebAudioRecorder {
         this.sampleRate = AUDIO_CONTEXT.sampleRate;
         console.log('SAMPLE RATE: ' + this.sampleRate);
 
-        let getUserMediaOptions: Object = { video: false, audio: true };
+        const getUserMediaOptions: Object = { video: false, audio: true };
 
         if (typeof navigator !== 'undefined' &&
             navigator.mediaDevices &&
@@ -164,6 +164,8 @@ export class WebAudioRecorder {
                     this.connectNodes(stream);
                 })
                 .catch((error: any) => {
+                    console.warn('initAudio(new) ' + error);
+                    console.dir(error);
                     this.status = RecorderStatus.NO_MICROPHONE_ERROR;
                 });
         }
@@ -182,15 +184,20 @@ export class WebAudioRecorder {
                             this.connectNodes(stream);
                         },
                         (error: any) => {
+                            console.warn('initAudio(old1) ' + error);
+                            console.dir(error);
                             this.status = RecorderStatus.NO_MICROPHONE_ERROR;
                         });
                 }
                 catch (error) {
+                    console.warn('initAudio(old2) ' + error);
+                    console.dir(error);
                     this.status = RecorderStatus.GETUSERMEDIA_ERROR;
                 }
             }
             else {
                 // neither old nor new getUserMedia are available
+                console.warn('initAudio() Error: no getUserMedia');
                 this.status = RecorderStatus.NO_GETUSERMEDIA_ERROR;
             }
         }

@@ -127,7 +127,7 @@ export class RecordPage {
             this.decibels =
                 (10.0 * Math.log10(this.gainFactor)).toFixed(2) + ' dB';
         }
-        this.percentGain = (this.gainFactor * 100.0).toFixed(1);
+        this.percentGain = (this.gainFactor * 100.0).toFixed(0);
 
         this.idbAppState.updateProperty('gain', {
             factor: this.gainFactor,

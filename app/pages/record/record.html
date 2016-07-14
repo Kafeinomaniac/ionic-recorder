@@ -24,8 +24,8 @@
         <button small almost-dark (click)="onResetGain()">Reset Gain</button>
     </p>
     <ion-range light [(ngModel)]="gainRangeSliderValue" (ionChange)="onGainChange($event.value)">
-        <ion-icon range-left small name="mic-off"></ion-icon>
-        <ion-icon range-right name="mic"></ion-icon>
+        <!--ion-icon range-left small name="mic-off"></ion-icon>
+        <ion-icon range-right name="mic"></ion-icon-->
     </ion-range>
     <div class="recording-time">
         {{webAudioRecorder.currentTime}}
