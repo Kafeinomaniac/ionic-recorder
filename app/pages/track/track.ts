@@ -62,7 +62,8 @@ export class TrackPage {
     private sampleRate: number;
     private encoding: string;
     private nSamples: number;
-    private duration: string;
+    private duration: number;
+    private displayDuration: string;
 
     /**
      * TrackPage constructor
@@ -71,8 +72,7 @@ export class TrackPage {
         console.log('constructor():TrackPage');
         const child: TreeNode = parentChild.child,
             nSamples: number = child.data.nSamples,
-            sampleRate: number = child.data.sampleRate,
-            duration: number = nSamples / sampleRate;
+            sampleRate: number = child.data.sampleRate;
         this.fileName = child.name;
         this.folderPath = getFolderPath(parentChild.parent);
         this.dateCreated = formatLocalTime(child.data.startTime);
@@ -80,7 +80,8 @@ export class TrackPage {
         this.sampleRate = sampleRate;
         this.encoding = child.data.encoding;
         this.nSamples = nSamples;
-        this.duration = formatTime(duration, duration);
+        this.duration = nSamples / sampleRate;
+        this.displayDuration = formatTime(this.duration, this.duration);
     }
 
     /**

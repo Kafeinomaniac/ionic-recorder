@@ -65,7 +65,7 @@
         <ion-item>
             <p>
                 <span style="float: left;">Duration:</span>
-                <span style="float:right;">{{duration}}</span>
+                <span style="float:right;">{{displayDuration}}</span>
             </p>
         </ion-item>
         <ion-item>
@@ -98,7 +98,7 @@
 
 <ion-footer>
     <ion-toolbar almost dark>
-        <audio-player [title]="title">
+        <audio-player [duration]="duration" [displayDuration]="displayDuration">
         </audio-player>
     </ion-toolbar>
 </ion-footer>

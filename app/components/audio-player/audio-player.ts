@@ -34,6 +34,8 @@ import {
 export class AudioPlayer implements OnChanges {
     @Input() private title: string;
     @Input() private blob: Blob;
+    @Input() private duration: number;
+    @Input() private displayDuration: string;
     private player: WebAudioPlayer;
     private hidden: boolean;
     private time: number;
@@ -48,7 +50,7 @@ export class AudioPlayer implements OnChanges {
         // player starts at hidden state
         this.hidden = false;
         this.time = 0;
-        this.displayTime = formatTime(0, this.player.duration);
+        this.displayTime = formatTime(0, this.duration);
     }
 
     /**
@@ -71,7 +73,7 @@ export class AudioPlayer implements OnChanges {
         const time: number = this.player.getTime();
         if (time !== this.time) {
             this.time = time;
-            this.displayTime = formatTime(time, this.player.duration);
+            this.displayTime = formatTime(time, this.duration);
         }
         return this.displayTime;
     }
@@ -87,6 +89,15 @@ export class AudioPlayer implements OnChanges {
     public ngOnChanges(
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
+        if (changeRecord['duration']) {
+            console.log('AudioPlayer:ngOnChanges(): duration: ' +
+                this.duration);
+            this.displayTime = formatTime(this.time, this.duration);
+        }
+        if (changeRecord['displayDuration']) {
+            console.log('AudioPlayer:ngOnChanges(): displayDuration: ' +
+                this.displayDuration);
+        }
         if (changeRecord['title']) {
             console.log('AudioPlayer:ngOnChanges(): title: ' + this.title);
             if (this.title !== undefined) {
