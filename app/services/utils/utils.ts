@@ -102,7 +102,6 @@ export function formatTime(
                 nMinutes + result;
         }
     }
-    console.log('ft: ' + result);
     return result;
 }
 
