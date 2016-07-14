@@ -5,7 +5,7 @@ import {
     objectInspector,
     prependArray,
     formatTime,
-    formatTime2,
+    formatLocalTime,
     copyFromObject,
     has,
     isFunction,
@@ -66,7 +66,7 @@ describe('utils/utils:isPositiveWholeNumber()', () => {
         expect(x).toEqual('15:25:55.12');
     });
 
-    it('can formatTime2', () => {
+    it('can formatLocalTime', () => {
         let now: Date = new Date(),
             fmt1: string = [
                 now.getFullYear().toString(),
@@ -77,7 +77,7 @@ describe('utils/utils:isPositiveWholeNumber()', () => {
                 ' -- ',
                 now.toLocaleTimeString()
             ].join(''),
-            fmt2: string = formatTime2(now);
+            fmt2: string = formatLocalTime(now.valueOf());
         expect(fmt1).toBe(fmt2);
     });
 

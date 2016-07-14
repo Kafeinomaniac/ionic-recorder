@@ -109,16 +109,17 @@ export function formatTime(
  * Create a string that reflects the time now, at 1 second resolution
  * @return {string} - human readable text representation of time now
  */
-export function formatTime2(now: Date): string {
+export function formatLocalTime(now: number): string {
     'use strict';
+    const dateNow: Date = new Date(now);
     return [
-        now.getFullYear().toString(),
+        dateNow.getFullYear().toString(),
         '-',
-        (now.getMonth() + 1).toString(),
+        (dateNow.getMonth() + 1).toString(),
         '-',
-        now.getDate().toString(),
+        dateNow.getDate().toString(),
         ' -- ',
-        now.toLocaleTimeString()
+        dateNow.toLocaleTimeString()
     ].join('');
 }
 

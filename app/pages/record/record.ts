@@ -29,7 +29,7 @@ import {
 } from '../../providers/idb-app-fs/idb-app-fs';
 
 import {
-    formatTime2
+    formatLocalTime
 } from '../../services/utils/utils';
 
 const START_RESUME_ICON: string = 'mic';
@@ -168,7 +168,7 @@ export class RecordPage {
         this.recordButtonIcon = START_RESUME_ICON;
         this.webAudioRecorder.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
-                let fileName: string = formatTime2(recordingInfo.startTime);
+                let fileName: string = formatLocalTime(recordingInfo.startTime);
                 delete recordingInfo['fileName'];
                 this.idbAppFS.createNode(
                     fileName,
