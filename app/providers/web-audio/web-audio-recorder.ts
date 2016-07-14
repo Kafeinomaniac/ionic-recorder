@@ -154,9 +154,9 @@ export class WebAudioRecorder {
 
         const getUserMediaOptions: Object = { video: false, audio: true };
 
-        if (typeof navigator !== 'undefined' &&
-            navigator.mediaDevices &&
+        if (navigator.mediaDevices &&
             navigator.mediaDevices.getUserMedia) {
+            // in mozilla but not yet in chrome
             // new getUserMedia is available, use it to get microphone stream
             // console.log('Using NEW navigator.mediaDevices.getUserMedia');
             navigator.mediaDevices.getUserMedia(getUserMediaOptions)
@@ -170,15 +170,15 @@ export class WebAudioRecorder {
                 });
         }
         else {
+            // for chrome / chromium
             // console.log('Using OLD navigator.getUserMedia (new not there)');
-            let getUserMedia: NavigatorGetUserMedia = navigator.getUserMedia ||
+            navigator.getUserMedia = navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
-                navigator.mozGetUserMedia ||
-                navigator.msGetUserMedia;
-            if (getUserMedia) {
+                navigator.mozGetUserMedia;
+            if (navigator.getUserMedia) {
                 // old getUserMedia is available, use it
                 try {
-                    getUserMedia(
+                    navigator.getUserMedia(
                         getUserMediaOptions,
                         (stream: MediaStream) => {
                             this.connectNodes(stream);
