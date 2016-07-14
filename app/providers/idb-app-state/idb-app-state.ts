@@ -161,7 +161,11 @@ export class IdbAppState extends IdbDict {
                                     this.cachedState[key] = dbValue;
                                     return;
                                 });
-                        }).subscribe();
+                        }).subscribe(
+                        null,
+                        (error: any) => {
+                            throw Error('loadFromDb: ' + error);
+                        });
                 },
                 (error) => {
                     observer.error('loadFromDb():waitForDb(): ' + error);

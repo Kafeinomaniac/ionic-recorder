@@ -46,7 +46,7 @@ export class AudioPlayer implements OnChanges {
         console.log('constructor():AudioPlayer');
         this.player = player;
         // player starts at hidden state
-        this.hidden = true;
+        this.hidden = false;
         this.time = 0;
         this.displayTime = formatTime(0, this.player.duration);
     }

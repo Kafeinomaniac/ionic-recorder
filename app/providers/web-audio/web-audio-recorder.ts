@@ -67,6 +67,7 @@ export interface RecordingInfo {
     sampleRate: number;
     nSamples: number;
     dbStartKey: number;
+    encoding: string;
 }
 
 /**
@@ -416,7 +417,8 @@ export class WebAudioRecorder {
                 startTime: this.startTime,
                 sampleRate: this.sampleRate,
                 nSamples: this.nRecordedSamples,
-                dbStartKey: this.dbStartKey
+                dbStartKey: this.dbStartKey,
+                encoding: 'audio/wav'
             };
             if (this.setter.bufferIndex === 0) {
                 // no leftovers: rare that we reach here due to no leftovers

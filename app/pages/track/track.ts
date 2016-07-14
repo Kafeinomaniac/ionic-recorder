@@ -12,21 +12,39 @@ import {
     AudioPlayer
 } from '../../components/audio-player/audio-player';
 
-// import {
-//     TreeNode
-// } from '../../services/idb/idb-fs'
+import {
+    TreeNode,
+    ParentChild
+} from '../../services/idb/idb-fs';
 
-// const treeNode: TreeNode = {
-//     name: '2016-7-13 -- 7:04:20 PM',
-//     parentKey: 2,
-//     timeStamp: 1468451068739,
-//     data: {
-//         dbStartKey: 1,
-//         nSamples: 378112,
-//         sampleRate: 44100,
-//         startTime: 1
-//     }
-// };
+import {
+    formatLocalTime
+} from '../../services/utils/utils';
+
+import {
+    getFolderPath
+} from '../library/library';
+
+const parentChild: ParentChild = {
+    parent: {
+        name: 'Unfiled',
+        parentKey: 1,
+        timeStamp: 1468467549736,
+        path: '/'
+    },
+    child: {
+        name: '2016-7-13 -- 11:39:04 PM',
+        parentKey: 2,
+        timeStamp: 1468459742866,
+        data: {
+            dbStartKey: 1,
+            nSamples: 231936,
+            sampleRate: 44100,
+            startTime: 1468467544459,
+            encoding: 'audio/wav'
+        }
+    }
+};
 
 /**
  * @name TrackPage
@@ -39,30 +57,30 @@ import {
 export class TrackPage {
     private fileName: string;
     private folderPath: string;
-    private title: string;
     private dateCreated: string;
     private size: number;
-    private samplingRate: number;
+    private sampleRate: number;
     private encoding: string;
     private nSamples: number;
-    private duration: number;
-    private displayDuration: string;
+    private duration: string;
 
     /**
      * TrackPage constructor
      */
     constructor() {
         console.log('constructor():TrackPage');
-        this.fileName = '2016-07-09 - 12:00 AM';
-        this. folderPath = '/Unfiled';
-        this.title = this.fileName;
-        this.dateCreated = this.fileName;
-        this.size = 30123;
-        this.samplingRate = 44100;
-        this.encoding = 'audio/wav';
-        this.nSamples = 1561;
-        this.duration = 4.3;
-        this.displayDuration = formatTime(this.duration, this.duration);
+        const child: TreeNode = parentChild.child,
+            nSamples: number = child.data.nSamples,
+            sampleRate: number = child.data.sampleRate,
+            duration: number = nSamples / sampleRate;
+        this.fileName = child.name;
+        this.folderPath = getFolderPath(parentChild.parent);
+        this.dateCreated = formatLocalTime(child.data.startTime);
+        this.size = nSamples * 2;
+        this.sampleRate = sampleRate;
+        this.encoding = child.data.encoding;
+        this.nSamples = nSamples;
+        this.duration = formatTime(duration, duration);
     }
 
     /**

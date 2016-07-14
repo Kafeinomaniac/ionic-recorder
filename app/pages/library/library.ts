@@ -41,6 +41,12 @@ import {
     AudioPlayer
 } from '../../components/audio-player/audio-player';
 
+export function getFolderPath(folderNode: TreeNode): string {
+    'use strict';
+    const path: string = folderNode.path + '/' + folderNode.name;
+    return (path === '/') ? path : path.slice(1);
+}
+
 /**
  * @name LibraryPage
  * @description
@@ -108,8 +114,7 @@ export class LibraryPage {
      * @returns {string} folder path, represented as a string
      */
     public getPath(): string {
-        const path: string = this.folderNode.path + '/' + this.folderNode.name;
-        return (path === '/') ? path : path.slice(1);
+        return getFolderPath(this.folderNode);
     }
 
     /**

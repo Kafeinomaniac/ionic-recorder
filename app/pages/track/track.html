@@ -42,31 +42,20 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-card>
-        <ion-card-header>
-            Title:
-        </ion-card-header>
-        <ion-card-content>
-            {{title}}
-        </ion-card-content>
-    </ion-card>
-    <ion-card>
-        <ion-card-header>
-            Filename:
-        </ion-card-header>
-        <ion-card-content>
-            {{fileName}}
-        </ion-card-content>
-    </ion-card>
-    <ion-card>
-        <ion-card-header>
-            Folder path:
-        </ion-card-header>
-        <ion-card-content>
-            {{folderPath}}
-        </ion-card-content>
-    </ion-card>
+
     <ion-list>
+        <ion-item text-wrap>
+            <p>
+                <span style="float: left;">Filename:</span>
+                <span style="float:right;">{{fileName}}</span>
+            </p>
+        </ion-item>
+        <ion-item text-wrap>
+            <p>
+                <span style="float: left;">Path:</span>
+                <span style="float:right;">{{folderPath}}</span>
+            </p>
+        </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Created on:</span>
@@ -76,13 +65,13 @@
         <ion-item>
             <p>
                 <span style="float: left;">Duration:</span>
-                <span style="float:right;">{{displayDuration}}</span>
+                <span style="float:right;">{{duration}}</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Size:</span>
-                <span style="float:right;">{{size}}</span>
+                <span style="float:right;">{{size}} bytes</span>
             </p>
         </ion-item>
         <ion-item>
@@ -93,8 +82,8 @@
         </ion-item>
         <ion-item>
             <p>
-                <span style="float: left;">Sampling rate:</span>
-                <span style="float:right;">{{samplingRate}} Hz</span>
+                <span style="float: left;">Sample rate:</span>
+                <span style="float:right;">{{sampleRate}} Hz</span>
             </p>
         </ion-item>
         <ion-item>
@@ -103,6 +92,7 @@
                 <span style="float:right;">{{nSamples}}</span>
             </p>
         </ion-item>
+
     </ion-list>
 </ion-content>
 
