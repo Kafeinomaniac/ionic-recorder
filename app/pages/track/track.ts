@@ -13,6 +13,10 @@ import {
 } from '../../components/audio-player/audio-player';
 
 import {
+    RecordingInfo
+} from '../../providers/web-audio/web-audio-recorder';
+
+import {
     TreeNode,
     ParentChild
 } from '../../services/idb/idb-fs';
@@ -64,6 +68,7 @@ export class TrackPage {
     private nSamples: number;
     private duration: number;
     private displayDuration: string;
+    private recordingInfo: RecordingInfo;
 
     /**
      * TrackPage constructor
@@ -82,6 +87,7 @@ export class TrackPage {
         this.nSamples = nSamples;
         this.duration = nSamples / sampleRate;
         this.displayDuration = formatTime(this.duration, this.duration);
+        this.recordingInfo = child.data;
     }
 
     /**
