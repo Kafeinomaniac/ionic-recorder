@@ -60,7 +60,7 @@ export class Idb {
                 this.db = db;
             },
             (error) => {
-                console.error('in openDB: ' + error);
+                console.error('openDB: ' + error);
             });
     }
 
@@ -490,11 +490,11 @@ export class Idb {
             };
 
             openRequest.onerror = (event: IDBErrorEvent) => {
-                observer.error('in openRequest.onerror');
+                observer.error('openRequest.onerror');
             };
 
             openRequest.onblocked = (event: IDBErrorEvent) => {
-                observer.error('in openRequest.onblocked');
+                observer.error('openRequest.onblocked');
             };
 
             // This function is called when the database doesn't exist
@@ -504,9 +504,7 @@ export class Idb {
                     this.createStores(config.storeConfigs, openRequest);
                 }
                 catch (error) {
-                    let ex: DOMException = error;
-                    observer.error('in openRequest.onupgradeended: ' +
-                        'code=' + ex.code + ' - ' + ex.message);
+                    observer.error('openRequest.onupgradeended: ' + error);
                 }
             }; // openRequest.onupgradeneeded = ..
         });
