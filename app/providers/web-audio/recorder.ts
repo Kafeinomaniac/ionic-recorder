@@ -1,24 +1,17 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    Observable
-} from 'rxjs/Rx';
-
-import {
     Injectable
 } from '@angular/core';
 
 import {
-    IdbAppData
-} from '../idb-app-data/idb-app-data';
+    Observable
+} from 'rxjs/Rx';
 
 import {
-    AUDIO_CONTEXT
-} from './web-audio-common';
-
-import {
-    DoubleBufferSetter
-} from '../../services/utils/double-buffer';
+    AUDIO_CONTEXT,
+    RecordingInfo
+} from './common';
 
 import {
     formatTime
@@ -34,15 +27,6 @@ const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 // length of script processing buffer (must be power of 2, smallest possible,
 // to reduce latency and to compute time as accurately as possible)
 const PROCESSING_BUFFER_LENGTH: number = 256;
-
-// make this a multiple of PROCESSING_BUFFER_LENGTH
-// 256 x PROCESSING_BUFFER_LENGTH = 65536 and since it's WAV,
-// it will be 2 bytes each
-export const DB_CHUNK_LENGTH: number = 65536;
-
-// pre-allocate the double chunk buffers used for saving to DB
-const DB_CHUNK1: Uint16Array = new Uint16Array(DB_CHUNK_LENGTH);
-const DB_CHUNK2: Uint16Array = new Uint16Array(DB_CHUNK_LENGTH);
 
 // statuses
 export enum RecorderStatus {
@@ -62,14 +46,6 @@ export enum RecorderStatus {
     READY_STATE
 }
 
-export interface RecordingInfo {
-    startTime: number;
-    sampleRate: number;
-    nSamples: number;
-    dbStartKey: number;
-    encoding: string;
-}
-
 /**
  * @name WebAudioRecorder
  * @description
@@ -77,7 +53,6 @@ export interface RecordingInfo {
  */
 @Injectable()
 export class WebAudioRecorder {
-    private idb: IdbAppData;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
     private scriptProcessorNode: ScriptProcessorNode;
@@ -86,10 +61,9 @@ export class WebAudioRecorder {
     private intervalId: NodeJS.Timer;
     private nRecordedProcessingBuffers: number;
     private nRecordedSamples: number;
-    // private dbKeys: number[];
-    private setter: DoubleBufferSetter;
     private startTime: number;
-    private dbStartKey: number;
+
+    protected valueCB: (pcm: number) => any;
 
     public status: RecorderStatus;
     public sampleRate: number;
@@ -101,14 +75,8 @@ export class WebAudioRecorder {
     public percentPeaksAtMax: string;
 
     // this is how we signal
-    constructor(idb: IdbAppData) {
+    constructor() {
         console.log('constructor():WebAudioRecorder');
-        this.idb = idb;
-
-        if (!this.idb) {
-            this.status = RecorderStatus.NO_DB_ERROR;
-            return;
-        }
 
         if (!AUDIO_CONTEXT) {
             this.status = RecorderStatus.NO_CONTEXT_ERROR;
@@ -123,22 +91,6 @@ export class WebAudioRecorder {
         this.resetPeaks();
         // grab microphone, init nodes that rely on stream, connect nodes
         this.initAudio();
-
-        this.dbStartKey = -1;
-        this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
-            this.idb.addChunk(this.setter.activeBuffer).subscribe(
-                (key: number) => {
-                    if (this.dbStartKey < 0) {
-                        // first key encountered
-                        console.log('setting dbStartKey to key');
-                        this.dbStartKey = key;
-                    }
-                    // increment the buffers-saved counter
-                    // this.dbKeys.push(key);
-                    // console.log('saved chunk ' + this.dbKeys.length);
-                    console.log('saved chunk ' + key);
-                });
-        });
 
         // stop() properly inits some variables for the next start()
         this.stop();
@@ -235,7 +187,7 @@ export class WebAudioRecorder {
             // fill up double-buffer active buffer if recording (and
             // save every time a fill-up occurs)
             if (this.isRecording) {
-                this.setter.setNext(value * 0x7FFF);
+                this.valueCB(value);
                 this.nRecordedSamples++;
             }
         } // for (i ...
@@ -341,6 +293,7 @@ export class WebAudioRecorder {
      */
     public stopMonitoring(): void {
         if (this.intervalId) {
+            console.log('clearing interval: ' + this.intervalId);
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
@@ -390,7 +343,6 @@ export class WebAudioRecorder {
         this.startTime = Date.now();
         this.nRecordedProcessingBuffers = 0;
         this.nRecordedSamples = 0;
-        // this.dbKeys = [];
         this.isRecording = true;
         this.isInactive = false;
     }
@@ -419,33 +371,14 @@ export class WebAudioRecorder {
         this.isRecording = false;
         this.isInactive = true;
         this.nRecordedProcessingBuffers = 0;
-        let src: Observable<RecordingInfo> = Observable.create((observer) => {
-            let recordingInfo: RecordingInfo = {
+        return Observable.create((observer) => {
+            observer.next({
                 startTime: this.startTime,
                 sampleRate: this.sampleRate,
                 nSamples: this.nRecordedSamples,
-                dbStartKey: this.dbStartKey,
                 encoding: 'audio/wav'
-            };
-            if (this.setter.bufferIndex === 0) {
-                // no leftovers: rare that we reach here due to no leftovers
-                // but we also reach here during the constructor call
-                observer.next(recordingInfo);
-                observer.complete();
-            }
-            // save leftover partial buffer
-            this.idb.addChunk(
-                this.setter.activeBuffer.subarray(0, this.setter.bufferIndex)
-            ).subscribe(
-                (key: number) => {
-                    // increment the buffers-saved counter
-                    // this.dbKeys.push(key);
-                    // console.log('saved final chunk ' + this.dbKeys.length);
-                    console.log('saved final chunk ' + key);
-                    observer.next(recordingInfo);
-                    observer.complete();
-                });
+            });
+            observer.complete();
         });
-        return src;
     }
 }

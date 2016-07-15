@@ -1,7 +1,15 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-// this is just here for DRY-ness - things used in both web-audio-player.ts
-// and web-audio-recorder.ts
+export interface RecordingInfo {
+    startTime: number;
+    sampleRate: number;
+    nSamples: number;
+    encoding: string;
+    dbStartKey?: number;
+}
+
+// this is just here for DRY-ness - things used in both player.ts
+// and recorder.ts
 export const AUDIO_CONTEXT: AudioContext =
     ((): AudioContext => {
         if (typeof window['AudioContext'] === 'undefined') {

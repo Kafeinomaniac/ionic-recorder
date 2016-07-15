@@ -7,17 +7,13 @@ import {
     SimpleChange
 } from '@angular/core';
 
-// import {
-//     IONIC_DIRECTIVES
-// } from 'ionic-angular';
-
 import {
-    WebAudioPlayer
-} from '../../providers/web-audio/web-audio-player';
+    WebAudioPlayerWav
+} from '../../providers/web-audio/player-wav';
 
 import {
     RecordingInfo
-} from '../../providers/web-audio/web-audio-recorder';
+} from '../../providers/web-audio/common';
 
 import {
     formatTime,
@@ -35,28 +31,29 @@ const RANGE_MAX: number = 200;
 @Component({
     selector: 'audio-player',
     templateUrl: 'build/components/audio-player/audio-player.html',
-    providers: [WebAudioPlayer] // ,
-    // directives: [IONIC_DIRECTIVES]
+    providers: [WebAudioPlayerWav]
 })
 export class AudioPlayer implements OnChanges {
     @Input() private recordingInfo: RecordingInfo;
-    private player: WebAudioPlayer;
+    private player: WebAudioPlayerWav;
     private hidden: boolean;
     private time: number;
     private duration: number;
     private displayTime: string;
     private displayDuration: string;
     private rangeMax: number;
+    private relativeTime: number;
 
     /**
      * @constructor
      */
-    constructor(player: WebAudioPlayer) {
+    constructor(player: WebAudioPlayerWav) {
         console.log('constructor():AudioPlayer');
         this.player = player;
         // player starts at hidden state
         this.hidden = false;
         this.time = 0;
+        this.relativeTime = 0;
         this.displayTime = formatTime(0, this.duration);
         this.rangeMax = RANGE_MAX;
     }
@@ -86,8 +83,18 @@ export class AudioPlayer implements OnChanges {
         return this.displayTime;
     }
 
-    public onPositionChange(position: number): void {
-        console.log('onPositionChange(' + position + ')');
+    public onRangePositionChange(position: number): void {
+        if (position / RANGE_MAX === this.relativeTime) {
+            // prevent calling player multiple times in
+            // immediate succession if nothing's changed
+            return;
+        }
+        this.relativeTime = position / RANGE_MAX;
+        this.time = this.relativeTime * this.duration;
+        this.displayTime = formatTime(this.time, this.duration);
+        // console.log('onRangePositionChange(' +
+        //     this.relativeTime.toFixed(2) + ')');
+        this.player.timeSeek(this.time);
     }
 
     /**
@@ -100,6 +107,7 @@ export class AudioPlayer implements OnChanges {
         if (changeRecord['recordingInfo']) {
             console.log('AudioPlayer:ngOnChanges(): [recordingInfo] = ' +
                 objectInspector(this.recordingInfo));
+            this.player.setRecordingInfo(this.recordingInfo);
             this.duration = this.recordingInfo.nSamples /
                 this.recordingInfo.sampleRate;
             this.displayTime = formatTime(this.time, this.duration);

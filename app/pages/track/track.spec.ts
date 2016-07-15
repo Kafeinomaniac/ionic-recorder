@@ -16,12 +16,16 @@ import {
     TrackPage
 } from './track';
 
+import {
+    IdbAppData
+} from '../../providers/idb-app-data/idb-app-data';
+
 let instanceFixture: InstanceFixture = null;
 
 describe('pages/track:TrackPage', () => {
     instanceFixture = beforeEachDI(
         TrackPage,
-        [menuControllerProvider],
+        [IdbAppData, menuControllerProvider],
         true,
         null
     );

@@ -14,7 +14,7 @@ import {
 
 import {
     RecordingInfo
-} from '../../providers/web-audio/web-audio-recorder';
+} from '../../providers/web-audio/common';
 
 import {
     TreeNode,

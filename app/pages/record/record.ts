@@ -18,10 +18,16 @@ import {
 } from '../../providers/idb-app-state/idb-app-state';
 
 import {
-    WebAudioRecorder,
-    RecorderStatus,
+    WebAudioRecorderWav
+} from '../../providers/web-audio/recorder-wav';
+
+import {
+    RecorderStatus
+} from '../../providers/web-audio/recorder';
+
+import {
     RecordingInfo
-} from '../../providers/web-audio/web-audio-recorder';
+} from '../../providers/web-audio/common';
 
 import {
     IdbAppFS,
@@ -42,13 +48,13 @@ const PAUSE_ICON: string = 'pause';
  */
 @Component({
     templateUrl: 'build/pages/record/record.html',
-    providers: [WebAudioRecorder],
+    providers: [WebAudioRecorderWav],
     directives: [VuGauge, Range]
 })
 export class RecordPage {
     private idbAppState: IdbAppState;
     private idbAppFS: IdbAppFS;
-    private webAudioRecorder: WebAudioRecorder;
+    private webAudioRecorder: WebAudioRecorderWav;
     private recordButtonIcon: string = START_RESUME_ICON;
     // template members
     private percentGain: string;
@@ -64,7 +70,7 @@ export class RecordPage {
     constructor(
         idbAppState: IdbAppState,
         idbAppFS: IdbAppFS,
-        webAudioRecorder: WebAudioRecorder
+        webAudioRecorder: WebAudioRecorderWav
     ) {
         console.log('constructor():RecordPage');
 
@@ -169,7 +175,6 @@ export class RecordPage {
         this.webAudioRecorder.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
                 let fileName: string = formatLocalTime(recordingInfo.startTime);
-                delete recordingInfo['fileName'];
                 this.idbAppFS.createNode(
                     fileName,
                     UNFILED_FOLDER_KEY,

@@ -25,7 +25,7 @@ import {
 
 import {
     WebAudioRecorder
-} from '../../providers/web-audio/web-audio-recorder';
+} from '../../providers/web-audio/recorder';
 
 import {
     RecordPage
