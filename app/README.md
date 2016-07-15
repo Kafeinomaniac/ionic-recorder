@@ -6,11 +6,11 @@
 
 | Name            | Content                            |
 |-----------------|------------------------------------|
-| app.ts          | App startup code (bootstrapping)   |
+| app.e2e.ts      | Top-level end-to-end app test spec |
 | app.html        | Template of app.ts                 |
 | app.scss        | Global style declarations          |
-| app.spec.tshtml | Top-level app unit test spec       |
-| app.e2e.ts      | Top-level end-to-end app test spec |
+| app.spec.ts     | Top-level app unit test spec       |
+| app.ts          | App startup code (bootstrapping)   |
 
 ### Folders
 
