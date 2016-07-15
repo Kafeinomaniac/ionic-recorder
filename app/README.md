@@ -4,6 +4,8 @@
 
 ### Files
 
+| Name            | Contents                           |
+|-----------------|------------------------------------|
 | app.ts          | App startup code (bootstrapping)   |
 | app.html        | Template of app.ts                 |
 | app.scss        | Global style declarations          |
@@ -12,6 +14,8 @@
 
 ### Subfolders
 
+| Name        | Contents                            |
+|-------------|-------------------------------------|
 | directives/ | Custom directives used by the app   |
 | pages/      | Full page components (modal or not) |
 | providers/  | Injectable service classes          |
