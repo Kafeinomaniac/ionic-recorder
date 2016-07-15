@@ -1,4 +1,4 @@
-# ionic-recorder/app: Project Source Code
+# app/ - Project Source Code
 
 ## Contents
 
