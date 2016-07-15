@@ -14,10 +14,10 @@
 
 ### Files
 
-| Name            | Content                            |
-|-----------------|------------------------------------|
-| app.e2e.ts      | Top-level end-to-end app test spec |
-| app.html        | Template for app.ts                |
-| app.scss        | Global style declarations          |
-| app.spec.ts     | Top-level app unit test spec       |
-| app.ts          | App startup code (bootstrapping)   |
+| Name            | Content                                  |
+|-----------------|------------------------------------------|
+| app.e2e.ts      | App (top-level) end-to-end app test spec |
+| app.html        | App template                             |
+| app.scss        | App (top-level) style declarations       |
+| app.spec.ts     | App (top-level) app unit test spec       |
+| app.ts          | App startup code (bootstrapping)         |
