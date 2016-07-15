@@ -91,9 +91,6 @@ export class WebAudioRecorder {
         this.resetPeaks();
         // grab microphone, init nodes that rely on stream, connect nodes
         this.initAudio();
-
-        // stop() properly inits some variables for the next start()
-        this.stop();
     }
 
     /**
@@ -245,11 +242,17 @@ export class WebAudioRecorder {
         // scriptProcessorNode -> destination
         this.scriptProcessorNode.connect(dest);
 
-        // finally, start monitoring audio volume levels
-        this.startMonitoring();
-
-        // and you can tell the world we're ready
-        this.status = RecorderStatus.READY_STATE;
+        // finally, start monitoring audio volume levels, but
+        // before we do that we reset things via stop()
+        this.stop().subscribe(
+            () => {
+                // and you can tell the world we're ready
+                this.status = RecorderStatus.READY_STATE;
+                this.startMonitoring();
+            },
+            (error) => {
+                throw Error('connectNodes():stop(): ' + error);
+            });
     }
 
     ///////////////////////////////////////////////////////////////////////////
