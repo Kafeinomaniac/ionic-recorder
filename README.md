@@ -16,28 +16,6 @@ to build
 * Useful real-time visualizations, stats and data-analysis of the recorded 
   audio signal
 
-## Live demo
-A live demo of the app even in its current (sometimes broken) alpha
-state is up on
-
-[https://tracktunes.org/ionic-recorder/]
-(https://tracktunes.org/ionic-recorder/)
-
-[ NOTE: [https://tracktunes.org](Tracktunes Inc) currently uses this
-link for staging / debugging purposes (it's over SSL, which allows us
-to test more easily on Chrome) so expect it to be broken sometimes,
-until the beta release.  When beta is released, we'll set up a
-separate staging system with its own SSL certificates elsewhere. ]
-
-This app asks for permission to use your microphone, for recording and
-sound monitoring.
-
-It runs 100% locally, on your device: no audio or any information
-about you gets transmitted anywhere.
-
-It is here for you to record audio from your device's microphone. The
-recorded audio is saved in a local database inside your device's browser.
-
 ## Requirements for running the app
 This apps runs only in browsers that implement
 a late version of IndexedDB that supports the `onupgradeended` event.
