@@ -64,15 +64,16 @@ function uint16ArrayToWavBlob(uint16Array: Uint16Array): Blob {
 export class WebAudioPlayerWav extends WebAudioPlayer {
     private idb: IdbAppData;
     private recordingInfo: RecordingInfo;
+    private fileReader: FileReader;
 
     constructor(idb: IdbAppData) {
         super();
         console.log('constructor():WebAudioPlayer');
         this.idb = idb;
-
         if (!this.idb) {
             throw Error('WebAudioPlayerWav:constructor(): db unavailable.');
         }
+        this.fileReader = new FileReader();
     }
 
     public setRecordingInfo(recordingInfo: RecordingInfo): void {
@@ -147,18 +148,36 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                 Math.floor(sampleToSkipTo / DB_CHUNK_LENGTH),
             offset: number =
                 sampleToSkipTo % DB_CHUNK_LENGTH;
+
         console.log('duration: ' + duration + ', ' +
             'relativeTime: ' + relativeTime + ', ' +
             'sampleToSkipTo: ' + sampleToSkipTo + ', ' +
             'key: ' + key + ', ' +
             'offset: ' + offset);
+
         this.idb.readChunk(key).subscribe(
             (wavArray: Uint16Array) => {
-                const blob: Blob = uint16ArrayToWavBlob(wavArray);
-                console.log('got chunk from db: ' + blob);
+                console.log('got chunk ' + key + ' from db!');
+                this.fileReader.onerror = () => {
+                    throw Error('FileReader error: ' + this.fileReader.error);
+                };
+                this.fileReader.onload = () => {
+                    AUDIO_CONTEXT.decodeAudioData(
+                        this.fileReader.result,
+                        (audioBuffer: AudioBuffer) => {
+                            console.log('decoded! duration: ' +
+                                audioBuffer.duration);
+                        },
+                        () => {
+                            throw Error('decodeAudioData() error');
+                        }
+                    );
+                };
                 // this.loadAndDecode(blob, true, null, null);
-            }
-        );
-    }
+                this.fileReader.readAsArrayBuffer(
+                    uint16ArrayToWavBlob(wavArray)
+                );
+            }); // this.idb.readChunk(key).subscribe(
+    } // public timeSeek(time: number): void {
 
 }
