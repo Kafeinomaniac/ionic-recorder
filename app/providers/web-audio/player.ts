@@ -1,9 +1,9 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 // single blob playback blass - i.e. this class is not dealing
-// with audio stored as multi-blob, it only knows a single blob. 
+// with audio stored as multi-blob, it only knows a single blob.
 // so duration for this class is the duration of the blob's audio.
-// db-free and file-free code - blob input is loaded from db 
+// db-free and file-free code - blob input is loaded from db
 // outside of (before) this class
 
 import {

@@ -15,7 +15,7 @@ import {
  */
 @Component({
     selector: 'vu-gauge',
-    templateUrl: 'build/components/vu-gauge/vu-gauge.html'
+    templateUrl: 'build/directives/vu-gauge/vu-gauge.html'
 })
 export class VuGauge implements OnChanges {
     @Input() private height: string;

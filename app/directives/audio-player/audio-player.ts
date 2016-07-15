@@ -30,7 +30,7 @@ const RANGE_MAX: number = 200;
  */
 @Component({
     selector: 'audio-player',
-    templateUrl: 'build/components/audio-player/audio-player.html',
+    templateUrl: 'build/directives/audio-player/audio-player.html',
     providers: [WebAudioPlayerWav]
 })
 export class AudioPlayer implements OnChanges {

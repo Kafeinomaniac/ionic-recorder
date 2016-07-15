@@ -10,7 +10,7 @@ import {
 
 import {
     VuGauge
-} from '../../components/vu-gauge/vu-gauge';
+} from '../../directives/vu-gauge/vu-gauge';
 
 import {
     IdbAppState,

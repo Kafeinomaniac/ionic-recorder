@@ -39,7 +39,7 @@ import {
 
 import {
     AudioPlayer
-} from '../../components/audio-player/audio-player';
+} from '../../directives/audio-player/audio-player';
 
 export function getFolderPath(folderNode: TreeNode): string {
     'use strict';
