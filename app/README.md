@@ -12,7 +12,7 @@
 | app.spec.tshtml | Top-level app unit test spec       |
 | app.e2e.ts      | Top-level end-to-end app test spec |
 
-### Subfolders
+### Folders
 
 | Name        | Content                             |
 |-------------|-------------------------------------|
