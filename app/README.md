@@ -4,7 +4,7 @@
 
 ### Files
 
-| Name            | Contents                           |
+| Name            | Content                            |
 |-----------------|------------------------------------|
 | app.ts          | App startup code (bootstrapping)   |
 | app.html        | Template of app.ts                 |
@@ -14,7 +14,7 @@
 
 ### Subfolders
 
-| Name        | Contents                            |
+| Name        | Content                             |
 |-------------|-------------------------------------|
 | directives/ | Custom directives used by the app   |
 | pages/      | Full page components (modal or not) |
