@@ -94,7 +94,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
      * @returns {string}
      */
     public getDisplayTime(): string {
-        return formatTime(this.getTime(), this.duration);
+        return formatTime(this.getTime(), this.audioBuffer.duration);
     }
 
     /**
@@ -103,7 +103,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
      */
     public getProgress(): number {
         // console.log(this.getTime() / this.duration);
-        return this.getTime() / this.duration;
+        return this.getTime() / this.audioBuffer.duration;
     }
 
     /**
@@ -155,7 +155,8 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         this.idb.readChunk(key).subscribe(
             (wavArray: Uint16Array) => {
                 const blob: Blob = uint16ArrayToWavBlob(wavArray);
-                this.loadAndDecode(blob, true, null, null);
+                console.log('got chunk from db: ' + blob);
+                // this.loadAndDecode(blob, true, null, null);
             }
         );
     }

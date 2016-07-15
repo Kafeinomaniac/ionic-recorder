@@ -14,10 +14,6 @@ import {
     AUDIO_CONTEXT
 } from './common';
 
-import {
-    formatTime
-} from '../../services/utils/utils';
-
 /**
  * @name WebAudioPlayer
  * @description
@@ -26,24 +22,18 @@ import {
  */
 @Injectable()
 export class WebAudioPlayer {
-    private audioBuffer: AudioBuffer;
+    protected audioBuffer: AudioBuffer;
     private sourceNode: AudioBufferSourceNode;
     private startedAt: number;
     private pausedAt: number;
-    public duration: number;
-    public displayDuration: string;
     public isPlaying: boolean;
-    private fileReader: FileReader;
 
     constructor() {
         console.log('constructor():WebAudioPlayer');
 
-        this.duration = 0;
-        this.displayDuration = formatTime(0, 0);
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
-        this.fileReader = new FileReader();
     }
 
     /**
@@ -59,67 +49,25 @@ export class WebAudioPlayer {
             // not paused, and we have started, so playing now
             res = AUDIO_CONTEXT.currentTime - this.startedAt;
         }
-        if (res >= this.duration) {
+        if (res >= this.audioBuffer.duration) {
             // console.log('res: ' + res + ', dur: ' + this.duration);
             // res = this.duration;
             this.stop();
             res = 0;
         }
-        if (res > this.duration) {
-            res = this.duration;
+        if (res > this.audioBuffer.duration) {
+            res = this.audioBuffer.duration;
         }
         return res;
     }
 
     /**
-     * Returns a string representation of current time no longer than the
-     * string representation of current duration.
-     * @returns {string}
-     */
-    public getDisplayTime(): string {
-        return formatTime(this.getTime(), this.duration);
-    }
-
-    /**
-     * Returns a number in [0, 1] denoting relative location in song
-     * @returns {number}
-     */
-    public getProgress(): number {
-        // console.log(this.getTime() / this.duration);
-        return this.getTime() / this.duration;
-    }
-
-    /**
-     * Load a blob and decode data in it, optionally playing it.
+     * Set a new audio buffer.  We'd have to stop current playback first.
      * @returns {void}
      */
-    public loadAndDecode(
-        blob: Blob,
-        playOnLoad: boolean,
-        loadErrorCB: () => void,
-        decodeErrorCB: () => void
-    ): void {
-        this.fileReader.onerror = loadErrorCB;
-        this.fileReader.onload = () => {
-            console.log('fileReader.onload()');
-            AUDIO_CONTEXT.decodeAudioData(
-                this.fileReader.result,
-                (audioBuffer: AudioBuffer) => {
-                    this.audioBuffer = audioBuffer;
-                    this.duration = audioBuffer.duration;
-                    this.displayDuration = formatTime(
-                        this.duration,
-                        this.duration
-                    );
-                    console.log('loaded and duration is: ' + this.duration);
-                    if (playOnLoad) {
-                        this.stop();
-                        this.play();
-                    }
-                },
-                decodeErrorCB);
-        };
-        this.fileReader.readAsArrayBuffer(blob);
+    public setAudioBuffer(audioBuffer: AudioBuffer): void {
+        this.stop();
+        this.audioBuffer = audioBuffer;
     }
 
     /**
@@ -129,22 +77,24 @@ export class WebAudioPlayer {
     private setPlaying(state: boolean): void {
         // TODO: the setTimeout() call below is a terrible hack to prevent
         // angular change detection exceptions
-        setTimeout(() => { this.isPlaying = state; }, 1);
+        setTimeout(() => { this.isPlaying = state; }, 0);
     }
 
     /**
      * Play
      * @returns {void}
      */
-    public play(): void {
-        let offset: number = this.pausedAt;
+    public play(when: number = 0, onEnded?: () => void): void {
         this.sourceNode = AUDIO_CONTEXT.createBufferSource();
         this.sourceNode.connect(AUDIO_CONTEXT.destination);
         this.sourceNode.buffer = this.audioBuffer;
-        // this.sourceNode.onended = () => {
-        //     console.log('onended!');
-        // }
-        this.sourceNode.start(0, offset);
+
+        if (onEnded) {
+            onEnded();
+        }
+
+        const offset: number = this.pausedAt;
+        this.sourceNode.start(when, offset);
         this.startedAt = AUDIO_CONTEXT.currentTime - offset;
         this.pausedAt = 0;
         this.setPlaying(true);
@@ -165,13 +115,12 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public togglePlayPause(): void {
-        // play if !isPlaying or (isPlaying && pausedAt)
         if (!this.isPlaying) {
             this.play();
         }
         else {
             this.pause();
-            console.log('at: ' + this.pausedAt + ', p: ' + this.getProgress());
+            console.log('paused at: ' + this.pausedAt);
         }
     }
 
@@ -195,30 +144,8 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public timeSeek(time: number): void {
-        let isPlaying: boolean = this.isPlaying;
-        this.setPlaying(false);
-        if (this.sourceNode) {
-            this.sourceNode.disconnect();
-            this.sourceNode.stop(0);
-            this.sourceNode = null;
-        }
-        this.sourceNode = AUDIO_CONTEXT.createBufferSource();
-        this.sourceNode.connect(AUDIO_CONTEXT.destination);
-        this.sourceNode.buffer = this.audioBuffer;
-        if (isPlaying) {
-            this.sourceNode.start(0, time);
-            this.startedAt = AUDIO_CONTEXT.currentTime - time;
-            this.pausedAt = 0;
-        }
-        this.setPlaying(isPlaying);
+        this.stop();
+        this.pausedAt = time;
+        this.play();
     }
-
-    /**
-     * Seek playback to a relative position, retaining playing state (or not)
-     * @returns {void}
-     */
-    public positionSeek(position: number): void {
-        this.timeSeek(position * this.duration);
-    }
-
 }
