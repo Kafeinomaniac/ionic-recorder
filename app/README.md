@@ -16,8 +16,8 @@
 
 | Name            | Content                                  |
 |-----------------|------------------------------------------|
-| app.e2e.ts      | App (top-level) end-to-end app test spec |
+| app.e2e.ts      | App (top-level) end-to-end tests spec    |
 | app.html        | App template                             |
 | app.scss        | App (top-level) style declarations       |
-| app.spec.ts     | App (top-level) app unit test spec       |
+| app.spec.ts     | App (top-level) unit tests spec          |
 | app.ts          | App startup code (bootstrapping)         |
