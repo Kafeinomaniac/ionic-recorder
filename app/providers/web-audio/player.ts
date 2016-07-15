@@ -1,5 +1,9 @@
 // Copyright (c) 2016 Tracktunes Inc
 
+// single blob playback blass
+// db-free code
+// file-free code - input is the file, already loaded (blob)
+
 import {
     Injectable
 } from '@angular/core';
