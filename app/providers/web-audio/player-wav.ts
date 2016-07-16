@@ -95,7 +95,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
      * @returns {string}
      */
     public getDisplayTime(): string {
-        return formatTime(this.getTime(), this.audioBuffer.duration);
+        return formatTime(this.getTime(), this.getDuration());
     }
 
     /**
@@ -104,15 +104,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
      */
     public getProgress(): number {
         // console.log(this.getTime() / this.duration);
-        return this.getTime() / this.audioBuffer.duration;
-    }
-
-    /**
-     * Play
-     * @returns {void}
-     */
-    public play(): void {
-        console.log('play');
+        return this.getTime() / this.getDuration();
     }
 
     /**
@@ -131,6 +123,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         console.log('stop');
     }
 
+    private loadDecodeAndPlay(startKey: number) {
+
+    }
+
     /**
      * Seek playback to a specific time, retaining playing state (or not)
      * @returns {void}
@@ -144,16 +140,21 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                 time / duration,
             sampleToSkipTo: number =
                 Math.floor(relativeTime * this.recordingInfo.nSamples),
-            key: number = this.recordingInfo.dbStartKey +
+            relativeSampleToSkipTo: number =
+                sampleToSkipTo % DB_CHUNK_LENGTH,
+            key: number =
+                this.recordingInfo.dbStartKey +
                 Math.floor(sampleToSkipTo / DB_CHUNK_LENGTH),
-            offset: number =
-                sampleToSkipTo % DB_CHUNK_LENGTH;
+            chunkRelativeTime: number =
+                relativeSampleToSkipTo / DB_CHUNK_LENGTH,
+            chunkDuration: number =
+                DB_CHUNK_LENGTH / this.recordingInfo.sampleRate,
+            chunkStartTime: number = chunkRelativeTime * chunkDuration;
 
         console.log('duration: ' + duration + ', ' +
             'relativeTime: ' + relativeTime + ', ' +
             'sampleToSkipTo: ' + sampleToSkipTo + ', ' +
-            'key: ' + key + ', ' +
-            'offset: ' + offset);
+            'key: ' + key + ', ');
 
         this.idb.readChunk(key).subscribe(
             (wavArray: Uint16Array) => {
@@ -167,6 +168,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                         (audioBuffer: AudioBuffer) => {
                             console.log('decoded! duration: ' +
                                 audioBuffer.duration);
+                            this.setAudioBuffer(audioBuffer);
+                            // setting this.pausedAt causes this.play() to skip to 
+                            // chunkTime within the chunk it is currently playing
+                            this.play(0, chunkStartTime);
                         },
                         () => {
                             throw Error('decodeAudioData() error');

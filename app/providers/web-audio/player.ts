@@ -22,10 +22,10 @@ import {
  */
 @Injectable()
 export class WebAudioPlayer {
-    protected audioBuffer: AudioBuffer;
+    private audioBuffer: AudioBuffer;
     private sourceNode: AudioBufferSourceNode;
     private startedAt: number;
-    private pausedAt: number;
+    protected pausedAt: number;
     public isPlaying: boolean;
 
     constructor() {
@@ -70,6 +70,10 @@ export class WebAudioPlayer {
         this.audioBuffer = audioBuffer;
     }
 
+    public getDuration(): number {
+        return this.audioBuffer ? this.audioBuffer.duration : 0;
+    }
+
     /**
      * Set this.isPlaying and force-fire angular2 change detection (a hack)
      * @returns {void}
@@ -84,7 +88,10 @@ export class WebAudioPlayer {
      * Play
      * @returns {void}
      */
-    public play(when: number = 0, onEnded?: () => void): void {
+    public play(
+        when: number = 0,
+        startAt?: number,
+        onEnded?: () => void): void {
         this.sourceNode = AUDIO_CONTEXT.createBufferSource();
         this.sourceNode.connect(AUDIO_CONTEXT.destination);
         this.sourceNode.buffer = this.audioBuffer;
@@ -93,7 +100,7 @@ export class WebAudioPlayer {
             onEnded();
         }
 
-        const offset: number = this.pausedAt;
+        let offset: number = startAt ? startAt : this.pausedAt;
         this.sourceNode.start(when, offset);
         this.startedAt = AUDIO_CONTEXT.currentTime - offset;
         this.pausedAt = 0;
