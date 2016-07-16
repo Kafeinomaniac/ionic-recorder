@@ -63,6 +63,20 @@ export function isPositiveWholeNumber(num: number): boolean {
     );
 }
 
+export function isOdd(num: number): boolean {
+    'use strict';
+    if (!isPositiveWholeNumber(num)) {
+        throw Error('isOdd expected positive whole number as input, got: ' +
+            num);
+    }
+    return num % 2 === 1;
+}
+
+export function isEven(num: number): boolean {
+    'use strict';
+    return !isOdd(num);
+}
+
 /**
  * format time into H*:MM:SS.CC
  * @param {number} - number of seconds, float

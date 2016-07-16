@@ -14,6 +14,11 @@ import {
     AUDIO_CONTEXT
 } from './common';
 
+import {
+    prependArray // ,
+    // isUndefined
+} from '../../services/utils/utils';
+
 /**
  * @name WebAudioPlayer
  * @description
@@ -23,7 +28,8 @@ import {
 @Injectable()
 export class WebAudioPlayer {
     private audioBuffer: AudioBuffer;
-    private sourceNode: AudioBufferSourceNode;
+    protected sourceNode: AudioBufferSourceNode;
+    private scheduledSourceNodes: AudioBufferSourceNode[];
     private startedAt: number;
     protected pausedAt: number;
     public isPlaying: boolean;
@@ -34,6 +40,7 @@ export class WebAudioPlayer {
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
+        this.scheduledSourceNodes = [];
     }
 
     /**
@@ -41,7 +48,7 @@ export class WebAudioPlayer {
      * @returns {number}
      */
     public getTime(): number {
-        let res: number = 0;
+        let res: number;
         if (this.pausedAt) {
             res = this.pausedAt;
         }
@@ -50,13 +57,9 @@ export class WebAudioPlayer {
             res = AUDIO_CONTEXT.currentTime - this.startedAt;
         }
         if (res >= this.audioBuffer.duration) {
-            // console.log('res: ' + res + ', dur: ' + this.duration);
-            // res = this.duration;
+            // res = this.audioBuffer.duration;
             this.stop();
             res = 0;
-        }
-        if (res > this.audioBuffer.duration) {
-            res = this.audioBuffer.duration;
         }
         return res;
     }
@@ -65,10 +68,10 @@ export class WebAudioPlayer {
      * Set a new audio buffer.  We'd have to stop current playback first.
      * @returns {void}
      */
-    public setAudioBuffer(audioBuffer: AudioBuffer): void {
-        this.stop();
-        this.audioBuffer = audioBuffer;
-    }
+    // public setAudioBuffer(audioBuffer: AudioBuffer): void {
+    //     this.stop();
+    //     this.audioBuffer = audioBuffer;
+    // }
 
     public getDuration(): number {
         return this.audioBuffer ? this.audioBuffer.duration : 0;
@@ -84,24 +87,84 @@ export class WebAudioPlayer {
         setTimeout(() => { this.isPlaying = state; }, 0);
     }
 
+    private resetSourceNode(): void {
+        if (this.sourceNode) {
+            this.sourceNode.stop(0);
+            this.sourceNode.disconnect();
+            this.sourceNode = null;
+        }
+    }
+
+    public schedulePlay(
+        audioBuffer: AudioBuffer,
+        when: number,
+        startTime?: number,
+        onEnded?: () => void
+    ): void {
+        console.log('schedulePlay(AudioBuffer, ' + when + ', ' +
+            startTime + ', onEnded())');
+        let sourceNode: AudioBufferSourceNode =
+            AUDIO_CONTEXT.createBufferSource();
+
+        sourceNode.connect(AUDIO_CONTEXT.destination);
+        sourceNode.buffer = audioBuffer;
+
+        sourceNode.onended = () => {
+            // const nextNode: AudioBufferSourceNode =
+            //     this.scheduledSourceNodes.pop();
+            // console.log('schedulePlay:sourceNode.onended() nextNode: ' +
+            //     nextNode);
+
+            // if (isUndefined(nextNode)) {
+            //     this.resetSourceNode();
+            // }
+            // else {
+            //     this.sourceNode = nextNode;
+            // }
+
+            if (onEnded) {
+                onEnded();
+            }
+        };
+
+        if (when > 0) {
+            sourceNode.start(when, 0);
+            // we save the scheduled source nodes in an array to avoid them 
+            // being garbage collected while they wait to be played.
+            // TODO: this array needs to be cleaned up when used - in onended?
+            // this.scheduledSourceNodes.push(sourceNode);
+            this.scheduledSourceNodes = prependArray(
+                sourceNode,
+                this.scheduledSourceNodes
+            );
+        }
+        else {
+            // start now
+            const offset: number = startTime ? startTime : this.pausedAt;
+
+            this.sourceNode = sourceNode;
+            sourceNode.start(0, offset);
+            this.startedAt = AUDIO_CONTEXT.currentTime - offset;
+            this.pausedAt = 0;
+            this.setPlaying(true);
+        }
+    }
+
     /**
      * Play
      * @returns {void}
      */
     public play(
-        when: number = 0,
-        startAt?: number,
-        onEnded?: () => void): void {
+        startTime?: number,
+        onEnded?: () => void
+    ): void {
         this.sourceNode = AUDIO_CONTEXT.createBufferSource();
         this.sourceNode.connect(AUDIO_CONTEXT.destination);
         this.sourceNode.buffer = this.audioBuffer;
 
-        if (onEnded) {
-            onEnded();
-        }
+        const offset: number = startTime ? startTime : this.pausedAt;
 
-        let offset: number = startAt ? startAt : this.pausedAt;
-        this.sourceNode.start(when, offset);
+        this.sourceNode.start(0, offset);
         this.startedAt = AUDIO_CONTEXT.currentTime - offset;
         this.pausedAt = 0;
         this.setPlaying(true);
@@ -136,23 +199,11 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public stop(): void {
-        if (this.sourceNode) {
-            this.sourceNode.disconnect();
-            this.sourceNode.stop(0);
-            this.sourceNode = null;
-        }
+        console.log('stop()');
+        this.resetSourceNode();
         this.startedAt = 0;
         this.pausedAt = 0;
         this.setPlaying(false);
     }
 
-    /**
-     * Seek playback to a specific time, retaining playing state (or not)
-     * @returns {void}
-     */
-    public timeSeek(time: number): void {
-        this.stop();
-        this.pausedAt = time;
-        this.play();
-    }
 }
