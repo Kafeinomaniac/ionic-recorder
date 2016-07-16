@@ -108,10 +108,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
      * Returns current playback time - position in song
      * @returns {number}
      */
-    public getTime(): number {
-        let res: number = 0;
-        return res;
-    }
+    // public getTime(): number {
+    //     let res: number = 0;
+    //     return res;
+    // }
 
     /**
      * Returns a string representation of current time no longer than the
