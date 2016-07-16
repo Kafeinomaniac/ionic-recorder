@@ -74,7 +74,8 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     private dbStartKey: number;
     private nSamples: number;
     private lastKey: number;
-    private firstChunkStartTime: number;
+    private chunkStartTime: number;
+    private startKey: number;
 
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
@@ -98,6 +99,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
             this.nSamples / this.recordingInfo.sampleRate;
         this.chunkDuration =
             DB_CHUNK_LENGTH / this.recordingInfo.sampleRate;
+        this.startKey = this.dbStartKey;
         this.lastKey =
             this.dbStartKey + Math.floor(this.nSamples / DB_CHUNK_LENGTH);
     }
@@ -146,6 +148,8 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     }
 
     private getFileReader(key: number): FileReader {
+        console.log('getFileReader(' + key + ') -> ' +
+            (isOdd(key) ? 'ODD' : 'EVEN'));
         return isOdd(key) ? this.oddKeyFileReader : this.evenKeyFileReader;
     }
 
@@ -174,7 +178,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     }
 
     private getChunkScheduleTime(key: number): number {
-        const deltaKey: number = key - this.recordingInfo.dbStartKey;
+        const deltaKey: number = key - this.startKey;
         if (key > this.lastKey) {
             throw Error('key > lastKey');
         }
@@ -258,15 +262,15 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                 Math.floor(absoluteSampleToSkipTo / DB_CHUNK_LENGTH),
             chunkRelativeTime: number =
                 relativeSampleToSkipTo / DB_CHUNK_LENGTH;
-        this.firstChunkStartTime =
-            chunkRelativeTime * this.chunkDuration;
+        this.startKey = startKey;
+        this.chunkStartTime = chunkRelativeTime * this.chunkDuration;
         console.log('duration: ' + this.duration + ', ' +
             'relativeTime: ' + relativeTime + ', ' +
             'absoluteSampleToSkipTo: ' + absoluteSampleToSkipTo + ', ' +
             'startKey: ' + startKey + ', ' +
             'lastKey: ' + this.lastKey);
 
-        this.scheduleChunk(startKey, 0, this.firstChunkStartTime).subscribe(
+        this.scheduleChunk(startKey, 0, this.chunkStartTime).subscribe(
             () => {
                 console.log('----> this.startedAt: ' + this.startedAt);
                 if (startKey + 1 <= this.lastKey) {
