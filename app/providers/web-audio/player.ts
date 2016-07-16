@@ -30,7 +30,7 @@ export class WebAudioPlayer {
     private audioBuffer: AudioBuffer;
     protected sourceNode: AudioBufferSourceNode;
     private scheduledSourceNodes: AudioBufferSourceNode[];
-    private startedAt: number;
+    protected startedAt: number;
     protected pausedAt: number;
     public isPlaying: boolean;
 
@@ -56,11 +56,11 @@ export class WebAudioPlayer {
             // not paused, and we have started, so playing now
             res = AUDIO_CONTEXT.currentTime - this.startedAt;
         }
-        if (res >= this.audioBuffer.duration) {
-            // res = this.audioBuffer.duration;
-            this.stop();
-            res = 0;
-        }
+        // if (res >= this.audioBuffer.duration) {
+        //     // res = this.audioBuffer.duration;
+        //     this.stop();
+        //     res = 0;
+        // }
         return res;
     }
 
@@ -98,7 +98,7 @@ export class WebAudioPlayer {
     public schedulePlay(
         audioBuffer: AudioBuffer,
         when: number,
-        startTime?: number,
+        startTime: number = 0,
         onEnded?: () => void
     ): void {
         console.log('schedulePlay(AudioBuffer, ' + when + ', ' +
@@ -127,7 +127,20 @@ export class WebAudioPlayer {
             }
         };
 
-        if (when > 0) {
+        if (when === 0) {
+            // start now
+            const offset: number = startTime ? startTime : this.pausedAt;
+            this.sourceNode = sourceNode;
+            this.startedAt = AUDIO_CONTEXT.currentTime - offset;
+            sourceNode.start(0, offset);
+            // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
+            this.pausedAt = 0;
+            this.setPlaying(true);
+
+        }
+        else {
+            // start later (when)
+            // sourceNode.start(when, startTime);
             sourceNode.start(when, 0);
             // we save the scheduled source nodes in an array to avoid them 
             // being garbage collected while they wait to be played.
@@ -137,16 +150,6 @@ export class WebAudioPlayer {
                 sourceNode,
                 this.scheduledSourceNodes
             );
-        }
-        else {
-            // start now
-            const offset: number = startTime ? startTime : this.pausedAt;
-
-            this.sourceNode = sourceNode;
-            sourceNode.start(0, offset);
-            this.startedAt = AUDIO_CONTEXT.currentTime - offset;
-            this.pausedAt = 0;
-            this.setPlaying(true);
         }
     }
 
@@ -164,8 +167,9 @@ export class WebAudioPlayer {
 
         const offset: number = startTime ? startTime : this.pausedAt;
 
-        this.sourceNode.start(0, offset);
         this.startedAt = AUDIO_CONTEXT.currentTime - offset;
+        this.sourceNode.start(0, offset);
+        // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
         this.pausedAt = 0;
         this.setPlaying(true);
     }

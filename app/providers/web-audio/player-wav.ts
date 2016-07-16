@@ -65,6 +65,7 @@ function uint16ArrayToWavBlob(uint16Array: Uint16Array): Blob {
 export class WebAudioPlayerWav extends WebAudioPlayer {
     private idb: IdbAppData;
     private recordingInfo: RecordingInfo;
+
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
 
@@ -148,14 +149,21 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         }
         else {
             return () => {
-                console.log('onEnded() - scheduling key: ' + (key + 2) +
-                    ' - nextNode: ' + this.sourceNode);
+                // this.startedAt + chunkStartTime + chunkDuration
                 const when: number =
-                    2 * DB_CHUNK_LENGTH / this.recordingInfo.sampleRate -
-                    startTime;
+                    this.startedAt +
+                    startTime +
+                    2 * DB_CHUNK_LENGTH / this.recordingInfo.sampleRate;
+                console.log('onEnded() - scheduling key: ' + (key + 2) +
+                    ' - nextNode: ' + this.sourceNode + ', when: ' + when);
                 this.scheduleChunk(key + 2, when, 0);
             };
         }
+    }
+
+    private getChunkScheduleTime(key: number): number {
+
+        return 0;
     }
 
     private scheduleChunk(
@@ -231,7 +239,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
 
         this.scheduleChunk(startKey, 0, chunkStartTime);
         if (startKey + 1 <= this.getLastKey()) {
-            this.scheduleChunk(startKey + 1, chunkDuration - chunkStartTime, 0);
+            this.scheduleChunk(
+                startKey + 1,
+                this.startedAt + chunkStartTime + chunkDuration
+            );
         }
     } // public timeSeek(time: number): void {
 
