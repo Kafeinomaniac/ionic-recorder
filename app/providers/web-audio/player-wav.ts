@@ -1,6 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
+    Observable
+} from 'rxjs/Rx';
+
+import {
     Injectable
 } from '@angular/core';
 
@@ -65,6 +69,12 @@ function uint16ArrayToWavBlob(uint16Array: Uint16Array): Blob {
 export class WebAudioPlayerWav extends WebAudioPlayer {
     private idb: IdbAppData;
     private recordingInfo: RecordingInfo;
+    private duration: number;
+    private chunkDuration: number;
+    private dbStartKey: number;
+    private nSamples: number;
+    private lastKey: number;
+    private firstChunkStartTime: number;
 
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
@@ -82,6 +92,14 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
 
     public setRecordingInfo(recordingInfo: RecordingInfo): void {
         this.recordingInfo = recordingInfo;
+        this.nSamples = this.recordingInfo.nSamples;
+        this.dbStartKey = this.recordingInfo.dbStartKey;
+        this.duration =
+            this.nSamples / this.recordingInfo.sampleRate;
+        this.chunkDuration =
+            DB_CHUNK_LENGTH / this.recordingInfo.sampleRate;
+        this.lastKey =
+            this.dbStartKey + Math.floor(this.nSamples / DB_CHUNK_LENGTH);
     }
 
     /**
@@ -131,17 +149,9 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         return isOdd(key) ? this.oddKeyFileReader : this.evenKeyFileReader;
     }
 
-    private getLastKey(): number {
-        return this.recordingInfo.dbStartKey +
-            Math.floor(this.recordingInfo.nSamples / DB_CHUNK_LENGTH);
-    }
-
-    private getOnEndedFunction(key: number, startTime: number): () => void {
-        const lastKey: number =
-            this.recordingInfo.dbStartKey +
-            Math.floor(this.recordingInfo.nSamples / DB_CHUNK_LENGTH);
-
-        if (key + 2 > lastKey) {
+    private getOnEndedCB(key: number, startTime: number): () => void {
+        key += 2;
+        if (key > this.lastKey) {
             return () => {
                 console.log('onEnded() - reached last chunk - nextNode: ' +
                     this.sourceNode);
@@ -150,61 +160,84 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         else {
             return () => {
                 // this.startedAt + chunkStartTime + chunkDuration
-                const when: number =
-                    this.startedAt +
-                    startTime +
-                    2 * DB_CHUNK_LENGTH / this.recordingInfo.sampleRate;
-                console.log('onEnded() - scheduling key: ' + (key + 2) +
-                    ' - nextNode: ' + this.sourceNode + ', when: ' + when);
-                this.scheduleChunk(key + 2, when, 0);
+                console.log('onEnded() - scheduling key: ' + key +
+                    ' - nextNode: ' + this.sourceNode + ', when: ' +
+                    this.getChunkScheduleTime(key));
+                this.scheduleChunk(key, this.getChunkScheduleTime(key))
+                    .subscribe(
+                    null,
+                    (error) => {
+                        throw Error('getOnEndedCB(): ' + error);
+                    });
             };
         }
     }
 
     private getChunkScheduleTime(key: number): number {
-
-        return 0;
+        const deltaKey: number = key - this.recordingInfo.dbStartKey;
+        if (key > this.lastKey) {
+            throw Error('key > lastKey');
+        }
+        if (deltaKey === 0) {
+            throw Error('Do not schedule the now for later!');
+        }
+        // if (this.startedAt === 0) {
+        //     throw Error('this.startedAt === 0!');
+        // }
+        else {
+            console.log('getScheduleTime(' + key + ') returned ' +
+                (this.startedAt + deltaKey * this.chunkDuration) +
+                ', startedAt: ' + this.startedAt
+            );
+            return this.startedAt + deltaKey * this.chunkDuration;
+        }
     }
 
     private scheduleChunk(
         key: number,
         when: number = 0,
         startTime: number = 0
-    ): void {
+    ): Observable<void> {
         console.log('scheduleChunk(' + key + ', ' + when +
             ', ' + startTime + ')');
-        const fileReader: FileReader = this.getFileReader(key);
-        this.idb.readChunk(key).subscribe(
-            (wavArray: Uint16Array) => {
-                console.log('got chunk ' + key + ' from db!');
-                fileReader.onerror = () => {
-                    throw Error('FileReader error: ' + fileReader.error);
-                };
-                fileReader.onload = () => {
-                    AUDIO_CONTEXT.decodeAudioData(
-                        fileReader.result,
-                        (audioBuffer: AudioBuffer) => {
-                            console.log('decoded! duration: ' +
-                                audioBuffer.duration);
-                            // this.setAudioBuffer(audioBuffer);
-                            // this.play(chunkStartTime);
-                            this.schedulePlay(
-                                audioBuffer,
-                                when,
-                                startTime,
-                                this.getOnEndedFunction(key, startTime)
-                            );
-                        },
-                        () => {
-                            throw Error('decodeAudioData() error');
-                        }
+        let obs: Observable<void> = Observable.create((observer) => {
+            const fileReader: FileReader = this.getFileReader(key);
+            this.idb.readChunk(key).subscribe(
+                (wavArray: Uint16Array) => {
+                    console.log('got chunk ' + key + ' from db!');
+                    fileReader.onerror = () => {
+                        throw Error('FileReader error: ' + fileReader.error);
+                    };
+                    fileReader.onload = () => {
+                        AUDIO_CONTEXT.decodeAudioData(
+                            fileReader.result,
+                            (audioBuffer: AudioBuffer) => {
+                                console.log('decoded! duration: ' +
+                                    audioBuffer.duration);
+                                // this.setAudioBuffer(audioBuffer);
+                                // this.play(chunkStartTime);
+                                this.schedulePlay(
+                                    audioBuffer,
+                                    when,
+                                    startTime,
+                                    this.getOnEndedCB(key, startTime)
+                                );
+                                observer.next();
+                                observer.complete();
+                            },
+                            () => {
+                                observer.error('decodeAudioData() error');
+                            }
+                        );
+                    };
+                    // this.loadAndDecode(blob, true, null, null);
+                    fileReader.readAsArrayBuffer(
+                        uint16ArrayToWavBlob(wavArray)
                     );
-                };
-                // this.loadAndDecode(blob, true, null, null);
-                fileReader.readAsArrayBuffer(
-                    uint16ArrayToWavBlob(wavArray)
-                );
-            }); // this.idb.readChunk(key).subscribe(
+                }); // this.idb.readChunk(key).subscribe(
+
+        });
+        return obs;
     }
 
     /**
@@ -214,10 +247,8 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     public timeSeek(time: number): void {
         console.log('skipToTime(' + time.toFixed(2) + ')');
         const
-            duration: number =
-                this.recordingInfo.nSamples / this.recordingInfo.sampleRate,
             relativeTime: number =
-                time / duration,
+                time / this.duration,
             absoluteSampleToSkipTo: number =
                 Math.floor(relativeTime * this.recordingInfo.nSamples),
             relativeSampleToSkipTo: number =
@@ -226,24 +257,33 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                 this.recordingInfo.dbStartKey +
                 Math.floor(absoluteSampleToSkipTo / DB_CHUNK_LENGTH),
             chunkRelativeTime: number =
-                relativeSampleToSkipTo / DB_CHUNK_LENGTH,
-            chunkDuration: number =
-                DB_CHUNK_LENGTH / this.recordingInfo.sampleRate,
-            chunkStartTime: number =
-                chunkRelativeTime * chunkDuration;
-        console.log('duration: ' + duration + ', ' +
+                relativeSampleToSkipTo / DB_CHUNK_LENGTH;
+        this.firstChunkStartTime =
+            chunkRelativeTime * this.chunkDuration;
+        console.log('duration: ' + this.duration + ', ' +
             'relativeTime: ' + relativeTime + ', ' +
             'absoluteSampleToSkipTo: ' + absoluteSampleToSkipTo + ', ' +
             'startKey: ' + startKey + ', ' +
-            'lastKey: ' + this.getLastKey());
+            'lastKey: ' + this.lastKey);
 
-        this.scheduleChunk(startKey, 0, chunkStartTime);
-        if (startKey + 1 <= this.getLastKey()) {
-            this.scheduleChunk(
-                startKey + 1,
-                this.startedAt + chunkStartTime + chunkDuration
-            );
-        }
+        this.scheduleChunk(startKey, 0, this.firstChunkStartTime).subscribe(
+            () => {
+                console.log('----> this.startedAt: ' + this.startedAt);
+                if (startKey + 1 <= this.lastKey) {
+                    this.scheduleChunk(
+                        startKey + 1,
+                        this.getChunkScheduleTime(startKey + 1)
+                    ).subscribe(
+                        null,
+                        (error) => {
+                            throw Error('timeSeek-2: ' + error);
+                        });
+                }
+            },
+            (error) => {
+                throw Error('timeSeek-1: ' + error);
+            }
+        );
     } // public timeSeek(time: number): void {
 
 }

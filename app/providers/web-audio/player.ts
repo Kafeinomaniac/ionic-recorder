@@ -131,9 +131,13 @@ export class WebAudioPlayer {
             // start now
             const offset: number = startTime ? startTime : this.pausedAt;
             this.sourceNode = sourceNode;
-            this.startedAt = AUDIO_CONTEXT.currentTime - offset;
-            sourceNode.start(0, offset);
             // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
+            // console.log('this.starteAt: ' + this.startedAt);
+            console.log('====> this.starteAt 0: ' +
+                (AUDIO_CONTEXT.currentTime - offset));
+            sourceNode.start(0, offset);
+            this.startedAt = AUDIO_CONTEXT.currentTime - offset;
+            console.log('====> this.starteAt 1: ' + this.startedAt);
             this.pausedAt = 0;
             this.setPlaying(true);
 
