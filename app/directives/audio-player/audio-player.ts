@@ -78,7 +78,7 @@ export class AudioPlayer implements OnChanges {
         return RANGE_MAX * this.player.time / this.player.duration;
     }
 
-    public onRangePositionChange(position: number): void {
+    public onRangeValueChange(position: number): void {
         if (position / RANGE_MAX === this.relativeTime) {
             // prevent calling player multiple times in
             // immediate succession if nothing's changed
