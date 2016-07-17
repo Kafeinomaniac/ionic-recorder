@@ -212,7 +212,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
      */
     public timeSeek(time: number): void {
         console.log('skipToTime(' + time.toFixed(2) + ')');
-        this.stop();
+        // this.stop();
         const
             relativeTime: number =
                 time / this.totalDuration,

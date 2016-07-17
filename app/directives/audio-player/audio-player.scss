@@ -1,10 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-// $audio-player-height: 40px;
-
-// div.audio-player-component ion-range {
-//     background: map-get($colors , almost-dark);
-//     color: map-get($colors, light);
-//     justify-content: center;
-//     padding-right: 1em;
-// }
+div.audio-player-component ion-range {
+    background: map-get($colors , almost-dark);
+    color: map-get($colors, light);
+    padding-right: 1em;
+}

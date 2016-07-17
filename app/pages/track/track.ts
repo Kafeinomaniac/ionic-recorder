@@ -29,6 +29,10 @@ import {
     getFolderPath
 } from '../library/library';
 
+import {
+    MasterClock
+} from '../../providers/master-clock/master-clock';
+
 const parentChild: ParentChild = {
     parent: {
         name: 'Unfiled',
@@ -56,6 +60,7 @@ const parentChild: ParentChild = {
  */
 @Component({
     templateUrl: 'build/pages/track/track.html',
+    providers: [MasterClock],
     directives: [AudioPlayer]
 })
 export class TrackPage {

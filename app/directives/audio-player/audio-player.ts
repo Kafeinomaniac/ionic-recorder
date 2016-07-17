@@ -19,11 +19,6 @@ import {
     RecordingInfo
 } from '../../providers/web-audio/common';
 
-import {
-    formatTime,
-    objectInspector
-} from '../../services/utils/utils';
-
 const RANGE_MAX: number = 200;
 
 /**
@@ -42,10 +37,6 @@ export class AudioPlayer implements OnChanges {
     @Input() private recordingInfo: RecordingInfo;
     private player: WebAudioPlayerWav;
     private hidden: boolean;
-    private time: number;
-    // private duration: number;
-    private displayTime: string;
-    private displayDuration: string;
     private rangeMax: number;
     private relativeTime: number;
 
@@ -57,9 +48,7 @@ export class AudioPlayer implements OnChanges {
         this.player = player;
         // player starts at hidden state
         this.hidden = false;
-        this.time = 0;
         this.relativeTime = 0;
-        this.displayTime = formatTime(0, this.player.getDuration());
         this.rangeMax = RANGE_MAX;
     }
 
@@ -90,12 +79,7 @@ export class AudioPlayer implements OnChanges {
             return;
         }
         this.relativeTime = position / RANGE_MAX;
-        const duration: number = this.player.duration,
-            seekTime: number = this.relativeTime * duration;
-        console.log('::::: relativeTime ::::::: ' + this.relativeTime);
-        console.log('::::: duration ::::::: ' + duration);
-        console.log('::::: seekTime ::::::: ' + seekTime);
-        this.displayTime = formatTime(seekTime, duration);
+        const seekTime: number = this.relativeTime * this.player.duration;
         this.player.timeSeek(seekTime);
     }
 
@@ -107,14 +91,11 @@ export class AudioPlayer implements OnChanges {
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['recordingInfo']) {
-            console.log('AudioPlayer:ngOnChanges(): [recordingInfo] = ' +
-                objectInspector(this.recordingInfo));
-            this.player.setRecordingInfo(this.recordingInfo);
-            // this.duration = this.recordingInfo.nSamples /
-            //     this.recordingInfo.sampleRate;
-            const duration: number = this.player.getDuration();
-            this.displayTime = formatTime(this.time, duration);
-            this.displayDuration = formatTime(duration, duration);
+            console.log('AudioPlayer:ngOnChanges(): [recordingInfo]: ' +
+                this.recordingInfo);
+            if (this.recordingInfo) {
+                this.player.setRecordingInfo(this.recordingInfo);
+            }
         }
     }
 }
