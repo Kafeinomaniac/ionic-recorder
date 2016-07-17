@@ -37,24 +37,6 @@ export class MasterClock {
         if (this.isRunning) {
             return;
         }
-        // commented block here is a more precisely timed version
-        // this.ngZone.runOutsideAngular(() => {
-        //     let startTime: number = Date.now(),
-        //         timeoutError: number,
-        //         id: string,
-        //         repeat: () => void = () => {
-        //             this.nTicks++;
-        //             this.ngZone.run(() => {
-        //                 for (id in this.functions) {
-        //                     this.functions[id]();
-        //                 }
-        //             });
-        //             timeoutError = Date.now() - startTime -
-        //                 this.nTicks * CLOCK_INTERVAL_MSEC;
-        //             setTimeout(repeat, CLOCK_INTERVAL_MSEC - timeoutError);
-        //         }; // repeat: Function = () => {
-        //     setTimeout(repeat, CLOCK_INTERVAL_MSEC);
-        // }); // this.ngZone.runOutsideAngular(() => {
         this.ngZone.runOutsideAngular(() => {
             this.intervalId = setInterval(
                 // the monitoring actions are in the following function:
