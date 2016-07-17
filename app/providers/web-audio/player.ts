@@ -49,7 +49,7 @@ export class WebAudioPlayer {
     protected pausedAt: number;
     public isPlaying: boolean;
     private intervalId: NodeJS.Timer;
-    private time: number;
+    public time: number;
     public duration: number;
     public displayTime: string;
     public displayDuration: string;

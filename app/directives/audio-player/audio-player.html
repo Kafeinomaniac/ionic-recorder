@@ -1,7 +1,7 @@
 <!-- Copyright (c) 2016 Tracktunes Inc -->
 
 <div class="audio-player-component" [hidden]="hidden">
-    <ion-range (ionChange)="onRangePositionChange($event.value)" debounce="50" min="0" [max]="rangeMax" logo-red>
+    <ion-range [ngModel]="getRangeValueFromTime()" (ionChange)="onRangePositionChange($event.value)" debounce="50" min="0" [max]="rangeMax" logo-red>
         <button range-left clear (click)="player.togglePlayPause()">
         	<ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
         	 <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
