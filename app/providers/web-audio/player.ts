@@ -44,7 +44,7 @@ export class WebAudioPlayer {
     protected pausedAt: number;
     public isPlaying: boolean;
     private intervalId: NodeJS.Timer;
-    
+
     constructor() {
         console.log('constructor():WebAudioPlayer');
 
@@ -221,7 +221,7 @@ export class WebAudioPlayer {
      */
     public togglePlayPause(): void {
         if (!this.isPlaying) {
-            this.schedulePlay(this.audioBuffer)
+            this.schedulePlay(this.audioBuffer);
         }
         else {
             this.pause();

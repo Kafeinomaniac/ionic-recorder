@@ -31,10 +31,9 @@ export class MasterClock {
         this.isRunning = false;
         this.intervalId = null;
         this.nTicks = 0;
-        this.start();
     }
 
-    start(): void {
+    public start(): void {
         if (this.isRunning) {
             return;
         }
@@ -68,13 +67,14 @@ export class MasterClock {
         this.isRunning = true;
     }
 
-    stop(): void {
+    public stop(): void {
         if (!this.isRunning) {
             return;
         }
         this.isRunning = false;
         if (this.intervalId) {
-            console.log('MasterClock:stop(): clearing interval: ' + this.intervalId);
+            console.log('MasterClock:stop(): clearing interval: ' +
+                this.intervalId);
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
@@ -86,8 +86,8 @@ export class MasterClock {
      * @param {Function} function to execute in the clock's loop
      * @returns {void}
      */
-    addFunction(id: string, fun: () => void) {
-        const nFunctions = Object.keys(this.functions).length;
+    public addFunction(id: string, fun: () => void): void {
+        const nFunctions: number = Object.keys(this.functions).length;
         if (nFunctions > MAX_FUNCTIONS) {
             throw Error('MasterClock: too many functions');
         }
@@ -102,9 +102,9 @@ export class MasterClock {
      * @param {string} id of function to remove
      * @returns {void}
      */
-    removeFunction(id: string) {
+    public removeFunction(id: string): void {
         delete this.functions[id];
-        const nFunctions = Object.keys(this.functions).length;
+        const nFunctions: number = Object.keys(this.functions).length;
         if (nFunctions === 0) {
             this.stop();
         }
