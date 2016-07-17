@@ -33,6 +33,15 @@ import {
 // the name of the function we give to master clock to run
 const CLOCK_FUNCTION_NAME: string = 'player';
 
+function resetSourceNode(sourceNode: AudioBufferSourceNode): void {
+    'use strict';
+    if (sourceNode) {
+        sourceNode.disconnect();
+        sourceNode.stop(0);
+        sourceNode = null;
+    }
+}
+
 /**
  * @name WebAudioPlayer
  * @description
@@ -107,7 +116,7 @@ export class WebAudioPlayer {
                     this.duration = duration;
                     this.displayDuration = formatTime(duration, duration);
                 }
-                console.log(this.displayTime + ' / ' + this.displayDuration);
+                // console.log(this.displayTime + '/' + this.displayDuration);
             });
     }
 
@@ -142,14 +151,6 @@ export class WebAudioPlayer {
         setTimeout(() => { this.isPlaying = state; });
     }
 
-    private resetSourceNode(): void {
-        if (this.sourceNode) {
-            this.sourceNode.stop(0);
-            this.sourceNode.disconnect();
-            this.sourceNode = null;
-        }
-    }
-
     public schedulePlay(
         audioBuffer: AudioBuffer,
         when: number = 0,
@@ -175,7 +176,7 @@ export class WebAudioPlayer {
                 nextNode);
 
             if (isUndefined(nextNode)) {
-                this.resetSourceNode();
+                resetSourceNode(this.sourceNode);
                 console.log('DONE! nScheduledSourceNodes = ' +
                     this.scheduledSourceNodes.length);
             }
@@ -250,7 +251,11 @@ export class WebAudioPlayer {
      */
     public stop(): void {
         console.log('stop()');
-        this.resetSourceNode();
+        resetSourceNode(this.sourceNode);
+        for (let i in this.scheduledSourceNodes) {
+            console.log('resetting scheduled: ' + i);
+            resetSourceNode(this.scheduledSourceNodes[i]);
+        }
         this.startedAt = 0;
         this.pausedAt = 0;
         this.setPlaying(false);

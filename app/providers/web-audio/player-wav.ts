@@ -85,7 +85,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
 
     constructor(masterClock: MasterClock, idb: IdbAppData) {
         super(masterClock);
-        console.log('constructor():WebAudioPlayer');
+        console.log('constructor():WebAudioPlayerWav');
         this.idb = idb;
         if (!this.idb) {
             throw Error('WebAudioPlayerWav:constructor(): db unavailable.');
@@ -212,6 +212,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
      */
     public timeSeek(time: number): void {
         console.log('skipToTime(' + time.toFixed(2) + ')');
+        this.stop();
         const
             relativeTime: number =
                 time / this.totalDuration,
