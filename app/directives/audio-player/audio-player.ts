@@ -8,6 +8,10 @@ import {
 } from '@angular/core';
 
 import {
+    Range
+} from 'ionic-angular';
+
+import {
     WebAudioPlayerWav
 } from '../../providers/web-audio/player-wav';
 
@@ -31,7 +35,8 @@ const RANGE_MAX: number = 200;
 @Component({
     selector: 'audio-player',
     templateUrl: 'build/directives/audio-player/audio-player.html',
-    providers: [WebAudioPlayerWav]
+    providers: [WebAudioPlayerWav],
+    directives: [Range]
 })
 export class AudioPlayer implements OnChanges {
     @Input() private recordingInfo: RecordingInfo;

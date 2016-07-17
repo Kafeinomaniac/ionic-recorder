@@ -49,7 +49,7 @@ export class MasterClock {
                     });
                 },
                 CLOCK_INTERVAL_MSEC);
-        })
+        });
         this.isRunning = true;
     }
 
