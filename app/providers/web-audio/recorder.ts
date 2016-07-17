@@ -14,15 +14,15 @@ import {
 } from './common';
 
 import {
+    MasterClock
+} from '../master-clock/master-clock';
+
+import {
     formatTime
 } from '../../services/utils/utils';
 
-// sets the frame-rate at which either the volume monitor or the progress bar
-// is updated when it changes on the screen.
-const MONITOR_REFRESH_RATE_HZ: number = 24;
-
-// MONITOR_REFRESH_INTERVAL is derived from MONITOR_REFRESH_RATE_HZ
-const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
+// the name of the function we give to master clock to run
+const CLOCK_FUNCTION_NAME: string = 'recorder';
 
 // length of script processing buffer (must be power of 2, smallest possible,
 // to reduce latency and to compute time as accurately as possible)
@@ -53,12 +53,12 @@ export enum RecorderStatus {
  */
 @Injectable()
 export class WebAudioRecorder {
+    private masterClock: MasterClock;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
     private scriptProcessorNode: ScriptProcessorNode;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
-    private intervalId: NodeJS.Timer;
     private nRecordedProcessingBuffers: number;
     private nRecordedSamples: number;
     private startTime: number;
@@ -75,8 +75,10 @@ export class WebAudioRecorder {
     public percentPeaksAtMax: string;
 
     // this is how we signal
-    constructor() {
+    constructor(masterClock: MasterClock) {
         console.log('constructor():WebAudioRecorder');
+
+        this.masterClock = masterClock;
 
         if (!AUDIO_CONTEXT) {
             this.status = RecorderStatus.NO_CONTEXT_ERROR;
@@ -264,7 +266,8 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public startMonitoring(): void {
-        this.intervalId = setInterval(
+        this.masterClock.addFunction(
+            CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
                 // update currentTime property
@@ -286,8 +289,7 @@ export class WebAudioRecorder {
                 this.percentPeaksAtMax =
                     (100 * this.nPeaksAtMax / this.nPeakMeasurements)
                         .toFixed(1);
-            },
-            MONITOR_REFRESH_INTERVAL);
+            });
     }
 
     /**
@@ -295,11 +297,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public stopMonitoring(): void {
-        if (this.intervalId) {
-            console.log('clearing interval: ' + this.intervalId);
-            clearInterval(this.intervalId);
-            this.intervalId = null;
-        }
+        this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
     }
 
     /**

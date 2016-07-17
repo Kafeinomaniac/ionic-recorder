@@ -33,6 +33,10 @@ import {
 } from './providers/idb-app-fs/idb-app-fs';
 
 import {
+    MasterClock
+} from './providers/master-clock/master-clock';
+
+import {
     LoadingPage
 } from './pages/loading/loading';
 
@@ -191,6 +195,7 @@ ionicBootstrap(
         provide(ExceptionHandler, { useClass: AppExceptionHandler }),
         IdbAppState,
         IdbAppData,
-        IdbAppFS
+        IdbAppFS,
+        MasterClock
     ],
     {});

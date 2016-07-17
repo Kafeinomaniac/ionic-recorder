@@ -24,6 +24,10 @@ import {
     WebAudioRecorder
 } from './recorder';
 
+import {
+    MasterClock
+} from '../master-clock/master-clock';
+
 // make this a multiple of PROCESSING_BUFFER_LENGTH
 // 256 x PROCESSING_BUFFER_LENGTH = 65536 and since it's WAV,
 // it will be 2 bytes each
@@ -45,8 +49,8 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
     private setter: DoubleBufferSetter;
 
     // this is how we signal
-    constructor(idb: IdbAppData) {
-        super();
+    constructor(masterClock: MasterClock, idb: IdbAppData) {
+        super(masterClock);
 
         console.log('constructor():WebAudioRecorderWav');
 
@@ -84,7 +88,7 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
      */
     public stop(): Observable<RecordingInfo> {
         let obs: Observable<RecordingInfo> = Observable.create((observer) => {
-            this.stop().subscribe(
+            super.stop().subscribe(
                 (recordingInfo: RecordingInfo) => {
                     recordingInfo.dbStartKey = this.dbStartKey;
                     if (this.setter.bufferIndex === 0) {

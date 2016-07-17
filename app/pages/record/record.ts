@@ -35,6 +35,10 @@ import {
 } from '../../providers/idb-app-fs/idb-app-fs';
 
 import {
+    MasterClock
+} from '../../providers/master-clock/master-clock';
+
+import {
     formatLocalTime
 } from '../../services/utils/utils';
 
@@ -48,7 +52,7 @@ const PAUSE_ICON: string = 'pause';
  */
 @Component({
     templateUrl: 'build/pages/record/record.html',
-    providers: [WebAudioRecorderWav],
+    providers: [WebAudioRecorderWav, MasterClock],
     directives: [VuGauge, Range]
 })
 export class RecordPage {
