@@ -74,16 +74,6 @@ export class AudioPlayer implements OnChanges {
         this.hidden = true;
     }
 
-    public getTime(): string {
-        const time: number = this.player.getTime();
-        console.log('getTime: ' + time);
-        if (time !== this.time) {
-            this.time = time;
-            this.displayTime = formatTime(time, this.player.getDuration());
-        }
-        return this.displayTime;
-    }
-
     public onRangePositionChange(position: number): void {
         if (position / RANGE_MAX === this.relativeTime) {
             // prevent calling player multiple times in
@@ -91,7 +81,7 @@ export class AudioPlayer implements OnChanges {
             return;
         }
         this.relativeTime = position / RANGE_MAX;
-        const duration: number = this.player.getDuration(),
+        const duration: number = this.player.duration,
             seekTime: number = this.relativeTime * duration;
         console.log('::::: relativeTime ::::::: ' + this.relativeTime);
         console.log('::::: duration ::::::: ' + duration);

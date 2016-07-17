@@ -7,10 +7,10 @@
         	 <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
     	</button>
         <ion-label range-left class="small-text">
-            {{getTime()}}
+            {{player.displayTime}}
         </ion-label>
         <ion-label range-right>
-            {{displayDuration}}
+            {{player.displayDuration}}
         </ion-label>
     </ion-range>
 </div>

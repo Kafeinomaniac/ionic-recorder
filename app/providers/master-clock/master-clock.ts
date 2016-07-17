@@ -1,7 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    // NgZone,
+    NgZone,
     Injectable
 } from '@angular/core';
 
@@ -20,7 +20,7 @@ export class MasterClock {
 
     private intervalId: NodeJS.Timer;
     private nTicks: number = 0;
-    // private ngZone: NgZone = new NgZone({ enableLongStackTrace: false });
+    private ngZone: NgZone = new NgZone({ enableLongStackTrace: false });
     private functions: { [id: string]: () => void } = {};
 
     /**
@@ -55,15 +55,19 @@ export class MasterClock {
         //         }; // repeat: Function = () => {
         //     setTimeout(repeat, CLOCK_INTERVAL_MSEC);
         // }); // this.ngZone.runOutsideAngular(() => {
-        this.intervalId = setInterval(
-            // the monitoring actions are in the following function:
-            () => {
-                this.nTicks++;
-                for (let id in this.functions) {
-                    this.functions[id]();
-                }
-            },
-            CLOCK_INTERVAL_MSEC);
+        this.ngZone.runOutsideAngular(() => {
+            this.intervalId = setInterval(
+                // the monitoring actions are in the following function:
+                () => {
+                    this.nTicks++;
+                    this.ngZone.run(() => {
+                        for (let id in this.functions) {
+                            this.functions[id]();
+                        }
+                    });
+                },
+                CLOCK_INTERVAL_MSEC);
+        })
         this.isRunning = true;
     }
 

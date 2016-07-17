@@ -22,12 +22,17 @@ import {
 } from './player';
 
 import {
-    isOdd
+    isOdd,
+    formatTime
 } from '../../services/utils/utils';
 
 import {
     IdbAppData
 } from '../idb-app-data/idb-app-data';
+
+import {
+    MasterClock
+} from '../master-clock/master-clock';
 
 function uint16ArrayToWavBlob(uint16Array: Uint16Array): Blob {
     'use strict';
@@ -68,19 +73,18 @@ function uint16ArrayToWavBlob(uint16Array: Uint16Array): Blob {
 export class WebAudioPlayerWav extends WebAudioPlayer {
     private idb: IdbAppData;
     private recordingInfo: RecordingInfo;
-    private duration: number;
     private chunkDuration: number;
     private dbStartKey: number;
     private nSamples: number;
     private lastKey: number;
     private chunkStartTime: number;
     private startKey: number;
-
+    private totalDuration: number;
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
 
-    constructor(idb: IdbAppData) {
-        super();
+    constructor(masterClock: MasterClock, idb: IdbAppData) {
+        super(masterClock);
         console.log('constructor():WebAudioPlayer');
         this.idb = idb;
         if (!this.idb) {
@@ -90,58 +94,20 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         this.evenKeyFileReader = new FileReader();
     }
 
-    // public getTime(): number {
-    //     let chunkTime: number = super.getTime();
-    //     return chunkTime;
-    // }
-
     public setRecordingInfo(recordingInfo: RecordingInfo): void {
         this.recordingInfo = recordingInfo;
         this.nSamples = this.recordingInfo.nSamples;
         this.dbStartKey = this.recordingInfo.dbStartKey;
-        this.duration =
+        this.totalDuration =
             this.nSamples / this.recordingInfo.sampleRate;
+        this.duration = this.totalDuration;
+        this.displayDuration = formatTime(this.duration, this.duration);
         this.chunkDuration =
             DB_CHUNK_LENGTH / this.recordingInfo.sampleRate;
         this.startKey = this.dbStartKey;
         this.lastKey =
             this.dbStartKey + Math.floor(this.nSamples / DB_CHUNK_LENGTH);
     }
-
-    /**
-     * Returns current playback time - position in song
-     * @returns {number}
-     */
-    public getDuration(): number {
-        // returns the duration of all chunks combined, we must
-        // override the single-chunk base class here.
-        return this.duration ? this.duration : 0;
-    }
-
-    /**
-     * Returns a number in [0, 1] denoting relative location in song
-     * @returns {number}
-     */
-    // public getProgress(): number {
-    //     // console.log(this.getTime() / this.duration);
-    //     return this.getTime() / this.getDuration();
-    // }
-
-    /**
-     * Pause
-     * @returns {void}
-     */
-    // public pause(): void {
-    //     console.log('pause');
-    // }
-
-    /**
-     * Stop playback
-     * @returns {void}
-     */
-    // public stop(): void {
-    //     console.log('stop');
-    // }
 
     private getFileReader(key: number): FileReader {
         console.log('getFileReader(' + key + ') -> ' +
@@ -248,7 +214,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         console.log('skipToTime(' + time.toFixed(2) + ')');
         const
             relativeTime: number =
-                time / this.duration,
+                time / this.totalDuration,
             absoluteSampleToSkipTo: number =
                 Math.floor(relativeTime * this.recordingInfo.nSamples),
             relativeSampleToSkipTo: number =
@@ -260,7 +226,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                 relativeSampleToSkipTo / DB_CHUNK_LENGTH;
         this.startKey = startKey;
         this.chunkStartTime = chunkRelativeTime * this.chunkDuration;
-        console.log('duration: ' + this.duration + ', ' +
+        console.log('duration: ' + this.totalDuration + ', ' +
             'relativeTime: ' + relativeTime + ', ' +
             'absoluteSampleToSkipTo: ' + absoluteSampleToSkipTo + ', ' +
             'startKey: ' + startKey + ', ' +

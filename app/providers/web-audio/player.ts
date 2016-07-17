@@ -22,12 +22,16 @@ import {
     isUndefined
 } from '../../services/utils/utils';
 
-// sets the frame-rate at which we monitor time
-// is updated when it changes on the screen.
-const MONITOR_REFRESH_RATE_HZ: number = 24;
+import {
+    MasterClock
+} from '../master-clock/master-clock';
 
-// MONITOR_REFRESH_INTERVAL is derived from MONITOR_REFRESH_RATE_HZ
-const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
+import {
+    formatTime
+} from '../../services/utils/utils';
+
+// the name of the function we give to master clock to run
+const CLOCK_FUNCTION_NAME: string = 'player';
 
 /**
  * @name WebAudioPlayer
@@ -37,6 +41,7 @@ const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
  */
 @Injectable()
 export class WebAudioPlayer {
+    private masterClock: MasterClock;
     private audioBuffer: AudioBuffer;
     protected sourceNode: AudioBufferSourceNode;
     private scheduledSourceNodes: AudioBufferSourceNode[];
@@ -44,15 +49,26 @@ export class WebAudioPlayer {
     protected pausedAt: number;
     public isPlaying: boolean;
     private intervalId: NodeJS.Timer;
+    private time: number;
+    public duration: number;
+    public displayTime: string;
+    public displayDuration: string;
 
-    constructor() {
+    constructor(masterClock: MasterClock) {
         console.log('constructor():WebAudioPlayer');
+
+        this.masterClock = masterClock;
 
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
         this.scheduledSourceNodes = [];
         this.intervalId = null;
+
+        this.time = 0;
+        this.duration = 0;
+        this.displayTime = formatTime(0, 0);
+        this.displayDuration = this.displayTime;
     }
 
     /**
@@ -60,30 +76,39 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public startMonitoring(): void {
-        this.intervalId = setInterval(
+        console.log('PLAYER: startMonitoring()');
+        this.masterClock.addFunction(
+            CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
-                // // update currentTime property
-                // this.currentTime = formatTime(
-                //     this.nBuffersToSeconds(this.nRecordedProcessingBuffers));
+                let time: number = 0;
+                if (this.pausedAt) {
+                    time = this.pausedAt;
+                }
+                else if (this.startedAt) {
+                    // not paused, and we have started, so playing now
+                    time = AUDIO_CONTEXT.currentTime - this.startedAt;
+                }
 
-                // // update currentVolume property
-                // this.nPeakMeasurements += 1;
-                // if (this.currentVolume > this.maxVolumeSinceReset) {
-                //     // on new maximum, re-start counting peaks
-                //     this.resetPeaks();
-                //     this.maxVolumeSinceReset = this.currentVolume;
-                // }
-                // else if (this.currentVolume === this.maxVolumeSinceReset) {
-                //     this.nPeaksAtMax += 1;
-                // }
+                if (time > this.duration) {
+                    time = this.duration;
+                    this.stop();
+                }
 
-                // // update percentPeaksAtMax property
-                // this.percentPeaksAtMax =
-                //     (100 * this.nPeaksAtMax / this.nPeakMeasurements)
-                //         .toFixed(1);
-            },
-            MONITOR_REFRESH_INTERVAL);
+                if (this.time !== time) {
+                    // change detected
+                    this.time = time;
+                    this.displayTime = formatTime(time, this.duration);
+                }
+
+                const duration: number = this.getDuration();
+                if (this.duration !== duration) {
+                    // change detected
+                    this.duration = duration;
+                    this.displayDuration = formatTime(duration, duration);
+                }
+                console.log(this.displayTime + ' / ' + this.displayDuration);
+            });
     }
 
     /**
@@ -91,35 +116,20 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public stopMonitoring(): void {
-        if (this.intervalId) {
-            console.log('clearing interval: ' + this.intervalId);
-            clearInterval(this.intervalId);
-            this.intervalId = null;
-        }
-    }
-    /**
-     * Returns current playback time - position in song
-     * @returns {number}
-     */
-    public getTime(): number {
-        let res: number = 0;
-        if (this.pausedAt) {
-            res = this.pausedAt;
-        }
-        else if (this.startedAt) {
-            // not paused, and we have started, so playing now
-            res = AUDIO_CONTEXT.currentTime - this.startedAt;
-        }
-        // if (res >= this.getDuration()) {
-        //     // res = this.audioBuffer.duration;
-        //     this.stop();
-        //     res = 0;
-        // }
-        return res;
+        console.log('PLAYER: stopMonitoring()');
+        this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
     }
 
     public getDuration(): number {
-        return this.audioBuffer ? this.audioBuffer.duration : 0;
+        if (this.duration) {
+            return this.duration;
+        }
+        else if (this.audioBuffer) {
+            return this.audioBuffer.duration;
+        }
+        else {
+            return 0;
+        }
     }
 
     /**
@@ -149,6 +159,7 @@ export class WebAudioPlayer {
         console.log('schedulePlay(AudioBuffer, ' + when + ', ' +
             startTime + ', onEnded())');
         this.audioBuffer = audioBuffer;
+
         let sourceNode: AudioBufferSourceNode =
             AUDIO_CONTEXT.createBufferSource();
 
@@ -165,6 +176,8 @@ export class WebAudioPlayer {
 
             if (isUndefined(nextNode)) {
                 this.resetSourceNode();
+                console.log('DONE! nScheduledSourceNodes = ' +
+                    this.scheduledSourceNodes.length);
             }
             else {
                 this.sourceNode = nextNode;
@@ -188,7 +201,8 @@ export class WebAudioPlayer {
             console.log('====> this.starteAt 1: ' + this.startedAt);
             this.pausedAt = 0;
             this.setPlaying(true);
-
+            // only when you start do you start monitoring
+            this.startMonitoring();
         }
         else {
             // start later (when)
@@ -213,6 +227,7 @@ export class WebAudioPlayer {
         let elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
         this.stop();
         this.pausedAt = elapsed;
+        this.stopMonitoring();
     }
 
     /**
@@ -239,6 +254,7 @@ export class WebAudioPlayer {
         this.startedAt = 0;
         this.pausedAt = 0;
         this.setPlaying(false);
+        // this.stopMonitoring();
     }
 
 }
