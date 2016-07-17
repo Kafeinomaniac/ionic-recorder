@@ -22,7 +22,6 @@ import {
 } from './player';
 
 import {
-    formatTime,
     isOdd
 } from '../../services/utils/utils';
 
@@ -91,6 +90,11 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         this.evenKeyFileReader = new FileReader();
     }
 
+    // public getTime(): number {
+    //     let chunkTime: number = super.getTime();
+    //     return chunkTime;
+    // }
+
     public setRecordingInfo(recordingInfo: RecordingInfo): void {
         this.recordingInfo = recordingInfo;
         this.nSamples = this.recordingInfo.nSamples;
@@ -108,44 +112,36 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
      * Returns current playback time - position in song
      * @returns {number}
      */
-    // public getTime(): number {
-    //     let res: number = 0;
-    //     return res;
-    // }
-
-    /**
-     * Returns a string representation of current time no longer than the
-     * string representation of current duration.
-     * @returns {string}
-     */
-    public getDisplayTime(): string {
-        return formatTime(this.getTime(), this.getDuration());
+    public getDuration(): number {
+        // returns the duration of all chunks combined, we must
+        // override the single-chunk base class here.
+        return this.duration ? this.duration : 0;
     }
 
     /**
      * Returns a number in [0, 1] denoting relative location in song
      * @returns {number}
      */
-    public getProgress(): number {
-        // console.log(this.getTime() / this.duration);
-        return this.getTime() / this.getDuration();
-    }
+    // public getProgress(): number {
+    //     // console.log(this.getTime() / this.duration);
+    //     return this.getTime() / this.getDuration();
+    // }
 
     /**
      * Pause
      * @returns {void}
      */
-    public pause(): void {
-        console.log('pause');
-    }
+    // public pause(): void {
+    //     console.log('pause');
+    // }
 
     /**
      * Stop playback
      * @returns {void}
      */
-    public stop(): void {
-        console.log('stop');
-    }
+    // public stop(): void {
+    //     console.log('stop');
+    // }
 
     private getFileReader(key: number): FileReader {
         console.log('getFileReader(' + key + ') -> ' +

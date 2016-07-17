@@ -1,10 +1,13 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-// single blob playback blass - i.e. this class is not dealing
-// with audio stored as multi-blob, it only knows a single blob.
-// so duration for this class is the duration of the blob's audio.
-// db-free and file-free code - blob input is loaded from db
-// outside of (before) this class
+// Lowest-level audio-buffer Web Audio Api playback class.
+// This class only deals with a single audio-buffer, it
+// knows nothing about multi-buffer streams. These are 
+// implemented in files with name player-X.ts, e.g.
+// in player-wav.ts and are responsible for dealing
+// with multiple-chunk files stored via indexedDB - these
+// extension classes use this base class for single
+// buffer operations.
 
 import {
     Injectable
@@ -18,6 +21,13 @@ import {
     prependArray,
     isUndefined
 } from '../../services/utils/utils';
+
+// sets the frame-rate at which we monitor time
+// is updated when it changes on the screen.
+const MONITOR_REFRESH_RATE_HZ: number = 24;
+
+// MONITOR_REFRESH_INTERVAL is derived from MONITOR_REFRESH_RATE_HZ
+const MONITOR_REFRESH_INTERVAL: number = 1000 / MONITOR_REFRESH_RATE_HZ;
 
 /**
  * @name WebAudioPlayer
@@ -33,7 +43,8 @@ export class WebAudioPlayer {
     protected startedAt: number;
     protected pausedAt: number;
     public isPlaying: boolean;
-
+    private intervalId: NodeJS.Timer;
+    
     constructor() {
         console.log('constructor():WebAudioPlayer');
 
@@ -41,14 +52,57 @@ export class WebAudioPlayer {
         this.pausedAt = 0;
         this.isPlaying = false;
         this.scheduledSourceNodes = [];
+        this.intervalId = null;
     }
 
+    /**
+     * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
+     * @returns {void}
+     */
+    public startMonitoring(): void {
+        this.intervalId = setInterval(
+            // the monitoring actions are in the following function:
+            () => {
+                // // update currentTime property
+                // this.currentTime = formatTime(
+                //     this.nBuffersToSeconds(this.nRecordedProcessingBuffers));
+
+                // // update currentVolume property
+                // this.nPeakMeasurements += 1;
+                // if (this.currentVolume > this.maxVolumeSinceReset) {
+                //     // on new maximum, re-start counting peaks
+                //     this.resetPeaks();
+                //     this.maxVolumeSinceReset = this.currentVolume;
+                // }
+                // else if (this.currentVolume === this.maxVolumeSinceReset) {
+                //     this.nPeaksAtMax += 1;
+                // }
+
+                // // update percentPeaksAtMax property
+                // this.percentPeaksAtMax =
+                //     (100 * this.nPeaksAtMax / this.nPeakMeasurements)
+                //         .toFixed(1);
+            },
+            MONITOR_REFRESH_INTERVAL);
+    }
+
+    /**
+     * Stops monitoring (stops change detection)
+     * @returns {void}
+     */
+    public stopMonitoring(): void {
+        if (this.intervalId) {
+            console.log('clearing interval: ' + this.intervalId);
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
+    }
     /**
      * Returns current playback time - position in song
      * @returns {number}
      */
     public getTime(): number {
-        let res: number;
+        let res: number = 0;
         if (this.pausedAt) {
             res = this.pausedAt;
         }
@@ -56,7 +110,7 @@ export class WebAudioPlayer {
             // not paused, and we have started, so playing now
             res = AUDIO_CONTEXT.currentTime - this.startedAt;
         }
-        // if (res >= this.audioBuffer.duration) {
+        // if (res >= this.getDuration()) {
         //     // res = this.audioBuffer.duration;
         //     this.stop();
         //     res = 0;
@@ -75,7 +129,7 @@ export class WebAudioPlayer {
     private setPlaying(state: boolean): void {
         // TODO: the setTimeout() call below is a terrible hack to prevent
         // angular change detection exceptions
-        setTimeout(() => { this.isPlaying = state; }, 0);
+        setTimeout(() => { this.isPlaying = state; });
     }
 
     private resetSourceNode(): void {
