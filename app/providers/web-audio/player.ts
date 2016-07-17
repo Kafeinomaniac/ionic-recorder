@@ -2,7 +2,7 @@
 
 // Lowest-level audio-buffer Web Audio Api playback class.
 // This class only deals with a single audio-buffer, it
-// knows nothing about multi-buffer streams. These are 
+// knows nothing about multi-buffer streams. These are
 // implemented in files with name player-X.ts, e.g.
 // in player-wav.ts and are responsible for dealing
 // with multiple-chunk files stored via indexedDB - these
