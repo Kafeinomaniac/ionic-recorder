@@ -54,7 +54,7 @@ export function getFolderPath(folderNode: TreeNode): string {
  * music organizer.
  */
 @Component({
-    templateUrl: 'build/pages/library/library.html',
+    templateUrl: 'build/pages/library-page/library-page.html',
     directives: [AudioPlayer]
 })
 export class LibraryPage {

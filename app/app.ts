@@ -46,7 +46,7 @@ import {
 
 import {
     LibraryPage
-} from './pages/library/library';
+} from './pages/library-page/library-page';
 
 import {
     SettingsPage

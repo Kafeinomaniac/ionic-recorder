@@ -27,7 +27,7 @@ import {
 
 import {
     getFolderPath
-} from '../library/library';
+} from '../library-page/library-page';
 
 import {
     MasterClock

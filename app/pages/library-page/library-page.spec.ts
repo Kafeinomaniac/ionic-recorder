@@ -23,7 +23,7 @@ import {
 
 import {
     LibraryPage
-} from './library';
+} from './library-page';
 
 let instanceFixture: InstanceFixture = null;
 
