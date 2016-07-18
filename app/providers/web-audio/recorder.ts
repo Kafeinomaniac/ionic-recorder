@@ -247,7 +247,7 @@ export class WebAudioRecorder {
         // finally, start monitoring audio volume levels, but
         // before we do that we reset things
         this.reset();
-        
+
         this.startMonitoring();
 
         // now you can tell the world we're ready
@@ -361,6 +361,10 @@ export class WebAudioRecorder {
         this.isRecording = true;
     }
 
+    /**
+     * Reset recording - just like this.stop() but does not  return anything.
+     * @returns {void}
+     */
     private reset(): void {
         this.isRecording = false;
         this.isInactive = true;
@@ -369,7 +373,7 @@ export class WebAudioRecorder {
 
     /**
      * Stop recording
-     * @returns {void}
+     * @returns {Observable<RecordingInfo>}
      */
     public stop(): Observable<RecordingInfo> {
         console.log('WebAudioRecorder:stop()');
