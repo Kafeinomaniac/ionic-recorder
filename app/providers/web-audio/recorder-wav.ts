@@ -91,8 +91,8 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
         let obs: Observable<RecordingInfo> = Observable.create((observer) => {
             super.stop().subscribe(
                 (recordingInfo: RecordingInfo) => {
-                    recordingInfo.dbStartKey = this.dbStartKey;
                     recordingInfo.encoding = 'audio/wav';
+                    recordingInfo.dbStartKey = this.dbStartKey;
                     if (this.setter.bufferIndex === 0) {
                         // no leftovers: rare we get here due to no leftovers
                         // but we also reach here during the constructor call
