@@ -245,16 +245,13 @@ export class WebAudioRecorder {
         this.scriptProcessorNode.connect(dest);
 
         // finally, start monitoring audio volume levels, but
-        // before we do that we reset things via stop()
-        this.stop().subscribe(
-            () => {
-                // and you can tell the world we're ready
-                this.status = RecorderStatus.READY_STATE;
-                this.startMonitoring();
-            },
-            (error) => {
-                throw Error('connectNodes():stop(): ' + error);
-            });
+        // before we do that we reset things
+        this.reset();
+        
+        this.startMonitoring();
+
+        // now you can tell the world we're ready
+        this.status = RecorderStatus.READY_STATE;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -364,15 +361,19 @@ export class WebAudioRecorder {
         this.isRecording = true;
     }
 
+    private reset(): void {
+        this.isRecording = false;
+        this.isInactive = true;
+        this.nRecordedProcessingBuffers = 0;
+    }
+
     /**
      * Stop recording
      * @returns {void}
      */
     public stop(): Observable<RecordingInfo> {
         console.log('WebAudioRecorder:stop()');
-        this.isRecording = false;
-        this.isInactive = true;
-        this.nRecordedProcessingBuffers = 0;
+        this.reset();
         return Observable.create((observer) => {
             observer.next({
                 startTime: this.startTime,
