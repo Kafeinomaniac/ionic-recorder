@@ -27,7 +27,7 @@ import {
 
 let instanceFixture: InstanceFixture = null;
 
-describe('pages/library:LibraryPage', () => {
+describe('pages/library-page:LibraryPage', () => {
     instanceFixture = beforeEachDI(
         LibraryPage,
         [IdbAppFS, IdbAppState, configProvider, navControllerProvider],

@@ -59,7 +59,7 @@ const parentChild: ParentChild = {
  * @description
  */
 @Component({
-    templateUrl: 'build/pages/track/track.html',
+    templateUrl: 'build/pages/track-page/track-page.html',
     providers: [MasterClock],
     directives: [AudioPlayer]
 })

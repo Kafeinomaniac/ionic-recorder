@@ -14,7 +14,7 @@ import {
 
 import {
     TrackPage
-} from './track';
+} from './track-page';
 
 import {
     IdbAppData
@@ -22,7 +22,7 @@ import {
 
 let instanceFixture: InstanceFixture = null;
 
-describe('pages/track:TrackPage', () => {
+describe('pages/track-page:TrackPage', () => {
     instanceFixture = beforeEachDI(
         TrackPage,
         [IdbAppData, menuControllerProvider],

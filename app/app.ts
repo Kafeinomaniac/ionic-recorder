@@ -58,7 +58,7 @@ import {
 
 import {
     TrackPage
-} from './pages/track/track';
+} from './pages/track-page/track-page';
 
 // Global catch-all exception handler for this app - any error thrown
 // will be handled by this function.

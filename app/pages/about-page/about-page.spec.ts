@@ -18,7 +18,7 @@ import {
 
 let instanceFixture: InstanceFixture = null;
 
-describe('pages/about:AboutPage', () => {
+describe('pages/about-page:AboutPage', () => {
     instanceFixture = beforeEachDI(
         AboutPage,
         [menuControllerProvider],

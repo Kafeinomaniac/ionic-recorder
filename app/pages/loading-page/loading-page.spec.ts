@@ -17,7 +17,7 @@ import {
 
 let instanceFixture: InstanceFixture = null;
 
-describe('pages/loading:LoadingPage', () => {
+describe('pages/loading-page:LoadingPage', () => {
     instanceFixture = beforeEachDI(
         LoadingPage,
         [],

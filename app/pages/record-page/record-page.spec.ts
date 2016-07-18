@@ -33,7 +33,7 @@ import {
 
 let instanceFixture: InstanceFixture = null;
 
-describe('pages/record:RecordPage', () => {
+describe('pages/record-page:RecordPage', () => {
     instanceFixture = beforeEachDI(
         RecordPage,
         [
