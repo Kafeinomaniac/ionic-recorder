@@ -186,4 +186,14 @@ export class RecordPage {
                 ).subscribe();
             });
     }
+
+    public ionViewDidEnter(): void {
+        console.log('RecordPage:ionViewDidEnter()');
+        this.webAudioRecorder.startMonitoring();
+    }
+
+    public ionViewDidLeave(): void {
+        console.log('RecordPage:ionViewDidLeave()');
+        this.webAudioRecorder.stopMonitoring();
+    }
 }

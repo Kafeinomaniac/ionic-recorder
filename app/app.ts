@@ -86,6 +86,7 @@ export class IonicRecorderApp {
     private platform: Platform;
     private menu: MenuController;
     private idbAppState: IdbAppState;
+
     private rootPage: Type;
     private pages: TabPage[];
 

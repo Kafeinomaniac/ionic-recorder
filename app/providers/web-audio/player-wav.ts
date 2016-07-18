@@ -227,9 +227,12 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                 relativeSampleToSkipTo / DB_CHUNK_LENGTH;
         this.startKey = startKey;
         this.chunkStartTime = chunkRelativeTime * this.chunkDuration;
-        console.log('duration: ' + this.totalDuration + ', ' +
+        console.log(
+            'seekTime: ' + time + ', ' +
+            'duration: ' + this.totalDuration + ', ' +
             'relativeTime: ' + relativeTime + ', ' +
             'absoluteSampleToSkipTo: ' + absoluteSampleToSkipTo + ', ' +
+            'nSamples: ' + this.recordingInfo.nSamples + ', ' +
             'startKey: ' + startKey + ', ' +
             'lastKey: ' + this.lastKey);
 

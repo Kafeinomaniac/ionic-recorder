@@ -33,6 +33,12 @@ export class MasterClock {
         this.nTicks = 0;
     }
 
+    public getFunction(id: string): () => void {
+        console.log('MasterClock:getFunction(' + id + '), have ' +
+            Object.keys(this.functions).length);
+        return this.functions[id];
+    }
+
     public start(): void {
         if (this.isRunning) {
             return;
@@ -43,12 +49,15 @@ export class MasterClock {
                 () => {
                     this.nTicks++;
                     this.ngZone.run(() => {
+                        console.log(Object.keys(this.functions).length);
                         for (let id in this.functions) {
                             this.functions[id]();
                         }
                     });
                 },
                 CLOCK_INTERVAL_MSEC);
+            console.log('MasterClock:start() interval: ' +
+                this.intervalId['data']['handleId']);
         });
         this.isRunning = true;
     }
@@ -60,7 +69,7 @@ export class MasterClock {
         this.isRunning = false;
         if (this.intervalId) {
             console.log('MasterClock:stop(): clearing interval: ' +
-                this.intervalId);
+                this.intervalId['data']['handleId']);
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
@@ -81,6 +90,8 @@ export class MasterClock {
             this.start();
         }
         this.functions[id] = fun;
+        console.log('MasterClock:addFunction(' + id + '), left with ' +
+            Object.keys(this.functions).length);
     }
 
     /**
@@ -89,11 +100,14 @@ export class MasterClock {
      * @returns {void}
      */
     public removeFunction(id: string): void {
+        console.log('MasterClock:removeFunction(' + id + '), start with ' +
+            Object.keys(this.functions).length);
         delete this.functions[id];
         const nFunctions: number = Object.keys(this.functions).length;
         if (nFunctions === 0) {
             this.stop();
         }
+        console.log('MasterClock:removeFunction(' + id + '), left with ' +
+            Object.keys(this.functions).length);
     }
-
 }

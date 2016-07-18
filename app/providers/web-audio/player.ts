@@ -85,7 +85,7 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public startMonitoring(): void {
-        console.log('PLAYER: startMonitoring()');
+        // console.log('PLAYER: startMonitoring()');
         this.masterClock.addFunction(
             CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
@@ -125,7 +125,7 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public stopMonitoring(): void {
-        console.log('PLAYER: stopMonitoring()');
+        // console.log('PLAYER: stopMonitoring()');
         this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
     }
 
@@ -195,11 +195,11 @@ export class WebAudioPlayer {
             this.sourceNode = sourceNode;
             // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
             // console.log('this.starteAt: ' + this.startedAt);
-            console.log('====> this.starteAt 0: ' +
-                (AUDIO_CONTEXT.currentTime - offset));
+            // console.log('====> this.starteAt 0: ' +
+            //     (AUDIO_CONTEXT.currentTime - offset));
             sourceNode.start(0, offset);
             this.startedAt = AUDIO_CONTEXT.currentTime - offset;
-            console.log('====> this.starteAt 1: ' + this.startedAt);
+            // console.log('====> this.starteAt 1: ' + this.startedAt);
             this.pausedAt = 0;
             this.setPlaying(true);
             // only when you start do you start monitoring
@@ -259,7 +259,7 @@ export class WebAudioPlayer {
         this.startedAt = 0;
         this.pausedAt = 0;
         this.setPlaying(false);
-        // this.stopMonitoring();
+        this.stopMonitoring();
     }
 
 }

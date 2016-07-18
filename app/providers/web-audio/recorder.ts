@@ -22,7 +22,7 @@ import {
 } from '../../services/utils/utils';
 
 // the name of the function we give to master clock to run
-const CLOCK_FUNCTION_NAME: string = 'recorder';
+export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 
 // length of script processing buffer (must be power of 2, smallest possible,
 // to reduce latency and to compute time as accurately as possible)
@@ -267,7 +267,7 @@ export class WebAudioRecorder {
      */
     public startMonitoring(): void {
         this.masterClock.addFunction(
-            CLOCK_FUNCTION_NAME,
+            RECORDER_CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
                 // update currentTime property
@@ -297,7 +297,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public stopMonitoring(): void {
-        this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
+        this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
     }
 
     /**
@@ -369,6 +369,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public stop(): Observable<RecordingInfo> {
+        console.log('WebAudioRecorder:stop()');
         this.isRecording = false;
         this.isInactive = true;
         this.nRecordedProcessingBuffers = 0;
@@ -382,4 +383,5 @@ export class WebAudioRecorder {
             observer.complete();
         });
     }
+
 }
