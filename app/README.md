@@ -1,4 +1,4 @@
-# app/ - Project Source Code
+# Project Source Code
 
 ## Contents
 
