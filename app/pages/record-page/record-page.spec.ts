@@ -29,7 +29,7 @@ import {
 
 import {
     RecordPage
-} from './record';
+} from './record-page';
 
 let instanceFixture: InstanceFixture = null;
 

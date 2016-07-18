@@ -51,7 +51,7 @@ const PAUSE_ICON: string = 'pause';
  * The page from which we record audio and monitor microphone sound volume.
  */
 @Component({
-    templateUrl: 'build/pages/record/record.html',
+    templateUrl: 'build/pages/record-page/record-page.html',
     providers: [WebAudioRecorderWav, MasterClock],
     directives: [VuGauge, Range]
 })

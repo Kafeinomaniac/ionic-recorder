@@ -42,7 +42,7 @@ import {
 
 import {
     RecordPage
-} from './pages/record/record';
+} from './pages/record-page/record-page';
 
 import {
     LibraryPage
