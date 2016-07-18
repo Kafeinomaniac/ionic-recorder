@@ -35,7 +35,7 @@ import {
 
 import {
     AddFolderPage
-} from '../add-folder/add-folder';
+} from '../add-folder-page/add-folder-page';
 
 import {
     AudioPlayer
