@@ -88,7 +88,6 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
      */
     public stop(): Observable<RecordingInfo> {
         console.log('WebAudioRecorderWav:stop()');
-        debugger;
         let obs: Observable<RecordingInfo> = Observable.create((observer) => {
             super.stop().subscribe(
                 (recordingInfo: RecordingInfo) => {
