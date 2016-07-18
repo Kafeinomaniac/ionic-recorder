@@ -14,7 +14,7 @@ import {
 
 import {
     AboutPage
-} from './about';
+} from './about-page';
 
 let instanceFixture: InstanceFixture = null;
 

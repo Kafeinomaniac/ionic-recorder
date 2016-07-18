@@ -54,7 +54,7 @@ import {
 
 import {
     AboutPage
-} from './pages/about/about';
+} from './pages/about-page/about-page';
 
 import {
     TrackPage

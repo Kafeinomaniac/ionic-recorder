@@ -17,7 +17,7 @@ const APP_VERSION: string = '0.0.8-alpha.19';
  * among other info.
  */
 @Component({
-    templateUrl: 'build/pages/about/about.html'
+    templateUrl: 'build/pages/about-page/about-page.html'
 })
 export class AboutPage {
     private menuController: MenuController;
