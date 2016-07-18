@@ -4,7 +4,7 @@ export interface RecordingInfo {
     startTime: number;
     sampleRate: number;
     nSamples: number;
-    encoding: string;
+    encoding?: string;
     dbStartKey?: number;
 }
 

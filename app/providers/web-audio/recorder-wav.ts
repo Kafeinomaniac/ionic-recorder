@@ -92,6 +92,7 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
             super.stop().subscribe(
                 (recordingInfo: RecordingInfo) => {
                     recordingInfo.dbStartKey = this.dbStartKey;
+                    recordingInfo.encoding = 'audio/wav';
                     if (this.setter.bufferIndex === 0) {
                         // no leftovers: rare we get here due to no leftovers
                         // but we also reach here during the constructor call

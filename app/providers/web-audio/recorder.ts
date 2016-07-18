@@ -382,8 +382,7 @@ export class WebAudioRecorder {
             observer.next({
                 startTime: this.startTime,
                 sampleRate: this.sampleRate,
-                nSamples: this.nRecordedSamples,
-                encoding: 'audio/wav'
+                nSamples: this.nRecordedSamples
             });
             observer.complete();
         });
