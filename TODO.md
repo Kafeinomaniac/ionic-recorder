@@ -5,6 +5,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* make it so that whatever file you save (first, so we'd have to
+  clear the db every time we try this) then that is what track page
+  loads, i.e. it loads from db a particular data node and reads its
+  own saved info instead of hard-wiring it in there.
+* the above TODO makes you want to fix the db init issues first...
 * save files to app fs from record.ts, then work on audio player
   interface, then on web-audio-player - get playback to work.
 * sliders

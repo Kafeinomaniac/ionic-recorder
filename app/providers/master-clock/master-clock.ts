@@ -49,7 +49,7 @@ export class MasterClock {
                 () => {
                     this.nTicks++;
                     this.ngZone.run(() => {
-                        console.log(Object.keys(this.functions).length);
+                        // console.log(Object.keys(this.functions).length);
                         for (let id in this.functions) {
                             this.functions[id]();
                         }
