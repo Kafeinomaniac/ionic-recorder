@@ -38,7 +38,7 @@ import {
 
 import {
     LoadingPage
-} from './pages/loading/loading';
+} from './pages/loading-page/loading-page';
 
 import {
     RecordPage

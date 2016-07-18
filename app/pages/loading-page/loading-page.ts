@@ -11,7 +11,7 @@ import {
  * to initialize.
  */
 @Component({
-    templateUrl: 'build/pages/loading/loading.html'
+    templateUrl: 'build/pages/loading-page/loading-page.html'
 })
 export class LoadingPage {
     /**

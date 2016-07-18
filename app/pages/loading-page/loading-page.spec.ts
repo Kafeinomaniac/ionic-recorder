@@ -13,7 +13,7 @@ import {
 
 import {
     LoadingPage
-} from './loading';
+} from './loading-page';
 
 let instanceFixture: InstanceFixture = null;
 
