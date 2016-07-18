@@ -50,7 +50,7 @@ import {
 
 import {
     SettingsPage
-} from './pages/settings/settings';
+} from './pages/settings-page/settings-page';
 
 import {
     AboutPage

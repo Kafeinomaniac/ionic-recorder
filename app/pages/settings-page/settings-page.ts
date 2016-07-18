@@ -14,7 +14,7 @@ import {
  * Change app settings.
  */
 @Component({
-    templateUrl: 'build/pages/settings/settings.html'
+    templateUrl: 'build/pages/settings-page/settings-page.html'
 })
 export class SettingsPage {
     private idbAppState: IdbAppState;
