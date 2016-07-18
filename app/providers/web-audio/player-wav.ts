@@ -34,6 +34,7 @@ import {
     MasterClock
 } from '../master-clock/master-clock';
 
+// see: http://soundfile.sapp.org/doc/WaveFormat/
 function uint16ArrayToWavBlob(uint16Array: Uint16Array): Blob {
     'use strict';
     let arrayByteLength: number = uint16Array.byteLength,
@@ -47,19 +48,33 @@ function uint16ArrayToWavBlob(uint16Array: Uint16Array): Blob {
                 }
             },
         nChannels: number = 1;
+    // 0-4:   ChunkId
     setString(headerView, 0, 'RIFF');
-    headerView.setUint32(4, 36 + arrayByteLength);
+    // 4-8:   ChunkSize
+    headerView.setUint32(4, 36 + arrayByteLength * 2);
+    // 8-12:  Format
     setString(headerView, 8, 'WAVE');
+    // 12-16: Subchunk1ID
     setString(headerView, 12, 'fmt ');
+    // 16-20: Subchunk1Size
     headerView.setUint32(16, 16, true);
+    // 20-22: AudioFormat
     headerView.setUint16(20, 1, true);
-    headerView.setUint16(22, nChannels, true);
+    // 22-24: NumChannels
+    headerView.setUint16(22, 1, true);
+    // 24-28: SampleRate
     headerView.setUint32(24, AUDIO_CONTEXT.sampleRate, true);
-    headerView.setUint32(28, AUDIO_CONTEXT.sampleRate * 4, true);
-    headerView.setUint16(32, nChannels * 2, true);
+    // 28-32: ByteRate
+    headerView.setUint32(28, AUDIO_CONTEXT.sampleRate * 2, true);
+    // 32-34: BlockAlign
+    headerView.setUint16(32, 2, true);
+    // 34-36: BitsPerSample
     headerView.setUint16(34, 16, true);
+    // 36-40: Subchunk2ID
     setString(headerView, 36, 'data');
-    headerView.setUint32(40, arrayByteLength, true);
+    // 40-44: Subchunk2Size
+    headerView.setUint32(40, arrayByteLength * 2, true);
+    // now attach data and convert to blob
     return new Blob([headerView, uint16Array], { type: 'audio/wav' });
 }
 

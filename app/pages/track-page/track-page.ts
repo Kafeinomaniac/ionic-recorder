@@ -17,8 +17,7 @@ import {
 } from '../../providers/web-audio/common';
 
 import {
-    TreeNode,
-    ParentChild
+    TreeNode
 } from '../../services/idb/idb-fs';
 
 import {
@@ -26,33 +25,13 @@ import {
 } from '../../services/utils/utils';
 
 import {
-    getFolderPath
-} from '../library-page/library-page';
-
-import {
     MasterClock
 } from '../../providers/master-clock/master-clock';
 
-const parentChild: ParentChild = {
-    parent: {
-        name: 'Unfiled',
-        parentKey: 1,
-        timeStamp: 1468467549736,
-        path: '/'
-    },
-    child: {
-        name: '2016-7-13 -- 11:39:04 PM',
-        parentKey: 2,
-        timeStamp: 1468459742866,
-        data: {
-            dbStartKey: 1,
-            nSamples: 231936,
-            sampleRate: 44100,
-            startTime: 1468467544459,
-            encoding: 'audio/wav'
-        }
-    }
-};
+// this is here just for testing
+import {
+    IdbAppFS
+} from '../../providers/idb-app-fs/idb-app-fs';
 
 /**
  * @name TrackPage
@@ -78,21 +57,26 @@ export class TrackPage {
     /**
      * TrackPage constructor
      */
-    constructor() {
+    constructor(idbAppFS: IdbAppFS) {
         console.log('constructor():TrackPage');
-        const child: TreeNode = parentChild.child,
-            nSamples: number = child.data.nSamples,
-            sampleRate: number = child.data.sampleRate;
-        this.fileName = child.name;
-        this.folderPath = getFolderPath(parentChild.parent);
-        this.dateCreated = formatLocalTime(child.data.startTime);
-        this.size = nSamples * 2;
-        this.sampleRate = sampleRate;
-        this.encoding = child.data.encoding;
-        this.nSamples = nSamples;
-        this.duration = nSamples / sampleRate;
-        this.displayDuration = formatTime(this.duration, this.duration);
-        this.recordingInfo = child.data;
+        idbAppFS.readNode(3).subscribe(
+            (node: TreeNode) => {
+                if (!node) {
+                    console.warn('no node!');
+                    return;
+                }
+                this.fileName = node.name;
+                this.folderPath = '/Unfiled';
+                this.encoding = node.data.encoding;
+                this.nSamples = node.data.nSamples;
+                this.sampleRate = node.data.sampleRate;
+                this.dateCreated = formatLocalTime(node.data.startTime);
+                this.size = 2 * this.nSamples;
+                this.duration = this.nSamples / this.sampleRate;
+                this.displayDuration = formatTime(this.duration, this.duration);
+                this.recordingInfo = node.data;
+            }
+        );
     }
 
     /**

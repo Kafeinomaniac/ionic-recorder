@@ -17,6 +17,10 @@ import {
 } from './track-page';
 
 import {
+    IdbAppFS
+} from '../../providers/idb-app-fs/idb-app-fs';
+
+import {
     IdbAppData
 } from '../../providers/idb-app-data/idb-app-data';
 
@@ -25,7 +29,7 @@ let instanceFixture: InstanceFixture = null;
 describe('pages/track-page:TrackPage', () => {
     instanceFixture = beforeEachDI(
         TrackPage,
-        [IdbAppData, menuControllerProvider],
+        [IdbAppFS, IdbAppData, menuControllerProvider],
         true,
         null
     );
