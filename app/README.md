@@ -1,4 +1,4 @@
-# Project Source Code
+# app - Project Source Code
 
 ## Contents
 
@@ -16,6 +16,7 @@
 
 | Name            | Content                                  |
 |-----------------|------------------------------------------|
+| README.md       | This file                                |
 | app.e2e.ts      | App (top-level) end-to-end tests spec    |
 | app.html        | App template                             |
 | app.scss        | App (top-level) style declarations       |
