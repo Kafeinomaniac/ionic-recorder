@@ -1,5 +1,7 @@
 # providers/ - Injectable Classes and Functions
 
+Each directory here is a singleton class injected via angular2 direct-injection.
+
 ## Contents
 
 ### Folders
