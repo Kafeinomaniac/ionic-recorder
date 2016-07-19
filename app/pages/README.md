@@ -1,4 +1,4 @@
-# pages/ - Full Page Components
+# pages/ - Page Components
 
 ## Contents
 
