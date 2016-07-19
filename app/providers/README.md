@@ -1,2 +1,1 @@
-# ionic-recorder/app/providers
-# Injectable Classes and Functions
+# providers - Injectable Classes and Functions
