@@ -1,1 +1,1 @@
-# app/services/ - Non-Injectable Service Classes and Functions
+# Non-Injectable Service Classes and Functions
