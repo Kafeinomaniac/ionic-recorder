@@ -8,8 +8,8 @@ Each directory here is a component that takes up a full page.
 
 | Name             | Content                                            |
 |------------------|----------------------------------------------------|
-| about-pages      | About this app page                                |
-| add-folder-pagee | Modal for adding a new folder - entering its name  |
+| about-page      | About this app page                                |
+| add-folder-page | Modal for adding a new folder - entering its name  |
 | library-page     | Music library of all recordings                    |
 | loading-page     | First page displayed very briefly while loading    |
 | record-page      | Record page                                        |
