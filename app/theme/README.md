@@ -1,4 +1,4 @@
-# theme - Global SCSS Declarations
+# theme/ - Global SCSS Declarations
 
 ## Contents
 

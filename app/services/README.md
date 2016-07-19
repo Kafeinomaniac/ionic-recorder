@@ -1,4 +1,4 @@
-# services - Non-Injectable Classes and Functions
+# services/ - Non-Injectable Classes and Functions
 
 ## Contents
 

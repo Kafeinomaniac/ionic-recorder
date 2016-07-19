@@ -1,4 +1,4 @@
-# Directive Components
+# directives/ - Directive Components
 
 ## Contents
 
@@ -8,3 +8,9 @@
 |--------------|--------------------------------------------|
 | audio-player | Audio player widget wraps WebAudioRecorder |
 | vu-gauge     | Colored LED volume monitoring widget       |
+
+### Files
+
+| Name               | Content                                   |
+|--------------------|-------------------------------------------|
+| README.md          | This file                                 |
