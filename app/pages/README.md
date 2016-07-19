@@ -1,7 +1,5 @@
 # pages/ - Full Page Components
 
-# providers/ - Injectable Classes and Functions
-
 ## Contents
 
 ### Folders
