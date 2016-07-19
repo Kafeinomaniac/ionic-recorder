@@ -151,6 +151,7 @@ export class IdbAppState extends IdbDict {
      */
     private loadFromDb(): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
+            // using recursive function to chain observables in succession
             const getOrAddRecursive: (keys: string[]) => void =
                 (keys: string[]) => {
                     if (keys.length === 0) {
