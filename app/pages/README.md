@@ -1,5 +1,7 @@
 # pages/ - Page Components
 
+Each directory here is a component that takes up a full page.
+
 ## Contents
 
 ### Folders
