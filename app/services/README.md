@@ -1,5 +1,7 @@
 # services/ - Non-Injectable Classes and Functions
 
+Each directory here is a service: any ol' utility class or function.
+
 ## Contents
 
 ### Folders
