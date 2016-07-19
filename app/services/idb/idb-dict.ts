@@ -19,10 +19,6 @@ interface KeyValuePair {
     value: any;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// START: Public API
-////////////////////////////////////////////////////////////////////////////////
-
 export class IdbDict extends Idb {
     constructor(dbName: string, dbVersion: number) {
         super({
@@ -74,6 +70,9 @@ export class IdbDict extends Idb {
                         let cursor: IDBCursorWithValue = cursorRequest.result;
                         if (cursor) {
                             observer.next(cursor.value.value);
+                            observer.complete();
+                            // NB: don't call cursor.continue() because we 
+                            // expect only one value for key 'key'
                             // cursor.continue();
                         }
                         else {
@@ -93,17 +92,20 @@ export class IdbDict extends Idb {
     }
 
     public addKeyValue(key: string, value: any): Observable<number> {
+        console.log('addKeyValue(' + key + ', value)');
         let source: Observable<number> = Observable.create((observer) => {
             this.create<KeyValuePair>(DICT_STORE, {
                 key: key,
                 value: value
             }).subscribe(
                 (dbKey: number) => {
+                    console.log('addKeyValue(' + key + ', value), dbKey: ' + dbKey);
                     observer.next(dbKey);
                     observer.complete();
                 },
                 (error) => {
-                    observer.error('addPair():create(): ' + error);
+                    console.log('addKeyValue(' + key + ', value) ERROR');
+                    observer.error('addKeyValue():create(): ' + error);
                 });
         });
         return source;
@@ -114,20 +116,23 @@ export class IdbDict extends Idb {
             // first we try to get the value
             this.getValue(key).subscribe(
                 (dbValue: any) => {
+
                     if (isUndefined(dbValue)) {
                         // value isn't there, so add the (key, value) pair
+                        console.log('getOrAddValue: NO! key: ' + key);
                         this.addKeyValue(key, value).subscribe(
                             (addedKey: number) => {
                                 observer.next(value);
                                 observer.complete();
                             },
                             (error) => {
-                                observer.error('getValue():' +
-                                    'addPair(): ' + error);
+                                observer.error('getOrAddValue():' +
+                                    'addKeyValue(): ' + error);
                             });
                     }
                     else {
                         // value is there, return it
+                        console.log('getOrAddValue: YES! key: ' + key);
                         observer.next(dbValue);
                         observer.complete();
                     }
@@ -184,9 +189,4 @@ export class IdbDict extends Idb {
         });
         return source;
     }
-
-    ////////////////////////////////////////////////////////////////////////////
-    // END: Public API
-    ////////////////////////////////////////////////////////////////////////////
-
 }

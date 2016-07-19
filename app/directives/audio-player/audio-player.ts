@@ -73,6 +73,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     public onRangeValueChange(position: number): void {
+        console.log('onRangeValueChange(): ' + position);
         if (position / RANGE_MAX === this.relativeTime) {
             // prevent calling player multiple times in
             // immediate succession if nothing's changed

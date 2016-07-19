@@ -166,7 +166,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         //     throw Error('this.startedAt === 0!');
         // }
         else {
-            console.log('getScheduleTime(' + key + ') returned ' +
+            console.log('getChunkScheduleTime(' + key + ') returned ' +
                 (this.startedAt + deltaKey * this.chunkDuration) +
                 ', startedAt: ' + this.startedAt
             );

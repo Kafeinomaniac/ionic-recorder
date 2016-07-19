@@ -221,6 +221,9 @@ export class Idb {
                                 observer.error('addRequest key mismatch');
                             }
                             else {
+                                console.log('incrementing store keys for ' +
+                                    storeName + ' to ' + 
+                                    this.storeKeys[storeName]);
                                 this.storeKeys[storeName]++;
                                 observer.next(key);
                                 observer.complete();
@@ -229,7 +232,8 @@ export class Idb {
 
                         addRequest.onerror = (event: IDBEvent) => {
                             observer.error('addRequest.onerror: ' +
-                                JSON.stringify(event));
+                                event.target['error'] + ', key: ' + key +
+                                ', item: ' + JSON.stringify(item));
                         };
                     },
                     (error) => {
@@ -542,6 +546,6 @@ export class Idb {
 
 }
 
-// Idb.deleteDb('IdbAppData').subscribe();
-// Idb.deleteDb('IdbAppFS').subscribe();
-// Idb.deleteDb('IdbAppState').subscribe();
+Idb.deleteDb('IdbAppData').subscribe();
+Idb.deleteDb('IdbAppFS').subscribe();
+Idb.deleteDb('IdbAppState').subscribe();

@@ -133,12 +133,12 @@ export class IdbAppState extends IdbDict {
                             },
                             (error) => {
                                 observer.error('updateProperty():' +
-                                    'waitForAppState()+updateValue()' + error);
+                                    'waitForAppState():updateValue()' + error);
                             });
                     }
                 },
                 (error) => {
-                    observer.error('updateProperty(): waitForAppState(): ' +
+                    observer.error('updateProperty():waitForAppState(): ' +
                         error);
                 });
         });
@@ -151,29 +151,33 @@ export class IdbAppState extends IdbDict {
      */
     private loadFromDb(): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
+            const getOrAddRecursive: (keys: string[]) => void =
+                (keys: string[]) => {
+                    if (keys.length === 0) {
+                        observer.next();
+                        observer.complete();
+                    }
+                    else {
+                        const key: string = keys.pop();
+                        this.getOrAddValue(key, DEFAULT_STATE[key]).subscribe(
+                            (dbValue: any) => {
+                                this.cachedState[key] = dbValue;
+                                getOrAddRecursive(keys);
+                            },
+                            (error) => {
+                                observer.error(
+                                    'loadFromDb():GetOrAddValue(): ' + error);
+                            });
+                    }
+                };
             this.waitForDB().subscribe(
                 () => {
-                    Observable.from(Object.keys(DEFAULT_STATE))
-                        .flatMap(key => {
-                            return this.getOrAddValue(key, DEFAULT_STATE[key])
-                                .map(dbValue => {
-                                    console.log('MAPPING!');
-                                    this.cachedState[key] = dbValue;
-                                    return;
-                                });
-                        }).subscribe(
-                        null,
-                        (error: any) => {
-                            throw Error('loadFromDb: ' + error);
-                        });
+                    getOrAddRecursive(Object.keys(DEFAULT_STATE));
                 },
                 (error) => {
                     observer.error('loadFromDb():waitForDb(): ' + error);
-                },
-                () => {
-                    observer.next();
-                    observer.complete();
                 });
+
         });
         return source;
     }
