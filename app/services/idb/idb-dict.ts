@@ -99,7 +99,8 @@ export class IdbDict extends Idb {
                 value: value
             }).subscribe(
                 (dbKey: number) => {
-                    console.log('addKeyValue(' + key + ', value), dbKey: ' + dbKey);
+                    console.log('addKeyValue(' + key + ', value), dbKey: ' +
+                        dbKey);
                     observer.next(dbKey);
                     observer.complete();
                 },

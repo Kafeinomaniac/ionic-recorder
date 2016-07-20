@@ -222,7 +222,7 @@ export class Idb {
                             }
                             else {
                                 console.log('incrementing store keys for ' +
-                                    storeName + ' to ' + 
+                                    storeName + ' to ' +
                                     this.storeKeys[storeName]);
                                 this.storeKeys[storeName]++;
                                 observer.next(key);
@@ -546,6 +546,7 @@ export class Idb {
 
 }
 
-Idb.deleteDb('IdbAppData').subscribe();
-Idb.deleteDb('IdbAppFS').subscribe();
-Idb.deleteDb('IdbAppState').subscribe();
+// TODO: these next three lines need to go elsewhere ...
+// Idb.deleteDb('IdbAppData').subscribe();
+// Idb.deleteDb('IdbAppFS').subscribe();
+// Idb.deleteDb('IdbAppState').subscribe();

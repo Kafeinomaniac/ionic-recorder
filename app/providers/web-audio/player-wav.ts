@@ -46,8 +46,7 @@ function uint16ArrayToWavBlob(uint16Array: Uint16Array): Blob {
                 for (i = 0; i < len; i++) {
                     dv.setUint8(offset + i, str.charCodeAt(i));
                 }
-            },
-        nChannels: number = 1;
+            };
     // 0-4:   ChunkId
     setString(headerView, 0, 'RIFF');
     // 4-8:   ChunkSize
