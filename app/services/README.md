@@ -14,6 +14,6 @@ Each directory here is a service: any ol' utility class or function.
 
 ### Files
 
-| Name               | Content                                   |
-|--------------------|-------------------------------------------|
-| README.md          | This file                                 |
+| Name      | Content   |
+|-----------|-----------|
+| README.md | This file |

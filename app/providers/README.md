@@ -16,6 +16,6 @@ Each directory here is a singleton class injected via angular2 direct-injection.
 
 ### Files
 
-| Name               | Content                                   |
-|--------------------|-------------------------------------------|
-| README.md          | This file                                 |
+| Name      | Content   |
+|-----------|-----------|
+| README.md | This file |
