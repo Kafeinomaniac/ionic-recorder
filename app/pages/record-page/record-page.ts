@@ -187,6 +187,10 @@ export class RecordPage {
             });
     }
 
+    public onRangeTouchEnd(): void {
+        console.log('onRangeTouchEnd');
+    }
+
     public ionViewDidEnter(): void {
         console.log('RecordPage:ionViewDidEnter()');
         this.webAudioRecorder.startMonitoring();
