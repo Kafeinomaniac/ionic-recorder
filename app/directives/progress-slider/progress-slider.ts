@@ -18,7 +18,7 @@ import {
  */
 @Component({
     selector: 'progress-slider',
-    templateUrl: 'build/components/progress-slider/progress-slider.html'
+    templateUrl: 'build/directives/progress-slider/progress-slider.html'
 })
 export class ProgressSlider {
     @Input() private progress: number;

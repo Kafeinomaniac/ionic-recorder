@@ -37,8 +37,8 @@ export const DB_CHUNK_LENGTH: number = 65536;
 const DB_CHUNK1: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
 const DB_CHUNK2: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
 
-const MAX = Math.max;
-const MIN = Math.min;
+const MAX: (a: number, b: number) => number = Math.max;
+const MIN: (a: number, b: number) => number = Math.min;
 
 /**
  * @name WebAudioRecorder

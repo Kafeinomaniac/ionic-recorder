@@ -271,7 +271,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     // } // public timeSeek(time: number): void {
 
     private loadAndDecodeChunk(key: number): Observable<AudioBuffer> {
-        let obs = Observable.create((observer) => {
+        let obs: Observable<AudioBuffer> = Observable.create((observer) => {
             const fileReader: FileReader = this.getFileReader(key);
             this.idb.readChunk(key).subscribe(
                 (wavArray: Int16Array) => {
@@ -287,7 +287,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                                 observer.next(audioBuffer);
                                 observer.complete();
                             });
-                    }
+                    };
                     fileReader.readAsArrayBuffer(
                         int16ArrayToWavBlob(wavArray)
                     );
@@ -296,13 +296,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         return obs;
     }
 
-    public timeSeek(time: number): void {
-        console.log('timeSeek(' + time.toFixed(2) + ')');
-
-        // this.stop();
+    public relativeTimeSeek(relativeTime: number): void {
+        console.log('relativeTimeSeek(' + relativeTime.toFixed(2) + ')');
+        this.stop();
         const
-            relativeTime: number =
-                time / this.totalDuration,
             absoluteSampleToSkipTo: number =
                 Math.floor(relativeTime * this.recordingInfo.nSamples),
             relativeSampleToSkipTo: number =
@@ -315,14 +312,13 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         this.startKey = startKey;
         this.chunkStartTime = chunkRelativeTime * this.chunkDuration;
         console.log(
-            'seekTime: ' + time + ', ' +
+            'seek relativeTime: ' + relativeTime + ', ' +
             'duration: ' + this.totalDuration + ', ' +
             'relativeTime: ' + relativeTime + ', ' +
             'absoluteSampleToSkipTo: ' + absoluteSampleToSkipTo + ', ' +
             'nSamples: ' + this.recordingInfo.nSamples + ', ' +
             'startKey: ' + startKey + ', ' +
             'lastKey: ' + this.lastKey);
-        this.stop();
         this.loadAndDecodeChunk(startKey).subscribe(
             (audioBuffer1: AudioBuffer) => {
                 if (this.startKey < this.lastKey) {
@@ -338,8 +334,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                                 this.chunkDuration,
                                 0
                             );
-                        }
-                    )
+                        });
                 }
             }
         );

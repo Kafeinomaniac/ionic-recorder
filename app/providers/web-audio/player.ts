@@ -59,6 +59,7 @@ export class WebAudioPlayer {
     public isPlaying: boolean;
     private intervalId: NodeJS.Timer;
     public time: number;
+    public relativeTime: number;
     public duration: number;
     public displayTime: string;
     public displayDuration: string;
@@ -75,6 +76,7 @@ export class WebAudioPlayer {
         this.intervalId = null;
 
         this.time = 0;
+        this.relativeTime = 0;
         this.duration = 0;
         this.displayTime = formatTime(0, 0);
         this.displayDuration = this.displayTime;
@@ -107,6 +109,7 @@ export class WebAudioPlayer {
                 if (this.time !== time) {
                     // change detected
                     this.time = time;
+                    this.relativeTime = time / this.duration;
                     this.displayTime = formatTime(time, this.duration);
                 }
 
@@ -204,7 +207,7 @@ export class WebAudioPlayer {
             this.pausedAt = 0;
             this.setPlaying(true);
             // only when you start do you start monitoring
-            this.startMonitoring();
+            // this.startMonitoring();
         }
         else {
             // start later (when)
@@ -262,5 +265,15 @@ export class WebAudioPlayer {
         this.setPlaying(false);
         // this.stopMonitoring();
     }
+
+    /**
+     * Seek playback to a relative position, retaining playing state (or not)
+     * @returns {void}
+     */
+
+    // relativeTimeSeek(relativeTime: number) {
+    //     this.schedulePlay(this.audioBuffer, )
+    //     this.timeSeek(position * this.duration);
+    // }
 
 }

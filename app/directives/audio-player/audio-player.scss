@@ -1,7 +1,47 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-div.audio-player-component ion-range {
+// div.audio-player-component ion-range {
+//     background: map-get($colors , almost-dark);
+//     color: map-get($colors, light);
+//     padding-right: 1em;
+// }
+$audio-player-height: 40px;
+
+div.audio-player ion-row {
     background: map-get($colors , almost-dark);
     color: map-get($colors, light);
-    padding-right: 1em;
+    justify-content: center;
+
+    padding-top: 0;
+    padding-bottom: 0;
+
+    span.player-title {
+            padding-top: 0.4em;
+            font-size: $toolbar-title-font-size;
+            word-wrap: break-word;
+            color: map-get($colors, logo-orange);
+        }
+
+    ion-col {
+        padding: 0;
+        height: $audio-player-height;
+        line-height: $audio-player-height;
+        vertical-align: middle;
+
+        ion-row {
+            padding: 0;
+
+            span.time {
+                font-size: 11px;
+                padding-right: 0.5em;
+                padding-left: 0.3em;
+            }
+
+            span.duration {
+                font-size: 11px;
+                padding-left: 0.5em;
+                padding-right: 0.3em;
+            }
+        }
+    }
 }

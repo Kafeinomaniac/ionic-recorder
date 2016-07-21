@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2016 Tracktunes Inc -->
 
-<div class="audio-player-component" [hidden]="hidden">
+<!--div class="audio-player-component" [hidden]="hidden">
     <ion-range [ngModel]="getRangeValueFromTime()" (ionChange)="onRangeValueChange($event.value)" debounce="150" min="0" [max]="rangeMax" logo-red>
         <button range-left clear (click)="player.togglePlayPause()">
             <ion-icon *ngIf="player.isPlaying" name="pause">
@@ -15,4 +15,26 @@
             {{player.displayDuration}}
         </ion-label>
     </ion-range>
+</div-->
+
+<div class="audio-player" [hidden]="hidden">
+    <ion-row>
+        <span class="player-title">{{title}}</span>
+    </ion-row>
+    <ion-row>
+        <ion-col button clear (click)="player.togglePlayPause()">
+            <ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
+            <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
+        </ion-col>
+        <ion-col width-80 center>
+            <ion-row>
+                <span class="time">{{player.displayTime}}</span>
+                <progress-slider [progress]="player.relativeTime" (changeEnd)="player.relativeTimeSeek($event)"></progress-slider>
+                <span class="duration">{{player.displayDuration}}</span>
+            </ion-row>
+        </ion-col>
+        <ion-col button clear (click)="hide()">
+            <ion-icon name="close"></ion-icon>
+        </ion-col>
+    </ion-row>
 </div>
