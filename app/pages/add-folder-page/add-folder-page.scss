@@ -7,11 +7,13 @@
 // wraps error message with some height so that when it disappears,
 // the add button does not jump too close to the input text input line
 
-ion-content ion-list form div.error-message-container {
+.add-folder-page {
+  ion-content ion-list form div.error-message-container {
     height: 2em;
-}
+  }
 
-ion-content p.add-folder-path-message {
+  ion-content p.add-folder-path-message {
     font-size: $toolbar-title-font-size;
     text-align: center;
+  }
 }

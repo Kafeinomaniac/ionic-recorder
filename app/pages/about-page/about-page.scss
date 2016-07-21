@@ -1,18 +1,18 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 .about-page {
+  b {
+    font-weight: 500;
+  }
+
+  p {
+    padding: 0 40px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: map-get($colors, medium-gray);
+
     b {
-        font-weight: 500;
+      color: map-get($colors, light-gray);
     }
-
-    p {
-        padding: 0 40px;
-        font-size: 14px;
-        line-height: 1.5;
-        color: map-get($colors, medium-gray);
-
-        b {
-            color: map-get($colors, light-gray);
-        }
-    }
+  }
 }

@@ -2,44 +2,49 @@
 
 // TODO: add .record-page wrapper
 
-p.gain-item-label {
+.record-page {
+  p.gain-item-label {
     line-height: 2em;
     margin-bottom: 0.2em;
     font-size: 1.2em;
     color: map-get($colors, medium-gray);
-    button {
-        vertical-align: middle;
-        float: right;
-        color: map-get($colors, medium-gray);
-    }
-}
 
-.recording-time {
+    button {
+      vertical-align: middle;
+      float: right;
+      color: map-get($colors, medium-gray);
+    }
+  }
+
+  .recording-time {
     text-align: center;
     font-size: 2.3em;
     font-family: "Courier New", Courier, monospace;
     padding-bottom: 0.4em;
     color: map-get($colors, light);
-}
+  }
 
-div.record-upload-buttons {
+  div.record-upload-buttons {
     text-align: center; // center-justify the two buttons in the page
     button:first-child {
-        border-radius: 50%;
+      border-radius: 50%;
     }
-    button {
-        font-size: 1.3em;
-        width: 5.8em;
-        height: 5.8em;
-    }
-}
 
-ion-item.monitor-switch {
+    button {
+      font-size: 1.3em;
+      width: 5.8em;
+      height: 5.8em;
+    }
+  }
+
+  ion-item.monitor-switch {
     color: map-get($colors, medium-gray);
     padding: 0;
     margin-bottom: 0.5em;
+
     div.item-inner {
-        font-size: 1em;
-        border-bottom: 0;
+      font-size: 1em;
+      border-bottom: 0;
     }
+  }
 }

@@ -2,23 +2,18 @@
 
 // library.scss
 
-// .toolbar-content {
-    // this fixes some line-wrappping issues in Android
-    // - the title and right badge were vertically placed
-    // not on the same vertical center (staggered) and
-    // this fixes them to be at the same vertical center
- //   display: inline-flex;
-// }
-
-ion-header ion-navbar ion-title.path-title {
+.library-page {
+  ion-header ion-navbar ion-title.path-title {
     max-width: 70%;
     text-align: right;
     direction: rtl;
     text-overflow: ellipsis;
-}
+  }
 
-// appearance of buttonbars
-div.buttonbar3, div.buttonbar4, div.buttonbar5 {
+  // appearance of buttonbars
+  div.buttonbar3,
+  div.buttonbar4,
+  div.buttonbar5 {
     // background-color is made same as navbars so that
     // it all looks like one section around the content
     background-color: map-get($colors, almost-dark);
@@ -28,25 +23,28 @@ div.buttonbar3, div.buttonbar4, div.buttonbar5 {
     width: 100%;
     // don't break into two lines
     white-space: nowrap;
-    button {
-        // text and icon size
-        font-size: 11px;
-        // button height
-        height: 40px;
-        ion-col {
-            // align stuff inside columns in the middle
-            text-align: center;
-            ion-icon {
-                // space between icons line and text line
-                margin-bottom: 3px;
-            }
-        }
-    }
-}
 
-// general for all alerts shown by library page
-ion-alert {
-    color: map-get($colors , light);
+    button {
+      // text and icon size
+      font-size: 11px;
+      // button height
+      height: 40px;
+
+      ion-col {
+        // align stuff inside columns in the middle
+        text-align: center;
+
+        ion-icon {
+          // space between icons line and text line
+          margin-bottom: 3px;
+        }
+      }
+    }
+  }
+
+  // general for all alerts shown by library page
+  ion-alert {
+    color: map-get($colors, light);
     // background color is of the backdrop, if you don't
     // set it, there is no backdrop shown
     // background-color: map-get($colors, dark);
@@ -54,92 +52,76 @@ ion-alert {
     // itself
     // opacity: 1.0;
     .alert-wrapper {
-        .alert-radio-group {
-            overflow: hidden;
-        }
-        // alert wrapper is the actual alert area, in it
-        // buttons were made transparent, so we set the
-        // alert's background color here
-        background: map-get($colors , darkest-gray);
+      .alert-radio-group {
+        overflow: hidden;
+      }
+      // alert wrapper is the actual alert area, in it
+      // buttons were made transparent, so we set the
+      // alert's background color here
+      background: map-get($colors, darkest-gray);
     }
-}
+  }
 
-div.buttonbar3 button {
+  div.buttonbar3 button {
     width: 30.9%;
-}
+  }
 
-// four button bar
-// set width to be a little less than 25% or you get
-// weird side effects
-div.buttonbar4 button {
-   width: 23%;
-}
+  // four button bar
+  // set width to be a little less than 25% or you get
+  // weird side effects
+  div.buttonbar4 button {
+    width: 23%;
+  }
 
-// five button bar
-// set width to be a little less than 20% or you get
-// weird side effects
-div.buttonbar5 button {
-   width: 18%;
-}
+  // five button bar
+  // set width to be a little less than 20% or you get
+  // weird side effects
+  div.buttonbar5 button {
+    width: 18%;
+  }
 
-// control appearance of the text that says a folder is empty
-.library-page ion-content ion-list.file-folder-list {
+  // control appearance of the text that says a folder is empty
+  .library-page ion-content ion-list.file-folder-list {
     ion-item.library-item {
-        ion-checkbox {
-            // margin-right was too large by default, creating
-            // too much of a space between checkbox and item text
-            margin-right: .5em;
+      ion-checkbox {
+        // margin-right was too large by default, creating
+        // too much of a space between checkbox and item text
+        margin-right: .5em;
+      }
+
+      ion-label.button span.button-inner {
+        text-transform: none;
+        text-align: left;
+        // justify-content: unset is needed for label
+        // text to not be centered and go to the left
+        justify-content: unset;
+
+        ion-icon {
+          font-size: 1.4em;
         }
-        ion-label.button span.button-inner {
-            text-transform: none;
-            text-align: left;
-            // justify-content: unset is needed for label
-            // text to not be centered and go to the left
-            justify-content: unset;
-            ion-icon {
-                font-size: 1.4em;
-            }
-        }
+      }
     }
 
     // control appearance of the text that says a folder is empty
     ion-item.library-empty-folder-message {
-        text-align: center;
-        color: map-get($colors, logo-orange);
+      text-align: center;
+      color: map-get($colors, logo-orange);
     }
-}
-/*
-ion-content ion-list ion-list-header div {
-    ion-label {
-        // this makes the list header vertically thinner
-        margin: 0;
-    }
-
-    span.list-header-path {
-        cursor: arrow;
-        display: inline-block;
-        text-align: center;
-        line-height: 34px;
-        width: 100%;
-    }
-}
-
-#audio-player-audio-tag {
-    // padding: 1em;
-    width: 100%;
-}
-*/
-ion-content ion-list ion-item-group ion-item-divider {
+  }
+ 
+  ion-content ion-list ion-item-group ion-item-divider {
     // use padding-left to center checkbox over checkboxes below
     padding-left: 14px;
-    ion-label {
-        // margin: 0 shrinks height of item divider by a lot
-        margin: 0;
-        button {
 
-            span.button-inner {
-                text-transform: none;
-            }
+    ion-label {
+      // margin: 0 shrinks height of item divider by a lot
+      margin: 0;
+
+      button {
+        span.button-inner {
+          text-transform: none;
         }
+      }
     }
+  }
 }
