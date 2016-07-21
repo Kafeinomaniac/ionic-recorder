@@ -176,9 +176,7 @@ export class WebAudioRecorder {
                 absValue = 1;
             }
 
-            // keep track of volume (for monitoring) via
-            // this.currentVolume, which is set to the max
-            // in absolute value of each processing buffer
+            // keep track of volume using abs value
             if (absValue > this.currentVolume) {
                 this.currentVolume = absValue;
             }

@@ -158,7 +158,7 @@ export class WebAudioPlayer {
         onEnded?: () => void
     ): void {
         console.log('schedulePlay(AudioBuffer, ' + when + ', ' +
-            startTime + ', onEnded())');
+            startTime + ')');
         this.audioBuffer = audioBuffer;
 
         let sourceNode: AudioBufferSourceNode =
@@ -168,12 +168,12 @@ export class WebAudioPlayer {
         sourceNode.buffer = audioBuffer;
 
         sourceNode.onended = () => {
-            console.log('onended: nScheduled: ' +
-                this.scheduledSourceNodes.length);
             const nextNode: AudioBufferSourceNode =
                 this.scheduledSourceNodes.pop();
-            console.log('schedulePlay:sourceNode.onended() nextNode: ' +
-                nextNode);
+
+            console.log('onended: nScheduled: ' +
+                this.scheduledSourceNodes.length +
+                ', nextNode: ' + nextNode);
 
             if (isUndefined(nextNode)) {
                 resetSourceNode(this.sourceNode);
@@ -199,7 +199,8 @@ export class WebAudioPlayer {
             //     (AUDIO_CONTEXT.currentTime - offset));
             sourceNode.start(0, offset);
             this.startedAt = AUDIO_CONTEXT.currentTime - offset;
-            // console.log('====> this.starteAt 1: ' + this.startedAt);
+            console.log('====> this.starteAt = ' + this.startedAt);
+            sourceNode.stop(this.startedAt + this.audioBuffer.duration);
             this.pausedAt = 0;
             this.setPlaying(true);
             // only when you start do you start monitoring
@@ -228,7 +229,7 @@ export class WebAudioPlayer {
         let elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
         this.stop();
         this.pausedAt = elapsed;
-        this.stopMonitoring();
+        // this.stopMonitoring();
     }
 
     /**
@@ -259,7 +260,7 @@ export class WebAudioPlayer {
         this.startedAt = 0;
         this.pausedAt = 0;
         this.setPlaying(false);
-        this.stopMonitoring();
+        // this.stopMonitoring();
     }
 
 }

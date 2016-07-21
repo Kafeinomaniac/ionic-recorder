@@ -91,12 +91,10 @@ export class AudioPlayer implements OnChanges {
     public ngOnChanges(
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
-        if (changeRecord['recordingInfo']) {
+        if (changeRecord['recordingInfo'] && this.recordingInfo) {
             console.log('AudioPlayer:ngOnChanges(): [recordingInfo]: ' +
                 this.recordingInfo);
-            if (this.recordingInfo) {
-                this.player.setRecordingInfo(this.recordingInfo);
-            }
+            this.player.setRecordingInfo(this.recordingInfo);
         }
     }
 }

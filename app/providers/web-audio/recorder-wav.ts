@@ -34,8 +34,11 @@ import {
 export const DB_CHUNK_LENGTH: number = 65536;
 
 // pre-allocate the double chunk buffers used for saving to DB
-const DB_CHUNK1: Uint16Array = new Uint16Array(DB_CHUNK_LENGTH);
-const DB_CHUNK2: Uint16Array = new Uint16Array(DB_CHUNK_LENGTH);
+const DB_CHUNK1: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
+const DB_CHUNK2: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
+
+const MAX = Math.max;
+const MIN = Math.min;
 
 /**
  * @name WebAudioRecorder
@@ -76,9 +79,9 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
                 });
         });
 
-        this.valueCB = (pcm: number) => {
-            this.setter.setNext(pcm * 0x7FFF);
-            return 1;
+        this.valueCB = (raw: number) => {
+            const x: number = raw * 0x7fff;
+            this.setter.setNext(x < 0 ? MAX(x, -0x8000) : MIN(x, 0x7fff));
         };
     }
 

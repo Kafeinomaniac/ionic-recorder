@@ -5,8 +5,8 @@ import {
     DoubleBufferSetter
 } from './double-buffer';
 
-let buffer1: Uint16Array,
-    buffer2: Uint16Array,
+let buffer1: Int16Array,
+    buffer2: Int16Array,
     getter: DoubleBufferGetter,
     setter: DoubleBufferSetter,
     preGetCBCounter: number,
@@ -19,8 +19,8 @@ let buffer1: Uint16Array,
     };
 
 beforeEach(() => {
-    buffer1 = new Uint16Array(3);
-    buffer2 = new Uint16Array(3);
+    buffer1 = new Int16Array(3);
+    buffer2 = new Int16Array(3);
     preGetCBCounter = 0;
     preSetCBCounter = 0;
     // (buffer1, buffer2) are shared by getter and setter
