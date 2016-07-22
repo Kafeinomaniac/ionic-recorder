@@ -18,8 +18,7 @@ import {
 } from './common';
 
 import {
-    prependArray,
-    isUndefined
+    prependArray
 } from '../../services/utils/utils';
 
 import {
@@ -135,9 +134,11 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public stopMonitoring(): void {
-        setTimeout(() => {
-            this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
-        }, 2 * CLOCK_INTERVAL_MSEC);
+        setTimeout(
+            () => {
+                this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
+            },
+            2 * CLOCK_INTERVAL_MSEC);
     }
 
     public getDuration(): number {

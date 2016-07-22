@@ -78,13 +78,13 @@ export class AudioPlayer implements OnChanges {
     public ngOnInit(): void {
         console.log('AudioPlayer:ngOnInit()');
         // TODO: this maintains monitoring throughout app, you
-        // can do this better by stopping to monitor when going to 
+        // can do this better by stopping to monitor when going to
         // another page but then there will need to be communication
-        // between the track page and this directive to tell the 
+        // between the track page and this directive to tell the
         // directive to start/stop monitoring, perhaps we can do
         // this via show() and hide(). Ideally, we can start monitoring
         // upon player.relativeTimeSeek() and stop monitoring upon
-        // player.pause() or player.stop() - but right now that does 
+        // player.pause() or player.stop() - but right now that does
         // not work due to race conditions (perhaps add a setTimeout()
         // to delay the stop monitoring command?)
         // this.player.startMonitoring();

@@ -71,7 +71,7 @@ export class IdbDict extends Idb {
                         if (cursor) {
                             observer.next(cursor.value.value);
                             observer.complete();
-                            // NB: don't call cursor.continue() because we 
+                            // NB: don't call cursor.continue() because we
                             // expect only one value for key 'key'
                             // cursor.continue();
                         }

@@ -93,7 +93,6 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     private nSamples: number;
     private dbEndKey: number;
     private chunkStartTime: number;
-    private startKey: number;
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
     private onEndeds: { [id: string]: number };

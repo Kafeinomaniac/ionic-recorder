@@ -9,7 +9,7 @@ Each directory here is a service: any ol' utility class or function.
 | Name       | Content                                            |
 |------------|----------------------------------------------------|
 | idb        | IndexedDB low level interface class                |
-| test-utils | Functions, classes, constants used only in testing | 
+| test-utils | Functions, classes, constants used only in testing |
 | utils      | Misc utility functions used in more than one place |
 
 ### Files
