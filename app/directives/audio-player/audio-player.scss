@@ -9,6 +9,8 @@ audio-player ion-toolbar div.toolbar-content {
       display: table-cell;
       width: auto;
       vertical-align: middle;
+      margin-right: -0.5em;
+      margin-left: 0.5em;
     }
 
     span {
@@ -16,14 +18,10 @@ audio-player ion-toolbar div.toolbar-content {
       display: table-cell;
       width: auto;
       color: map-get($colors, almost-light);
-    }
-
-    span.duration {
       padding-right: 0.7em;
     }
 
     progress-slider {
-      padding-left: 0.7em;
       vertical-align: middle;
       display: table-cell;
       width: 100%;

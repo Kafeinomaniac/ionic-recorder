@@ -3,18 +3,11 @@
 <ion-toolbar almost-dark [hidden]="hidden">
     <div class="player-content">
         <button button clear (click)="player.togglePlayPause()">
-        <ion-icon *ngIf="player.isPlaying" name="pause">
-        </ion-icon>
-        <ion-icon *ngIf="!player.isPlaying" name="play">
-        </ion-icon>
-    </button>
-        <span class="time">
-                {{player.displayTime}}
-    </span>
-        <progress-slider [progress]="player.relativeTime" (changeEnd)="player.relativeTimeSeek($event)">
-        </progress-slider>
-        <span class="duration">
-                {{player.displayDuration}}
-    </span>
+            <ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
+            <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
+        </button>
+        <span>{{player.displayTime}}</span>
+        <progress-slider [progress]="player.relativeTime" (changeEnd)="player.relativeTimeSeek($event)"></progress-slider>
+        <span>{{player.displayDuration}}</span>
     </div>
 </ion-toolbar>
