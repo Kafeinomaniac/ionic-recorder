@@ -89,7 +89,7 @@ export class WebAudioPlayer {
         if (this.pausedAt) {
             return this.pausedAt;
         }
-        if (this.startedAt) {
+        else if (this.startedAt) {
             return AUDIO_CONTEXT.currentTime - this.startedAt;
         }
         return 0;
@@ -105,14 +105,7 @@ export class WebAudioPlayer {
             CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
-                let time: number = 0;
-                if (this.pausedAt) {
-                    time = this.pausedAt;
-                }
-                else if (this.startedAt) {
-                    // not paused, and we have started, so playing now
-                    time = AUDIO_CONTEXT.currentTime - this.startedAt;
-                }
+                let time: number = this.getTime();
 
                 if (time > this.duration) {
                     time = this.duration;
@@ -157,16 +150,6 @@ export class WebAudioPlayer {
         }
     }
 
-    /**
-     * Set this.isPlaying and force-fire angular2 change detection (a hack)
-     * @returns {void}
-     */
-    // private setPlaying(state: boolean): void {
-    //     // TODO: the setTimeout() call below is a terrible hack to prevent
-    //     // angular change detection exceptions
-    //     setTimeout(() => { this.isPlaying = state; });
-    // }
-
     public schedulePlay(
         audioBuffer: AudioBuffer,
         when: number = 0,
@@ -186,28 +169,6 @@ export class WebAudioPlayer {
         if (onEnded) {
             sourceNode.onended = onEnded;
         }
-        // sourceNode.onended = () => {
-        //     // const nextNode: AudioBufferSourceNode =
-        //     //     this.scheduledSourceNodes.pop();
-
-        //     // console.log('onended: nScheduled: ' +
-        //     //     this.scheduledSourceNodes.length +
-        //     //     ', nextNode: ' + nextNode);
-
-        //     // if (isUndefined(nextNode)) {
-        //     //     resetSourceNode(this.sourceNode);
-        //     //     console.log('DONE! nScheduledSourceNodes = ' +
-        //     //         this.scheduledSourceNodes.length);
-        //     // }
-        //     // else {
-        //     //     this.sourceNode = nextNode;
-        //     // }
-
-        //     if (onEnded) {
-        //         console.log('calling onended ..............');
-        //         onEnded();
-        //     }
-        // };
 
         if (when === 0) {
             // start now
@@ -284,14 +245,4 @@ export class WebAudioPlayer {
         this.isPlaying = false;
         // this.stopMonitoring();
     }
-
-    /**
-     * Seek playback to a relative position, retaining playing state (or not)
-     * @returns {void}
-     */
-
-    // relativeTimeSeek(relativeTime: number) {
-    //     this.schedulePlay(this.audioBuffer, )
-    //     this.timeSeek(position * this.duration);
-    // }
 }
