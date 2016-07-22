@@ -102,14 +102,18 @@ export class AudioPlayer implements OnChanges {
             this.player.setRecordingInfo(this.recordingInfo);
         }
     }
-
-    public ionViewDidEnter(): void {
-        console.log('RecordPage:ionViewDidEnter()');
-        this.player.startMonitoring();
+    public ngOnInit(): void {
+        console.log('AudioPlayer:ngOnInit()');
+        // TODO: this maintains monitoring throughout app, you
+        // can do this better by stop monitoring when going to 
+        // another page but then there will need to be communication
+        // between the track page and this directive to tell the 
+        // directive to start/stop monitoring, perhaps we can do
+        // this via show() and hide().
+        this.player.startMonitoring();        
     }
-
-    public ionViewDidLeave(): void {
-        console.log('RecordPage:ionViewDidLeave()');
-        this.player.stopMonitoring();
+    public ngOnDestroy(): void {
+        console.log('AudioPlayer:ngOnDestroy()');
+        this.player.stopMonitoring();        
     }
 }

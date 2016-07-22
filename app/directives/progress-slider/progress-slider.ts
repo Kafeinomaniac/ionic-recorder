@@ -127,6 +127,7 @@ export class ProgressSlider {
     }
 
     public onMouseUp(event: MouseEvent): void {
+        console.log('onMouseeUp()');
         // free up the listening to mouse up from <body> now that it happened
         // until the next time we click on the progress-bar
         this.mouseUpListener();
@@ -148,7 +149,13 @@ export class ProgressSlider {
         this.trackWidthRange = this.getTrackWidthRange();
     }
 
-    public onSliderTouchEnd(): void {
-        this.changeEnd.emit(this.progress);
+    public onSliderTouchEnd(event: TouchEvent): void {
+        // this.progress =
+        //     this.computeProgress(
+        //         event.touches[0].clientX,
+        //         this.trackWidthRange);
+        // this.changeEnd.emit(this.progress);
+        console.log('onSliderTouchEnd(): ' + this.progress);
+        // this.changeEnd.emit(this.progress);
     }
 }

@@ -331,8 +331,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                             );
                             this.schedulePlay(
                                 audioBuffer2,
-                                this.chunkDuration,
-                                0
+                                this.startedAt + this.chunkDuration
                             );
                         });
                 }
