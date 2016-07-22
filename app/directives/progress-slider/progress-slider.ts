@@ -29,8 +29,8 @@ export class ProgressSlider {
     private renderer: Renderer;
 
     private trackWidthRange: { start: number, end: number };
-    private mouseUpListener: Function;
-    private mouseMoveListener: Function;
+    private freeMouseUpListener: Function;
+    private freeMouseMoveListener: Function;
 
     constructor(element: ElementRef, renderer: Renderer) {
         console.log('constructor():ProgressSlider');
@@ -104,14 +104,14 @@ export class ProgressSlider {
 
         this.jumpToPosition(event.clientX, this.trackWidthRange);
 
-        this.mouseUpListener =
+        this.freeMouseUpListener =
             this.renderer.listenGlobal(
                 'document',
                 'mouseup',
                 (mouseEvent: MouseEvent) => {
                     this.onMouseUp(mouseEvent);
                 });
-        this.mouseMoveListener =
+        this.freeMouseMoveListener =
             this.renderer.listenGlobal(
                 'document',
                 'mousemove',
@@ -124,8 +124,8 @@ export class ProgressSlider {
         console.log('onMouseeUp()');
         // free up the listening to mouse up from <body> now that it happened
         // until the next time we click on the progress-bar
-        this.mouseUpListener();
-        this.mouseMoveListener();
+        this.freeMouseUpListener();
+        this.freeMouseMoveListener();
         this.progress =
             this.computeProgress(event.clientX, this.trackWidthRange);
         this.changeEnd.emit(this.progress);
@@ -144,12 +144,18 @@ export class ProgressSlider {
     }
 
     public onSliderTouchEnd(event: TouchEvent): void {
+        // If we uncomment this block below, then in the browser we get
+        // double-calls to the changeEnd event on mouseUp and touchEnd -
+        // both get called... not sure if we need touchEnd at all, 
+        // commenting it out until we test on mobile. If mobile browser
+        // handles the mouseUp event on touchEnd then we're all set and
+        // can get rid of this function altogether. Otherwise, we'd have
+        // to somehow make sure we don't get double event firings.
         // this.progress =
         //     this.computeProgress(
         //         event.touches[0].clientX,
         //         this.trackWidthRange);
         // this.changeEnd.emit(this.progress);
         console.log('onSliderTouchEnd(): ' + this.progress);
-        // this.changeEnd.emit(this.progress);
     }
 }
