@@ -91,10 +91,9 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     private chunkDuration: number;
     private dbStartKey: number;
     private nSamples: number;
-    private lastKey: number;
+    private dbEndKey: number;
     private chunkStartTime: number;
     private startKey: number;
-    private totalDuration: number;
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
     private onEndeds: { [id: string]: number };
@@ -114,14 +113,12 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         this.recordingInfo = recordingInfo;
         this.nSamples = this.recordingInfo.nSamples;
         this.dbStartKey = this.recordingInfo.dbStartKey;
-        this.totalDuration =
+        this.duration =
             this.nSamples / this.recordingInfo.sampleRate;
-        this.duration = this.totalDuration;
         this.displayDuration = formatTime(this.duration, this.duration);
         this.chunkDuration =
             DB_CHUNK_LENGTH / this.recordingInfo.sampleRate;
-        this.startKey = this.dbStartKey;
-        this.lastKey =
+        this.dbEndKey =
             this.dbStartKey + Math.floor(this.nSamples / DB_CHUNK_LENGTH);
     }
 
@@ -137,11 +134,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         console.log('getOnEndedCB(' + key + '), scheduling key ' +
             nextKey);
 
-        if (nextKey > this.lastKey) {
+        if (nextKey > this.dbEndKey) {
             return () => {
                 console.log('onEnded(' + nextKey +
-                    ') - reached last chunk - nextNode: ' +
-                    this.sourceNode);
+                    ') - reached last chunk');
             };
         }
         else {
@@ -168,6 +164,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                             audioBuffer,
                             when,
                             0,
+                            0,
                             this.getOnEndedCB(nextKey)
                         );
                     });
@@ -177,10 +174,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     }
 
     private getChunkWhenTime(key: number): number {
-        const deltaKey: number = key - this.startKey;
-        if (key > this.lastKey) {
-            throw Error('key > lastKey');
+        if (key > this.dbEndKey) {
+            throw Error('key > dbEndKey');
         }
+        const deltaKey: number = key - this.dbStartKey;
         if (deltaKey === 0) {
             throw Error('Do not schedule the now for later!');
         }
@@ -232,39 +229,42 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         const
             absoluteSampleToSkipTo: number =
                 Math.floor(relativeTime * this.recordingInfo.nSamples),
-            relativeSampleToSkipTo: number =
+            chunkSampleToSkipTo: number =
                 absoluteSampleToSkipTo % DB_CHUNK_LENGTH,
             startKey: number =
                 this.recordingInfo.dbStartKey +
                 Math.floor(absoluteSampleToSkipTo / DB_CHUNK_LENGTH),
-            chunkRelativeTime: number =
-                relativeSampleToSkipTo / DB_CHUNK_LENGTH;
-        this.startKey = startKey;
-        this.chunkStartTime = chunkRelativeTime * this.chunkDuration;
+            startOffset: number =
+                (startKey - this.recordingInfo.dbStartKey) *
+                this.chunkDuration;
+        this.chunkStartTime =
+            chunkSampleToSkipTo * this.chunkDuration / DB_CHUNK_LENGTH;
         console.log(
             'seek relativeTime: ' + relativeTime + ', ' +
-            'duration: ' + this.totalDuration + ', ' +
+            'duration: ' + this.duration + ', ' +
             'relativeTime: ' + relativeTime + ', ' +
             'absoluteSampleToSkipTo: ' + absoluteSampleToSkipTo + ', ' +
             'nSamples: ' + this.recordingInfo.nSamples + ', ' +
             'startKey: ' + startKey + ', ' +
-            'lastKey: ' + this.lastKey);
+            'dbEndKey: ' + this.dbEndKey);
         this.loadAndDecodeChunk(startKey).subscribe(
             (audioBuffer1: AudioBuffer) => {
-                if (this.startKey < this.lastKey) {
+                if (startKey < this.dbEndKey) {
                     this.loadAndDecodeChunk(startKey + 1).subscribe(
                         (audioBuffer2: AudioBuffer) => {
                             this.schedulePlay(
                                 audioBuffer1,
                                 0,
                                 this.chunkStartTime,
-                                this.getOnEndedCB(this.startKey)
+                                startOffset,
+                                this.getOnEndedCB(startKey)
                             );
                             this.schedulePlay(
                                 audioBuffer2,
                                 this.startedAt + this.chunkDuration,
                                 0,
-                                this.getOnEndedCB(this.startKey + 1)
+                                0,
+                                this.getOnEndedCB(startKey + 1)
                             );
                         });
                 }

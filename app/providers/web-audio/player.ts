@@ -153,12 +153,14 @@ export class WebAudioPlayer {
     public schedulePlay(
         audioBuffer: AudioBuffer,
         when: number = 0,
-        startTime: number = 0,
+        offset: number = 0,
+        startOffset: number = 0,
         onEnded?: () => void
     ): void {
         console.log('schedulePlay(AudioBuffer, ' +
             when.toFixed(2) + ', ' +
-            startTime.toFixed(2) + ')');
+            offset.toFixed(2) + ', ' +
+            startOffset.toFixed(2) + ')');
         this.audioBuffer = audioBuffer;
 
         let sourceNode: AudioBufferSourceNode =
@@ -172,14 +174,17 @@ export class WebAudioPlayer {
 
         if (when === 0) {
             // start now
-            const offset: number = startTime ? startTime : this.pausedAt;
+            if (this.pausedAt) {
+                offset = this.pausedAt;
+                startOffset = 0;
+            }
             this.sourceNode = sourceNode;
             // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
             // console.log('this.starteAt: ' + this.startedAt);
             // console.log('====> this.starteAt 0: ' +
             //     (AUDIO_CONTEXT.currentTime - offset));
             sourceNode.start(0, offset);
-            this.startedAt = AUDIO_CONTEXT.currentTime - offset;
+            this.startedAt = AUDIO_CONTEXT.currentTime - offset - startOffset;
             console.log('====> this.starteAt = ' + this.startedAt.toFixed(2));
             sourceNode.stop(this.startedAt + this.audioBuffer.duration);
             this.pausedAt = 0;
@@ -190,7 +195,7 @@ export class WebAudioPlayer {
         }
         else {
             // start later (when)
-            // sourceNode.start(when, startTime);
+            // sourceNode.start(when, offset);
             sourceNode.start(when, 0);
             // we save the scheduled source nodes in an array to avoid them
             // being garbage collected while they wait to be played.
@@ -228,6 +233,13 @@ export class WebAudioPlayer {
         }
     }
 
+    public cancelScheduled(): void {
+        for (let i in this.scheduledSourceNodes) {
+            console.log('resetting scheduled: ' + i);
+            this.resetSourceNode(this.scheduledSourceNodes[i]);
+        }
+    }
+
     /**
      * Stop playback
      * @returns {void}
@@ -235,10 +247,7 @@ export class WebAudioPlayer {
     public stop(): void {
         console.log('stop()');
         this.resetSourceNode(this.sourceNode);
-        for (let i in this.scheduledSourceNodes) {
-            console.log('resetting scheduled: ' + i);
-            this.resetSourceNode(this.scheduledSourceNodes[i]);
-        }
+        this.cancelScheduled();
         this.startedAt = 0;
         this.pausedAt = 0;
         // this.setPlaying(false);
