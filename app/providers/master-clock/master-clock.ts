@@ -9,7 +9,7 @@ import {
 const CLOCK_FREQUENCY_HZ: number = 24;
 
 // derived constants, please do not touch the constants below:
-const CLOCK_INTERVAL_MSEC: number = 1000 / CLOCK_FREQUENCY_HZ;
+export const CLOCK_INTERVAL_MSEC: number = 1000 / CLOCK_FREQUENCY_HZ;
 
 // maximum allowed number of functions running concurrently
 export const MAX_FUNCTIONS: number = 2;
@@ -90,7 +90,7 @@ export class MasterClock {
             this.start();
         }
         this.functions[id] = fun;
-        console.log('MasterClock:addFunction(' + id + '), left with ' +
+        console.log('MasterClock:addFunction(' + id + '), nFunctions: ' +
             Object.keys(this.functions).length);
     }
 
@@ -100,14 +100,12 @@ export class MasterClock {
      * @returns {void}
      */
     public removeFunction(id: string): void {
-        console.log('MasterClock:removeFunction(' + id + '), start with ' +
-            Object.keys(this.functions).length);
         delete this.functions[id];
         const nFunctions: number = Object.keys(this.functions).length;
         if (nFunctions === 0) {
             this.stop();
         }
-        console.log('MasterClock:removeFunction(' + id + '), left with ' +
+        console.log('MasterClock:removeFunction(' + id + '), nFunctions: ' +
             Object.keys(this.functions).length);
     }
 }

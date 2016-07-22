@@ -225,7 +225,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
 
     public relativeTimeSeek(relativeTime: number): void {
         console.log('relativeTimeSeek(' + relativeTime.toFixed(2) + ')');
-        this.stop();
+        this.stop(false);
         const
             absoluteSampleToSkipTo: number =
                 Math.floor(relativeTime * this.recordingInfo.nSamples),
@@ -272,8 +272,8 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         );
     } // public timeSeek(time: number): void {
 
-    public stop(): void {
-        super.stop();
+    public stop(stopMonitoring: boolean = true): void {
+        super.stop(stopMonitoring);
         this.onEndeds = {};
     }
 

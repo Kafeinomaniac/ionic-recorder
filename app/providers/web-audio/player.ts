@@ -23,7 +23,8 @@ import {
 } from '../../services/utils/utils';
 
 import {
-    MasterClock
+    MasterClock,
+    CLOCK_INTERVAL_MSEC
 } from '../master-clock/master-clock';
 
 import {
@@ -134,8 +135,9 @@ export class WebAudioPlayer {
      * @returns {void}
      */
     public stopMonitoring(): void {
-        // console.log('PLAYER: stopMonitoring()');
-        this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
+        setTimeout(() => {
+            this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
+        }, 2 * CLOCK_INTERVAL_MSEC);
     }
 
     public getDuration(): number {
@@ -157,6 +159,7 @@ export class WebAudioPlayer {
         startOffset: number = 0,
         onEnded?: () => void
     ): void {
+        this.startMonitoring();
         console.log('schedulePlay(AudioBuffer, ' +
             when.toFixed(2) + ', ' +
             offset.toFixed(2) + ', ' +
@@ -188,7 +191,6 @@ export class WebAudioPlayer {
             console.log('====> this.starteAt = ' + this.startedAt.toFixed(2));
             sourceNode.stop(this.startedAt + this.audioBuffer.duration);
             this.pausedAt = 0;
-            // this.setPlaying(true);
             this.isPlaying = true;
             // only when you start do you start monitoring
             // this.startMonitoring();
@@ -216,7 +218,7 @@ export class WebAudioPlayer {
         let elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
         this.stop();
         this.pausedAt = elapsed;
-        // this.stopMonitoring();
+        this.stopMonitoring();
     }
 
     /**
@@ -244,14 +246,15 @@ export class WebAudioPlayer {
      * Stop playback
      * @returns {void}
      */
-    public stop(): void {
+    public stop(stopMonitoring: boolean = true): void {
         console.log('stop()');
         this.resetSourceNode(this.sourceNode);
         this.cancelScheduled();
         this.startedAt = 0;
         this.pausedAt = 0;
-        // this.setPlaying(false);
         this.isPlaying = false;
-        // this.stopMonitoring();
+        if (stopMonitoring) {
+            this.stopMonitoring();
+        }
     }
 }

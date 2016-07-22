@@ -15,15 +15,9 @@ import {
     RecordingInfo
 } from '../../providers/web-audio/common';
 
-// import {
-//     Range
-// } from 'ionic-angular';
-
 import {
     ProgressSlider
 } from '../progress-slider/progress-slider';
-
-// const RANGE_MAX: number = 200;
 
 /**
  * @name AudioPlayer
@@ -35,15 +29,12 @@ import {
     selector: 'audio-player',
     templateUrl: 'build/directives/audio-player/audio-player.html',
     providers: [WebAudioPlayerWav],
-    // directives: [Range]
     directives: [ProgressSlider]
 })
 export class AudioPlayer implements OnChanges {
     @Input() private recordingInfo: RecordingInfo;
     private player: WebAudioPlayerWav;
     private hidden: boolean;
-    // private rangeMax: number;
-    // private relativeTime: number;
 
     /**
      * @constructor
@@ -51,10 +42,7 @@ export class AudioPlayer implements OnChanges {
     constructor(player: WebAudioPlayerWav) {
         console.log('constructor():AudioPlayer');
         this.player = player;
-        // player starts at hidden state
         this.hidden = false;
-        // this.relativeTime = 0;
-        // this.rangeMax = RANGE_MAX;
     }
 
     /**
@@ -73,22 +61,6 @@ export class AudioPlayer implements OnChanges {
         this.hidden = true;
     }
 
-    // public getRangeValueFromTime(): number {
-    //     return RANGE_MAX * this.player.time / this.player.duration;
-    // }
-
-    // public onRangeValueChange(position: number): void {
-    //     console.log('onRangeValueChange(): ' + position);
-    //     if (position / RANGE_MAX === this.relativeTime) {
-    //         // prevent calling player multiple times in
-    //         // immediate succession if nothing's changed
-    //         return;
-    //     }
-    //     this.relativeTime = position / RANGE_MAX;
-    //     const seekTime: number = this.relativeTime * this.player.duration;
-    //     this.player.timeSeek(seekTime);
-    // }
-
     /**
      * Handle changes (play new song) when a new song (url) is loaded
      * @returns {void}
@@ -102,18 +74,24 @@ export class AudioPlayer implements OnChanges {
             this.player.setRecordingInfo(this.recordingInfo);
         }
     }
+
     public ngOnInit(): void {
         console.log('AudioPlayer:ngOnInit()');
         // TODO: this maintains monitoring throughout app, you
-        // can do this better by stop monitoring when going to 
+        // can do this better by stopping to monitor when going to 
         // another page but then there will need to be communication
         // between the track page and this directive to tell the 
         // directive to start/stop monitoring, perhaps we can do
-        // this via show() and hide().
-        this.player.startMonitoring();        
+        // this via show() and hide(). Ideally, we can start monitoring
+        // upon player.relativeTimeSeek() and stop monitoring upon
+        // player.pause() or player.stop() - but right now that does 
+        // not work due to race conditions (perhaps add a setTimeout()
+        // to delay the stop monitoring command?)
+        // this.player.startMonitoring();
     }
+
     public ngOnDestroy(): void {
         console.log('AudioPlayer:ngOnDestroy()');
-        this.player.stopMonitoring();        
+        this.player.stopMonitoring();
     }
 }
