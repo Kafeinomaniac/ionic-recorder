@@ -23,7 +23,8 @@ import {
 
 import {
     isOdd,
-    formatTime
+    formatTime,
+    has
 } from '../../services/utils/utils';
 
 import {
@@ -96,7 +97,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     private totalDuration: number;
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
-
+    private onEndeds: { [id: string]: number };
     constructor(masterClock: MasterClock, idb: IdbAppData) {
         super(masterClock);
         console.log('constructor():WebAudioPlayerWav');
@@ -106,6 +107,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         }
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
+        this.onEndeds = {};
     }
 
     public setRecordingInfo(recordingInfo: RecordingInfo): void {
@@ -159,6 +161,9 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     private getOnEndedCB(key: number): () => void {
         const nextKey: number = key + 2;
 
+        console.log('getOnEndedCB(' + key + '), scheduling key ' +
+            nextKey);
+
         if (nextKey > this.lastKey) {
             return () => {
                 console.log('onEnded(' + nextKey +
@@ -167,14 +172,21 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
             };
         }
         else {
-
-            console.log('getOnEndedCB(' + key + '), scheduling key ' +
-                nextKey);
-
             return () => {
-                const when: number = this.getChunkScheduleTime(nextKey);
+                const strKey: string = nextKey.toString(),
+                    when: number = this.getChunkScheduleTime(nextKey);
 
-                console.log('onEndedCB(' + key + ')' +
+                if (has(this.onEndeds, strKey)) {
+                    // prevents calling onEnded() twice in succession as
+                    // happens in chrome/chromium when you don't start at 0
+                    return;
+                }
+                else {
+                    this.onEndeds[strKey] = when;
+                }
+
+                console.log('onEndedCB(' + key + '), time = ' +
+                    this.getTime() +
                     ', sched key: ' + nextKey + ', when: ' + when.toFixed(2));
 
                 this.loadAndDecodeChunk(nextKey).subscribe(
@@ -186,6 +198,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                             this.getOnEndedCB(nextKey)
                         );
                     });
+
             };
         }
     }
@@ -305,6 +318,11 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     // } // public timeSeek(time: number): void {
 
     private loadAndDecodeChunk(key: number): Observable<AudioBuffer> {
+        console.log('loadAndDecodeChunk(' + key + ')');
+        // if (key === 3) {
+        //     debugger;
+        // }
+
         let obs: Observable<AudioBuffer> = Observable.create((observer) => {
             const fileReader: FileReader = this.getFileReader(key);
             this.idb.readChunk(key).subscribe(
@@ -322,6 +340,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                                 observer.complete();
                             });
                     };
+                    console.log('READING FILE!');
                     fileReader.readAsArrayBuffer(
                         int16ArrayToWavBlob(wavArray)
                     );
@@ -376,6 +395,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         );
     } // public timeSeek(time: number): void {
 
+    public stop(): void {
+        super.stop();
+        this.onEndeds = {};
+    }
 
     public togglePlayPause(): void {
         if (!this.isPlaying) {

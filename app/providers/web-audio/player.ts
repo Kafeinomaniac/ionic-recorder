@@ -85,6 +85,16 @@ export class WebAudioPlayer {
         }
     }
 
+    public getTime(): number {
+        if (this.pausedAt) {
+            return this.pausedAt;
+        }
+        if (this.startedAt) {
+            return AUDIO_CONTEXT.currentTime - this.startedAt;
+        }
+        return 0;
+    }
+
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      * @returns {void}
@@ -151,11 +161,11 @@ export class WebAudioPlayer {
      * Set this.isPlaying and force-fire angular2 change detection (a hack)
      * @returns {void}
      */
-    private setPlaying(state: boolean): void {
-        // TODO: the setTimeout() call below is a terrible hack to prevent
-        // angular change detection exceptions
-        setTimeout(() => { this.isPlaying = state; });
-    }
+    // private setPlaying(state: boolean): void {
+    //     // TODO: the setTimeout() call below is a terrible hack to prevent
+    //     // angular change detection exceptions
+    //     setTimeout(() => { this.isPlaying = state; });
+    // }
 
     public schedulePlay(
         audioBuffer: AudioBuffer,
@@ -173,28 +183,31 @@ export class WebAudioPlayer {
 
         sourceNode.connect(AUDIO_CONTEXT.destination);
         sourceNode.buffer = audioBuffer;
+        if (onEnded) {
+            sourceNode.onended = onEnded;
+        }
+        // sourceNode.onended = () => {
+        //     // const nextNode: AudioBufferSourceNode =
+        //     //     this.scheduledSourceNodes.pop();
 
-        sourceNode.onended = () => {
-            // const nextNode: AudioBufferSourceNode =
-            //     this.scheduledSourceNodes.pop();
+        //     // console.log('onended: nScheduled: ' +
+        //     //     this.scheduledSourceNodes.length +
+        //     //     ', nextNode: ' + nextNode);
 
-            // console.log('onended: nScheduled: ' +
-            //     this.scheduledSourceNodes.length +
-            //     ', nextNode: ' + nextNode);
+        //     // if (isUndefined(nextNode)) {
+        //     //     resetSourceNode(this.sourceNode);
+        //     //     console.log('DONE! nScheduledSourceNodes = ' +
+        //     //         this.scheduledSourceNodes.length);
+        //     // }
+        //     // else {
+        //     //     this.sourceNode = nextNode;
+        //     // }
 
-            // if (isUndefined(nextNode)) {
-            //     resetSourceNode(this.sourceNode);
-            //     console.log('DONE! nScheduledSourceNodes = ' +
-            //         this.scheduledSourceNodes.length);
-            // }
-            // else {
-            //     this.sourceNode = nextNode;
-            // }
-
-            if (onEnded) {
-                onEnded();
-            }
-        };
+        //     if (onEnded) {
+        //         console.log('calling onended ..............');
+        //         onEnded();
+        //     }
+        // };
 
         if (when === 0) {
             // start now
@@ -209,7 +222,8 @@ export class WebAudioPlayer {
             console.log('====> this.starteAt = ' + this.startedAt.toFixed(2));
             sourceNode.stop(this.startedAt + this.audioBuffer.duration);
             this.pausedAt = 0;
-            this.setPlaying(true);
+            // this.setPlaying(true);
+            this.isPlaying = true;
             // only when you start do you start monitoring
             // this.startMonitoring();
         }
@@ -266,7 +280,8 @@ export class WebAudioPlayer {
         }
         this.startedAt = 0;
         this.pausedAt = 0;
-        this.setPlaying(false);
+        // this.setPlaying(false);
+        this.isPlaying = false;
         // this.stopMonitoring();
     }
 
