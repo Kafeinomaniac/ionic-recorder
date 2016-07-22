@@ -9,12 +9,6 @@ import {
     EventEmitter
 } from '@angular/core';
 
-import {
-    Range,
-    Form,
-    Item
-} from 'ionic-angular';
-
 /**
  * @name ProgressSlider
  * @description
@@ -38,7 +32,7 @@ export class ProgressSlider {
     private mouseUpListener: Function;
     private mouseMoveListener: Function;
 
-    constructor(element: ElementRef, form: Form, renderer: Renderer) {
+    constructor(element: ElementRef, renderer: Renderer) {
         console.log('constructor():ProgressSlider');
         this.element = element;
         this.renderer = renderer;
