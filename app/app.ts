@@ -160,8 +160,9 @@ export class IonicRecorderApp {
             selectedTab.show = false;
         }
         else {
-            // save in the DB the 'lastTabIndex' so that if we restart the app
-            // it starts with the last tab you've visited last time you used it
+            // save in the DB the 'lastTabIndex' so that if we restart
+            // the app it starts with the last tab you've visited last
+            // time you used it
             console.log('updating tab index to be: ' + tabIndex);
             this.idbAppState.updateProperty('lastTabIndex', tabIndex)
                 .subscribe();

@@ -338,4 +338,16 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
             }
         );
     } // public timeSeek(time: number): void {
+
+
+    public togglePlayPause(): void {
+        if (!this.isPlaying) {
+            this.relativeTimeSeek(
+                (this.pausedAt - this.startedAt) / this.duration);
+        }
+        else {
+            this.pause();
+            console.log('paused at: ' + this.pausedAt);
+        }
+    }
 }

@@ -10,7 +10,7 @@ import {
     DB_KEY_PATH
 } from '../../services/idb/idb-fs';
 
-const DB_NAME: string = 'IdbAppFS';
+export const DB_NAME: string = 'IdbAppFS';
 const DB_VERSION: number = 1;
 
 export const UNFILED_FOLDER_NAME: string = 'Unfiled';

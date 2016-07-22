@@ -16,8 +16,7 @@ import {
     KeyDict
 } from '../../services/idb/idb-fs';
 
-const WAIT_MSEC: number = 50;
-const DB_NAME: string = 'IdbAppState';
+export const DB_NAME: string = 'IdbAppState';
 const DB_VERSION: number = 1;
 const DEFAULT_STATE: State = {
     lastTabIndex: 1,
@@ -25,6 +24,7 @@ const DEFAULT_STATE: State = {
     selectedNodes: {},
     gain: { factor: 1.0, maxFactor: 2.0 }
 };
+const WAIT_MSEC: number = 50;
 
 interface State {
     lastTabIndex: number;
@@ -163,12 +163,14 @@ export class IdbAppState extends IdbDict {
                         const key: string = keys.pop();
                         this.getOrAddValue(key, DEFAULT_STATE[key]).subscribe(
                             (dbValue: any) => {
+                                console.log('getOrAddValue got: ' +
+                                    dbValue);
                                 this.cachedState[key] = dbValue;
                                 getOrAddRecursive(keys);
                             },
                             (error) => {
                                 observer.error(
-                                    'loadFromDb():GetOrAddValue(): ' + error);
+                                    'loadFromDb():getOrAddValue(): ' + error);
                             });
                     }
                 };
