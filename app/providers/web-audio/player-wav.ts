@@ -81,8 +81,8 @@ function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
 /**
  * @name WebAudioPlayer
  * @description
- * Audio Player functions based on WebAudio. Originally based on
- * code by Ian McGregor: http://codepen.io/ianmcgregor/pen/EjdJZZ
+ * Audio Player functions based on WebAudio, originally based on code
+ * of Ian McGregor here: http://codepen.io/ianmcgregor/pen/EjdJZZ
  */
 @Injectable()
 export class WebAudioPlayerWav extends WebAudioPlayer {

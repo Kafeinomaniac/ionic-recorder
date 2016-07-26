@@ -75,13 +75,13 @@ export class WebAudioPlayer {
 
     private resetSourceNode(sourceNode: AudioBufferSourceNode): void {
         if (sourceNode) {
+            sourceNode.stop();
+            sourceNode.disconnect();
+            sourceNode = null;
             const idx: number = this.scheduledSourceNodes.indexOf(sourceNode);
             if (idx !== -1) {
                 delete this.scheduledSourceNodes[idx];
             }
-            sourceNode.disconnect();
-            sourceNode.stop(0);
-            sourceNode = null;
         }
     }
 
