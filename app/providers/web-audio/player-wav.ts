@@ -48,11 +48,15 @@ function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
                     dataView.setUint8(offset + i, text.charCodeAt(i));
                 }
             };
-    // 0-4:   ChunkId
+    // 
+    // NB: this is single-channel (mono)
+    //
+
+    //   0-4: ChunkId
     writeAscii(headerView, 0, 'RIFF');
-    // 4-8:   ChunkSize
-    headerView.setUint32(4, 36 + arrayByteLength * 2);
-    // 8-12:  Format
+    //   4-8: ChunkSize
+    headerView.setUint32(4, 36 + arrayByteLength * 2, true);
+    //  8-12: Format
     writeAscii(headerView, 8, 'WAVE');
     // 12-16: Subchunk1ID
     writeAscii(headerView, 12, 'fmt ');
@@ -74,7 +78,8 @@ function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     writeAscii(headerView, 36, 'data');
     // 40-44: Subchunk2Size
     headerView.setUint32(40, arrayByteLength * 2, true);
-    // now attach data and convert to blob
+
+    // attach data and convert to blob
     return new Blob([headerView, int16Array], { type: 'audio/wav' });
 }
 
@@ -220,7 +225,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                                 console.dir(audioBuffer);
                                 observer.next(audioBuffer);
                                 observer.complete();
-                            }, 
+                            },
                             () => {
                                 console.warn('decodeAudioData Error!');
                                 observer.error('decodeAudioData Error!');
