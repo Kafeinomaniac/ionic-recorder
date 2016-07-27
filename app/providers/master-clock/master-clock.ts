@@ -1,5 +1,12 @@
 // Copyright (c) 2016 Tracktunes Inc
 
+// Simple way to have a clock that fires every CLOCK_INTERVAL_MSEC
+// in our app, to which we can attach functions to do things at the
+// clock's frequency. This is basically an integration of setInterval()
+// with zone.js, see, for example, articles like this 
+// http://blog.thoughtram.io/angular/2016/02/01/zones-in-angular-2.html
+// to understand the zone-related code here.
+
 import {
     NgZone,
     Injectable
@@ -8,18 +15,14 @@ import {
 // clock frequency, in Hz
 const CLOCK_FREQUENCY_HZ: number = 24;
 
-// derived constants, please do not touch the constants below:
+// derived constant, please do not touch:
 export const CLOCK_INTERVAL_MSEC: number = 1000 / CLOCK_FREQUENCY_HZ;
-
-// maximum allowed number of functions running concurrently
-export const MAX_FUNCTIONS: number = 2;
 
 @Injectable()
 export class MasterClock {
     public isRunning: boolean;
 
     private intervalId: NodeJS.Timer;
-    private nTicks: number = 0;
     private ngZone: NgZone = new NgZone({ enableLongStackTrace: false });
     private functions: { [id: string]: () => void } = {};
 
@@ -30,15 +33,15 @@ export class MasterClock {
         console.log('constructor():MasterClock');
         this.isRunning = false;
         this.intervalId = null;
-        this.nTicks = 0;
     }
 
-    public getFunction(id: string): () => void {
-        console.log('MasterClock:getFunction(' + id + '), have ' +
-            Object.keys(this.functions).length);
-        return this.functions[id];
-    }
-
+    /**
+     * Start the clock. We cannot call addFunction() until we've 
+     * started the clock by calling this. Call it to start the setInterval()
+     * loop and call stop() to end it. While the loop is started you can call
+     * addFunction() to add anything you'd like to monitor at the current
+     * clock frequency.
+     */
     public start(): void {
         if (this.isRunning) {
             return;
@@ -47,7 +50,6 @@ export class MasterClock {
             this.intervalId = setInterval(
                 // the monitoring actions are in the following function:
                 () => {
-                    this.nTicks++;
                     this.ngZone.run(() => {
                         // console.log(Object.keys(this.functions).length);
                         for (let id in this.functions) {
@@ -62,6 +64,10 @@ export class MasterClock {
         this.isRunning = true;
     }
 
+    /**
+     * Stop the clock. Stop repeat-running any scheduled functions.
+     * @returns {void}
+     */
     public stop(): void {
         if (!this.isRunning) {
             return;
@@ -83,9 +89,6 @@ export class MasterClock {
      */
     public addFunction(id: string, fun: () => void): void {
         const nFunctions: number = Object.keys(this.functions).length;
-        if (nFunctions > MAX_FUNCTIONS) {
-            throw Error('MasterClock: too many functions');
-        }
         if (nFunctions === 0) {
             this.start();
         }
