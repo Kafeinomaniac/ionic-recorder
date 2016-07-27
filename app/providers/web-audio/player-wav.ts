@@ -217,8 +217,13 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                             (audioBuffer: AudioBuffer) => {
                                 console.log('!!! Audio Data Decoded !!! ' +
                                     audioBuffer.duration);
+                                console.dir(audioBuffer);
                                 observer.next(audioBuffer);
                                 observer.complete();
+                            }, 
+                            () => {
+                                console.warn('decodeAudioData Error!');
+                                observer.error('decodeAudioData Error!');
                             });
                     };
 

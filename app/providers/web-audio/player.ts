@@ -190,9 +190,11 @@ export class WebAudioPlayer {
             //     (AUDIO_CONTEXT.currentTime - offset));
             sourceNode.start(0, offset);
             this.startedAt = AUDIO_CONTEXT.currentTime - totalOffset;
+
             console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
                 ', stopping at: ' + (this.startedAt + totalOffset +
                     this.audioBuffer.duration).toFixed(2));
+
             sourceNode.stop(this.startedAt + totalOffset +
                 this.audioBuffer.duration);
             this.pausedAt = 0;
