@@ -38,7 +38,7 @@ import {
 // see: http://soundfile.sapp.org/doc/WaveFormat/
 function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     'use strict';
-    let arrayByteLength: number = int16Array.byteLength,
+    const arrayByteLength: number = int16Array.byteLength,
         headerView: DataView = new DataView(new ArrayBuffer(44)),
         writeAscii:
             (dataView: DataView, offset: number, text: string) => void =
