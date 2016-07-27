@@ -11,7 +11,8 @@ In order for us to help you please check that you've completed the
 following steps:
 
 * Developed according to our development guideline outlined in the top-level
-  [README.md](https://github.com/tracktunes/ionic-recorder/README.md)
+  [README.md](
+      https://github.com/tracktunes/ionic-recorder/blob/master/README.md)
 * Made sure you're on the latest version: issue `git pull` in your cloned 
 code repository
 * Used the issue search feature to ensure that the issue hasn't been raised
@@ -29,7 +30,8 @@ start)
 ## Style Guide
 
 Your code must pass `npm test`. It includes a `tslint` run with many 
-[lint rules](https://github.com/tracktunes/ionic-recorder/tslint.json)
+[lint rules](
+    https://github.com/tracktunes/ionic-recorder/blob/master/tslint.json)
 which your code must obey.
 
 ## Pull Request Guidelines
