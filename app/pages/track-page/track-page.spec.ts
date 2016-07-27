@@ -24,12 +24,16 @@ import {
     IdbAppData
 } from '../../providers/idb-app-data/idb-app-data';
 
+import {
+    MasterClock
+} from '../../providers/master-clock/master-clock';
+
 let instanceFixture: InstanceFixture = null;
 
 describe('pages/track-page:TrackPage', () => {
     instanceFixture = beforeEachDI(
         TrackPage,
-        [IdbAppFS, IdbAppData, menuControllerProvider],
+        [MasterClock, IdbAppFS, IdbAppData, menuControllerProvider],
         true,
         null
     );

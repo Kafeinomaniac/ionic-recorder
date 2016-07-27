@@ -28,6 +28,10 @@ import {
 } from '../../providers/web-audio/recorder';
 
 import {
+    MasterClock
+} from '../../providers/master-clock/master-clock';
+
+import {
     RecordPage
 } from './record-page';
 
@@ -37,6 +41,7 @@ describe('pages/record-page:RecordPage', () => {
     instanceFixture = beforeEachDI(
         RecordPage,
         [
+            MasterClock,
             IdbAppData,
             IdbAppFS,
             IdbAppState,
