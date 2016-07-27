@@ -1,52 +1,51 @@
-# based on
-# https://github.com/yeoman/yeoman/blob/master/contributing.md
-
-# NB: not yet fully edited, names still need to be changed and words edited.
-
-# Contributing
-
-We are more than happy to accept external contributions to the project in the form of feedback, bug reports and even better - pull requests :)
+# CONTRIBUTING.md
 
 
-## Issue submission
+We are more than happy to accept external contributions to the project 
+in the form of feedback, bug reports and even better - pull requests :)
 
-In order for us to help you please check that you've completed the following steps:
+This file outlines a set of guidelines for contributing to this project. 
+It is based on 
+[this file](https://github.com/yeoman/yeoman/blob/master/contributing.md)
 
-* Made sure you're on the latest version
-* Made sure your version of the app
-* Used the search feature to ensure that the bug hasn't been reported before
-* Included as much information about the bug as possible, including any output you've received, what OS and version you're on, other relevant software versions (e.g. npm, node, ionic2, angular2).
-* Shared the output from running the following command in your project root as this can also help track down the issue.
+## Contribution Guidelines
 
-    # cd ionic-recorder
-    # npm test
+In order for us to help you please check that you've completed the 
+following steps:
 
-[Submit your issue](https://github.com/tracktunes/ionic-recorder/issues/new)
+* Developed according to our development guideline outlined in the top-level
+  [README.md](https://github.com/tracktunes/ionic-recorder/README.md)
+* Made sure you're on the latest version: issue `git pull` in your cloned 
+code repository
+* Used the issue search feature to ensure that the issue hasn't been raised
+* Included as much information about the issue as possible, including:
+  * Any output you've received
+  * OS version
+  * Browser version
+* Ran the unit test suite by issuing `npm test` at the project's home 
+directory - before and after your changes (all tests should pass at 
+start)
 
-
-## Quick Start
-
-- Clone the repo of [ionic-recorder](https://github.com/tracktunes/ionic-recorder)
-
-
-You can keep the various repos up to date by running `git pull --rebase upstream master` in each.
-
+[Submit your issue here](
+    https://github.com/tracktunes/ionic-recorder/issues/new)
 
 ## Style Guide
 
-Please refer to the style guild [TODO: add page and link to STYLE.md]
-
-Please ensure any pull requests follow this closely. If you notice existing code which doesn't follow these practices, feel free to shout and we will address this.
-
+Your code must pass `npm test`. It includes a `tslint` run with many 
+[lint rules](https://github.com/tracktunes/ionic-recorder/tslint.json)
+which your code must obey.
 
 ## Pull Request Guidelines
 
-* Please check to make sure that there aren't existing pull requests attempting to address the issue mentioned. We also recommend checking for issues related to the issue on the tracker, as a team member may be working on the issue in a branch or fork.
-* Non-trivial changes should be discussed in an issue first
-* Develop in a topic branch, not master
-* Lint the code by running `grunt`
+* Check for procedural updates in this file every time (as they may
+change)
+* Please check to make sure that there aren't existing pull requests 
+attempting to address the issue mentioned
+* Non-trivial changes should be discussed in an issue first. If there is
+no issue for your pull request, create one first. Then mention the issue
+you are addressing in the pull request comment section
+* Develop in a branch, not master
 * Add relevant tests to cover the change
-* Make sure test-suite passes: `npm test`
-* Squash your commits
+* Use `npm test` to make sure all tests pass before submitting the request
+* [Squash your commits](https://github.com/blog/2141-squash-your-commits)
 * Write a convincing description of your PR and why we should land it
-* Check the individual project to see if there is a **contributing.md** or similar file as some project's have different requirements.
