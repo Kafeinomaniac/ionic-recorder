@@ -1,9 +1,9 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-// Simple way to have a clock that fires every CLOCK_INTERVAL_MSEC
-// in our app, to which we can attach functions to do things at the
-// clock's frequency. This is basically an integration of setInterval()
-// with zone.js, see, for example, articles like this 
+// Simple provider class that adds a clock that fires every
+// CLOCK_INTERVAL_MSEC in our Ionic2/Angular2 app, to which we can
+// attach functions to do things at the clock's frequency. This is
+// basically an integration of setInterval() with zone.js, e.g. see
 // http://blog.thoughtram.io/angular/2016/02/01/zones-in-angular-2.html
 // to understand the zone-related code here.
 
@@ -41,6 +41,7 @@ export class MasterClock {
      * loop and call stop() to end it. While the loop is started you can call
      * addFunction() to add anything you'd like to monitor at the current
      * clock frequency.
+     * @returns {void}
      */
     public start(): void {
         if (this.isRunning) {
