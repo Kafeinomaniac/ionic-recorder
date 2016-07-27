@@ -61,7 +61,7 @@ function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     // 12-16: Subchunk1ID
     writeAscii(headerView, 12, 'fmt ');
     // 16-20: Subchunk1Size
-    headerView.setUint32(16, 16, true);
+    headerView.setUint32(16, 16, true); 
     // 20-22: AudioFormat
     headerView.setUint16(20, 1, true);
     // 22-24: NumChannels
