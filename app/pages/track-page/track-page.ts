@@ -24,10 +24,6 @@ import {
     formatLocalTime
 } from '../../services/utils/utils';
 
-import {
-    MasterClock
-} from '../../providers/master-clock/master-clock';
-
 // this is here just for testing
 import {
     IdbAppFS
@@ -39,7 +35,6 @@ import {
  */
 @Component({
     templateUrl: 'build/pages/track-page/track-page.html',
-    // providers: [MasterClock],
     directives: [AudioPlayer]
 })
 export class TrackPage {

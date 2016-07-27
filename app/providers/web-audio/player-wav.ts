@@ -23,8 +23,7 @@ import {
 
 import {
     isOdd,
-    formatTime,
-    has
+    formatTime
 } from '../../services/utils/utils';
 
 import {
@@ -44,7 +43,7 @@ function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
             (dataView: DataView, offset: number, text: string) => void =
             (dataView: DataView, offset: number, text: string) => {
                 const len: number = text.length;
-                for (let i = 0; i < len; i++) {
+                for (let i: number = 0; i < len; i++) {
                     dataView.setUint8(offset + i, text.charCodeAt(i));
                 }
             };
@@ -61,7 +60,7 @@ function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     // 12-16: Subchunk1ID
     writeAscii(headerView, 12, 'fmt ');
     // 16-20: Subchunk1Size
-    headerView.setUint32(16, 16, true); 
+    headerView.setUint32(16, 16, true);
     // 20-22: AudioFormat
     headerView.setUint16(20, 1, true);
     // 22-24: NumChannels
@@ -147,9 +146,9 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         }
         else {
             return () => {
-                const dictKey: string = nextKey.toString(),
-                    when: number = this.getChunkWhenTime(nextKey);
-
+                const when: number = this.getChunkWhenTime(nextKey);
+                // const dictKey: string = nextKey.toString(),
+                //     when: number = this.getChunkWhenTime(nextKey);
                 // if (has(this.onEndeds, dictKey)) {
                 //     // prevents calling onEnded() twice in succession as
                 //     // happens in chrome/chromium when you don't start at 0
