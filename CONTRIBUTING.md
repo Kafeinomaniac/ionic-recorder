@@ -1,6 +1,3 @@
-# CONTRIBUTING.md
-
-
 We are more than happy to accept external contributions to the project 
 in the form of feedback, bug reports and even better - pull requests :)
 
