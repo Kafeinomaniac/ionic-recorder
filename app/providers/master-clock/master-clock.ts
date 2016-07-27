@@ -21,10 +21,9 @@ export const CLOCK_INTERVAL_MSEC: number = 1000 / CLOCK_FREQUENCY_HZ;
 @Injectable()
 export class MasterClock {
     public isRunning: boolean;
-
     private intervalId: NodeJS.Timer;
-    private ngZone: NgZone = new NgZone({ enableLongStackTrace: false });
-    private functions: { [id: string]: () => void } = {};
+    private ngZone: NgZone;
+    private functions: { [id: string]: () => void };
 
     /**
      * constructor
@@ -33,6 +32,8 @@ export class MasterClock {
         console.log('constructor():MasterClock');
         this.isRunning = false;
         this.intervalId = null;
+        this.ngZone =  new NgZone({ enableLongStackTrace: false });
+        this.functions = {};
     }
 
     /**
