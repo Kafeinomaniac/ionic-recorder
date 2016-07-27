@@ -131,8 +131,8 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     private getOnEndedCB(key: number): () => void {
         const nextKey: number = key + 2;
 
-        console.log('getOnEndedCB(' + key + '), scheduling key ' +
-            nextKey);
+        // console.log('getOnEndedCB(' + key + '), scheduling key ' +
+        //     nextKey);
 
         if (nextKey > this.dbEndKey) {
             return () => {
@@ -203,18 +203,25 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
             this.idb.readChunk(key).subscribe(
                 (wavArray: Int16Array) => {
                     console.log('idb.readChunk(): got chunk ' + key);
-                    fileReader.onerror = () => {
+
+                    fileReader.onerror = (error) => {
+                        console.warn('FileReader error: ' + error);
                         observer.error('FileReader error: ' +
                             fileReader.error);
                     };
+
                     fileReader.onload = () => {
+                        console.log('fileReader.onload()');
                         AUDIO_CONTEXT.decodeAudioData(
                             fileReader.result,
                             (audioBuffer: AudioBuffer) => {
+                                console.log('!!! Audio Data Decoded !!! ' +
+                                    audioBuffer.duration);
                                 observer.next(audioBuffer);
                                 observer.complete();
                             });
                     };
+
                     console.log('READING FILE!');
                     fileReader.readAsArrayBuffer(
                         int16ArrayToWavBlob(wavArray)
@@ -241,25 +248,30 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         this.chunkStartTime =
             chunkSampleToSkipTo * this.chunkDuration / DB_CHUNK_LENGTH;
         console.log(
-            'seek relativeTime: ' + relativeTime + ', ' +
+            'seek (relative) time: ' + relativeTime + ', ' +
             'duration: ' + this.duration + ', ' +
             'relativeTime: ' + relativeTime + ', ' +
             'absoluteSampleToSkipTo: ' + absoluteSampleToSkipTo + ', ' +
             'nSamples: ' + this.recordingInfo.nSamples + ', ' +
-            'startKey: ' + startKey + ', ' +
+            'dbStartKey: ' + startKey + ', ' +
             'dbEndKey: ' + this.dbEndKey);
         this.loadAndDecodeChunk(startKey).subscribe(
             (audioBuffer1: AudioBuffer) => {
+                console.log('loaded and decoded chunk 1 ... ');
+                const playFirstBuffer: () => void = () => {
+                    this.schedulePlay(
+                        audioBuffer1,
+                        0,
+                        this.chunkStartTime,
+                        startOffset,
+                        this.getOnEndedCB(startKey)
+                    );
+                };
                 if (startKey < this.dbEndKey) {
+                    // play/schedule both 1st & 2nd buffers
                     this.loadAndDecodeChunk(startKey + 1).subscribe(
                         (audioBuffer2: AudioBuffer) => {
-                            this.schedulePlay(
-                                audioBuffer1,
-                                0,
-                                this.chunkStartTime,
-                                startOffset,
-                                this.getOnEndedCB(startKey)
-                            );
+                            playFirstBuffer();
                             this.schedulePlay(
                                 audioBuffer2,
                                 this.startedAt + this.chunkDuration,
@@ -268,6 +280,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                                 this.getOnEndedCB(startKey + 1)
                             );
                         });
+                }
+                else {
+                    // no 2nd buffer, play 1st
+                    playFirstBuffer();
                 }
             }
         );

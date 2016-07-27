@@ -182,15 +182,19 @@ export class WebAudioPlayer {
                 offset = this.pausedAt;
                 startOffset = 0;
             }
+            const totalOffset: number = offset + startOffset;
             this.sourceNode = sourceNode;
             // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
             // console.log('this.starteAt: ' + this.startedAt);
             // console.log('====> this.starteAt 0: ' +
             //     (AUDIO_CONTEXT.currentTime - offset));
             sourceNode.start(0, offset);
-            this.startedAt = AUDIO_CONTEXT.currentTime - offset - startOffset;
-            console.log('====> this.starteAt = ' + this.startedAt.toFixed(2));
-            sourceNode.stop(this.startedAt + this.audioBuffer.duration);
+            this.startedAt = AUDIO_CONTEXT.currentTime - totalOffset;
+            console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
+                ', stopping at: ' + (this.startedAt + totalOffset +
+                    this.audioBuffer.duration).toFixed(2));
+            sourceNode.stop(this.startedAt + totalOffset +
+                this.audioBuffer.duration);
             this.pausedAt = 0;
             this.isPlaying = true;
             // only when you start do you start monitoring
