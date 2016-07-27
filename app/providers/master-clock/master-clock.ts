@@ -96,7 +96,7 @@ export class MasterClock {
         }
         this.functions[id] = fun;
         console.log('MasterClock:addFunction(' + id + '), nFunctions: ' +
-            Object.keys(this.functions).length);
+            nFunctions);
     }
 
     /**
@@ -111,6 +111,6 @@ export class MasterClock {
             this.stop();
         }
         console.log('MasterClock:removeFunction(' + id + '), nFunctions: ' +
-            Object.keys(this.functions).length);
+            nFunctions);
     }
 }
