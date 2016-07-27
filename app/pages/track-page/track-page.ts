@@ -39,7 +39,7 @@ import {
  */
 @Component({
     templateUrl: 'build/pages/track-page/track-page.html',
-    providers: [MasterClock],
+    // providers: [MasterClock],
     directives: [AudioPlayer]
 })
 export class TrackPage {

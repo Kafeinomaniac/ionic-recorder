@@ -52,7 +52,7 @@ const PAUSE_ICON: string = 'pause';
  */
 @Component({
     templateUrl: 'build/pages/record-page/record-page.html',
-    providers: [WebAudioRecorderWav, MasterClock],
+    providers: [WebAudioRecorderWav],
     directives: [VuGauge, Range]
 })
 export class RecordPage {

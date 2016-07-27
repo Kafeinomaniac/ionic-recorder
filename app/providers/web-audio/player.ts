@@ -161,9 +161,9 @@ export class WebAudioPlayer {
         onEnded?: () => void
     ): void {
         this.startMonitoring();
-        console.log('schedulePlay(AudioBuffer, ' +
-            when.toFixed(2) + ', ' +
-            offset.toFixed(2) + ', ' +
+        console.log('====> schedulePlay(when: ' +
+            (when - this.startedAt).toFixed(2) + ', offset: ' +
+            offset.toFixed(2) + ', s-offset: ' +
             startOffset.toFixed(2) + ')');
         this.audioBuffer = audioBuffer;
 
@@ -237,9 +237,13 @@ export class WebAudioPlayer {
     }
 
     public cancelScheduled(): void {
-        for (let i in this.scheduledSourceNodes) {
-            console.log('resetting scheduled: ' + i);
-            this.resetSourceNode(this.scheduledSourceNodes[i]);
+        console.log('*** resetting ' + this.scheduledSourceNodes.length +
+            ' scheduled ***');
+        let node: AudioBufferSourceNode = this.scheduledSourceNodes.pop();
+        while (node) {
+            console.log('.');
+            this.resetSourceNode(node);
+            node = this.scheduledSourceNodes.pop();
         }
     }
 

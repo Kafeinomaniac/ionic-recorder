@@ -76,7 +76,7 @@ interface TabPage {
 
 @Component({
     templateUrl: 'build/app.html',
-    providers: [IdbAppState]
+    providers: [IdbAppState, MasterClock]
 })
 export class IonicRecorderApp {
     // NOTE: either one of these @ViewChild declarations works, use only one ..
@@ -149,7 +149,7 @@ export class IonicRecorderApp {
      */
     public onTabChange(selectedTab: Tab): void {
         let tabIndex: number = selectedTab.index;
-        console.log('onTabChange: ' + tabIndex);
+        // console.log('onTabChange: ' + tabIndex);
         if (tabIndex === 0) {
             //
             // hide tab 0 dynamically because if we hide it in the
@@ -163,7 +163,7 @@ export class IonicRecorderApp {
             // save in the DB the 'lastTabIndex' so that if we restart
             // the app it starts with the last tab you've visited last
             // time you used it
-            console.log('updating tab index to be: ' + tabIndex);
+            // console.log('updating tab index to be: ' + tabIndex);
             this.idbAppState.updateProperty('lastTabIndex', tabIndex)
                 .subscribe();
         }
@@ -175,7 +175,7 @@ export class IonicRecorderApp {
      */
     public goToPage(page: TabPage): void {
         let tabIndex: number = page.tabIndex;
-        console.log('goToPage: ' + tabIndex + ', tabs: ' + this.tabs);
+        // console.log('goToPage: ' + tabIndex + ', tabs: ' + this.tabs);
         if (typeof this.tabs !== undefined) {
             // we need this conditional because @ViewChild does not work
             // when karma and this.tabs ends up undefined in karma

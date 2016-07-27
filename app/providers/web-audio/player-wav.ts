@@ -40,22 +40,22 @@ function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     'use strict';
     let arrayByteLength: number = int16Array.byteLength,
         headerView: DataView = new DataView(new ArrayBuffer(44)),
-        setString:
-            (dv: DataView, offset: number, str: string) => void =
-            (dv: DataView, offset: number, str: string) => {
-                let len: number = str.length, i: number;
-                for (i = 0; i < len; i++) {
-                    dv.setUint8(offset + i, str.charCodeAt(i));
+        writeAscii:
+            (dataView: DataView, offset: number, text: string) => void =
+            (dataView: DataView, offset: number, text: string) => {
+                const len: number = text.length;
+                for (let i = 0; i < len; i++) {
+                    dataView.setUint8(offset + i, text.charCodeAt(i));
                 }
             };
     // 0-4:   ChunkId
-    setString(headerView, 0, 'RIFF');
+    writeAscii(headerView, 0, 'RIFF');
     // 4-8:   ChunkSize
     headerView.setUint32(4, 36 + arrayByteLength * 2);
     // 8-12:  Format
-    setString(headerView, 8, 'WAVE');
+    writeAscii(headerView, 8, 'WAVE');
     // 12-16: Subchunk1ID
-    setString(headerView, 12, 'fmt ');
+    writeAscii(headerView, 12, 'fmt ');
     // 16-20: Subchunk1Size
     headerView.setUint32(16, 16, true);
     // 20-22: AudioFormat
@@ -71,7 +71,7 @@ function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     // 34-36: BitsPerSample
     headerView.setUint16(34, 16, true);
     // 36-40: Subchunk2ID
-    setString(headerView, 36, 'data');
+    writeAscii(headerView, 36, 'data');
     // 40-44: Subchunk2Size
     headerView.setUint32(40, arrayByteLength * 2, true);
     // now attach data and convert to blob
@@ -96,6 +96,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
     private onEndeds: { [id: string]: number };
+
     constructor(masterClock: MasterClock, idb: IdbAppData) {
         super(masterClock);
         console.log('constructor():WebAudioPlayerWav');
@@ -144,18 +145,19 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                 const dictKey: string = nextKey.toString(),
                     when: number = this.getChunkWhenTime(nextKey);
 
-                if (has(this.onEndeds, dictKey)) {
-                    // prevents calling onEnded() twice in succession as
-                    // happens in chrome/chromium when you don't start at 0
-                    return;
-                }
-                else {
-                    this.onEndeds[dictKey] = when;
-                }
+                // if (has(this.onEndeds, dictKey)) {
+                //     // prevents calling onEnded() twice in succession as
+                //     // happens in chrome/chromium when you don't start at 0
+                //     return;
+                // }
+                // else {
+                //     this.onEndeds[dictKey] = when;
+                // }
 
-                console.log('onEndedCB(' + key + '), time = ' +
-                    this.getTime() +
-                    ', sched key: ' + nextKey + ', when: ' + when.toFixed(2));
+                console.log('====> onEndedCB(' + key + '), time = ' +
+                    this.getTime().toFixed(2) +
+                    ', sched key: ' + nextKey + ', when: ' +
+                    (when - this.startedAt).toFixed(2));
 
                 this.loadAndDecodeChunk(nextKey).subscribe(
                     (audioBuffer: AudioBuffer) => {
@@ -184,8 +186,8 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         //     throw Error('this.startedAt === 0!');
         // }
         else {
-            console.log('getChunkWhenTime(' + key + ') returned ' +
-                (this.startedAt + deltaKey * this.chunkDuration));
+            console.log('====> getChunkWhenTime(' + key + ') returned ' +
+                (deltaKey * this.chunkDuration).toFixed(2));
             return this.startedAt + deltaKey * this.chunkDuration;
         }
     }
