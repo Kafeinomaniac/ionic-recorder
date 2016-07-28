@@ -63,7 +63,7 @@ your path):
         npm install
 This last command also performs some postinstall actions.
 
-You can develop now. As usual, all the code is
+* You can develop now. As usual, all the code is
 under subdirectory './app'. Useful commands from 'package.json': 
 
         npm start - starts a server and pops up a browser running the app
