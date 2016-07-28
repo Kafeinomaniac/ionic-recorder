@@ -5,12 +5,14 @@ web app, based on the Ionic framework, Web Audio API and IndexedDB. This
 app is written to run in recent versions of the Chrome / Chromium browser
 on any device.
 
-`ionic-recorder` combines
+`ionic-recorder` combines:
 * [Ionic 2](http://ionicframework.com/docs/v2/)
 * [Web Audio API](
         https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
-* [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
-to build
+* [IndexedDB](
+        https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
+
+to build:
 * A simple recording app (hybrid app that can run either in your browser or 
   as an ios/android native app)
 * Useful real-time visualizations, stats and data-analysis of the recorded 
