@@ -1,6 +1,4 @@
-# TODO.md
-
-**NOTE:** This file is cryptical.  It's just used as a scrapbook for 
+**Caveat:** This file is cryptical.  It's just used as a scrapbook for 
 adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
