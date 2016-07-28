@@ -46,6 +46,7 @@ export class WebAudioPlayer {
     protected sourceNode: AudioBufferSourceNode;
     private scheduledSourceNodes: AudioBufferSourceNode[];
     protected startedAt: number;
+    private startedAtOffset: number;
     protected pausedAt: number;
     public isPlaying: boolean;
     private intervalId: NodeJS.Timer;
@@ -61,6 +62,7 @@ export class WebAudioPlayer {
         this.masterClock = masterClock;
 
         this.startedAt = 0;
+        this.startedAtOffset = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
         this.scheduledSourceNodes = [];
@@ -182,20 +184,20 @@ export class WebAudioPlayer {
                 offset = this.pausedAt;
                 startOffset = 0;
             }
-            const totalOffset: number = offset + startOffset;
+            this.startedAtOffset = offset + startOffset;
             this.sourceNode = sourceNode;
             // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
             // console.log('this.starteAt: ' + this.startedAt);
             // console.log('====> this.starteAt 0: ' +
             //     (AUDIO_CONTEXT.currentTime - offset));
             sourceNode.start(0, offset);
-            this.startedAt = AUDIO_CONTEXT.currentTime - totalOffset;
+            this.startedAt = AUDIO_CONTEXT.currentTime - this.startedAtOffset;
 
             console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
-                ', stopping at: ' + (this.startedAt + totalOffset +
+                ', stopping at: ' + (this.startedAt + this.startedAtOffset +
                     this.audioBuffer.duration).toFixed(2));
 
-            sourceNode.stop(this.startedAt + totalOffset +
+            sourceNode.stop(this.startedAt + this.startedAtOffset +
                 this.audioBuffer.duration);
             this.pausedAt = 0;
             this.isPlaying = true;

@@ -99,7 +99,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     private chunkStartTime: number;
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
-    private onEndeds: { [id: string]: number };
+    // private onEndeds: { [id: string]: number };
 
     constructor(masterClock: MasterClock, idb: IdbAppData) {
         super(masterClock);
@@ -110,7 +110,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         }
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
-        this.onEndeds = {};
+        // this.onEndeds = {};
     }
 
     public setRecordingInfo(recordingInfo: RecordingInfo): void {
@@ -127,20 +127,19 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     }
 
     private getFileReader(key: number): FileReader {
-        console.log('getFileReader(' + key + ') -> ' +
-            (isOdd(key) ? 'ODD' : 'EVEN'));
+        // console.log('getFileReader(' + key + ') -> ' +
+        //     (isOdd(key) ? 'ODD' : 'EVEN'));
         return isOdd(key) ? this.oddKeyFileReader : this.evenKeyFileReader;
     }
 
     private getOnEndedCB(key: number): () => void {
         const nextKey: number = key + 2;
-
         // console.log('getOnEndedCB(' + key + '), scheduling key ' +
         //     nextKey);
 
         if (nextKey > this.dbEndKey) {
             return () => {
-                console.log('onEnded(' + nextKey +
+                console.log('====> onEndedCB(' + nextKey +
                     ') - reached last chunk');
             };
         }
@@ -158,9 +157,8 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                 //     this.onEndeds[dictKey] = when;
                 // }
 
-                console.log('====> onEndedCB(' + key + '), time = ' +
-                    this.getTime().toFixed(2) +
-                    ', sched key: ' + nextKey + ', when: ' +
+                console.log('====> onEndedCB(' + nextKey + '), time = ' +
+                    this.getTime().toFixed(2) + ', when: ' +
                     (when - this.startedAt).toFixed(2));
 
                 this.loadAndDecodeChunk(nextKey).subscribe(
@@ -197,7 +195,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     }
 
     private loadAndDecodeChunk(key: number): Observable<AudioBuffer> {
-        console.log('loadAndDecodeChunk(' + key + ')');
+        // console.log('loadAndDecodeChunk(' + key + ')');
         // if (key === 3) {
         //     debugger;
         // }
@@ -206,7 +204,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
             const fileReader: FileReader = this.getFileReader(key);
             this.idb.readChunk(key).subscribe(
                 (wavArray: Int16Array) => {
-                    console.log('idb.readChunk(): got chunk ' + key);
+                    // console.log('idb.readChunk(): got chunk ' + key);
 
                     fileReader.onerror = (error) => {
                         console.warn('FileReader error: ' + error);
@@ -215,13 +213,13 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                     };
 
                     fileReader.onload = () => {
-                        console.log('fileReader.onload()');
+                        // console.log('fileReader.onload()');
                         AUDIO_CONTEXT.decodeAudioData(
                             fileReader.result,
                             (audioBuffer: AudioBuffer) => {
-                                console.log('!!! Audio Data Decoded !!! ' +
-                                    audioBuffer.duration);
-                                console.dir(audioBuffer);
+                                // console.log('!!! Audio Data Decoded !!! ' +
+                                //     audioBuffer.duration);
+                                // console.dir(audioBuffer);
                                 observer.next(audioBuffer);
                                 observer.complete();
                             },
@@ -231,7 +229,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                             });
                     };
 
-                    console.log('READING FILE!');
+                    // console.log('READING FILE!');
                     fileReader.readAsArrayBuffer(
                         int16ArrayToWavBlob(wavArray)
                     );
@@ -241,7 +239,6 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
     }
 
     public relativeTimeSeek(relativeTime: number): void {
-        console.log('relativeTimeSeek(' + relativeTime.toFixed(2) + ')');
         this.stop(false);
         const
             absoluteSampleToSkipTo: number =
@@ -256,17 +253,15 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                 this.chunkDuration;
         this.chunkStartTime =
             chunkSampleToSkipTo * this.chunkDuration / DB_CHUNK_LENGTH;
-        console.log(
-            'seek (relative) time: ' + relativeTime + ', ' +
-            'duration: ' + this.duration + ', ' +
-            'relativeTime: ' + relativeTime + ', ' +
-            'absoluteSampleToSkipTo: ' + absoluteSampleToSkipTo + ', ' +
-            'nSamples: ' + this.recordingInfo.nSamples + ', ' +
-            'dbStartKey: ' + startKey + ', ' +
-            'dbEndKey: ' + this.dbEndKey);
+        console.log('relativeTimeSeek(' + relativeTime.toFixed(2) +
+            ') -- duration: ' + this.duration.toFixed(2) + ', ' +
+            'skip-to-sample: ' + absoluteSampleToSkipTo + ', ' +
+            '# samples: ' + this.recordingInfo.nSamples + ', ' +
+            'startKey: ' + startKey + ', ' +
+            'endKey: ' + this.dbEndKey);
         this.loadAndDecodeChunk(startKey).subscribe(
             (audioBuffer1: AudioBuffer) => {
-                console.log('loaded and decoded chunk 1 ... ');
+                // console.log('loaded and decoded chunk 1 ... ');
                 const playFirstBuffer: () => void = () => {
                     this.schedulePlay(
                         audioBuffer1,
@@ -283,7 +278,8 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
                             playFirstBuffer();
                             this.schedulePlay(
                                 audioBuffer2,
-                                this.startedAt + this.chunkDuration,
+                                // this.startedAt + this.chunkDuration,
+                                this.getChunkWhenTime(startKey + 1),
                                 0,
                                 0,
                                 this.getOnEndedCB(startKey + 1)
@@ -300,7 +296,7 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
 
     public stop(stopMonitoring: boolean = true): void {
         super.stop(stopMonitoring);
-        this.onEndeds = {};
+        // this.onEndeds = {};
     }
 
     public togglePlayPause(): void {
