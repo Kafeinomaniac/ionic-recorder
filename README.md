@@ -64,11 +64,12 @@ your path):
 This last command also performs some postinstall actions.
 
 * You can develop now. As usual, all the code is
-  under subdirectory './app'.
+  under subdirectory './app'. Useful commands from 'package.json': 
 
-* Useful commands from 'package.json': 
-        npm start - starts a server and pops up a browser running the app
-        npm test - runs through tests
+    npm start - starts a server and pops up a browser running the app
+or
+
+    npm test - runs through tests
 
 ## Version
 The current version is maintained in the
