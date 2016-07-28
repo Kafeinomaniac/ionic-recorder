@@ -79,7 +79,7 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
                 });
         });
 
-        // see: 
+        // see:
         // https://github.com/dorontal/Recorderjs/blob/master/dist/recorder.js
         this.valueCB = (rawFloat: number) => {
             const clipped: number = MAX(-1, MIN(1, rawFloat));

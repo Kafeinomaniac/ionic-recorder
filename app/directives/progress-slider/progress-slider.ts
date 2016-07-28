@@ -146,7 +146,7 @@ export class ProgressSlider {
     public onSliderTouchEnd(event: TouchEvent): void {
         // If we uncomment this block below, then in the browser we get
         // double-calls to the changeEnd event on mouseUp and touchEnd -
-        // both get called... not sure if we need touchEnd at all, 
+        // both get called... not sure if we need touchEnd at all,
         // commenting it out until we test on mobile. If mobile browser
         // handles the mouseUp event on touchEnd then we're all set and
         // can get rid of this function altogether. Otherwise, we'd have

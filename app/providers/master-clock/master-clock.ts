@@ -37,7 +37,7 @@ export class MasterClock {
     }
 
     /**
-     * Start the clock. We cannot call addFunction() until we've 
+     * Start the clock. We cannot call addFunction() until we've
      * started the clock by calling this. Call it to start the setInterval()
      * loop and call stop() to end it. While the loop is started you can call
      * addFunction() to add anything you'd like to monitor at the current
