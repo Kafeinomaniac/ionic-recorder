@@ -117,8 +117,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
         this.recordingInfo = recordingInfo;
         this.nSamples = this.recordingInfo.nSamples;
         this.dbStartKey = this.recordingInfo.dbStartKey;
+        // this is how you set the total duration that will be displayed
         this.duration =
             this.nSamples / this.recordingInfo.sampleRate;
+        this.displayTime = formatTime(0, this.duration);
         this.displayDuration = formatTime(this.duration, this.duration);
         this.chunkDuration =
             DB_CHUNK_LENGTH / this.recordingInfo.sampleRate;

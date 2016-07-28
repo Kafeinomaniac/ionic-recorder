@@ -58,7 +58,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-list *ngIf="folderNode" class="file-folder-list">
+    <ion-list *ngIf="folderNode">
         <ion-item-group>
             <ion-item-divider sticky dark *ngIf="folderNode">
                 <button dark (click)="onClickAddButton()" ion-row center>

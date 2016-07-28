@@ -107,6 +107,14 @@ export class WebAudioPlayer {
             CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
+                const duration: number = this.getDuration();
+                console.log('dur: ' + duration);
+                if (this.duration !== duration) {
+                    // change detected
+                    this.duration = duration;
+                    this.displayDuration = formatTime(duration, duration);
+                }
+
                 let time: number = this.getTime();
 
                 if (time > this.duration) {
@@ -119,13 +127,6 @@ export class WebAudioPlayer {
                     this.time = time;
                     this.relativeTime = time / this.duration;
                     this.displayTime = formatTime(time, this.duration);
-                }
-
-                const duration: number = this.getDuration();
-                if (this.duration !== duration) {
-                    // change detected
-                    this.duration = duration;
-                    this.displayDuration = formatTime(duration, duration);
                 }
                 // console.log(this.displayTime + '/' + this.displayDuration);
             });
