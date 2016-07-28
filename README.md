@@ -45,9 +45,15 @@ outlines our contribution guidelines.
 
 ### Installing the development environment and running from sources
 * Install, on your development machine, the latest stable version of
-  * Ionic CLI
+the following global packages (the first one may be a system package,
+the rest are installed via `npm -g` as they are command-line tool but
+if you don't like using -g, ensure these command-line tools are on
+your path):
   * npm
-  * node
+  * Ionic CLI (`npm install -g ionic@beta`)
+  * Cordova (`npm install -g cordova`)
+  * Webdriver (`npm install -g webdriver-manager`)
+  * node (`npm install -g node`)
 * In a shell, type
 
         git clone https://github.com/tracktunes/ionic-recorder
