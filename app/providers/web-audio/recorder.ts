@@ -26,7 +26,9 @@ export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 
 // length of script processing buffer (must be power of 2, smallest possible,
 // to reduce latency and to compute time as accurately as possible)
-const PROCESSING_BUFFER_LENGTH: number = 256;
+const PROCESSING_BUFFER_LENGTH: number = 512;
+
+const ABS: (n: number) => number = Math.abs;
 
 // statuses
 export enum RecorderStatus {
@@ -169,7 +171,7 @@ export class WebAudioRecorder {
             value = inputData[i];
 
             // absValue is what we use to monitor volume = abs(value)
-            absValue = Math.abs(value);
+            absValue = ABS(value);
 
             // clip monitored volume at [0, 1]
             if (absValue > 1) {
