@@ -1,49 +1,51 @@
-Sound recording mobile / browser hybrid app, based on the Ionic framework,
-Web Audio API and IndexedDB.
+# ionic-recorder
 
-## Introduction
+`ionic-recorder` is a sound recording hybrid app and also a progressive
+web app, based on the Ionic framework, Web Audio API and IndexedDB. This
+app is written to run in recent versions of the Chrome / Chromium browser
+on any device.
 
-This app combines
+`ionic-recorder` combines
 * [Ionic 2](http://ionicframework.com/docs/v2/)
-* [Web Audio
-  Interface](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+* [Web Audio API](
+        https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 * [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
 to build
 * A simple recording app (hybrid app that can run either in your browser or 
   as an ios/android native app)
 * Useful real-time visualizations, stats and data-analysis of the recorded 
   audio signal
+* A music organizer to keep your recordings as files and folders on your
+device or on the cloud (cloud code not yet implemented)
 
 ## Requirements for running the app
 This apps runs only in browsers that implement
-a late version of IndexedDB that supports the `onupgradeended` event.
+a late version of IndexedDB that supports the `onupgradeended` event,
+plus a recent version of the Web Audio Api.
 
 The only browsers on which we successfully tested the above link are:
 * Latest Chrome or latest Chromium browser
+* Latest Firefox
 * So far we're only testing in Ubuntu Linux 14.04.
 
 ## DEVELOPMENT
 
-### Roadmap
-**TBA: We will set up a separate page for that.**  
+Feel free to work on whatever you like, of course - but there are specific
+places where we feel we need help and those are all the issues marked with
+the label 'help wanted' on [the issues page](
+        https://github.com/tracktunes/ionic-recorder/issues).
 
 ### Contribution guidelines
 
-See the file [CONTRIBUTING.md](https://github.com/tracktunes/ionic-recorder/blob/master/CONTRIBUTING.md)
+The file [CONTRIBUTING.md](
+    https://github.com/tracktunes/ionic-recorder/blob/master/CONTRIBUTING.md)
+outlines our contribution guidelines.
 
-### Installing the development environment and getting started
-* Get the latest version of npm and get rid of any Ubuntu packages for
-node or npm - in a bash shell, type the following commands:
-        sudo apt-get remove -f -y --purge ax25-node node node-\* nodejs rlwrap npm > /dev/null 2>&1
-        sudo apt-get autoremove -y --purge
-        curl https://www.npmjs.com/install.sh | bash -
-        hash -r
-* Get the latest versions of npm and nodejs:
-
-        sudo npm install -g n ionic@beta cordova webdriver-manager
-* Install node via n
-
-        sudo n stable
+### Installing the development environment and running from sources
+* Install, on your development machine, the latest stable version of
+  * Ionic CLI
+  * npm
+  * node
 * In a shell, type
 
         git clone https://github.com/tracktunes/ionic-recorder
@@ -53,17 +55,12 @@ node or npm - in a bash shell, type the following commands:
         npm install
 This last command also performs some postinstall actions.
 
-* You can develop now.  Check the Getting Started Coding page or the
-  Getting Started Using page (neither page exists yet). You can open
-  the root directory 'ionic-recorder' in VSCode.  All the code is
-  under subdirectory 'app'.
+* You can develop now. As usual, all the code is
+  under subdirectory './app'.
 
-* The 'package.json' file has some useful high level commands at the
-  'scripts' subsection.  Sample useful commands in there:
-
+* Useful commands from 'package.json': 
         npm start - starts a server and pops up a browser running the app
         npm test - runs through tests
-        npm e2e - runs end-to-end tests
 
 ## Version
 The current version is maintained in the
