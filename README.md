@@ -20,7 +20,7 @@ to build
 * A music organizer to keep your recordings as files and folders on your
 device or on the cloud (cloud code not yet implemented)
 
-## Requirements for running the app
+## System Requirements (for running the app)
 This apps runs only in browsers that implement
 a late version of IndexedDB that supports the `onupgradeended` event,
 plus a recent version of the Web Audio Api.
@@ -30,18 +30,18 @@ The only browsers on which we successfully tested the above link are:
 * Latest Firefox
 * So far we're only testing in Ubuntu Linux 14.04.
 
-## DEVELOPMENT
+## Live Demo
+Coming soon!
+
+## Development
 
 Feel free to work on whatever you like, of course - but there are specific
 places where we feel we need help and those are all the issues marked with
 the label 'help wanted' on [the issues page](
         https://github.com/tracktunes/ionic-recorder/issues).
-
-### Contribution guidelines
-
-The file [CONTRIBUTING.md](
+Please refer to the file [CONTRIBUTING.md](
     https://github.com/tracktunes/ionic-recorder/blob/master/CONTRIBUTING.md)
-outlines our contribution guidelines.
+if joining our developer community. Welcome!
 
 ### Installing the development environment and running from sources
 * Install, on your development machine, the latest stable version of
