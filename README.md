@@ -66,10 +66,12 @@ This last command also performs some postinstall actions.
 * You can develop now. As usual, all the code is
 under subdirectory './app'. Useful commands from 'package.json': 
 
-        npm start - starts a server and pops up a browser running the app
+        npm start
+which starts a server and pops up a browser tab with the app running in it,
 or
 
-        npm test - runs through tests
+        npm test
+which runs through the unit tests
 
 ## Version
 The current version is maintained in the
