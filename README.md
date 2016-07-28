@@ -54,7 +54,7 @@ your path):
   * Cordova (`npm install -g cordova`)
   * Webdriver (`npm install -g webdriver-manager`)
   * node (`npm install -g node`)
-* In a shell, type
+* Clone the repository and cd into it
 
         git clone https://github.com/tracktunes/ionic-recorder
         cd ionic-recorder
