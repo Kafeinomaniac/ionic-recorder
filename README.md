@@ -61,7 +61,7 @@ your path):
 * Install the npm packages needed by this project
 
         npm install
-This last command also performs some postinstall actions.
+This last command also performs some postinstall actions
 
 * You can develop now. As usual, all the code is
 under subdirectory './app'. Useful commands from 'package.json': 
