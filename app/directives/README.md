@@ -4,12 +4,12 @@
 
 ### Folders
 
-| Name            | Content                                    |
-|-----------------|--------------------------------------------|
-| audio-player    | Audio player widget wraps WebAudioRecorder |
-| button-toolbar  | Toolbar full of buttons widget / directive |
-| progress-slider | Clickable progress slider widget           |
-| vu-gauge        | Colored LED volume monitoring widget       |
+| Name            | Content                                          |
+|-----------------|--------------------------------------------------|
+| audio-player    | Audio player toolbar widget wraps WebAudioPlayer |
+| button-toolbar  | Row of buttons toolbar widget                    |
+| progress-slider | Clickable progress slider widget                 |
+| vu-gauge        | Colored LED volume monitoring widget             |
 
 ### Files
 
