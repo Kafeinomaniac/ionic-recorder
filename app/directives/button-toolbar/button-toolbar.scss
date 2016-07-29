@@ -22,10 +22,11 @@ ion-toolbar.button-toolbar {
       div.vspace {
         height: 0.3em;
       }
-      ion-col {
+      div {
         // width: 100%;
         // align stuff inside columns in the middle
         text-align: center;
+        text-transform: none;
 
         ion-icon {
           // space between icons line and text line
