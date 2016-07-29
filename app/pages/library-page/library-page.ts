@@ -41,6 +41,11 @@ import {
     AudioPlayer
 } from '../../directives/audio-player/audio-player';
 
+import {
+    ButtonToolbar,
+    ToolbarButton
+} from '../../directives/button-toolbar/button-toolbar';
+
 export function getFolderPath(folderNode: TreeNode): string {
     'use strict';
     const path: string = folderNode.path + '/' + folderNode.name;
@@ -55,7 +60,7 @@ export function getFolderPath(folderNode: TreeNode): string {
  */
 @Component({
     templateUrl: 'build/pages/library-page/library-page.html',
-    directives: [AudioPlayer]
+    directives: [AudioPlayer, ButtonToolbar]
 })
 export class LibraryPage {
     private nav: NavController;
@@ -65,6 +70,8 @@ export class LibraryPage {
     private folderItems: KeyDict;
     private selectedNodes: KeyDict;
     private totalSelectedCounter: number;
+    private headerButtons: ToolbarButton[];
+    private footerButtons: ToolbarButton[];
     // private playerTitle: string;
     // private playerBlob: Blob;
 
@@ -85,6 +92,84 @@ export class LibraryPage {
         this.folderItems = {};
         this.selectedNodes = {};
         this.totalSelectedCounter = 0;
+        this.headerButtons = [
+            {
+                text: 'Selection',
+                leftIcon: 'square-outline',
+                rightIcon: 'md-arrow-dropdown',
+                clickCB: () => {
+                    this.onClickSelectButton();
+                }
+            },
+            {
+                text: 'Home',
+                leftIcon: 'home',
+                clickCB: () => {
+                    this.onClickSelectButton();
+                }
+            },
+            {
+                text: 'To parent',
+                leftIcon: 'arrow-up',
+                rightIcon: 'folder',
+                clickCB: () => {
+                    this.onClickParentButton();
+                }
+            },
+            {
+                text: 'New folder',
+                leftIcon: 'add',
+                rightIcon: 'folder',
+                clickCB: () => {
+                    this.onClickAddButton();
+                }
+            }
+        ];
+
+        this.footerButtons = [
+            {
+                text: 'Info',
+                leftIcon: 'information-circle',
+                clickCB: () => {
+                    this.onClickInfoButton();
+                }
+            },
+            {
+                text: 'Move',
+                leftIcon: 'share-alt',
+                rightIcon: 'folder',
+                clickCB: () => {
+                    this.onClickMoveButton();
+                },
+                disabledCB: () => {
+                    return  this.moveButtonDisabled();
+                }
+            },
+            {
+                text: 'Delete',
+                leftIcon: 'trash',
+                clickCB: () => {
+                    this.onClickDeleteButton();
+                },
+                disabledCB: () => {
+                    return this.deleteButtonDisabled();
+                }
+            },
+            {
+                text: 'Share',
+                leftIcon: 'md-share',
+                clickCB: () => {
+                    this.onClickShareButton();
+                }
+            },
+            {
+                text: 'More',
+                leftIcon: 'more',
+                clickCB: () => {
+                    this.onClickMoreButton();
+                }
+            }
+        ];
     }
 
     /**
@@ -306,6 +391,13 @@ export class LibraryPage {
         else {
             this.checkIfDeletingInOtherFolders();
         }
+    }
+
+    /**
+     * @returns {void}
+     */
+    public onClickShareButton(): void {
+        console.log('onClickShareButton()');
     }
 
     /**

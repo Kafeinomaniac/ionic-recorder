@@ -13,32 +13,8 @@
         </ion-buttons>
     </ion-navbar>
 
-    <ion-toolbar position="bottom" almost-dark>
-        <div class="buttonbar3">
-            <button almost-dark (click)="onClickMoveButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="share-alt"></ion-icon>
-                    <ion-icon name="folder"></ion-icon>
-                    <br> Move
-                    <br>
-                </ion-col>
-            </button>
-            <button almost-dark (click)="onClickDeleteButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="trash"></ion-icon>
-                    <br> Delete
-                    <br>
-                </ion-col>
-            </button>
-            <button almost-dark (click)="onClickShareButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="md-share"></ion-icon>
-                    <br> Share
-                    <br>
-                </ion-col>
-            </button>
-        </div>
-    </ion-toolbar>
+    <button-toolbar [buttons]="headerButtons">
+    </button-toolbar>
 </ion-header>
 
 <ion-content padding>

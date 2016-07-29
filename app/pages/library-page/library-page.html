@@ -2,7 +2,6 @@
 
 <ion-header>
     <ion-navbar no-border-bottom almost-dark>
-
         <button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
@@ -20,56 +19,13 @@
         </ion-buttons>
     </ion-navbar>
 
-    <ion-toolbar position="top" almost-dark>
-        <div class="buttonbar3">
-            <!--<button almost-dark (click)="onClickSelectButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="square-outline"></ion-icon>
-                    <ion-icon name="md-arrow-dropdown"></ion-icon>
-                    <br> Selection
-                    <br>
-                </ion-col>
-            </button>-->
-            <button almost-dark (click)="onClickHomeButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="home"></ion-icon>
-                    <br> Home
-                    <br>
-                </ion-col>
-            </button>
-            <button almost-dark (click)="onClickParentButton()" [disabled]="parentButtonDisabled()" ion-row center>
-                <ion-col>
-                    <ion-icon name="arrow-up"></ion-icon>
-                    <ion-icon name="folder"></ion-icon>
-                    <br> To parent
-                    <br>
-                </ion-col>
-            </button>
-            <button almost-dark (click)="onClickAddButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="add"></ion-icon>
-                    <ion-icon name="folder"></ion-icon>
-                    <br> New folder
-                    <br>
-                </ion-col>
-            </button>
-        </div>
-    </ion-toolbar>
+    <button-toolbar [buttons]="headerButtons">
+    </button-toolbar>
 </ion-header>
 
 <ion-content>
     <ion-list *ngIf="folderNode">
         <ion-item-group>
-            <ion-item-divider sticky dark *ngIf="folderNode">
-                <button dark (click)="onClickAddButton()" ion-row center>
-                    <ion-icon name="square-outline"></ion-icon>
-                    &nbsp;&nbsp;
-                    <ion-icon name="md-arrow-dropdown"></ion-icon>
-                </button>
-                <button clear>
-                    {{getPath()}}
-                </button>
-            </ion-item-divider>
             <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
                 <ion-label button clear (click)="onClickListItem(folderItems[i])">
                     <span *ngIf="folderItems[i].data">
@@ -95,44 +51,12 @@
 </ion-content>
 
 <ion-footer>
-    <ion-toolbar position="bottom" almost-dark *ngIf="nSelectedNodes()">
-        <div class="buttonbar5">
-            <button almost-dark (click)="onClickInfoButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="information-circle"></ion-icon>
-                    <br> Info
-                    <br>
-                </ion-col>
-            </button>
-            <button almost-dark (click)="onClickMoveButton()" [disabled]="moveButtonDisabled()" ion-row center>
-                <ion-col>
-                    <ion-icon name="share-alt"></ion-icon>
-                    <ion-icon name="folder"></ion-icon>
-                    <br> Move
-                    <br>
-                </ion-col>
-            </button>
-            <button almost-dark (click)="onClickDeleteButton()" [disabled]="deleteButtonDisabled()" ion-row center>
-                <ion-col>
-                    <ion-icon name="trash"></ion-icon>
-                    <br> Delete
-                    <br>
-                </ion-col>
-            </button>
-            <button almost-dark (click)="onClickShareButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="md-share"></ion-icon>
-                    <br> Share
-                    <br>
-                </ion-col>
-            </button>
-            <button almost-dark (click)="onClickMoreButton()" ion-row center>
-                <ion-col>
-                    <ion-icon name="more"></ion-icon>
-                    <br> More
-                    <br>
-                </ion-col>
-            </button>
-        </div>
+    <button-toolbar [buttons]="footerButtons" *ngIf="nSelectedNodes() > 0">
+    </button-toolbar>
+
+    <ion-toolbar position="bottom" almost-dark *ngIf="folderNode">
+        <ion-title>
+            {{getPath()}}
+        </ion-title>
     </ion-toolbar>
 </ion-footer>

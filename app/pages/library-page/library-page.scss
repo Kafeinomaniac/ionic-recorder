@@ -26,14 +26,17 @@
 
     button {
       // text and icon size
-      font-size: 11px;
+      font-size: 13px;
       ion-icon {
-        font-size: 16px;
+        font-size: 15px;
       }
       // button height
       height: 40px;
-
+      div.vspace {
+        height: 0.3em;
+      }
       ion-col {
+        // width: 100%;
         // align stuff inside columns in the middle
         text-align: center;
 
@@ -73,7 +76,7 @@
   // set width to be a little less than 25% or you get
   // weird side effects
   div.buttonbar4 button {
-    width: 23%;
+    width: 22%;
   }
 
   // five button bar

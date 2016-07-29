@@ -108,7 +108,7 @@ export class WebAudioPlayer {
             // the monitoring actions are in the following function:
             () => {
                 const duration: number = this.getDuration();
-                console.log('dur: ' + duration);
+                // console.log('dur: ' + duration);
                 if (this.duration !== duration) {
                     // change detected
                     this.duration = duration;
