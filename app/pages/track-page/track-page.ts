@@ -5,6 +5,10 @@ import {
 } from '@angular/core';
 
 import {
+    Platform
+} from 'ionic-angular';
+
+import {
     formatTime
 } from '../../services/utils/utils';
 
@@ -60,6 +64,7 @@ export class TrackPage {
      */
     constructor(idbAppFS: IdbAppFS) {
         console.log('constructor():TrackPage');
+
         idbAppFS.readNode(3).subscribe(
             (node: TreeNode) => {
                 if (!node) {
@@ -78,6 +83,7 @@ export class TrackPage {
                 this.recordingInfo = node.data;
             }
         );
+
         this.headerButtons = [
             {
                 text: 'Move',

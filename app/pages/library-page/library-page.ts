@@ -6,7 +6,8 @@ import {
 
 import {
     NavController,
-    Modal
+    Modal,
+    Platform
 } from 'ionic-angular';
 
 import {
@@ -82,7 +83,8 @@ export class LibraryPage {
     constructor(
         nav: NavController,
         idbAppFS: IdbAppFS,
-        idbAppState: IdbAppState
+        idbAppState: IdbAppState,
+        platform: Platform
     ) {
         console.log('constructor():LibraryPage');
         this.nav = nav;
@@ -95,7 +97,7 @@ export class LibraryPage {
         this.headerButtons = [
             {
                 text: 'Selection',
-                leftIcon: 'square-outline',
+                leftIcon: platform.is('ios') ? 'radio-button-off' : 'square-outline',
                 rightIcon: 'md-arrow-dropdown',
                 clickCB: () => {
                     this.onClickSelectButton();
@@ -142,7 +144,7 @@ export class LibraryPage {
                     this.onClickMoveButton();
                 },
                 disabledCB: () => {
-                    return  this.moveButtonDisabled();
+                    return this.moveButtonDisabled();
                 }
             },
             {
