@@ -3,6 +3,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* - split schedulePlay into play() and playLater()
+  - add seek() and seekRelative() and make them respect paused state
+* fix the jumps in the display when jumping (seeking)
+* move <ion-toolbar> out of your directives and back into the template
+  that uses those directives
 * make it so that whatever file you save (first, so we'd have to
   clear the db every time we try this) then that is what track page
   loads, i.e. it loads from db a particular data node and reads its

@@ -79,7 +79,6 @@ export class WebAudioPlayer {
         if (sourceNode) {
             sourceNode.stop();
             sourceNode.disconnect();
-            sourceNode = null;
             const idx: number = this.scheduledSourceNodes.indexOf(sourceNode);
             if (idx !== -1) {
                 delete this.scheduledSourceNodes[idx];
@@ -140,9 +139,12 @@ export class WebAudioPlayer {
         setTimeout(
             () => {
                 this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
-            },
-            2 * CLOCK_INTERVAL_MSEC);
+                // },
+                // 2 * CLOCK_INTERVAL_MSEC);
+                // }    
+            });
     }
+
 
     public getDuration(): number {
         if (this.duration) {
