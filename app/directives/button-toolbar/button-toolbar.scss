@@ -34,23 +34,23 @@ ion-toolbar.button-toolbar {
         font-size: 16px;
       }
     }
+  }
 
-    .buttonbar3 button {
-      width: 30.9%;
-    }
+  div.buttonbar3 button {
+    width: 30.9%;
+  }
 
-    // four button bar
-    // set width to be a little less than 25% or you get
-    // weird side effects
-    .buttonbar4 button {
-      width: 22%;
-    }
+  // four button bar
+  // set width to be a little less than 25% or you get
+  // weird side effects
+  div.buttonbar4 button {
+    width: 22%;
+  }
 
-    // five button bar
-    // set width to be a little less than 20% or you get
-    // weird side effects
-    .buttonbar5 button {
-      width: 18%;
-    }
+  // five button bar
+  // set width to be a little less than 20% or you get
+  // weird side effects
+  div.buttonbar5 button {
+    width: 18%;
   }
 }
