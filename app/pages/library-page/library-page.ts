@@ -565,6 +565,7 @@ export class LibraryPage {
      * @returns {void}
      */
     public onClickParentButton(): void {
+        console.log('onClickParentButton()');
         if (this.folderNode) {
             this.switchFolder(this.folderNode.parentKey, true);
         }

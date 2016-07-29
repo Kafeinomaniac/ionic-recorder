@@ -2,7 +2,7 @@
 
 <ion-toolbar class="button-toolbar" almost-dark>
     <div [class]="buttonToolbarClass">
-        <button almost-dark center *ngFor="let button of buttons" (click)="button.clickCB" [disabled]="button.disabledCB && button.disabledCB()">
+        <button almost-dark center *ngFor="let button of buttons" (click)="button.clickCB()" [disabled]="button.disabledCB && button.disabledCB()">
             <div>
                 <ion-icon [name]="button.leftIcon"></ion-icon>
                 <ion-icon *ngIf="button.rightIcon" [name]="button.rightIcon"></ion-icon>
