@@ -12,11 +12,8 @@ ion-toolbar.button-toolbar {
     white-space: nowrap;
 
     button {
-      // text and icon size
+      // text size
       font-size: 14px;
-      ion-icon {
-        font-size: 15px;
-      }
       // button height
       height: 40px;
       div.vspace {
@@ -31,6 +28,8 @@ ion-toolbar.button-toolbar {
         ion-icon {
           // space between icons line and text line
           margin-bottom: 3px;
+          // icon-size
+          font-size: 16px;
         }
       }
     }
