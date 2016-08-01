@@ -9,6 +9,7 @@ import {
 import {
     configProvider,
     navControllerProvider,
+    platformProvider,
     InstanceFixture,
     beforeEachDI
 } from '../../services/test-utils/test-utils';
@@ -30,7 +31,13 @@ let instanceFixture: InstanceFixture = null;
 describe('pages/library-page:LibraryPage', () => {
     instanceFixture = beforeEachDI(
         LibraryPage,
-        [IdbAppFS, IdbAppState, configProvider, navControllerProvider],
+        [
+            IdbAppFS,
+            IdbAppState,
+            configProvider,
+            navControllerProvider,
+            platformProvider
+        ],
         true,
         null
     );

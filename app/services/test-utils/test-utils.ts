@@ -118,6 +118,11 @@ export class NavMock {
 }
 
 export class PlatformMock {
+
+    public is(): any {
+        return true;
+    }
+
     public ready(): any {
         return new Promise((resolve: Function) => {
             resolve();
@@ -129,6 +134,9 @@ export class PlatformMock {
 // Ionic Providers used in specs
 ///////////////////////////////////////////////////////////////////////////////
 
+export const appProvider: Provider =
+    provide(App, { useClass: ConfigMock });
+
 export const configProvider: Provider =
     provide(Config, { useClass: ConfigMock });
 
@@ -137,6 +145,9 @@ export const menuControllerProvider: Provider =
 
 export const navControllerProvider: Provider =
     provide(NavController, { useClass: NavMock });
+
+export const platformProvider: Provider =
+    provide(Platform, { useClass: PlatformMock });
 
 export interface InstanceFixture {
     instance: Type;
@@ -147,10 +158,11 @@ export interface InstanceFixture {
 // the ngModel problem which we're still trying to solve
 const DEFAULT_PROVIDERS: any[] = [
     Form,
-    provide(Config, { useClass: ConfigMock }),
-    provide(App, { useClass: ConfigMock }),
-    provide(NavController, { useClass: NavMock }),
-    provide(Platform, { useClass: ConfigMock })
+    appProvider,
+    configProvider,
+    menuControllerProvider,
+    navControllerProvider,
+    platformProvider
 ];
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -31,7 +31,8 @@ import {
 // make this a multiple of PROCESSING_BUFFER_LENGTH
 // 256 x PROCESSING_BUFFER_LENGTH = 65536 and since it's WAV,
 // it will be 2 bytes each
-export const DB_CHUNK_LENGTH: number = 65536;
+// export const DB_CHUNK_LENGTH: number = 65536;
+export const DB_CHUNK_LENGTH: number = 131072;
 
 // pre-allocate the double chunk buffers used for saving to DB
 const DB_CHUNK1: Int16Array = new Int16Array(DB_CHUNK_LENGTH);

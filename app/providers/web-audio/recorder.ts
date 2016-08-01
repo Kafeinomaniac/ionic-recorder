@@ -26,7 +26,7 @@ export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 
 // length of script processing buffer (must be power of 2, smallest possible,
 // to reduce latency and to compute time as accurately as possible)
-const PROCESSING_BUFFER_LENGTH: number = 512;
+const PROCESSING_BUFFER_LENGTH: number = 2048;
 
 const ABS: (n: number) => number = Math.abs;
 
@@ -89,10 +89,15 @@ export class WebAudioRecorder {
 
         this.status = RecorderStatus.UNINITIALIZED_STATE;
 
+        // next line initializes recording time display to not show NaN on init
+        this.nRecordedProcessingBuffers = 0;
+
         // create nodes that do not require a stream in their constructor
         this.createNodes();
+
         // this call to resetPeaks() also initializes private variables
         this.resetPeaks();
+
         // grab microphone, init nodes that rely on stream, connect nodes
         this.initAudio();
     }
@@ -117,8 +122,10 @@ export class WebAudioRecorder {
                     this.connectNodes(stream);
                 })
                 .catch((error: any) => {
-                    console.warn('initAudio(new) ' + error);
-                    console.dir(error);
+                    console.warn(error + ': ' + error.name);
+                    // console.warn('initAudio(new) ' + error);
+                    // console.dir(error);
+                    alert(error + ': ' + error.name);
                     this.status = RecorderStatus.NO_MICROPHONE_ERROR;
                 });
         }
@@ -138,19 +145,21 @@ export class WebAudioRecorder {
                         },
                         (error: any) => {
                             console.warn('initAudio(old1) ' + error);
-                            console.dir(error);
+                            alert('initAudio(old1) ' + error);
                             this.status = RecorderStatus.NO_MICROPHONE_ERROR;
                         });
                 }
                 catch (error) {
                     console.warn('initAudio(old2) ' + error);
                     console.dir(error);
+                    alert('initAudio(old2) ' + error);
                     this.status = RecorderStatus.GETUSERMEDIA_ERROR;
                 }
             }
             else {
                 // neither old nor new getUserMedia are available
                 console.warn('initAudio() Error: no getUserMedia');
+                alert('initAudio() Error: no getUserMedia');
                 this.status = RecorderStatus.NO_GETUSERMEDIA_ERROR;
             }
         }

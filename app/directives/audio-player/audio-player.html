@@ -6,8 +6,8 @@
             <ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
             <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
         </button>
-        <span>{{player.displayTime}}</span>
+        <span class="display-time">{{player.displayTime}}</span>
         <progress-slider [progress]="player.relativeTime" (changeEnd)="player.relativeTimeSeek($event)"></progress-slider>
-        <span>{{player.displayDuration}}</span>
+        <span class="display-duration">{{player.displayDuration}}</span>
     </div>
 </ion-toolbar>

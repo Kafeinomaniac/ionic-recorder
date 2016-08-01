@@ -22,8 +22,9 @@ import {
 } from '../../services/utils/utils';
 
 import {
-    MasterClock,
-    CLOCK_INTERVAL_MSEC
+    // MasterClock,
+    // CLOCK_INTERVAL_MSEC
+    MasterClock
 } from '../master-clock/master-clock';
 
 import {
@@ -141,10 +142,9 @@ export class WebAudioPlayer {
                 this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
                 // },
                 // 2 * CLOCK_INTERVAL_MSEC);
-                // }    
+                // }
             });
     }
-
 
     public getDuration(): number {
         if (this.duration) {

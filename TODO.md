@@ -3,11 +3,26 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* start trying to work with nightly - simply can't wait for alerts and
+  nav controller anymore ... we're better off making a branch for this
+* we can do the other format later - it's a waste of time now. we don't
+  need it.  more important to get the one format that we will always
+  need done well.  we might as well add lossless compression before
+  lossy.
+* the idea in the next few bullets is to get webm to work and in the
+  process improve the wav player too because we'll fix kinks that
+  were in either player (in player.ts)
+* make player / recorder of webm / ogg available in chrome / firefox
+  and going into a single file (?)
 * - split schedulePlay into play() and playLater()
   - add seek() and seekRelative() and make them respect paused state
+  - base play() on the old way it was done so that we can easily add
+    webm next
+* set up a true Settings page and allow for changing the encoding,
+  allow for deleting / resetting DB.
 * fix the jumps in the display when jumping (seeking)
 * move <ion-toolbar> out of your directives and back into the template
-  that uses those directives
+  that uses those directives (?)
 * make it so that whatever file you save (first, so we'd have to
   clear the db every time we try this) then that is what track page
   loads, i.e. it loads from db a particular data node and reads its

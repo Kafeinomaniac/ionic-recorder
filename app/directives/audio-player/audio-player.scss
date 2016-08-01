@@ -9,8 +9,9 @@ audio-player ion-toolbar div.toolbar-content {
       display: table-cell;
       width: auto;
       vertical-align: middle;
-      margin-right: -0.5em;
-      margin-left: 0.5em;
+      // the following two lines is a hack that shifts the button to the left
+      // margin-right: -0.5em;
+      // margin-left: 0.5em;
     }
 
     span {
@@ -18,7 +19,15 @@ audio-player ion-toolbar div.toolbar-content {
       display: table-cell;
       width: auto;
       color: map-get($colors, almost-light);
-      padding-right: 0.7em;
+    }
+
+    span.display-duration {
+      padding-right: 0.5em;
+      padding-left: 0.5em;
+    }
+
+    span.display-time {
+      padding-right: 0.5em;
     }
 
     progress-slider {

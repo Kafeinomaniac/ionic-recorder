@@ -97,7 +97,9 @@ export class LibraryPage {
         this.headerButtons = [
             {
                 text: 'Selection',
-                leftIcon: platform.is('ios') ? 'radio-button-off' : 'square-outline',
+                leftIcon: platform.is('ios') ?
+                    'radio-button-off' :
+                    'square-outline',
                 rightIcon: 'md-arrow-dropdown',
                 clickCB: () => {
                     this.onClickSelectButton();
