@@ -86,6 +86,8 @@ export class WebAudioRecorder {
             this.status = RecorderStatus.NO_CONTEXT_ERROR;
             return;
         }
+        // no value callback initially unless supplied
+        this.valueCB = null;
 
         this.status = RecorderStatus.UNINITIALIZED_STATE;
 
@@ -194,7 +196,7 @@ export class WebAudioRecorder {
 
             // fill up double-buffer active buffer if recording (and
             // save every time a fill-up occurs)
-            if (this.isRecording) {
+            if (this.valueCB && this.isRecording) {
                 this.valueCB(value);
                 this.nRecordedSamples++;
             }
