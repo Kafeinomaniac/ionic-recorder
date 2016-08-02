@@ -11,9 +11,9 @@ import {
     ROOT_FOLDER_KEY
 } from '../../services/idb/idb-fs';
 
-export const DB_NAME: string = 'IdbAppFS';
 const DB_VERSION: number = 1;
 
+export const DB_NAME: string = 'IdbAppFS';
 export const UNFILED_FOLDER_NAME: string = 'Unfiled';
 export const UNFILED_FOLDER_KEY: number = 2;
 
@@ -40,14 +40,5 @@ export class IdbAppFS extends IdbFS {
                 throw Error('in IdbAppFS:constructor(): ' + error);
             }
         );
-        // this.createNode(UNFILED_FOLDER_NAME, 1).subscribe(
-        //     (parentChild: ParentChild) => {
-        //         if (parentChild.child[DB_KEY_PATH] !==
-        //             UNFILED_FOLDER_KEY) {
-        //             throw Error(UNFILED_FOLDER_NAME +
-        //                 ' key mismatch: ' + UNFILED_FOLDER_KEY +
-        //                 ' vs. ' + parentChild.child[DB_KEY_PATH]);
-        //         }
-        //     });
     }
 }
