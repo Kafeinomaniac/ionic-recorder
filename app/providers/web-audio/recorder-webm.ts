@@ -30,7 +30,7 @@ import {
  * Audio Recorder functions based on WebAudio.
  */
 @Injectable()
-export class WebAudioRecorderWav extends WebAudioRecorder {
+export class WebAudioRecorderWebm extends WebAudioRecorder {
     private idb: IdbAppData;
     private dbKey: number;
 

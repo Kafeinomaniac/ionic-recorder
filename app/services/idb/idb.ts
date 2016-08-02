@@ -85,7 +85,10 @@ export class Idb {
             };
             request.onblocked = function (): void {
                 console.warn('deleteDatabase: BLOCKED');
-                throw Error('Idb:deleteDb() request blocked error');
+                // we're going to stop throwing this error here because
+                // we notice that the DB gets deleted despite this error
+                // being thrown every time, keeping just the warning
+                // throw Error('Idb:deleteDb() request blocked error');
             };
         }, source: Observable<void> = Observable.create((observer) => {
             let timerId: NodeJS.Timer,

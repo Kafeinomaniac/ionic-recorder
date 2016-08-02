@@ -15,6 +15,7 @@ import {
 } from '../../services/utils/utils';
 
 const NODE_STORE: string = 'storeIdbFS';
+export const ROOT_FOLDER_KEY: number = 1;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// START: Public API
@@ -85,7 +86,7 @@ export class IdbFS extends Idb {
         let source: Observable<void> = Observable.create((observer) => {
             this.waitForDB().subscribe(
                 (db: IDBDatabase) => {
-                    this.read<TreeNode>(NODE_STORE, 1).subscribe(
+                    this.read<TreeNode>(NODE_STORE, ROOT_FOLDER_KEY).subscribe(
                         (rootNode: TreeNode) => {
                             if (rootNode) {
                                 observer.next();
@@ -100,8 +101,9 @@ export class IdbFS extends Idb {
                                 this.create<TreeNode>(NODE_STORE, newNode)
                                     .subscribe(
                                     (key: number) => {
-                                        if (key !== 1) {
-                                            observer.error('root key not 1');
+                                        if (key !== ROOT_FOLDER_KEY) {
+                                            observer.error('root key not ' +
+                                                ROOT_FOLDER_KEY);
                                         }
                                         else {
                                             observer.next();

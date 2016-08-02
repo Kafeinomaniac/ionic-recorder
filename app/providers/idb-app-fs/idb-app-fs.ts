@@ -7,7 +7,8 @@ import {
 import {
     IdbFS,
     TreeNode,
-    DB_KEY_PATH
+    DB_KEY_PATH,
+    ROOT_FOLDER_KEY
 } from '../../services/idb/idb-fs';
 
 export const DB_NAME: string = 'IdbAppFS';
@@ -26,7 +27,7 @@ export class IdbAppFS extends IdbFS {
                 this.readOrCreateNode(
                     UNFILED_FOLDER_KEY,
                     UNFILED_FOLDER_NAME,
-                    1).subscribe(
+                    ROOT_FOLDER_KEY).subscribe(
                     (treeNode: TreeNode) => {
                         if (treeNode[DB_KEY_PATH] !== UNFILED_FOLDER_KEY) {
                             throw Error(UNFILED_FOLDER_NAME +
