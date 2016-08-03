@@ -7,7 +7,6 @@ import {
 } from '@angular/core/testing';
 
 import {
-    menuControllerProvider,
     InstanceFixture,
     beforeEachDI
 } from '../../services/test-utils/test-utils';
@@ -33,7 +32,7 @@ let instanceFixture: InstanceFixture = null;
 describe('pages/track-page:TrackPage', () => {
     instanceFixture = beforeEachDI(
         TrackPage,
-        [MasterClock, IdbAppFS, IdbAppData, menuControllerProvider],
+        [MasterClock, IdbAppFS, IdbAppData],
         true,
         null
     );

@@ -7,7 +7,6 @@ import {
 } from '@angular/core/testing';
 
 import {
-    menuControllerProvider,
     InstanceFixture,
     beforeEachDI
 } from '../../services/test-utils/test-utils';
@@ -21,7 +20,7 @@ let instanceFixture: InstanceFixture = null;
 describe('pages/about-page:AboutPage', () => {
     instanceFixture = beforeEachDI(
         AboutPage,
-        [menuControllerProvider],
+        [],
         true,
         null
     );

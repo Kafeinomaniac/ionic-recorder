@@ -7,9 +7,6 @@ import {
 } from '@angular/core/testing';
 
 import {
-    configProvider,
-    navControllerProvider,
-    platformProvider,
     InstanceFixture,
     beforeEachDI
 } from '../../services/test-utils/test-utils';
@@ -33,10 +30,7 @@ describe('pages/library-page:LibraryPage', () => {
         LibraryPage,
         [
             IdbAppFS,
-            IdbAppState,
-            configProvider,
-            navControllerProvider,
-            platformProvider
+            IdbAppState
         ],
         true,
         null

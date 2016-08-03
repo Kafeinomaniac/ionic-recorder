@@ -8,7 +8,7 @@ import {
 } from '@angular/common';
 
 import {
-    Provider,
+    // Provider,
     provide,
     Type
 } from '@angular/core';
@@ -21,16 +21,20 @@ import {
 import {
     beforeEachProviders,
     beforeEach,
-    injectAsync
+    async,
+    inject
 } from '@angular/core/testing';
 
 import {
     Config,
     MenuController,
     NavController,
+    AlertController,
+    ModalController,
     App,
     Form,
-    Platform
+    Platform,
+    Keyboard
 } from 'ionic-angular';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,7 +94,7 @@ export class ConfigMock {
     }
 }
 
-export class NavMock {
+export class NavControllerMock {
 
     public pop(): any {
         return new Promise(function (resolve: Function): void {
@@ -117,6 +121,34 @@ export class NavMock {
     }
 }
 
+export class AlertControllerMock {
+
+    public create(): any {
+        return {
+            setTitle: (title: string) => {
+                return;
+            },
+            present: () => {
+                return;
+            }
+        };
+    }
+}
+
+export class ModalControllerMock {
+
+    public create(component: any, config: any): any {
+        return {
+            onDismiss: (title: string) => {
+                return;
+            },
+            present: (x: any) => {
+                return;
+            }
+        };
+    }
+}
+
 export class PlatformMock {
 
     public is(): any {
@@ -134,20 +166,26 @@ export class PlatformMock {
 // Ionic Providers used in specs
 ///////////////////////////////////////////////////////////////////////////////
 
-export const appProvider: Provider =
-    provide(App, { useClass: ConfigMock });
+// export const appProvider: Provider =
+//     provide(App, { useClass: ConfigMock });
 
-export const configProvider: Provider =
-    provide(Config, { useClass: ConfigMock });
+// export const configProvider: Provider =
+//     provide(Config, { useClass: ConfigMock });
 
-export const menuControllerProvider: Provider =
-    provide(MenuController, { useClass: ConfigMock });
+// export const menuControllerProvider: Provider =
+//     provide(MenuController, { useClass: ConfigMock });
 
-export const navControllerProvider: Provider =
-    provide(NavController, { useClass: NavMock });
+// export const navControllerProvider: Provider =
+//     provide(NavController, { useClass: NavControllerMock });
 
-export const platformProvider: Provider =
-    provide(Platform, { useClass: PlatformMock });
+// export const alertControllerProvider: Provider =
+//     provide(AlertController, { useClass: AlertControllerMock });
+
+// export const modalControllerProvider: Provider =
+//     provide(ModalController, { useClass: ModalControllerMock });
+
+// export const platformProvider: Provider =
+//     provide(Platform, { useClass: PlatformMock });
 
 export interface InstanceFixture {
     instance: Type;
@@ -158,11 +196,21 @@ export interface InstanceFixture {
 // the ngModel problem which we're still trying to solve
 const DEFAULT_PROVIDERS: any[] = [
     Form,
-    appProvider,
-    configProvider,
-    menuControllerProvider,
-    navControllerProvider,
-    platformProvider
+    Keyboard,
+    provide(App, { useClass: ConfigMock }),
+    provide(Config, { useClass: ConfigMock }),
+    provide(MenuController, { useClass: ConfigMock }),
+    provide(NavController, { useClass: NavControllerMock }),
+    provide(AlertController, { useClass: AlertControllerMock }),
+    provide(ModalController, { useClass: ModalControllerMock }),
+    provide(Platform, { useClass: PlatformMock })
+    // appProvider,
+    // configProvider,
+    // menuControllerProvider,
+    // navControllerProvider,
+    // alertControllerProvider,
+    // modalControllerProvider,
+    // platformProvider
 ];
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -170,7 +218,7 @@ const DEFAULT_PROVIDERS: any[] = [
 ///////////////////////////////////////////////////////////////////////////////
 
 export function beforeEachDI(
-    component: Type,
+    component: any,
     providers: any[],
     detectChanges: boolean,
     beforeEachCB: Function
@@ -184,7 +232,7 @@ export function beforeEachDI(
     else {
         beforeEachProviders(() => DEFAULT_PROVIDERS);
     }
-    beforeEach(injectAsync(
+    beforeEach(async(inject(
         [TestComponentBuilder],
         (testComponentBuilder: TestComponentBuilder) => {
             return testComponentBuilder
@@ -197,7 +245,8 @@ export function beforeEachDI(
                     if (beforeEachCB) beforeEachCB(fixture);
                 })
                 .catch(promiseCatchHandler);
-        }));
+        })));
+
     return {
         instance: instance,
         fixture: fixture
