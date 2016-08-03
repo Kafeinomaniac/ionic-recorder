@@ -5,6 +5,8 @@ import {
 } from '@angular/core';
 
 import {
+    AlertController,
+    ModalController,
     NavController,
     Modal,
     Platform
@@ -13,7 +15,7 @@ import {
 import {
     TreeNode,
     KeyDict,
-    ParentChild,
+    // ParentChild,
     DB_KEY_PATH
 } from '../../services/idb/idb-fs';
 
@@ -27,7 +29,7 @@ import {
 } from '../../services/utils/utils';
 
 import {
-    askAndDo
+    alertAndDo
 } from '../../services/utils/alerts';
 
 import {
@@ -65,8 +67,11 @@ export function getFolderPath(folderNode: TreeNode): string {
 })
 export class LibraryPage {
     private nav: NavController;
+    private alertController: AlertController;
+    private modalController: ModalController;
     private idbAppFS: IdbAppFS;
     private idbAppState: IdbAppState;
+
     private folderNode: TreeNode;
     private folderItems: KeyDict;
     private selectedNodes: KeyDict;
@@ -82,12 +87,16 @@ export class LibraryPage {
      */
     constructor(
         nav: NavController,
+        alertController: AlertController,
+        modalController: ModalController,
         idbAppFS: IdbAppFS,
         idbAppState: IdbAppState,
         platform: Platform
     ) {
         console.log('constructor():LibraryPage');
         this.nav = nav;
+        this.alertController = alertController;
+        this.modalController = modalController;
         this.idbAppFS = idbAppFS;
         this.idbAppState = idbAppState;
         this.folderNode = null;
@@ -269,7 +278,8 @@ export class LibraryPage {
         if (!nNodes) {
             alert('wow no way!');
         }
-        this.nav.present(askAndDo(
+        alertAndDo(
+            this.alertController,
             'Permanently delete ' + nNodes + ' item' +
             (nNodes > 1 ? 's?' : '?'),
             'Ok',
@@ -311,7 +321,7 @@ export class LibraryPage {
                         }
                     }
                 );
-            }));
+            });
     }
 
     /**
@@ -337,7 +347,8 @@ export class LibraryPage {
 
         if (nSelectedNodesNotHere) {
             if (nSelectedNodesHere) {
-                this.nav.present(askAndDo(
+                alertAndDo(
+                    this.alertController,
                     [
                         'You have ', nSelectedNodesNotHere,
                         ' selected item',
@@ -359,7 +370,7 @@ export class LibraryPage {
                         console.log('yes action');
                         this.deleteNodes(selectedNodesHere);
                     }
-                ));
+                );
             }
             else {
                 // nothing selected in this folder, but stuff selected outside
@@ -379,7 +390,8 @@ export class LibraryPage {
     public onClickDeleteButton(): void {
         if (this.selectedNodes[UNFILED_FOLDER_KEY]) {
             console.log('onClickDeleteButton()');
-            this.nav.present(askAndDo(
+            alertAndDo(
+                this.alertController,
                 [
                     'The Unfiled folder is selected for deletion, ',
                     'but the Unfiled folder cannot be deleted. Unselect it ',
@@ -390,7 +402,7 @@ export class LibraryPage {
                     delete this.selectedNodes[UNFILED_FOLDER_KEY];
                     this.checkIfDeletingInOtherFolders();
                 }
-            ));
+            );
         }
         else {
             this.checkIfDeletingInOtherFolders();
@@ -579,7 +591,7 @@ export class LibraryPage {
      */
     public onClickAddButton(): void {
         // note we consider the current folder (this.folderNode) the parent
-        let addFolderModal: Modal = Modal.create(AddFolderPage, {
+        let addFolderModal: Modal = this.modalController.create(AddFolderPage, {
             parentPath: this.getPath(),
             parentItems: this.folderItems
         });
@@ -587,38 +599,39 @@ export class LibraryPage {
         console.log('onClickAddButton() - nav: ' +
             this.nav);
 
-        this.nav.present(addFolderModal);
+        // this.nav.present(addFolderModal);
+        addFolderModal.present(addFolderModal);
 
-        addFolderModal.onDismiss((folderName: string) => {
-            if (folderName) {
-                // data is new folder's name returned from addFolderModal
-                console.log('got folderName back: ' + folderName);
-                // create a node for added folder childNode
-                this.idbAppFS.createNode(
-                    folderName,
-                    this.folderNode[DB_KEY_PATH]
-                ).subscribe(
-                    (parentChild: ParentChild) => {
-                        let childNode: TreeNode = parentChild.child,
-                            parentNode: TreeNode = parentChild.parent,
-                            childNodeKey: number = childNode[DB_KEY_PATH];
-                        console.log('childNode: ' + childNode +
-                            ', parentNode: ' + parentNode);
-                        // update folder items dictionary of this page
-                        this.folderItems[childNodeKey] = childNode;
-                        this.folderNode = parentNode;
-                    },
-                    (error: any) => {
-                        alert('in createFolderNode: ' + error);
-                    }
-                    ); // createFolderNode().subscribe(
-            }
-            else {
-                console.log('you canceled the add-folder');
-                // assume cancel
-                return;
-            }
-        });
+        // addFolderModal.onDismiss((folderName: string) => {
+        //     if (folderName) {
+        //         // data is new folder's name returned from addFolderModal
+        //         console.log('got folderName back: ' + folderName);
+        //         // create a node for added folder childNode
+        //         this.idbAppFS.createNode(
+        //             folderName,
+        //             this.folderNode[DB_KEY_PATH]
+        //         ).subscribe(
+        //             (parentChild: ParentChild) => {
+        //                 let childNode: TreeNode = parentChild.child,
+        //                     parentNode: TreeNode = parentChild.parent,
+        //                     childNodeKey: number = childNode[DB_KEY_PATH];
+        //                 console.log('childNode: ' + childNode +
+        //                     ', parentNode: ' + parentNode);
+        //                 // update folder items dictionary of this page
+        //                 this.folderItems[childNodeKey] = childNode;
+        //                 this.folderNode = parentNode;
+        //             },
+        //             (error: any) => {
+        //                 alert('in createFolderNode: ' + error);
+        //             }
+        //             ); // createFolderNode().subscribe(
+        //     }
+        //     else {
+        //         console.log('you canceled the add-folder');
+        //         // assume cancel
+        //         return;
+        //     }
+        // });
     }
 
     /**
@@ -692,18 +705,18 @@ export class LibraryPage {
      */
     public onClickSelectButton(): void {
         console.log('onClickSelectButton()');
-        this.nav.present(
-            askAndDo(
-                'Select which, in<br>' + this.folderNode.name,
-                'All',
-                () => {
-                    console.log('action1 doing it now');
-                    this.selectAllInFolder();
-                },
-                'None',
-                () => {
-                    console.log('action2 doing it now');
-                    this.selectNoneInFolder();
-                }));
+        alertAndDo(
+            this.alertController,
+            'Select which, in<br>' + this.folderNode.name,
+            'All',
+            () => {
+                console.log('action1 doing it now');
+                this.selectAllInFolder();
+            },
+            'None',
+            () => {
+                console.log('action2 doing it now');
+                this.selectNoneInFolder();
+            });
     }
 }

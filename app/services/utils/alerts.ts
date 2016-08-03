@@ -1,7 +1,8 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    Alert
+    Alert,
+    AlertController
 } from 'ionic-angular';
 
 /**
@@ -13,13 +14,14 @@ import {
  * @param {() => void} action2
  * @returns {Alert}
  */
-export function askAndDo(
+export function alertAndDo(
+    alertController: AlertController,
     question: string,
     button1Text: string,
-    action1: () => void,
+    action1: (data: any) => void,
     button2Text?: string,
-    action2?: () => void
-): Alert {
+    action2?: (data: any) => void
+): void {
     'use strict';
 
     console.log('askAndDo(' + question + ')');
@@ -29,7 +31,7 @@ export function askAndDo(
     // console.log('button2Text: ' + button2Text);
     // console.log('action2: ' + action2);
 
-    let alert: Alert = Alert.create();
+    let alert: Alert = alertController.create();
 
     alert.setTitle(question);
 
@@ -50,5 +52,5 @@ export function askAndDo(
         alert.addButton('Cancel');
     }
 
-    return alert;
+    alert.present();
 }
