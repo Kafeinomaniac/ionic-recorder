@@ -7,7 +7,7 @@
 # path to file containing the version
 VERSIONFILE="VERSION"
 CONFIGFILE="config.xml"
-ABOUTFILE="app/pages/about/about.ts"
+ABOUTFILE="app/pages/about-page/about-page.ts"
 
 # run unit tests 
 echo "Running unit tests ..."
