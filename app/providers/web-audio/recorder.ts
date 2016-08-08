@@ -116,7 +116,7 @@ export class WebAudioRecorder {
 
         if (navigator.mediaDevices &&
             navigator.mediaDevices.getUserMedia) {
-            // in mozilla but not yet in chrome
+            // We're in mozilla but not yet in chrome
             // new getUserMedia is available, use it to get microphone stream
             // console.log('Using NEW navigator.mediaDevices.getUserMedia');
             navigator.mediaDevices.getUserMedia(getUserMediaOptions)
@@ -124,15 +124,12 @@ export class WebAudioRecorder {
                     this.connectNodes(stream);
                 })
                 .catch((error: any) => {
-                    console.warn(error + ': ' + error.name);
-                    // console.warn('initAudio(new) ' + error);
-                    // console.dir(error);
-                    alert(error + ': ' + error.name);
+                    console.warn('NO MICROPHONE');
                     this.status = RecorderStatus.NO_MICROPHONE_ERROR;
                 });
         }
         else {
-            // for chrome / chromium
+            // This is what is called if we're in chrome / chromium
             // console.log('Using OLD navigator.getUserMedia (new not there)');
             navigator.getUserMedia = navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
