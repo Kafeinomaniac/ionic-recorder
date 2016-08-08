@@ -5,16 +5,16 @@ import {
 } from '@angular/core';
 
 import {
-    NavParams,
-    ViewController
-} from 'ionic-angular';
-
-import {
     Control,
     FormBuilder,
     ControlGroup,
     Validators
 } from '@angular/common';
+
+import {
+    NavParams,
+    ViewController
+} from 'ionic-angular';
 
 import {
     KeyDict
@@ -30,7 +30,7 @@ interface ValidationResult {
  * A modal page for entering a new folder's name and validating it.
  */
 @Component({
-    templateUrl: 'build/pages/add-folder/add-folder.html'
+    templateUrl: 'build/pages/add-folder-page/add-folder-page.html'
 })
 export class AddFolderPage {
     private navParams: NavParams;

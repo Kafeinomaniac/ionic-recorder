@@ -41,6 +41,10 @@ import {
 } from '../add-folder-page/add-folder-page';
 
 import {
+    TrackPage
+} from '../track-page/track-page';
+
+import {
     AudioPlayer
 } from '../../directives/audio-player/audio-player';
 
@@ -571,6 +575,13 @@ export class LibraryPage {
             // it's not a folder, it's a playable file, play it
             // TODO: see node.name, node[DB_KEY_PATH]
             console.dir(node);
+
+            const trackModal: Modal = this.modalController.create(TrackPage, {
+                node: node
+            });
+
+            // this.nav.present(addFolderModal);
+            trackModal.present();
         } // if (IdbAppFS.isFolderNode(node)) { .. else { ..
     }
 

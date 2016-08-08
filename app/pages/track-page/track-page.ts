@@ -4,10 +4,6 @@ import {
     Component
 } from '@angular/core';
 
-// import {
-//     Platform
-// } from 'ionic-angular';
-
 import {
     formatTime
 } from '../../services/utils/utils';

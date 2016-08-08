@@ -259,17 +259,19 @@ export class IdbFS extends Idb {
             this.readNode(key).subscribe(
                 (readNode: TreeNode) => {
                     if (readNode) {
+                        console.log('readOrCreateNode(): successfull read');
                         observer.next(readNode);
                         observer.complete();
                     }
                     else {
+                        console.log('readOrCreateNode(): UNsuccessfull read');
                         this.createNode(name, parentKey).subscribe(
                             (parentChild: ParentChild) => {
                                 observer.next(parentChild.child);
                                 observer.complete();
                             },
                             (error) => {
-                                observer.error('readOrCreateNode(): ' +
+                                observer.error('readOrCreateNode(): create' +
                                     error);
                             });
                     }

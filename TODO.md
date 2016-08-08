@@ -3,6 +3,9 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Connect library page with track page - when somebody clicks on a track
+  page, bring up the track page - we may need to make sure the design is
+  alright first
 * start trying to work with nightly - simply can't wait for alerts and
   nav controller anymore ... we're better off making a branch for this
 * we can do the other format later - it's a waste of time now. we don't
