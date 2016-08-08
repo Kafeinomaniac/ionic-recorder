@@ -4,13 +4,21 @@ import {
     Component
 } from '@angular/core';
 
+// import {
+//     Range
+// } from 'ionic-angular';
+
 import {
-    Range
-} from 'ionic-angular';
+    formatLocalTime
+} from '../../services/utils/utils';
 
 import {
     VuGauge
 } from '../../directives/vu-gauge/vu-gauge';
+
+import {
+    ProgressSlider
+} from '../../directives/progress-slider/progress-slider';
 
 import {
     IdbAppState,
@@ -34,10 +42,6 @@ import {
     UNFILED_FOLDER_KEY
 } from '../../providers/idb-app-fs/idb-app-fs';
 
-import {
-    formatLocalTime
-} from '../../services/utils/utils';
-
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
 
@@ -49,7 +53,7 @@ const PAUSE_ICON: string = 'pause';
 @Component({
     templateUrl: 'build/pages/record-page/record-page.html',
     providers: [WebAudioRecorderWav],
-    directives: [VuGauge, Range]
+    directives: [VuGauge, ProgressSlider]
 })
 export class RecordPage {
     private idbAppState: IdbAppState;
@@ -89,7 +93,7 @@ export class RecordPage {
                 // we still want to show the previous gain value.
                 // if we don't have this line below then it will
                 // always show up as gain == 0.
-                this.gainRangeSliderValue = 100 * gain.factor / gain.maxFactor;
+                this.gainRangeSliderValue = gain.factor / gain.maxFactor;
                 this.onGainChange(this.gainRangeSliderValue);
             }
         );
@@ -106,22 +110,12 @@ export class RecordPage {
 
     public onResetGain(): void {
         console.log('onResetGain()');
-        this.gainRangeSliderValue = 50;
-        this.onGainChange(this.gainRangeSliderValue);
+        this.gainRangeSliderValue = 0.5;
+        this.onGainChangeEnd(this.gainRangeSliderValue);
     }
 
-    public onGainChange(value: number): void {
-        // if (isNaN(this.gainRangeSliderValue)) {
-        //     return;
-        // }
-        if (isNaN(value)) {
-            return;
-        }
-        // const position: number = this.gainRangeSliderValue / 100;
-        const position: number = value / 100;
-        console.log('onGainChange: ' + position);
-
-        // convert fro position in [0, 1] to [0, this.maxGainFactor]
+    public onGainChange(position: number): void {
+        // console.log('onGainChange(' + position + ')');
         this.gainFactor = position * this.maxGainFactor;
 
         this.webAudioRecorder.setGainFactor(this.gainFactor);
@@ -134,11 +128,20 @@ export class RecordPage {
                 (10.0 * Math.log10(this.gainFactor)).toFixed(2) + ' dB';
         }
         this.percentGain = (this.gainFactor * 100.0).toFixed(0);
+    }
 
+    public onGainChangeEnd(position: number): void {
+        console.log('onGainChangeEnd(' + position.toFixed(2) + '): ' +
+            this.gainFactor + ', ' + this.maxGainFactor);
+        this.onGainChange(position);
         this.idbAppState.updateProperty('gain', {
             factor: this.gainFactor,
             maxFactor: this.maxGainFactor
-        }).subscribe();
+        }).subscribe(null, (error: any) => {
+            const msg: string = 'AppState:updateProperty(): ' + error;
+            alert(msg);
+            throw Error(msg);
+        });
     }
 
     /**

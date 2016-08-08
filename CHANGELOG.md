@@ -1,7 +1,15 @@
+## 0.0.9-alpha
+* Update to Ionic 2.0.0-beta.11 / Angular 2.0.0-rc.4
+* Chunked playback of wav files is the main feature - no more is
+  this recorder app a strain on you device's memory, it will expand
+  to use as much as your hard disk (typically flash on mobile) as is
+  allowed (for IndexedDB) or as is available (we need to monitor disk
+  use for safety, later...).
+
 ## 0.0.8-alpha
 * Update to Ionic 2.0.0-beta.9 / Angular 2.0.0-rc.1
   (numerous breaking changes were made since rc.1)
-* Made karma / jasmine to work after many breaking changes
+* Made karma / jasmine tests work after many breaking changes earlier
 * Changed from using MediaRecorder to ScriptProcessorNode approach
   no longer recording webm but recording wav instead
 * New chunking method that saves current recording one chunk at a 
