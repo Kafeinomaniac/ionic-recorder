@@ -4,6 +4,10 @@ import {
     Component
 } from '@angular/core';
 
+// import {
+//     NavController
+// } from 'ionic-angular';
+
 import {
     formatTime
 } from '../../services/utils/utils';
@@ -43,6 +47,7 @@ import {
     directives: [AudioPlayer, ButtonToolbar]
 })
 export class TrackPage {
+    // private navController: NavController;
     private fileName: string;
     private folderPath: string;
     private dateCreated: string;
@@ -58,8 +63,13 @@ export class TrackPage {
     /**
      * TrackPage constructor
      */
-    constructor(idbAppFS: IdbAppFS) {
+    constructor(
+        // navController: NavController,
+        idbAppFS: IdbAppFS
+    ) {
         console.log('constructor():TrackPage');
+
+        // this.navController = navController;
 
         idbAppFS.readNode(3).subscribe(
             (node: TreeNode) => {
@@ -82,6 +92,13 @@ export class TrackPage {
 
         this.headerButtons = [
             {
+                text: 'Share',
+                leftIcon: 'md-share',
+                clickCB: () => {
+                    this.onClickShareButton();
+                }
+            },
+            {
                 text: 'Move',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
@@ -95,16 +112,27 @@ export class TrackPage {
                 clickCB: () => {
                     this.onClickDeleteButton();
                 }
-            },
-            {
-                text: 'Share',
-                leftIcon: 'md-share',
-                clickCB: () => {
-                    this.onClickShareButton();
-                }
             }
+            // ,
+            // {
+            //     text: 'To parent',
+            //     leftIcon: 'arrow-up',
+            //     rightIcon: 'folder',
+            //     clickCB: () => {
+            //         this.onClickParentButton();
+            //     }
+            // }
         ];
     }
+
+    /**
+     * UI calls this when the goToParent button is clicked
+     * @returns {void}
+     */
+    // public onClickParentButton(): void {
+    //     console.log('onClickParentButton()');
+    //     this.navController.pop();
+    // }
 
     /**
      * UI callback handling cancellation of this modal
@@ -126,14 +154,6 @@ export class TrackPage {
      */
     public onClickShareButton(): void {
         console.log('onClickShareButton()');
-    }
-
-    /**
-     * UI callback handling cancellation of this modal
-     * @returns {void}
-     */
-    public onClickCancel(): void {
-        console.log('onClickCancel()');
     }
 
 }

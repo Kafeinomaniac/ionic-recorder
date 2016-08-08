@@ -6,9 +6,9 @@ import {
 
 import {
     AlertController,
-    ModalController,
+    // ModalController,
     NavController,
-    Modal,
+    // Modal,
     Platform
 } from 'ionic-angular';
 
@@ -70,9 +70,9 @@ export function getFolderPath(folderNode: TreeNode): string {
     directives: [AudioPlayer, ButtonToolbar]
 })
 export class LibraryPage {
-    private nav: NavController;
+    private navController: NavController;
     private alertController: AlertController;
-    private modalController: ModalController;
+    // private modalController: ModalController;
     private idbAppFS: IdbAppFS;
     private idbAppState: IdbAppState;
 
@@ -90,17 +90,17 @@ export class LibraryPage {
      * @param {NavController} nav
      */
     constructor(
-        nav: NavController,
+        navController: NavController,
         alertController: AlertController,
-        modalController: ModalController,
+        // modalController: ModalController,
         idbAppFS: IdbAppFS,
         idbAppState: IdbAppState,
         platform: Platform
     ) {
         console.log('constructor():LibraryPage');
-        this.nav = nav;
+        this.navController = navController;
         this.alertController = alertController;
-        this.modalController = modalController;
+        // this.modalController = modalController;
         this.idbAppFS = idbAppFS;
         this.idbAppState = idbAppState;
         this.folderNode = null;
@@ -572,16 +572,8 @@ export class LibraryPage {
             this.switchFolder(node[DB_KEY_PATH], true);
         }
         else {
-            // it's not a folder, it's a playable file, play it
-            // TODO: see node.name, node[DB_KEY_PATH]
             console.dir(node);
-
-            const trackModal: Modal = this.modalController.create(TrackPage, {
-                node: node
-            });
-
-            // this.nav.present(addFolderModal);
-            trackModal.present();
+            this.navController.push(TrackPage, node);
         } // if (IdbAppFS.isFolderNode(node)) { .. else { ..
     }
 
@@ -602,16 +594,19 @@ export class LibraryPage {
      */
     public onClickAddButton(): void {
         // note we consider the current folder (this.folderNode) the parent
-        let addFolderModal: Modal = this.modalController.create(AddFolderPage, {
-            parentPath: this.getPath(),
-            parentItems: this.folderItems
-        });
+        // let addFolderModal: Modal =
+        //     this.modalController.create(AddFolderPage, {
+        //         parentPath: this.getPath(),
+        //         parentItems: this.folderItems
+        //     });
 
-        console.log('onClickAddButton() - nav: ' +
-            this.nav);
+        console.log('onClickAddButton() - navController: ' +
+            this.navController);
+
+        this.navController.push(AddFolderPage);
 
         // this.nav.present(addFolderModal);
-        addFolderModal.present(addFolderModal);
+        // addFolderModal.present(addFolderModal);
 
         // addFolderModal.onDismiss((folderName: string) => {
         //     if (folderName) {

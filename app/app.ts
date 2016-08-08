@@ -56,10 +56,6 @@ import {
     AboutPage
 } from './pages/about-page/about-page';
 
-import {
-    TrackPage
-} from './pages/track-page/track-page';
-
 // Global catch-all exception handler for this app - any error thrown
 // will be handled by this function.
 class AppExceptionHandler extends ExceptionHandler {
@@ -110,8 +106,7 @@ export class IonicRecorderApp {
             { tabIndex: 1, title: 'Record', component: RecordPage },
             { tabIndex: 2, title: 'Library', component: LibraryPage },
             { tabIndex: 3, title: 'Settings', component: SettingsPage },
-            { tabIndex: 4, title: 'About', component: AboutPage },
-            { tabIndex: 5, title: 'Track', component: TrackPage }
+            { tabIndex: 4, title: 'About', component: AboutPage }
         ];
 
         this.initializeApp();

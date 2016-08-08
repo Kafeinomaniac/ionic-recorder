@@ -1,16 +1,14 @@
 <!-- Copyright (c) 2016 Tracktunes Inc -->
 
 <ion-header>
+    <!--ion-navbar almost-dark hideBackButton="true"-->
     <ion-navbar almost-dark>
-        <button menuToggle>
+        <!--button menuToggle>
             <ion-icon name="menu"></ion-icon>
-        </button>
+        </button-->
         <ion-title>
             Track
         </ion-title>
-        <ion-buttons end>
-            <button (click)="onClickCancel()">Back</button>
-        </ion-buttons>
     </ion-navbar>
 
     <button-toolbar [buttons]="headerButtons">
@@ -28,7 +26,7 @@
         </ion-item>
         <ion-item text-wrap>
             <p>
-                <span style="float: left;">Path:</span>
+                <span style="float: left;">Parent:</span>
                 <span style="float:right;">{{folderPath}}</span>
             </p>
         </ion-item>
@@ -36,6 +34,12 @@
             <p>
                 <span style="float: left;">Created on:</span>
                 <span style="float:right;">{{dateCreated}}</span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">Encoding:</span>
+                <span style="float:right;">{{encoding}}</span>
             </p>
         </ion-item>
         <ion-item>
@@ -48,12 +52,6 @@
             <p>
                 <span style="float: left;">Size:</span>
                 <span style="float:right;">{{size}} bytes</span>
-            </p>
-        </ion-item>
-        <ion-item>
-            <p>
-                <span style="float: left;">Encoding:</span>
-                <span style="float:right;">{{encoding}}</span>
             </p>
         </ion-item>
         <ion-item>
