@@ -34,7 +34,6 @@ import {
 export class AudioPlayer implements OnChanges {
     @Input() private recordingInfo: RecordingInfo;
     private player: WebAudioPlayerWav;
-    private hidden: boolean;
 
     /**
      * @constructor
@@ -42,23 +41,6 @@ export class AudioPlayer implements OnChanges {
     constructor(player: WebAudioPlayerWav) {
         console.log('constructor():AudioPlayer');
         this.player = player;
-        this.hidden = false;
-    }
-
-    /**
-     * Show audio player
-     * @returns {void}
-     */
-    public show(): void {
-        this.hidden = false;
-    }
-
-    /**
-     * Hide audio player
-     * @returns {void}
-     */
-    public hide(): void {
-        this.hidden = true;
     }
 
     /**
@@ -81,8 +63,7 @@ export class AudioPlayer implements OnChanges {
         // can do this better by stopping to monitor when going to
         // another page but then there will need to be communication
         // between the track page and this directive to tell the
-        // directive to start/stop monitoring, perhaps we can do
-        // this via show() and hide(). Ideally, we can start monitoring
+        // directive to start/stop monitoring. We can start monitoring
         // upon player.relativeTimeSeek() and stop monitoring upon
         // player.pause() or player.stop() - but right now that does
         // not work due to race conditions (perhaps add a setTimeout()
