@@ -4,9 +4,10 @@ import {
     Component
 } from '@angular/core';
 
-// import {
-//     NavController
-// } from 'ionic-angular';
+import {
+    NavParams
+    // NavController
+} from 'ionic-angular';
 
 import {
     formatTime
@@ -47,6 +48,7 @@ import {
     directives: [AudioPlayer, ButtonToolbar]
 })
 export class TrackPage {
+    private navParams: NavParams;
     // private navController: NavController;
     private fileName: string;
     private folderPath: string;
@@ -64,31 +66,26 @@ export class TrackPage {
      * TrackPage constructor
      */
     constructor(
+        navParams: NavParams,
         // navController: NavController,
         idbAppFS: IdbAppFS
     ) {
         console.log('constructor():TrackPage');
 
-        // this.navController = navController;
+        console.dir(navParams.data);
 
-        idbAppFS.readNode(3).subscribe(
-            (node: TreeNode) => {
-                if (!node) {
-                    console.warn('no node!');
-                    return;
-                }
-                this.fileName = node.name;
-                this.folderPath = '/Unfiled';
-                this.encoding = node.data.encoding;
-                this.nSamples = node.data.nSamples;
-                this.sampleRate = node.data.sampleRate;
-                this.dateCreated = formatLocalTime(node.data.startTime);
-                this.size = 2 * this.nSamples;
-                this.duration = this.nSamples / this.sampleRate;
-                this.displayDuration = formatTime(this.duration, this.duration);
-                this.recordingInfo = node.data;
-            }
-        );
+        const node: TreeNode = navParams.data;
+
+        this.fileName = node.name;
+        this.folderPath = '/Unfiled';
+        this.encoding = node.data.encoding;
+        this.nSamples = node.data.nSamples;
+        this.sampleRate = node.data.sampleRate;
+        this.dateCreated = formatLocalTime(node.data.startTime);
+        this.size = 2 * this.nSamples;
+        this.duration = this.nSamples / this.sampleRate;
+        this.displayDuration = formatTime(this.duration, this.duration);
+        this.recordingInfo = node.data;
 
         this.headerButtons = [
             {
