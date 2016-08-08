@@ -29,10 +29,10 @@
             <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
                 <ion-label button clear (click)="onClickListItem(folderItems[i])">
                     <span *ngIf="folderItems[i].data">
-                <ion-icon name="play" medium-gray>
-                </ion-icon>
-                &nbsp;
-                </span>
+                        <ion-icon name="play" medium-gray>
+                        </ion-icon>
+                        &nbsp;
+                    </span>
                     <ion-icon *ngIf="!folderItems[i].data" name="folder" medium-gray>
                     </ion-icon>
                     {{folderItems[i].name}}
@@ -40,11 +40,14 @@
                 <ion-checkbox [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])" medium-gray item-left>
                 </ion-checkbox>
                 <button clear item-right>
-                <ion-icon name="more"></ion-icon>
-            </button>
+                    <ion-icon name="more">
+                    </ion-icon>
+                </button>
             </ion-item>
             <ion-item class="library-empty-folder-message" *ngIf="!folderNode.childOrder.length">
-                <h2>This folder is empty</h2>
+                <h2>
+                    This folder is empty
+                </h2>
             </ion-item>
         </ion-item-group>
     </ion-list>
@@ -59,5 +62,4 @@
             {{getPath()}}
         </ion-title>
     </ion-toolbar>
-
 </ion-footer>
