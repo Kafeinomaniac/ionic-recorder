@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2016 Tracktunes Inc -->
 
-<div class="progress-slider-container" (touchstart)="onSliderTouchStart($event)" (touchmove)="onSliderTouchMove($event)"
+<div id="progress-slider-container" (touchstart)="onSliderTouchStart($event)" (touchmove)="onSliderTouchMove($event)"
     (touchend)="onSliderTouchEnd($event)" (mousedown)="onSliderMouseDown($event)">
     <div class="track">
         <div class="track-inner-left" [style.width]="progressPercent()"></div>

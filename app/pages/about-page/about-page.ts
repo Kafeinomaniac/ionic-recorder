@@ -4,7 +4,7 @@ import {
     Component
 } from '@angular/core';
 
-const APP_VERSION: string = '0.0.8-alpha.19';
+const APP_VERSION: string = '0.0.8-alpha.24';
 
 /**
  * @name AboutPage

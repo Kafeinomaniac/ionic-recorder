@@ -50,14 +50,20 @@ export class ProgressSlider {
     }
 
     private getTrackWidthRange(): { start: number, end: number } {
-        // console.dir(this.element.nativeElement);
-        let width: number = parseFloat(getComputedStyle(
-            this.element.nativeElement.firstChild, null)
-            .getPropertyValue('width').replace('px', '')),
+        const
+            progressSliderContainerElement: Element =
+                document.getElementById('progress-slider-container'),
+            styleDeclaration: CSSStyleDeclaration =
+                getComputedStyle(progressSliderContainerElement, null),
             offsetLeft: number = this.element.nativeElement.offsetLeft,
-            paddingLeft: number = parseFloat(getComputedStyle(
-                this.element.nativeElement.firstChild, null)
-                .getPropertyValue('padding-left').replace('px', ''));
+            widthStyle: String =
+                styleDeclaration.getPropertyValue('width'),
+            paddingLeftStyle: string =
+                styleDeclaration.getPropertyValue('padding-left'),
+            width: number =
+                parseFloat(widthStyle.replace('px', '')),
+            paddingLeft: number =
+                parseFloat(paddingLeftStyle.replace('px', ''));
         return {
             start: offsetLeft + paddingLeft,
             end: offsetLeft + width - paddingLeft
