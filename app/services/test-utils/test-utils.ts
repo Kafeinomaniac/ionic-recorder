@@ -29,6 +29,7 @@ import {
     Config,
     MenuController,
     NavController,
+    NavParams,
     AlertController,
     ModalController,
     App,
@@ -36,6 +37,10 @@ import {
     Platform,
     Keyboard
 } from 'ionic-angular';
+
+import {
+    TreeNode
+} from '../idb/idb-fs';
 
 ///////////////////////////////////////////////////////////////////////////////
 // utility functions and interfaces
@@ -121,6 +126,21 @@ export class NavControllerMock {
     }
 }
 
+export class NavParamsMock {
+    public data: TreeNode = {
+        name: 'dummy name',
+        parentKey: 1,
+        timeStamp: 0,
+        data: {
+            startTime: 0,
+            sampleRate: 0,
+            nSamples: 0,
+            encoding: 'audio/wav',
+            dbStartKey: 0
+        }
+    };
+}
+
 export class AlertControllerMock {
 
     public create(): any {
@@ -178,6 +198,9 @@ export class PlatformMock {
 // export const navControllerProvider: Provider =
 //     provide(NavController, { useClass: NavControllerMock });
 
+// export const navParamsProvider: Provider =
+//     provide(NavParams, { useClass: NavParamsMock });
+
 // export const alertControllerProvider: Provider =
 //     provide(AlertController, { useClass: AlertControllerMock });
 
@@ -201,6 +224,7 @@ const DEFAULT_PROVIDERS: any[] = [
     provide(Config, { useClass: ConfigMock }),
     provide(MenuController, { useClass: ConfigMock }),
     provide(NavController, { useClass: NavControllerMock }),
+    provide(NavParams, { useClass: NavParamsMock }),
     provide(AlertController, { useClass: AlertControllerMock }),
     provide(ModalController, { useClass: ModalControllerMock }),
     provide(Platform, { useClass: PlatformMock })
@@ -208,6 +232,7 @@ const DEFAULT_PROVIDERS: any[] = [
     // configProvider,
     // menuControllerProvider,
     // navControllerProvider,
+    // navParamsProvider,
     // alertControllerProvider,
     // modalControllerProvider,
     // platformProvider

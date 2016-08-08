@@ -48,7 +48,6 @@ import {
     directives: [AudioPlayer, ButtonToolbar]
 })
 export class TrackPage {
-    private navParams: NavParams;
     // private navController: NavController;
     private fileName: string;
     private folderPath: string;
