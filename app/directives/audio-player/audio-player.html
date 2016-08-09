@@ -5,12 +5,15 @@
 </ion-toolbar>
 
 <ion-toolbar almost-dark no-border>
-    <div class="player-controls">
-        <span class="display-time">{{player.displayTime}}</span>
-        <button button clear (click)="player.togglePlayPause()">
+    <ion-buttons left>
+        <button clear (click)="player.togglePlayPause()">
             <ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
             <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
         </button>
-        <span class="display-duration">{{player.displayDuration}}</span>
-    </div>
+    </ion-buttons>
+    <ion-buttons right>
+        <button clear>
+            {{player.displayTime}} / {{player.displayDuration}}
+        </button>
+    </ion-buttons>
 </ion-toolbar>
