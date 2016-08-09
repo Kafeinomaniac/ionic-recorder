@@ -63,8 +63,8 @@ export class WebAudioRecorder {
     private nPeakMeasurements: number;
     private nRecordedProcessingBuffers: number;
     private nRecordedSamples: number;
-    private startTime: number;
 
+    protected startTime: number;
     protected mediaStream: MediaStream;
     protected valueCB: (pcm: number) => any;
 

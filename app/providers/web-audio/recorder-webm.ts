@@ -55,6 +55,8 @@ export class WebAudioRecorderWebm extends WebAudioRecorder {
         this.blobChunks = [];
         this.isReady = false;
 
+        this.valueCB = null;
+
         if (!this.idb) {
             throw Error('WebAudioRecorderWav:constructor(): no db');
         }
@@ -165,17 +167,18 @@ export class WebAudioRecorderWebm extends WebAudioRecorder {
 
                 this.blobChunks = [];
 
-                console.dir(blob);
-
                 super.stop().subscribe(
                     (recordingInfo: RecordingInfo) => {
-                        recordingInfo.encoding = 'audio/webm';
                         // TODO: save to db the blob and set key in
                         // recordingInfo, which you next()
                         // TODO: fix nSamples and duration acc to 
                         // webm file blob properties
                         this.startedAt = 0;
                         this.pausedAt = 0;
+
+                        recordingInfo.encoding = WEBM_MIME_TYPE;
+                        recordingInfo.dbStartKey = this.dbKey;
+                        recordingInfo.size = blob.size;
 
                         observer.next(recordingInfo);
                         observer.complete();

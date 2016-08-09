@@ -6,6 +6,7 @@ export interface RecordingInfo {
     nSamples: number;
     encoding?: string;
     dbStartKey?: number;
+    size?: number;
 }
 
 // this is just here for DRY-ness - things used in both player.ts
