@@ -29,9 +29,6 @@ import {
 } from '../master-clock/master-clock';
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH
-// 256 x PROCESSING_BUFFER_LENGTH = 65536 and since it's WAV,
-// it will be 2 bytes each
-// export const DB_CHUNK_LENGTH: number = 65536;
 export const DB_CHUNK_LENGTH: number = 131072;
 
 // pre-allocate the double chunk buffers used for saving to DB
@@ -70,7 +67,7 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
                 (key: number) => {
                     if (this.dbStartKey < 0) {
                         // first key encountered
-                        console.log('setting dbStartKey to key');
+                        console.log('setting dbStartKey to key: ' + key);
                         this.dbStartKey = key;
                     }
                     // increment the buffers-saved counter
@@ -99,26 +96,48 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
             super.stop().subscribe(
                 (recordingInfo: RecordingInfo) => {
                     recordingInfo.encoding = 'audio/wav';
+
                     recordingInfo.dbStartKey = this.dbStartKey;
+                    // we need to reset the db start key so that the next time
+                    // we record we know that we need to set it again to the 
+                    // next start key
+                    this.dbStartKey = -1;
+
                     if (this.setter.bufferIndex === 0) {
                         // no leftovers: rare we get here due to no leftovers
                         // but we also reach here during the constructor call
+
+                        if (this.dbStartKey < 0) {
+                            // NB: It is not possible that we have not yet set
+                            // this.dbStartKey.
+                            throw Error('something very wrong happened');
+                        }
+
                         observer.next(recordingInfo);
                         observer.complete();
                     }
-                    // save leftover partial buffer
-                    this.idb.createChunk(this.setter.activeBuffer.subarray(
-                        0,
-                        this.setter.bufferIndex)
-                    ).subscribe(
-                        (key: number) => {
-                            console.log('saved final chunk ' + key);
-                            observer.next(recordingInfo);
-                            observer.complete();
-                        },
-                        (error) => {
-                            throw Error('WebAudioRecorderWav:stop() ' + error);
-                        });
+                    else {
+                        // save leftover partial buffer
+                        this.idb.createChunk(this.setter.activeBuffer.subarray(
+                            0,
+                            this.setter.bufferIndex)
+                        ).subscribe(
+                            (key: number) => {
+                                console.log('saved final chunk ' + key);
+                                if (recordingInfo.dbStartKey < 0) {
+                                    recordingInfo.dbStartKey = key;
+                                    console.log('saved final chunk / start ' +
+                                        recordingInfo.dbStartKey);
+                                }
+                                observer.next(recordingInfo);
+                                observer.complete();
+                            },
+                            (error) => {
+                                throw Error('WebAudioRecorderWav:stop() ' +
+                                    error);
+                            });
+
+                    }
                 },
                 (error) => {
                     throw Error('WebAudioRecorderWav:stop() ' + error);
