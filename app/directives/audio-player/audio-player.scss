@@ -1,17 +1,17 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 audio-player ion-toolbar div.toolbar-content {
-  div.player-content {
+  padding-left: 0.9em;
+  padding-right: 0.9em;
+
+ div.player-controls {
     display: table;
     width: 100%;
 
     button {
       display: table-cell;
-      width: auto;
+      margin: 0 auto;
       vertical-align: middle;
-      // the following two lines is a hack that shifts the button to the left
-      // margin-right: -0.5em;
-      // margin-left: 0.5em;
     }
 
     span {
@@ -21,19 +21,12 @@ audio-player ion-toolbar div.toolbar-content {
       color: map-get($colors, almost-light);
     }
 
+    // span.display-time {
+    // }
+
     span.display-duration {
-      padding-right: 0.5em;
-      padding-left: 0.5em;
+      direction: rtl;
     }
 
-    span.display-time {
-      padding-right: 0.5em;
-    }
-
-    progress-slider {
-      vertical-align: middle;
-      display: table-cell;
-      width: 100%;
-    }
   }
 }
