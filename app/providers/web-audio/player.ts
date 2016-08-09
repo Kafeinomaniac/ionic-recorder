@@ -2,12 +2,11 @@
 
 // Lowest-level audio-buffer Web Audio Api playback class.
 // This class only deals with a single audio-buffer, it
-// knows nothing about multi-buffer streams. These are
-// implemented in files with name player-X.ts, e.g.
-// in player-wav.ts and are responsible for dealing
-// with multiple-chunk files stored via indexedDB - these
-// extension classes use this base class for single
-// buffer operations.
+// knows nothing about multi-buffer streams or encodings.
+// Players for various encodings are in files with name player-X.ts 
+// (where 'X' is, e.g, 'wav' or 'webm') in player-wav.ts and are 
+// responsible for dealing with multiple-chunk files stored via indexedDB -
+// these extension classes use this base class for single buffer operations.
 
 import {
     Injectable
@@ -22,8 +21,6 @@ import {
 } from '../../services/utils/utils';
 
 import {
-    // MasterClock,
-    // CLOCK_INTERVAL_MSEC
     MasterClock
 } from '../master-clock/master-clock';
 
@@ -140,9 +137,6 @@ export class WebAudioPlayer {
         setTimeout(
             () => {
                 this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
-                // },
-                // 2 * CLOCK_INTERVAL_MSEC);
-                // }
             });
     }
 

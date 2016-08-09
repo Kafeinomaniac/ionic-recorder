@@ -68,7 +68,6 @@ export class WebAudioRecorderWebm extends WebAudioRecorder {
      * @returns {void}
      */
     private initMediaRecorder(): void {
-
         if (!MediaRecorder) {
             const msg: string = [
                 'Your browser does not support the MediaRecorder object ',
@@ -88,20 +87,21 @@ export class WebAudioRecorderWebm extends WebAudioRecorder {
         if (iWebm === -1) {
             throw Error('MediaRecorder/webm not available');
         }
+        else {
+            this.mediaRecorder = new MediaRecorder(this.mediaStream, {
+                mimeType: WEBM_MIME_TYPE
+            });
+            console.log('MediaRecorder = ' + this.mediaRecorder);
 
-        this.mediaRecorder = new MediaRecorder(this.mediaStream, {
-            mimeType: WEBM_MIME_TYPE
-        });
-        console.log('MediaRecorder = ' + this.mediaRecorder);
+            this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
+                // console.log('ondataavailable()');
+                this.blobChunks.push(event.data);
+            };
 
-        this.mediaRecorder.ondataavailable = (event: BlobEvent) => {
-            // console.log('ondataavailable()');
-            this.blobChunks.push(event.data);
-        };
-
-        // finally let users of this class know it's ready
-        this.isReady = true;
-        console.log('WebAudioRecorder: READY');
+            // finally let users of this class know it's ready
+            this.isReady = true;
+            console.log('WebAudioRecorder: READY');
+        }
     }
 
     /**
