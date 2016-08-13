@@ -28,10 +28,18 @@ plus a recent version of the Web Audio Api.
 The only browsers on which we successfully tested the above link are:
 * Latest Chrome or latest Chromium browser
 * Latest Firefox
-* So far we're only testing in Ubuntu Linux 14.04.
 
 ## Live Demo
-Coming soon!
+Unoptimized version at 
+[https://tracktunes.org/ionic-recorder](https://tracktunes.org/ionic-recorder)
+
+**NOTE:** Until the official beta release, expect lots of bugs and 
+unimplemented features.
+
+**NOTE:** The About page shows the version number that's running there, it 
+should be the same as in the [VERSION]
+(https://github.com/tracktunes/ionic-recorder/blob/master/VERSION)
+file.
 
 ## Development
 
