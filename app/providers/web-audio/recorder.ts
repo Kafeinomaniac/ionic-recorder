@@ -29,8 +29,6 @@ export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 // to reduce latency and to compute time as accurately as possible)
 const PROCESSING_BUFFER_LENGTH: number = 2048;
 
-const WEBM_MIME_TYPE: string = 'audio/webm';
-
 // statuses
 export enum RecorderStatus {
     // uninitialized means we have not been initialized yet
@@ -62,10 +60,10 @@ export class WebAudioRecorder {
     private scriptProcessorNode: ScriptProcessorNode;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
-    private nRecordedProcessingBuffers: number;
     private nRecordedSamples: number;
+    private startedAt: number;
+    private pausedAt: number;
 
-    protected startTime: number;
     protected valueCB: (pcm: number) => any;
 
     public status: RecorderStatus;
@@ -91,9 +89,6 @@ export class WebAudioRecorder {
         this.valueCB = null;
 
         this.status = RecorderStatus.UNINITIALIZED_STATE;
-
-        // next line initializes recording time display to not show NaN on init
-        this.nRecordedProcessingBuffers = 0;
 
         // create nodes that do not require a stream in their constructor
         this.createNodes();
@@ -200,10 +195,6 @@ export class WebAudioRecorder {
                 this.nRecordedSamples++;
             }
         } // for (i ...
-        if (this.isRecording) {
-            // this is how we keep track of recording time
-            this.nRecordedProcessingBuffers++;
-        }
     }
 
     /**
@@ -282,8 +273,7 @@ export class WebAudioRecorder {
             // the monitoring actions are in the following function:
             () => {
                 // update currentTime property
-                this.currentTime = formatTime(
-                    this.nBuffersToSeconds(this.nRecordedProcessingBuffers));
+                this.currentTime = formatTime(this.getTime());
 
                 // update currentVolume property
                 this.nPeakMeasurements += 1;
@@ -339,24 +329,15 @@ export class WebAudioRecorder {
     }
 
     /**
-     * Convert from known sample-rate and buffer-size, nBuffers to seconds
-     * @returns {number} Time in seconds
-     */
-    private nBuffersToSeconds(nBuffers: number): number {
-        return this.nRecordedProcessingBuffers * PROCESSING_BUFFER_LENGTH /
-            this.sampleRate;
-    }
-
-    /**
      * Start recording
      * @returns {void}
      */
     public start(): void {
-        this.startTime = Date.now();
-        this.nRecordedProcessingBuffers = 0;
         this.nRecordedSamples = 0;
         this.isRecording = true;
         this.isInactive = false;
+        this.startedAt = AUDIO_CONTEXT.currentTime;
+        this.pausedAt = 0;
     }
 
     /**
@@ -365,6 +346,7 @@ export class WebAudioRecorder {
      */
     public pause(): void {
         this.isRecording = false;
+        this.pausedAt = AUDIO_CONTEXT.currentTime - this.startedAt;
     }
 
     /**
@@ -382,7 +364,18 @@ export class WebAudioRecorder {
     private reset(): void {
         this.isRecording = false;
         this.isInactive = true;
-        this.nRecordedProcessingBuffers = 0;
+        this.startedAt = 0;
+        this.pausedAt = 0;
+    }
+
+    private getTime(): number {
+        if (this.pausedAt) {
+            return this.pausedAt;
+        }
+        if (this.startedAt) {
+            return AUDIO_CONTEXT.currentTime - this.startedAt;
+        }
+        return 0;
     }
 
     /**
@@ -394,12 +387,11 @@ export class WebAudioRecorder {
         this.reset();
         return Observable.create((observer) => {
             observer.next({
-                startTime: this.startTime,
+                dateCreated: Date.now(),
                 sampleRate: this.sampleRate,
                 nSamples: this.nRecordedSamples
             });
             observer.complete();
         });
     }
-
 }

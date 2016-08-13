@@ -10,6 +10,7 @@ import {
 
 import {
     AUDIO_CONTEXT,
+    WAV_MIME_TYPE,
     RecordingInfo
 } from './common';
 
@@ -79,7 +80,7 @@ function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     headerView.setUint32(40, arrayByteLength * 2, true);
 
     // attach data and convert to blob
-    return new Blob([headerView, int16Array], { type: 'audio/wav' });
+    return new Blob([headerView, int16Array], { type: WAV_MIME_TYPE });
 }
 
 /**

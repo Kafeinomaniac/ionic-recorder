@@ -573,7 +573,11 @@ export class LibraryPage {
         }
         else {
             console.dir(node);
-            this.navController.push(TrackPage, node);
+            this.navController.push(TrackPage, {
+                folderPath: this.folderNode.name,
+                fileName: node.name,
+                recordingInfo: node.data
+            });
         } // if (IdbAppFS.isFolderNode(node)) { .. else { ..
     }
 

@@ -26,7 +26,7 @@
         </ion-item>
         <ion-item text-wrap>
             <p>
-                <span style="float: left;">Parent:</span>
+                <span style="float: left;">Parent folder:</span>
                 <span style="float:right;">{{folderPath}}</span>
             </p>
         </ion-item>
@@ -39,7 +39,7 @@
         <ion-item>
             <p>
                 <span style="float: left;">Encoding:</span>
-                <span style="float:right;">{{encoding}}</span>
+                <span style="float:right;">{{recordingInfo.encoding}}</span>
             </p>
         </ion-item>
         <ion-item>
@@ -51,19 +51,19 @@
         <ion-item>
             <p>
                 <span style="float: left;">Size:</span>
-                <span style="float:right;">{{size}} bytes</span>
+                <span style="float:right;">{{recordingInfo.size}} bytes</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Sample rate:</span>
-                <span style="float:right;">{{sampleRate}} Hz</span>
+                <span style="float:right;">{{recordingInfo.sampleRate}} Hz</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;"># of samples:</span>
-                <span style="float:right;">{{nSamples}}</span>
+                <span style="float:right;">{{recordingInfo.nSamples}}</span>
             </p>
         </ion-item>
 

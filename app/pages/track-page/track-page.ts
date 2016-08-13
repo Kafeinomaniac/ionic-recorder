@@ -26,9 +26,9 @@ import {
     RecordingInfo
 } from '../../providers/web-audio/common';
 
-import {
-    TreeNode
-} from '../../services/idb/idb-fs';
+// import {
+//     TreeNode
+// } from '../../services/idb/idb-fs';
 
 import {
     formatLocalTime
@@ -52,10 +52,10 @@ export class TrackPage {
     private fileName: string;
     private folderPath: string;
     private dateCreated: string;
-    private size: number;
-    private sampleRate: number;
-    private encoding: string;
-    private nSamples: number;
+    // private size: number;
+    // private sampleRate: number;
+    // private encoding: string;
+    // private nSamples: number;
     private duration: number;
     private displayDuration: string;
     private recordingInfo: RecordingInfo;
@@ -73,18 +73,20 @@ export class TrackPage {
 
         console.dir(navParams.data);
 
-        const node: TreeNode = navParams.data;
+        const navData: any = navParams.data;
 
-        this.fileName = node.name;
-        this.folderPath = '/Unfiled';
-        this.encoding = node.data.encoding;
-        this.nSamples = node.data.nSamples;
-        this.sampleRate = node.data.sampleRate;
-        this.dateCreated = formatLocalTime(node.data.startTime);
-        this.size = 2 * this.nSamples;
-        this.duration = this.nSamples / this.sampleRate;
+        this.fileName = navData.fileName;
+        // this.folderPath = '/Unfiled';
+        this.folderPath = navData.folderPath;
+        this.recordingInfo = navData.recordingInfo;
+        // this.encoding = node.data.encoding;
+        // this.nSamples = node.data.nSamples;
+        // this.sampleRate = node.data.sampleRate;
+        this.dateCreated = formatLocalTime(this.recordingInfo.dateCreated);
+        // this.size = node.data.size;
+        this.duration =
+            this.recordingInfo.nSamples / this.recordingInfo.sampleRate;
         this.displayDuration = formatTime(this.duration, this.duration);
-        this.recordingInfo = node.data;
 
         this.headerButtons = [
             {

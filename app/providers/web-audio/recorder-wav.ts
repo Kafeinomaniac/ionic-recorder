@@ -13,7 +13,8 @@ import {
 } from '../idb-app-data/idb-app-data';
 
 import {
-    RecordingInfo
+    RecordingInfo,
+    WAV_MIME_TYPE
 } from './common';
 
 import {
@@ -48,7 +49,7 @@ const DB_CHUNK2: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
 @Injectable()
 export class WebAudioRecorderWav extends WebAudioRecorder {
     private idb: IdbAppData;
-    private dbStartKey: number;
+    private dbKeys: number[];
     private setter: DoubleBufferSetter;
 
     // this is how we signal
@@ -58,24 +59,15 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
         console.log('constructor():WebAudioRecorderWav');
 
         this.idb = idb;
-        this.dbStartKey = -1;
-
-        if (!this.idb) {
-            throw Error('WebAudioRecorderWav:constructor(): no db');
-        }
+        this.dbKeys = [];
 
         this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
             this.idb.createChunk(this.setter.activeBuffer).subscribe(
                 (key: number) => {
-                    if (this.dbStartKey < 0) {
-                        // first key encountered
-                        console.log('setting dbStartKey to key: ' + key);
-                        this.dbStartKey = key;
-                    }
                     // increment the buffers-saved counter
-                    // this.dbKeys.push(key);
-                    // console.log('saved chunk ' + this.dbKeys.length);
-                    console.log('saved chunk ' + key);
+                    this.dbKeys.push(key);
+                    console.log('saved chunk: ' + this.dbKeys.length +
+                        ', key: ' + key);
                 });
         });
 
@@ -90,6 +82,7 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
 
     /**
      * Stop recording
+     * Precondition: called start() already
      * @returns {void}
      */
     public stop(): Observable<RecordingInfo> {
@@ -97,52 +90,26 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
         let obs: Observable<RecordingInfo> = Observable.create((observer) => {
             super.stop().subscribe(
                 (recordingInfo: RecordingInfo) => {
-                    recordingInfo.encoding = 'audio/wav';
-
-                    recordingInfo.dbStartKey = this.dbStartKey;
-                    // we need to reset the db start key so that the next time
-                    // we record we know that we need to set it again to the 
-                    // next start key
-                    this.dbStartKey = -1;
-
-                    if (this.setter.bufferIndex === 0) {
-                        // no leftovers: rare we get here due to no leftovers
-                        // but we also reach here during the constructor call
-
-                        if (this.dbStartKey < 0) {
-                            // NB: It is not possible that we have not yet set
-                            // this.dbStartKey.
-                            throw Error('something very wrong happened');
-                        }
-
-                        observer.next(recordingInfo);
-                        observer.complete();
-                    }
-                    else {
-                        // save leftover partial buffer
-                        this.idb.createChunk(this.setter.activeBuffer.subarray(
-                            0,
-                            this.setter.bufferIndex)
-                        ).subscribe(
-                            (key: number) => {
-                                console.log('saved final chunk ' + key);
-                                if (recordingInfo.dbStartKey < 0) {
-                                    recordingInfo.dbStartKey = key;
-                                    console.log('saved final chunk / start ' +
-                                        recordingInfo.dbStartKey);
-                                }
-                                observer.next(recordingInfo);
-                                observer.complete();
-                            },
-                            (error) => {
-                                throw Error('WebAudioRecorderWav:stop() ' +
-                                    error);
-                            });
-
-                    }
-                },
-                (error) => {
-                    throw Error('WebAudioRecorderWav:stop() ' + error);
+                    const lastChunk: Int16Array = this.setter.activeBuffer
+                        .subarray(0, this.setter.bufferIndex);
+                    this.idb.createChunk(lastChunk).subscribe(
+                        (key: number) => {
+                            this.dbKeys.push(key);
+                            console.log('saved final chunk: ' +
+                                this.dbKeys.length + ', key: ' + key);
+                            // update some essential components of data
+                            // stored in db
+                            recordingInfo.encoding = WAV_MIME_TYPE;
+                            recordingInfo.size = recordingInfo.nSamples * 2;
+                            recordingInfo.dbStartKey = this.dbKeys[0];
+                            // reset db-keys, for the next recording
+                            this.dbKeys = [];
+                            // reset double buffer, for the next recording
+                            this.setter.reset();
+                            // return result now that db-save is done
+                            observer.next(recordingInfo);
+                            observer.complete();
+                        });
                 });
         });
         return obs;

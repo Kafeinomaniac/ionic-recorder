@@ -177,7 +177,8 @@ export class RecordPage {
         this.recordButtonIcon = START_RESUME_ICON;
         this.webAudioRecorder.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
-                let fileName: string = formatLocalTime(recordingInfo.startTime);
+                const fileName: string =
+                    formatLocalTime(recordingInfo.dateCreated);
                 this.idbAppFS.createNode(
                     fileName,
                     UNFILED_FOLDER_KEY,

@@ -38,9 +38,9 @@ import {
     Keyboard
 } from 'ionic-angular';
 
-import {
-    TreeNode
-} from '../idb/idb-fs';
+// import {
+//     TreeNode
+// } from '../idb/idb-fs';
 
 ///////////////////////////////////////////////////////////////////////////////
 // utility functions and interfaces
@@ -127,16 +127,16 @@ export class NavControllerMock {
 }
 
 export class NavParamsMock {
-    public data: TreeNode = {
-        name: 'dummy name',
-        parentKey: 1,
-        timeStamp: 0,
-        data: {
-            startTime: 0,
+    public data: any = {
+        folderPath: '',
+        fileName: '',
+        recordingInfo: {
+            dateCreated: 0,
             sampleRate: 0,
             nSamples: 0,
             encoding: 'audio/wav',
-            dbStartKey: 0
+            dbStartKey: 0,
+            size: 0
         }
     };
 }

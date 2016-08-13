@@ -24,9 +24,13 @@ export abstract class DoubleBuffer {
         if (buffer2.length !== this.bufferLength) {
             throw Error('double buffer size mismatch');
         }
+        this.reset();
+    }
+
+    public reset(): void {
         this.bufferIndex = 0;
         this.cumulativeIndex = 0;
-        this.activeBuffer = buffer1;
+        this.activeBuffer = this.buffer1;
     }
 
     protected swap(): void {
