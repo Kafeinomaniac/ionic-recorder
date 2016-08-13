@@ -1,5 +1,11 @@
 // Copyright (c) 2016 Tracktunes Inc
 
+export const ABS: (n: number) => number = Math.abs;
+
+export const MAX: (a: number, b: number) => number = Math.max;
+
+export const MIN: (a: number, b: number) => number = Math.min;
+
 /**
  * Update object 'dest' by adding or changing any fields that differ in 'src'
  * @param {Object} 'src' the source object from which to update 'dest'
@@ -151,13 +157,17 @@ export function objectInspector(object: Object): string {
         key: string,
         count: number = 0;
     for (key in object) {
-        rows.push([key, typeof object[key]].join(': '));
+        if (!has(object, key)) {
+            continue;
+        }
+        const val: any = object[key];
+        rows.push([' - ', key, ':', val, ' (', typeof val, ')'].join(''));
         count++;
     }
     return [
-        'Type: ' + typeof object,
+        '\nType: ' + typeof object,
         'Length: ' + count,
-        rows.join(' // ')
+        rows.join('\n')
     ].join('\n');
 }
 

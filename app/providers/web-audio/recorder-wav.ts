@@ -28,15 +28,17 @@ import {
     MasterClock
 } from '../master-clock/master-clock';
 
+import {
+    MAX,
+    MIN
+} from '../../services/utils/utils';
+
 // make this a multiple of PROCESSING_BUFFER_LENGTH
 export const DB_CHUNK_LENGTH: number = 131072;
 
 // pre-allocate the double chunk buffers used for saving to DB
 const DB_CHUNK1: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
 const DB_CHUNK2: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
-
-const MAX: (a: number, b: number) => number = Math.max;
-const MIN: (a: number, b: number) => number = Math.min;
 
 /**
  * @name WebAudioRecorder

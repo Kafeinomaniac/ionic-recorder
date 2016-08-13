@@ -18,6 +18,7 @@ import {
 } from '../master-clock/master-clock';
 
 import {
+    ABS,
     formatTime
 } from '../../services/utils/utils';
 
@@ -28,7 +29,7 @@ export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 // to reduce latency and to compute time as accurately as possible)
 const PROCESSING_BUFFER_LENGTH: number = 2048;
 
-const ABS: (n: number) => number = Math.abs;
+const WEBM_MIME_TYPE: string = 'audio/webm';
 
 // statuses
 export enum RecorderStatus {
@@ -65,7 +66,6 @@ export class WebAudioRecorder {
     private nRecordedSamples: number;
 
     protected startTime: number;
-    protected mediaStream: MediaStream;
     protected valueCB: (pcm: number) => any;
 
     public status: RecorderStatus;
@@ -87,7 +87,7 @@ export class WebAudioRecorder {
             this.status = RecorderStatus.NO_CONTEXT_ERROR;
             return;
         }
-        // no value callback initially unless supplied
+
         this.valueCB = null;
 
         this.status = RecorderStatus.UNINITIALIZED_STATE;
@@ -122,11 +122,11 @@ export class WebAudioRecorder {
             // console.log('Using NEW navigator.mediaDevices.getUserMedia');
             navigator.mediaDevices.getUserMedia(getUserMediaOptions)
                 .then((stream: MediaStream) => {
-                    this.mediaStream = stream;
-                    this.connectNodes();
+                    this.connectNodes(stream);
                 })
                 .catch((error: any) => {
-                    console.warn('NO MICROPHONE');
+                    console.warn('NO MICROPHONE: ' + error);
+                    console.dir(error);
                     this.status = RecorderStatus.NO_MICROPHONE_ERROR;
                 });
         }
@@ -142,8 +142,7 @@ export class WebAudioRecorder {
                     navigator.getUserMedia(
                         getUserMediaOptions,
                         (stream: MediaStream) => {
-                            this.mediaStream = stream;
-                            this.connectNodes();
+                            this.connectNodes(stream);
                         },
                         (error: any) => {
                             console.warn('initAudio(old1) ' + error);
@@ -235,14 +234,15 @@ export class WebAudioRecorder {
      * @param {MediaStream} stream the stream obtained by getUserMedia
      * @returns {void}
      */
-    private connectNodes(): void {
+    private connectNodes(stream: MediaStream): void {
+        console.log('connectNodes()');
         // TODO: a check here that this.mediaStream is valid
 
         // create a source node out of the audio media stream
         // (the other nodes, which do not require a stream for their
         // initialization, are created in this.createNodes())
         this.sourceNode =
-            AUDIO_CONTEXT.createMediaStreamSource(this.mediaStream);
+            AUDIO_CONTEXT.createMediaStreamSource(stream);
 
         // create a destination node (need something to connect the
         // scriptProcessorNode with or else it won't process audio)
