@@ -4,9 +4,9 @@ import {
     Component
 } from '@angular/core';
 
-// import {
-//     Range
-// } from 'ionic-angular';
+import {
+    Range
+} from 'ionic-angular';
 
 import {
     formatLocalTime
@@ -44,6 +44,7 @@ import {
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
+const MAX_GAIN_SLIDER_VALUE: number = 1000;
 
 /**
  * @name RecordPage
@@ -53,7 +54,7 @@ const PAUSE_ICON: string = 'pause';
 @Component({
     templateUrl: 'build/pages/record-page/record-page.html',
     providers: [WebAudioRecorderWav],
-    directives: [VuGauge, ProgressSlider]
+    directives: [VuGauge, ProgressSlider, Range]
 })
 export class RecordPage {
     private idbAppState: IdbAppState;
@@ -67,6 +68,8 @@ export class RecordPage {
     private decibels: string;
 
     private gainRangeSliderValue: number;
+    private maxGainSliderValue: number;
+    // private gainSliderLeftIcon: string;
 
     /**
      * @constructor
@@ -82,6 +85,8 @@ export class RecordPage {
         this.idbAppFS = idbAppFS;
         this.webAudioRecorder = webAudioRecorder;
 
+        this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
+
         // initialize with "remembered" gain values
         this.idbAppState.getProperty('gain').subscribe(
             (gain: GainState) => {
@@ -93,8 +98,9 @@ export class RecordPage {
                 // we still want to show the previous gain value.
                 // if we don't have this line below then it will
                 // always show up as gain == 0.
-                this.gainRangeSliderValue = gain.factor / gain.maxFactor;
-                this.onGainChange(this.gainRangeSliderValue);
+                this.gainRangeSliderValue =
+                    MAX_GAIN_SLIDER_VALUE * gain.factor / gain.maxFactor;
+                this.onGainChangeEnd(this.gainRangeSliderValue);
             }
         );
     }
@@ -110,22 +116,30 @@ export class RecordPage {
 
     public onResetGain(): void {
         console.log('onResetGain()');
-        this.gainRangeSliderValue = 0.5;
+
+        // 0.5 if progress-slider is used instead of ion-range:
+        // this.gainRangeSliderValue = 0.5;
+        this.gainRangeSliderValue = 0.5 * MAX_GAIN_SLIDER_VALUE;
+
         this.onGainChangeEnd(this.gainRangeSliderValue);
     }
 
-    public onGainChange(position: number): void {
-        // console.log('onGainChange(' + position + ')');
+    // public onGainChange(position: number): void {
+    //     this.gainFactor = position * this.maxGainFactor;
+    public onGainChange(sliderValue: number): void {
+        const position: number = sliderValue / MAX_GAIN_SLIDER_VALUE;
         this.gainFactor = position * this.maxGainFactor;
 
         this.webAudioRecorder.setGainFactor(this.gainFactor);
 
         if (position === 0) {
             this.decibels = 'Muted';
+            // this.gainSliderLeftIcon = 'mic-off';
         }
         else {
             this.decibels =
                 (10.0 * Math.log10(this.gainFactor)).toFixed(2) + ' dB';
+            // this.gainSliderLeftIcon = 'mic';
         }
         this.percentGain = (this.gainFactor * 100.0).toFixed(0);
     }

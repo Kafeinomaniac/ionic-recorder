@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget id="com.ionicframework.ionicrecorder963132" version="0.0.9-alpha.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ionicframework.ionicrecorder963132" version="0.0.9-alpha.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>ionic-recorder</name>
     <description>A Webapp for recording audio.</description>
     <author email="info@tracktunes.org" href="https://tracktunes.org">Tracktunes Inc Homepage</author>

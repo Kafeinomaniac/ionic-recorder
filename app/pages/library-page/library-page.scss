@@ -32,7 +32,13 @@
 
   // control appearance of the text that says a folder is empty
   ion-content ion-list {
-    ion-item-group ion-item-divider {
+    ion-item-divider {
+      color: map-get($colors, light);
+      text-transform: none;
+      text-align: center;
+    }
+
+    ion-item {
       // use padding-left to center checkbox over checkboxes below it
       padding-left: 14px;
 

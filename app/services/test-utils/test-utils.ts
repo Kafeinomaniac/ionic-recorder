@@ -2,10 +2,10 @@
 
 // Based on: https://github.com/lathonez/clicker - app/test/diExports.ts
 
-import {
-    AbstractControl,
-    Control
-} from '@angular/common';
+// import {
+//     AbstractControl,
+//     Control
+// } from '@angular/common';
 
 import {
     // Provider,
@@ -26,6 +26,12 @@ import {
 } from '@angular/core/testing';
 
 import {
+    disableDeprecatedForms,
+    provideForms,
+    FormControl
+} from '@angular/forms';
+
+import {
     Config,
     MenuController,
     NavController,
@@ -34,13 +40,8 @@ import {
     ModalController,
     App,
     Form,
-    Platform,
-    Keyboard
+    Platform
 } from 'ionic-angular';
-
-// import {
-//     TreeNode
-// } from '../idb/idb-fs';
 
 ///////////////////////////////////////////////////////////////////////////////
 // utility functions and interfaces
@@ -50,16 +51,16 @@ import {
 // control as well as the value expecting a Control.reset() method
 // to do this but there doesn't seem to be one
 // http://stackoverflow.com/questions/33084280/how-to-reset-control-value
-export function resetControl(control: AbstractControl): AbstractControl {
-    'use strict';
-    control['updateValue']('');
-    control['_touched'] = false;
-    control['_untouched'] = true;
-    control['_pristine'] = true;
-    control['_dirty'] = false;
-    // control.setErrors(null);
-    return control;
-}
+// export function resetControl(control: AbstractControl): AbstractControl {
+//     'use strict';
+//     control['updateValue']('');
+//     control['_touched'] = false;
+//     control['_untouched'] = true;
+//     control['_pristine'] = true;
+//     control['_dirty'] = false;
+//     // control.setErrors(null);
+//     return control;
+// }
 
 export function promiseCatchHandler(err: Error): void {
     'use strict';
@@ -218,16 +219,9 @@ export interface InstanceFixture {
 // note: probably none of these are needed below - they didn't solve
 // the ngModel problem which we're still trying to solve
 const DEFAULT_PROVIDERS: any[] = [
+    disableDeprecatedForms(),
+    provideForms(),
     Form,
-    Keyboard,
-    provide(App, { useClass: ConfigMock }),
-    provide(Config, { useClass: ConfigMock }),
-    provide(MenuController, { useClass: ConfigMock }),
-    provide(NavController, { useClass: NavControllerMock }),
-    provide(NavParams, { useClass: NavParamsMock }),
-    provide(AlertController, { useClass: AlertControllerMock }),
-    provide(ModalController, { useClass: ModalControllerMock }),
-    provide(Platform, { useClass: PlatformMock })
     // appProvider,
     // configProvider,
     // menuControllerProvider,
@@ -236,6 +230,14 @@ const DEFAULT_PROVIDERS: any[] = [
     // alertControllerProvider,
     // modalControllerProvider,
     // platformProvider
+    provide(App, { useClass: ConfigMock }),
+    provide(Config, { useClass: ConfigMock }),
+    provide(MenuController, { useClass: ConfigMock }),
+    provide(NavController, { useClass: NavControllerMock }),
+    provide(NavParams, { useClass: NavParamsMock }),
+    provide(AlertController, { useClass: AlertControllerMock }),
+    provide(ModalController, { useClass: ModalControllerMock }),
+    provide(Platform, { useClass: PlatformMock })
 ];
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -265,7 +267,7 @@ export function beforeEachDI(
                 .then((componentFixture: ComponentFixture<Type>) => {
                     fixture = componentFixture;
                     instance = componentFixture.componentInstance;
-                    instance['control'] = new Control('');
+                    instance['control'] = new FormControl('');
                     if (detectChanges) componentFixture.detectChanges();
                     if (beforeEachCB) beforeEachCB(fixture);
                 })
