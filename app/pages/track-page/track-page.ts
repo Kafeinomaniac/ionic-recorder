@@ -18,9 +18,9 @@ import {
 } from '../../directives/audio-player/audio-player';
 
 import {
-    ButtonToolbar,
-    ToolbarButton
-} from '../../directives/button-toolbar/button-toolbar';
+    ButtonBar,
+    BarButton
+} from '../../directives/button-bar/button-bar';
 
 import {
     RecordingInfo
@@ -45,7 +45,7 @@ import {
  */
 @Component({
     templateUrl: 'build/pages/track-page/track-page.html',
-    directives: [AudioPlayer, ButtonToolbar]
+    directives: [AudioPlayer, ButtonBar]
 })
 export class TrackPage {
     // private navController: NavController;
@@ -59,7 +59,7 @@ export class TrackPage {
     private duration: number;
     private displayDuration: string;
     private recordingInfo: RecordingInfo;
-    private headerButtons: ToolbarButton[];
+    private headerButtons: BarButton[];
 
     /**
      * TrackPage constructor

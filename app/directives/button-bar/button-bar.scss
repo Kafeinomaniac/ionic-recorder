@@ -1,0 +1,26 @@
+// Copyright (c) 2016 Tracktunes Inc
+
+$button-bar-text-font-size: 14px;
+$button-bar-icon-font-size: 16px;
+$button-bar-tex-icon-vspace: 4px;
+
+button-bar {
+  // don't break into two lines
+  white-space: nowrap;
+
+  button {
+    margin: 0 !important;
+    font-size: $button-bar-text-font-size;
+
+    div {
+      .vspace {
+        height: $button-bar-tex-icon-vspace;
+      }
+      text-transform: none;
+
+      ion-icon {
+        font-size: $button-bar-icon-font-size;
+      }
+    }
+  }
+}

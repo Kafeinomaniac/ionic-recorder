@@ -1,19 +1,10 @@
 <!-- Copyright (c) 2016 Tracktunes Inc -->
 
-<ion-toolbar almost-dark no-border>
-    <progress-slider [progress]="player.relativeTime" (changeEnd)="player.relativeTimeSeek($event)"></progress-slider>
-</ion-toolbar>
-
-<ion-toolbar almost-dark no-border>
-    <ion-buttons left>
-        <button clear (click)="player.togglePlayPause()">
-            <ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
-            <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
-        </button>
-    </ion-buttons>
-    <ion-buttons right>
-        <button clear>
-            {{player.displayTime}} / {{player.displayDuration}}
-        </button>
-    </ion-buttons>
-</ion-toolbar>
+<progress-slider [progress]="player.relativeTime" (changeEnd)="player.relativeTimeSeek($event)"></progress-slider>
+<button clear (click)="player.togglePlayPause()">
+    <ion-icon *ngIf="player.isPlaying" name="pause"></ion-icon>
+    <ion-icon *ngIf="!player.isPlaying" name="play"></ion-icon>
+</button>
+<button clear>
+    {{player.displayTime}} / {{player.displayDuration}}
+</button>

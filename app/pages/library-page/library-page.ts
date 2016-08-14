@@ -49,9 +49,9 @@ import {
 } from '../../directives/audio-player/audio-player';
 
 import {
-    ButtonToolbar,
-    ToolbarButton
-} from '../../directives/button-toolbar/button-toolbar';
+    ButtonBar,
+    BarButton
+} from '../../directives/button-bar/button-bar';
 
 export function getFolderPath(folderNode: TreeNode): string {
     'use strict';
@@ -67,7 +67,7 @@ export function getFolderPath(folderNode: TreeNode): string {
  */
 @Component({
     templateUrl: 'build/pages/library-page/library-page.html',
-    directives: [AudioPlayer, ButtonToolbar]
+    directives: [AudioPlayer, ButtonBar]
 })
 export class LibraryPage {
     private navController: NavController;
@@ -80,8 +80,8 @@ export class LibraryPage {
     private folderItems: KeyDict;
     private selectedNodes: KeyDict;
     private totalSelectedCounter: number;
-    private headerButtons: ToolbarButton[];
-    private footerButtons: ToolbarButton[];
+    private headerButtons: BarButton[];
+    private footerButtons: BarButton[];
     // private playerTitle: string;
     // private playerBlob: Blob;
 

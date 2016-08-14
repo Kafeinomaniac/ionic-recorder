@@ -1,20 +1,19 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-$audio-player-padding: 1em;
-$audio-player-font-size: 1.33em;
+$audio-player-padding: 1.2em;
+$audio-player-font-size: 1.2em;
 
-audio-player ion-toolbar div.toolbar-content {
-  padding-left: $audio-player-padding;
-  padding-right: $audio-player-padding;
-}
-
-audio-player ion-toolbar ion-buttons {
-  padding-left: $audio-player-padding;
-  padding-right: $audio-player-padding;
+audio-player {
+  div#progress-slider-container {
+    padding-left: $audio-player-padding;
+    padding-right: $audio-player-padding;
+  }
 
   button {
     font-size: $audio-player-font-size !important;
-    color: map-get($colors, almost-light);
-    background-color: map-get($colors, almost-dark);
+  }
+
+  button:last-child {
+      float: right;
   }
 }

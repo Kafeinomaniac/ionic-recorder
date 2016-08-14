@@ -18,9 +18,10 @@
             </button>
         </ion-buttons>
     </ion-navbar>
-
-    <button-toolbar [buttons]="headerButtons">
-    </button-toolbar>
+    <ion-toolbar almost-dark>
+        <button-bar [buttons]="headerButtons">
+        </button-bar>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -57,6 +58,8 @@
 </ion-content>
 
 <ion-footer>
-    <button-toolbar [buttons]="footerButtons" *ngIf="nSelectedNodes() > 0">
-    </button-toolbar>
+    <ion-toolbar almost-dark *ngIf="nSelectedNodes() > 0">
+        <button-bar [buttons]="footerButtons">
+        </button-bar>
+    </ion-toolbar>
 </ion-footer>

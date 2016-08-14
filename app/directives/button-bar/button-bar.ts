@@ -7,7 +7,7 @@ import {
     SimpleChange
 } from '@angular/core';
 
-export interface ToolbarButton {
+export interface BarButton {
     leftIcon: string;
     rightIcon?: string;
     text: string;
@@ -16,24 +16,24 @@ export interface ToolbarButton {
 }
 
 /**
- * @name ButtonToolbar
+ * @name ButtonBar
  * @description
- * A toolbar that has buttons with icon(s) on top and text on the bottom
+ * A bar that has buttons with icon(s) on top and text on the bottom
  * in the two-row labels of buttons
  */
 @Component({
-    selector: 'button-toolbar',
-    templateUrl: 'build/directives/button-toolbar/button-toolbar.html'
+    selector: 'button-bar',
+    templateUrl: 'build/directives/button-bar/button-bar.html'
 })
-export class ButtonToolbar implements OnChanges {
-    @Input() private buttons: ToolbarButton[];
-    private buttonToolbarClass: string;
+export class ButtonBar implements OnChanges {
+    @Input() private buttons: BarButton[];
+    private buttonWidth: string;
 
     /**
      * @constructor
      */
     constructor() {
-        console.log('constructor():ButtonToolbar');
+        console.log('constructor():ButtonBar');
         this.buttons = [];
     }
     /**
@@ -44,10 +44,9 @@ export class ButtonToolbar implements OnChanges {
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['buttons'] && this.buttons) {
-            console.log('ButtonToolbar:ngOnChanges(): ' +
+            console.log('ButtonBar:ngOnChanges(): ' +
                 this.buttons.length);
-            this.buttonToolbarClass =
-                'buttonbar' + this.buttons.length.toString();
+            this.buttonWidth = (100 / this.buttons.length).toString() + '%';
         }
     }
 }

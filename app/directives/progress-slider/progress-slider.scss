@@ -9,7 +9,7 @@ $track-radius: 0.5 * $track-height;
 $horizontal-padding: 0.5 * max($track-radius, 0.5 * $handle-diameter);
 
 progress-slider {
-  //     width: 100%;
+      // width: 100%;
 
   #progress-slider-container {
     position: relative;

@@ -10,9 +10,10 @@
             Track
         </ion-title>
     </ion-navbar>
-
-    <button-toolbar [buttons]="headerButtons">
-    </button-toolbar>
+    <ion-toolbar almost-dark>
+        <button-bar [buttons]="headerButtons">
+        </button-bar>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
@@ -71,6 +72,8 @@
 </ion-content>
 
 <ion-footer>
-    <audio-player [recordingInfo]="recordingInfo">
-    </audio-player>
+    <ion-toolbar almost-dark no-border>
+        <audio-player [recordingInfo]="recordingInfo">
+        </audio-player>
+    </ion-toolbar>
 </ion-footer>
