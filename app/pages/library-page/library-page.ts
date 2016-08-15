@@ -533,6 +533,12 @@ export class LibraryPage {
         this.totalSelectedCounter++;
     }
 
+    private resize(): void {
+        setTimeout(() => {
+            this.content.resize();
+        }, 20);
+    }
+
     /**
      * UI calls this when a UI item gets checked
      * @param {TreeNode} node corresponding to UI item that just got checked
@@ -552,9 +558,7 @@ export class LibraryPage {
             if (nSelected === 1) {
                 // we're about to transition from something selected to nothing
                 // selected, i.e. footer will disappear, resize after delay
-                setTimeout(() => {
-                    this.content.resize();
-                }, 20);
+                this.resize();
             }
         }
         else {
@@ -563,9 +567,7 @@ export class LibraryPage {
             if (nSelected === 0) {
                 // we're about to transition from nothing selected to something
                 // selected, i.e. footer will appear, resize after delay
-                setTimeout(() => {
-                    this.content.resize();
-                }, 20);
+                this.resize();
             }
         }
 
@@ -700,7 +702,11 @@ export class LibraryPage {
             }
         }
         if (changed) {
+            // resize if anything changed
+            this.resize();
+
             // update state with new list of selected nodes
+            // TODO: handle errors here
             this.idbAppState.updateProperty(
                 'selectedNodes',
                 this.selectedNodes).subscribe();
