@@ -28,7 +28,6 @@
 // color constants
 $color-dark: #000;
 $color-almost-dark: #222;
-$color-almost-dark: #222;
 $color-darkest-gray: #333;
 $color-dark-gray: #666;
 $color-medium-gray: #7f7f7f;
@@ -41,7 +40,7 @@ $color-logo-orange: #f27321;
 // color scheme
 $colors: (
   primary: (
-    base: $color-darkest-gray,
+    base: $color-dark-gray,
     contrast: $color-light
   ),
 

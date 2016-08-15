@@ -3,7 +3,9 @@
 $content-text-color: color($colors, almost-dark);
 
 .library-page {
-
+  ion-toolbar p {
+    color: color($colors, primary, base);
+  }
   // control appearance of the text that says a folder is empty
   ion-content ion-list {
 

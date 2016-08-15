@@ -24,8 +24,9 @@
         <button small text-uppercase (click)="onResetGain()">
             Reset Gain
         </button>
-    <ion-range light [(ngModel)]="gainRangeSliderValue" (ionChange)="onGainChange($event.value)" debounce="50" (touchend)="onRangeTouchEnd()" [max]="maxGainSliderValue">
-    </ion-range>
+        <ion-range light [(ngModel)]="gainRangeSliderValue" (ionChange)="onGainChange($event.value)" debounce="50" (touchend)="onRangeTouchEnd()"
+            [max]="maxGainSliderValue">
+        </ion-range>
     </p>
     <div class="recording-time">
         {{webAudioRecorder.currentTime}}

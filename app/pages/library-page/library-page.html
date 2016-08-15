@@ -29,7 +29,7 @@
 
 <ion-content>
     <ion-list *ngIf="folderNode">
-        <ion-item logo-red clear *ngFor="let i of folderNode.childOrder" class="library-item">
+        <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
             <ion-label button clear (click)="onClickListItem(folderItems[i])">
                 <span *ngIf="folderItems[i].data">
                         <ion-icon name="play">
