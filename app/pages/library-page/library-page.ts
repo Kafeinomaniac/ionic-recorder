@@ -542,16 +542,31 @@ export class LibraryPage {
         // reset the counter for flipping through selected nodes
         this.totalSelectedCounter = 0;
 
-        let nodeKey: number = node[DB_KEY_PATH],
+        const nodeKey: number = node[DB_KEY_PATH],
+            nSelected: number = Object.keys(this.selectedNodes).length,
             isSelected: TreeNode = this.selectedNodes[nodeKey];
 
         if (isSelected) {
             // uncheck it
             delete this.selectedNodes[nodeKey];
+            if (nSelected === 1) {
+                // we're about to transition from something selected to nothing
+                // selected, i.e. footer will disappear, resize after delay
+                setTimeout(() => {
+                    this.content.resize();
+                }, 20);
+            }
         }
         else {
             // not selected, check it
             this.selectedNodes[nodeKey] = node;
+            if (nSelected === 0) {
+                // we're about to transition from nothing selected to something
+                // selected, i.e. footer will appear, resize after delay
+                setTimeout(() => {
+                    this.content.resize();
+                }, 20);
+            }
         }
 
         // update state with new list of selected nodes
