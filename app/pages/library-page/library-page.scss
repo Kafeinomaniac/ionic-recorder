@@ -3,13 +3,9 @@
 $content-text-color: color($colors, almost-dark);
 
 .library-page {
+
   // control appearance of the text that says a folder is empty
   ion-content ion-list {
-    ion-item-divider {
-      text-transform: none;
-      text-align: center;
-      color: $content-text-color;
-    }
 
     ion-item.library-item {
       ion-checkbox {

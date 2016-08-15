@@ -1,7 +1,8 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    Component
+    Component,
+    ViewChild
 } from '@angular/core';
 
 import {
@@ -9,7 +10,8 @@ import {
     // ModalController,
     NavController,
     // Modal,
-    Platform
+    Platform,
+    Content
 } from 'ionic-angular';
 
 import {
@@ -70,6 +72,7 @@ export function getFolderPath(folderNode: TreeNode): string {
     directives: [AudioPlayer, ButtonBar]
 })
 export class LibraryPage {
+    @ViewChild(Content) private content: Content;
     private navController: NavController;
     private alertController: AlertController;
     // private modalController: ModalController;
@@ -492,6 +495,9 @@ export class LibraryPage {
                         } // for
                         this.folderNode = folderNode;
                         this.folderItems = newFolderItems;
+                        // resize content, because a change in this.folderNode
+                        // can affect the header's visibility of the
+                        this.content.resize();
                     },
                     (error: any) => {
                         alert('in readChildNodes: ' + error);
