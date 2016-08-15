@@ -1,58 +1,14 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-// library.scss
+$content-text-color: color($colors, almost-dark);
 
 .library-page {
-  ion-header ion-navbar ion-title.path-title {
-    max-width: 70%;
-    text-align: right;
-    direction: rtl;
-    text-overflow: ellipsis;
-  }
-
-  // general for all alerts shown by library page
-  ion-alert {
-    color: map-get($colors, light);
-    // background color is of the backdrop, if you don't
-    // set it, there is no backdrop shown
-    // background-color: map-get($colors, dark);
-    // opacity here is of the backdrop but also the alert
-    // itself
-    // opacity: 1.0;
-    .alert-wrapper {
-      .alert-radio-group {
-        overflow: hidden;
-      }
-      // alert wrapper is the actual alert area, in it
-      // buttons were made transparent, so we set the
-      // alert's background color here
-      background: map-get($colors, darkest-gray);
-    }
-  }
-
   // control appearance of the text that says a folder is empty
   ion-content ion-list {
     ion-item-divider {
-      color: map-get($colors, light);
       text-transform: none;
       text-align: center;
-    }
-
-    ion-item {
-      // use padding-left to center checkbox over checkboxes below it
-      padding-left: 14px;
-
-      ion-label {
-        // margin: 0 shrinks height of item divider by a lot
-        margin: 0;
-
-        button {
-          span.button-inner {
-            // makes path upper and lower case, removes uppercase transform
-            text-transform: none;
-          }
-        }
-      }
+      color: $content-text-color;
     }
 
     ion-item.library-item {
@@ -63,16 +19,16 @@
       }
 
       ion-label.button span.button-inner {
+        color: $content-text-color;
         // text-transform: : none; is needed to remove uppercase transform
         text-transform: none;
-        // text-align: left;
         // justify-content: unset is needed for label
         // text to not be centered and go to the left
         justify-content: unset;
 
-        // ion-icon {
-        //   font-size: 1.4em;
-        // }
+        ion-icon {
+          font-size: 1.4em;
+        }
       }
     }
 

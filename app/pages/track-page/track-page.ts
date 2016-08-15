@@ -6,7 +6,6 @@ import {
 
 import {
     NavParams
-    // NavController
 } from 'ionic-angular';
 
 import {
@@ -26,10 +25,6 @@ import {
     RecordingInfo
 } from '../../providers/web-audio/common';
 
-// import {
-//     TreeNode
-// } from '../../services/idb/idb-fs';
-
 import {
     formatLocalTime
 } from '../../services/utils/utils';
@@ -48,7 +43,6 @@ import {
     directives: [AudioPlayer, ButtonBar]
 })
 export class TrackPage {
-    // private navController: NavController;
     private fileName: string;
     private folderPath: string;
     private dateCreated: string;
@@ -66,7 +60,6 @@ export class TrackPage {
      */
     constructor(
         navParams: NavParams,
-        // navController: NavController,
         idbAppFS: IdbAppFS
     ) {
         console.log('constructor():TrackPage');
@@ -90,13 +83,6 @@ export class TrackPage {
 
         this.headerButtons = [
             {
-                text: 'Share',
-                leftIcon: 'md-share',
-                clickCB: () => {
-                    this.onClickShareButton();
-                }
-            },
-            {
                 text: 'Move',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
@@ -110,27 +96,16 @@ export class TrackPage {
                 clickCB: () => {
                     this.onClickDeleteButton();
                 }
+            },
+            {
+                text: 'Share',
+                leftIcon: 'md-share',
+                clickCB: () => {
+                    this.onClickShareButton();
+                }
             }
-            // ,
-            // {
-            //     text: 'To parent',
-            //     leftIcon: 'arrow-up',
-            //     rightIcon: 'folder',
-            //     clickCB: () => {
-            //         this.onClickParentButton();
-            //     }
-            // }
         ];
     }
-
-    /**
-     * UI calls this when the goToParent button is clicked
-     * @returns {void}
-     */
-    // public onClickParentButton(): void {
-    //     console.log('onClickParentButton()');
-    //     this.navController.pop();
-    // }
 
     /**
      * UI callback handling cancellation of this modal

@@ -8,7 +8,7 @@
         <ion-title>Record</ion-title>
         <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
             <button small (click)="webAudioRecorder.resetPeaks()">
-            <ion-badge darkest-gray item-right>
+            <ion-badge item-right button-on-dark-bg>
                 {{webAudioRecorder.percentPeaksAtMax}}% peaks
             </ion-badge>
         </button>
@@ -21,14 +21,12 @@
     </vu-gauge>
     <p class="gain-item-label">
         Gain: {{percentGain}}% ({{decibels}})
-        <button small almost-dark (click)="onResetGain()">Reset Gain</button>
-    </p>
-    <!--progress-slider [progress]="gainFactor/maxGainFactor" (change)="onGainChange($event)" (changeEnd)="onGainChangeEnd($event)">
-    </progress-slider-->
+        <button small (click)="onResetGain()">
+            Reset Gain
+        </button>
     <ion-range light [(ngModel)]="gainRangeSliderValue" (ionChange)="onGainChange($event.value)" debounce="50" (touchend)="onRangeTouchEnd()" [max]="maxGainSliderValue">
-        <!--ion-icon range-left small [name]="gainSliderLeftIcon"></ion-icon>
-        <ion-icon range-right name="mic"></ion-icon-->
     </ion-range>
+    </p>
     <div class="recording-time">
         {{webAudioRecorder.currentTime}}
     </div>

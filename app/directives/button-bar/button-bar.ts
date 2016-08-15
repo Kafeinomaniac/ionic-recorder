@@ -18,8 +18,8 @@ export interface BarButton {
 /**
  * @name ButtonBar
  * @description
- * A bar that has buttons with icon(s) on top and text on the bottom
- * in the two-row labels of buttons
+ * A bar that has buttons with two-row labels: icon(s) on top
+ * and text on the bottom
  */
 @Component({
     selector: 'button-bar',
@@ -44,8 +44,6 @@ export class ButtonBar implements OnChanges {
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['buttons'] && this.buttons) {
-            console.log('ButtonBar:ngOnChanges(): ' +
-                this.buttons.length);
             this.buttonWidth = (100 / this.buttons.length).toString() + '%';
         }
     }

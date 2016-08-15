@@ -1,40 +1,15 @@
-    // Copyright (c) 2016 Tracktunes Inc
+// Copyright (c) 2016 Tracktunes Inc
 
 ion-app {
-  ion-menu ion-content {
-    scroll-content {
-      overflow-y: hidden;
-      background: map-get($colors, darkest-gray);
-    }
 
-    ion-list {
-      .item {
-        // items in side-menu
-        background: map-get($colors, darkest-gray);
-        cursor: pointer;
-      }
-      // get rid of border between menu heading and first item and remove border at bottom of each menu item button
-      .item:first-child,
-      .item-inner,
-      .item:last-child {
-        border: 0;
-      }
-      // TODO: test below does not work - we want to change item-activated color
-      button.item.activated {
-        background-color: map-get($colors, red);
-      }
-    }
+  scroll-content {
+    // prevent scrollbars from showing up in desktop browsers
+    // in the side-menu and in the main content window
+    overflow-y: auto;
   }
 
-  ion-tabs {
-    ion-tabbar {
-      // hide tabs
-      display: none;
-    }
-
-    scroll-content {
-      overflow-y: auto;
-      background: map-get($colors, dark);
-    }
+  ion-tabs ion-tabbar {
+    // hide tabs
+    display: none;
   }
 }

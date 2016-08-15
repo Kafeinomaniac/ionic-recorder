@@ -4,7 +4,7 @@
 // --------------------------------------------------
 // Makes Ionic Sass functions available to your App
 
-@import 'globals.core';
+@import "globals.core";
 
 // App Shared Variables
 // --------------------------------------------------
@@ -25,97 +25,44 @@
 // Both iOS and MD colors can be further customized if colors
 // are different per mode.
 
-/*
+// color constants
+$color-dark: #000;
+$color-almost-dark: #222;
+$color-almost-dark: #222;
+$color-darkest-gray: #333;
+$color-dark-gray: #666;
+$color-medium-gray: #7f7f7f;
+$color-light-gray: #999;
+$color-lightest-gray: #ccc;
+$color-light: #f4f4f4;
+$color-logo-red: #b92025;
+$color-logo-orange: #f27321;
+
+// color scheme
 $colors: (
-  primary:    #387ef5,
-  secondary:  #32db64,
-  danger:     #f53d3d,
-  light:      #f4f4f4,
-  dark:       #222,
-  favorite:   #69BB7B
+  primary: (
+    base: $color-darkest-gray,
+    contrast: $color-light
+  ),
+
+  dark: (
+    base: $color-dark,
+    contrast: $color-light
+  ),
+
+  button-on-dark-bg: (
+    base: $color-almost-dark,
+    contrast: $color-lightest-gray
+  ),
+
+  almost-dark: $color-almost-dark,
+  darkest-gray: $color-darkest-gray,
+  dark-gray: $color-dark-gray,
+  medium-gray: $color-medium-gray,
+  light-gray: $color-light-gray,
+  lightest-gray: $color-lightest-gray,
+  light: $color-light,
+
+  logo-red: $color-logo-red,
+  logo-orange: $color-logo-orange
 );
-*/
-
-$colors: (
-    primary:        #ccc,
-
-    dark:           #000,
-    almost-dark:    #222,
-    darkest-gray:   #333,
-    dark-gray:      #666,
-    medium-gray:    #7f7f7f,
-    light-gray:     #999,
-    lightest-gray:  #ccc,
-    almost-light:   #ddd,
-    light:          #FFF,
-
-    logo-red:       #b92025,
-    logo-orange:    #f27321,
-    medium-green:   #2bc253,
-    light-green:    #54f054
-);
-
-// overrides:
-
-$text-color: map-get($colors, light) !default;
-$background-color: map-get($colors, dark) !default;
-
-$list-background-color: map-get($colors, dark);
-$list-border-color: map-get($colors, dark-gray);
-$list-text-color: $text-color;
-
-//
-// overrides - some are globals used in project scss files
-//
-
-
-/*
- * text and text background
- */
-$text-color: map-get($colors, light) !default;
-$background-color: map-get($colors, dark) !default;
-
-
-/*
- * list
- */
-$list-text-color: $text-color !default;
-$list-background-color: $background-color !default;
-$list-border-color: map-get($colors,dark-gray) !default;
-
-
-/*
- * links
- */
-
-$link-color: map-get($colors, primary) !default;
-
-
-/*
- * toolbar
- */
-$toolbar-background-color: map-get($colors, almost-dark) !default;
-$toolbar-border-color: map-get($colors, dark) !default;
-$toolbar-text-color: $text-color !default;
-$toolbar-active-color: $link-color !default;
-$toolbar-inactive-color: map-get($colors, medium-gray) !default;
-// $toolbar-title-font-size is used in
-// - add-folder.scss
-// - library.scss
-// - audio-player.scss
-$toolbar-title-font-size: 13px;
-
-
-/*
- * toggle
- */
-$toggle-md-track-background-color-on: map-get($colors, dark-gray);
-$toggle-md-track-background-color-off: map-get($colors, darkest-gray);
-$toggle-md-handle-background-color-on: map-get($colors, medium-green);
-$toggle-md-handle-background-color-off: map-get($colors, logo-red);
-
-$toggle-ios-background-color-off: map-get($colors, darkest-gray);
-$toggle-ios-border-color-off: map-get($colors, darkest-gray);
-$toggle-ios-background-color-on: map-get($colors, medium-green);
-$toggle-ios-background-color-off: map-get($colors, dark);
-$toggle-ios-handle-background-color: map-get($colors, darkest-gray);

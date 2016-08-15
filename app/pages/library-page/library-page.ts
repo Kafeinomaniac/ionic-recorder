@@ -178,13 +178,6 @@ export class LibraryPage {
                 clickCB: () => {
                     this.onClickShareButton();
                 }
-            },
-            {
-                text: 'More',
-                leftIcon: 'more',
-                clickCB: () => {
-                    this.onClickMoreButton();
-                }
             }
         ];
     }
