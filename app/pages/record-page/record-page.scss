@@ -8,13 +8,12 @@
       line-height: 2em;
       margin-bottom: 0.2em;
       font-size: 1.2em;
-      color: color($colors, light-gray);
+      color: color($colors, button-on-dark-bg, contrast);
 
       button {
         float: right;
         background-color: color($colors, button-on-dark-bg, base);
         color: color($colors, button-on-dark-bg, contrast);
-        text-transform: none;
         font-weight: 600;
       }
 
