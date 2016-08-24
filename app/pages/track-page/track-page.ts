@@ -18,7 +18,7 @@ import {
 
 import {
     ButtonBar,
-    BarButton
+    ButtonbarButton
 } from '../../directives/button-bar/button-bar';
 
 import {
@@ -53,7 +53,7 @@ export class TrackPage {
     private duration: number;
     private displayDuration: string;
     private recordingInfo: RecordingInfo;
-    private headerButtons: BarButton[];
+    private headerButtons: ButtonbarButton[];
 
     /**
      * TrackPage constructor

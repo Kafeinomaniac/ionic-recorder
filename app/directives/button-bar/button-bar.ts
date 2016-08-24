@@ -7,7 +7,7 @@ import {
     SimpleChange
 } from '@angular/core';
 
-export interface BarButton {
+export interface ButtonbarButton {
     leftIcon: string;
     rightIcon?: string;
     text: string;
@@ -26,7 +26,7 @@ export interface BarButton {
     templateUrl: 'build/directives/button-bar/button-bar.html'
 })
 export class ButtonBar implements OnChanges {
-    @Input() private buttons: BarButton[];
+    @Input() private buttons: ButtonbarButton[];
     private buttonWidth: string;
 
     /**

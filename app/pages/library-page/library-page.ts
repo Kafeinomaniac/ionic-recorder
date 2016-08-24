@@ -52,7 +52,7 @@ import {
 
 import {
     ButtonBar,
-    BarButton
+    ButtonbarButton
 } from '../../directives/button-bar/button-bar';
 
 export function getFolderPath(folderNode: TreeNode): string {
@@ -83,8 +83,8 @@ export class LibraryPage {
     private folderItems: KeyDict;
     private selectedNodes: KeyDict;
     private totalSelectedCounter: number;
-    private headerButtons: BarButton[];
-    private footerButtons: BarButton[];
+    private headerButtons: ButtonbarButton[];
+    private footerButtons: ButtonbarButton[];
     // private playerTitle: string;
     // private playerBlob: Blob;
 
