@@ -19,7 +19,7 @@ export interface ButtonbarButton {
  * @name ButtonBar
  * @description
  * A bar that has buttons with two-row labels: icon(s) on top
- * and text on the bottom
+ * and text on the bottom.
  */
 @Component({
     selector: 'button-bar',
@@ -37,7 +37,7 @@ export class ButtonBar implements OnChanges {
         this.buttons = [];
     }
     /**
-     * Handle changes (play new song) when a new song (url) is loaded
+     * Handle changes
      * @returns {void}
      */
     public ngOnChanges(
