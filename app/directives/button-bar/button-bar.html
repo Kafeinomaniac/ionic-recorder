@@ -2,13 +2,10 @@
 
 <button clear [style.width]="buttonWidth" center *ngFor="let button of buttons" (click)="button.clickCB()" [disabled]="button.disabledCB && button.disabledCB()">
     <div>
-        <ion-icon [name]="button.leftIcon">
-        </ion-icon>
-        <ion-icon *ngIf="button.rightIcon" [name]="button.rightIcon">
-        </ion-icon>
+        <ion-icon [name]="button.leftIcon"></ion-icon>
+        <ion-icon *ngIf="button.rightIcon" [name]="button.rightIcon"></ion-icon>
         <br>
-        <div class="vspace">
-        </div>
+        <div class="vspace"></div>
         {{button.text}}
     </div>
 </button>
