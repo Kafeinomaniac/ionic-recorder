@@ -534,9 +534,11 @@ export class LibraryPage {
     }
 
     private resize(): void {
-        setTimeout(() => {
-            this.content.resize();
-        }, 20);
+        setTimeout(
+            () => {
+                this.content.resize();
+            },
+            20);
     }
 
     /**
