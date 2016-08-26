@@ -541,6 +541,10 @@ export class LibraryPage {
             20);
     }
 
+    public ionViewDidEnter(): void {
+        this.resize();
+    }
+
     /**
      * UI calls this when a UI item gets checked
      * @param {TreeNode} node corresponding to UI item that just got checked
