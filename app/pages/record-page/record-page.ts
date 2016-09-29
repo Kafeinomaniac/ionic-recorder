@@ -16,9 +16,9 @@ import {
     VuGauge
 } from '../../directives/vu-gauge/vu-gauge';
 
-import {
-    ProgressSlider
-} from '../../directives/progress-slider/progress-slider';
+// import {
+//     ProgressSlider
+// } from '../../directives/progress-slider/progress-slider';
 
 import {
     IdbAppState,
@@ -54,7 +54,8 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
 @Component({
     templateUrl: 'build/pages/record-page/record-page.html',
     providers: [WebAudioRecorderWav],
-    directives: [VuGauge, ProgressSlider, Range]
+    // directives: [VuGauge, ProgressSlider, Range]
+    directives: [VuGauge, Range]
 })
 export class RecordPage {
     private idbAppState: IdbAppState;
