@@ -1,0 +1,5 @@
+{
+  "globalDependencies": {
+    "webaudioapi/waa": "github:tracktunes/ionic-recorder/typings/globals/waa/index.d.ts"
+  }
+}
