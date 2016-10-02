@@ -1,5 +1,0 @@
-{
-  "globalDependencies": {
-    "mediastream": "github:tracktunes/ionic-recorder/src/typings/globals/mediastream/index.d.ts"
-  }
-}
