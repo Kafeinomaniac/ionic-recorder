@@ -147,5 +147,5 @@ interface MediaStreamAudioDestinationNode extends AudioNode {
 }
 
 interface AudioContext {
-    createMediaStreamDestination(): MediaStreamAudioDestinationNode; 
+    createMediaStreamDestination(): MediaStreamAudioDestinationNode;
 }
