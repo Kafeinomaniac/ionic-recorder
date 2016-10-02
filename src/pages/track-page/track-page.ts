@@ -48,7 +48,7 @@ export class TrackPage {
     public dateCreated: string;
     public recordingInfo: RecordingInfo;
     public displayDuration: string;
-    
+
     private duration: number;
     public headerButtons: ButtonbarButton[];
 

@@ -47,6 +47,14 @@ export enum RecorderStatus {
     READY_STATE
 }
 
+interface Gain {
+    value: number;
+}
+
+interface AudioGainNode extends AudioNode {
+    gain: Gain;
+}
+
 /**
  * @name WebAudioRecorder
  * @description

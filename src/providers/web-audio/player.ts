@@ -63,7 +63,7 @@ export class WebAudioPlayer {
         this.pausedAt = 0;
         this.isPlaying = false;
         this.scheduledSourceNodes = [];
-    
+
         this.time = 0;
         this.relativeTime = 0;
         this.duration = 0;

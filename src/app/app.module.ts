@@ -29,13 +29,13 @@
 // })
 // export class AppModule {}
 
-import { 
-    NgModule 
+import {
+    NgModule
 } from '@angular/core';
 
-import { 
+import {
     IonicApp,
-    IonicModule 
+    IonicModule
 } from 'ionic-angular';
 
 import {
