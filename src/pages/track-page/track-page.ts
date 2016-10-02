@@ -28,11 +28,6 @@ import {
     formatLocalTime
 } from '../../services/utils/utils';
 
-// this is here just for testing
-import {
-    IdbAppFS
-} from '../../providers/idb-app-fs/idb-app-fs';
-
 /**
  * @name TrackPage
  * @description
@@ -48,32 +43,24 @@ export class TrackPage {
     public dateCreated: string;
     public recordingInfo: RecordingInfo;
     public displayDuration: string;
-
-    private duration: number;
     public headerButtons: ButtonbarButton[];
+    private duration: number;
 
     /**
      * TrackPage constructor
      */
     constructor(
-        navParams: NavParams,
-        idbAppFS: IdbAppFS
+        navParams: NavParams
     ) {
         console.log('constructor():TrackPage');
-
-        console.dir(navParams.data);
 
         const navData: any = navParams.data;
 
         this.fileName = navData.fileName;
-        // this.folderPath = '/Unfiled';
         this.folderPath = navData.folderPath;
         this.recordingInfo = navData.recordingInfo;
-        // this.encoding = node.data.encoding;
-        // this.nSamples = node.data.nSamples;
-        // this.sampleRate = node.data.sampleRate;
         this.dateCreated = formatLocalTime(this.recordingInfo.dateCreated);
-        // this.size = node.data.size;
+
         this.duration =
             this.recordingInfo.nSamples / this.recordingInfo.sampleRate;
         this.displayDuration = formatTime(this.duration, this.duration);
@@ -105,21 +92,21 @@ export class TrackPage {
     }
 
     /**
-     * UI callback handling cancellation of this modal
+     * UI callback handling 'move' button click
      * @returns {void}
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton()');
     }
     /**
-     * UI callback handling cancellation of this modal
+     * UI callback handling 'delete' button click
      * @returns {void}
      */
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
     }
     /**
-     * UI callback handling cancellation of this modal
+     * UI callback handling 'share' button click
      * @returns {void}
      */
     public onClickShareButton(): void {
