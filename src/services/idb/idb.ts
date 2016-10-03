@@ -87,7 +87,7 @@ export class Idb {
                 // throw Error('Idb:deleteDb() request blocked error');
             };
         }, source: Observable<void> = Observable.create((observer) => {
-            let timerId: number,
+            let timerId: NodeJS.Timer,
                 repeat: () => void = () => {
                     try {
                         console.log('trying to delete ' + dbName + ' ...');
