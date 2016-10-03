@@ -20,6 +20,11 @@ to build
 * A music organizer to keep your recordings as files and folders on your
 device or on the cloud (cloud code not yet implemented)
 
+## Note
+This project is still very much a work in progress. 
+
+The recorder app is still in alpha, it does not yet have all features.
+
 ## System Requirements (for running the app)
 This apps runs only in browsers that implement
 a late version of IndexedDB that supports the `onupgradeended` event,
