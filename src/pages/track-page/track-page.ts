@@ -5,7 +5,8 @@ import {
 } from '@angular/core';
 
 import {
-    NavParams
+    NavParams,
+    ActionSheetController
 } from 'ionic-angular';
 
 import {
@@ -37,6 +38,7 @@ import {
     templateUrl: 'track-page.html'
 })
 export class TrackPage {
+    private actionSheetController: ActionSheetController;
     // used in template
     public fileName: string;
     public folderPath: string;
@@ -50,10 +52,12 @@ export class TrackPage {
      * TrackPage constructor
      */
     constructor(
-        navParams: NavParams
+        navParams: NavParams,
+        actionSheetController: ActionSheetController
     ) {
         console.log('constructor():TrackPage');
 
+        this.actionSheetController = actionSheetController;
         const navData: any = navParams.data;
 
         this.fileName = navData.fileName;
@@ -109,8 +113,30 @@ export class TrackPage {
      * UI callback handling 'share' button click
      * @returns {void}
      */
+
+    private presentActionSheet(): void {
+        this.actionSheetController.create({
+            title: 'Share as:',
+            buttons: [
+                {
+                    text: 'Local file on device',
+                    handler: () => {
+                        console.log('Share as local file clicked');
+                    }
+                }, {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        console.log('Cancel clicked');
+                    }
+                }
+            ]
+        }).present();
+    }
+
     public onClickShareButton(): void {
         console.log('onClickShareButton()');
+        this.presentActionSheet();
     }
 
 }

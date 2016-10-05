@@ -1,3 +1,5 @@
+// Copyright (c) 2016 Tracktunes Inc
+
 import {
     Component,
     ViewChild
@@ -48,16 +50,15 @@ export interface TabPage {
     templateUrl: 'app.component.html'
 })
 export class IonicRecorderApp {
-    // NOTE: either one of these @ViewChild declarations works, use only one ..
+    // Use one of these @ViewChild declarations (both work):
     // @ViewChild(Tabs) private tabs: Tabs;
     @ViewChild('navTabs') public tabs: Tabs;
+    public rootPage: Component;
+    public pages: TabPage[];
 
     private platform: Platform;
     private menu: MenuController;
     private idbAppState: IdbAppState;
-
-    public rootPage: Component;
-    public pages: TabPage[];
 
     constructor(
         platform: Platform,
@@ -96,8 +97,6 @@ export class IonicRecorderApp {
             // [ NOTE: cordova must be available for StatusBar ]
             StatusBar.styleDefault();
 
-            // NOTE: this.tabs @ViewChild property is *defined* here
-
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
 
@@ -116,7 +115,7 @@ export class IonicRecorderApp {
      * @returns {void}
      */
     public onTabChange(selectedTab: Tab): void {
-        let tabIndex: number = selectedTab.index;
+        const tabIndex: number = selectedTab.index;
         // console.log('onTabChange: ' + tabIndex);
         if (tabIndex === 0) {
             //
@@ -141,9 +140,8 @@ export class IonicRecorderApp {
      * Go to a page (via menu selection)
      * @returns {void}
      */
-
     public goToPage(page: TabPage): void {
-        let tabIndex: number = page.tabIndex;
+        const tabIndex: number = page.tabIndex;
         // console.log('goToPage: ' + tabIndex + ', tabs: ' + this.tabs);
         if (typeof this.tabs !== undefined) {
             // we need this conditional because @ViewChild does not work

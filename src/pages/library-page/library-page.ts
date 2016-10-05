@@ -586,7 +586,7 @@ export class LibraryPage {
             this.switchFolder(node[DB_KEY_PATH], true);
         }
         else {
-            console.dir(node);
+            // console.dir(node);
             this.navController.push(TrackPage, {
                 folderPath: this.folderNode.name,
                 fileName: node.name,

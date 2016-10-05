@@ -199,10 +199,6 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
 
     private loadAndDecodeChunk(key: number): Observable<AudioBuffer> {
         // console.log('loadAndDecodeChunk(' + key + ')');
-        // if (key === 3) {
-        //     debugger;
-        // }
-
         let obs: Observable<AudioBuffer> = Observable.create((observer) => {
             const fileReader: FileReader = this.getFileReader(key);
             this.idb.readChunk(key).subscribe(

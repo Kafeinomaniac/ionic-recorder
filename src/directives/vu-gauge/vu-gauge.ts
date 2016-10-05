@@ -18,16 +18,14 @@ import {
     templateUrl: 'vu-gauge.html'
 })
 export class VuGauge implements OnChanges {
-    // height referenced by template
     @Input() public height: string;
     @Input() public nbars: number;
     @Input() public value: number;
     @Input() public max: number;
-    private maxIndex: number;
-    // ledWidth referenced by template
     public ledWidth: string;
-    // leds referenced by template
     public leds: { x: string, fill: string, strokeWidth: string }[];
+
+    private maxIndex: number;
     private hStep: number;
     private valueStep: number;
 
@@ -66,11 +64,11 @@ export class VuGauge implements OnChanges {
         // position 0 and ending at position (totalWidth - xStep).
         // 'xStep' is the step by which we walk along the x-axis to
         // draw.
-        let percentWidth: number = 100 / (2 * this.nbars - 1),
-            xStep: number = 2 * percentWidth, i: number;
+        const percentWidth: number = 100 / (2 * this.nbars - 1),
+            xStep: number = 2 * percentWidth;
         this.ledWidth = percentWidth + '%';
         this.hStep = 120 / (this.nbars - 1);
-        for (i = 0; i < this.nbars; i++) {
+        for (let i: number = 0; i < this.nbars; i++) {
             this.leds.push({
                 x: (i * xStep) + '%',
                 fill: this.fillColor(i, '15%'),
