@@ -22,22 +22,23 @@ import {
 } from '../../providers/web-audio/common';
 
 import {
-    WebAudioPlayerWav
-} from '../../providers/web-audio/player-wav';
-
-import {
     formatLocalTime
 } from '../../services/utils/utils';
+
+import {
+    WebAudioSaverWav
+} from '../../providers/web-audio/saver-wav';
 
 /**
  * @name TrackPage
  * @description
  */
 @Component({
-    providers: [WebAudioPlayerWav],
+    providers: [WebAudioSaverWav],
     templateUrl: 'track-page.html'
 })
 export class TrackPage {
+    private webAudioSaverWav: WebAudioSaverWav;
     private actionSheetController: ActionSheetController;
     // used in template
     public fileName: string;
@@ -52,6 +53,7 @@ export class TrackPage {
      * TrackPage constructor
      */
     constructor(
+        webAudioSaverWav: WebAudioSaverWav,
         navParams: NavParams,
         actionSheetController: ActionSheetController
     ) {
@@ -59,6 +61,8 @@ export class TrackPage {
 
         this.actionSheetController = actionSheetController;
         const navData: any = navParams.data;
+
+        this.webAudioSaverWav = webAudioSaverWav;
 
         this.fileName = navData.fileName;
         this.folderPath = navData.folderPath;
@@ -122,6 +126,8 @@ export class TrackPage {
                     text: 'Local file on device',
                     handler: () => {
                         console.log('Share as local file clicked');
+                        console.dir(this.recordingInfo);
+                        this.webAudioSaverWav.save(this.recordingInfo);
                     }
                 }, {
                     text: 'Cancel',

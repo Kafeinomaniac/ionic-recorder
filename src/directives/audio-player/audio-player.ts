@@ -22,6 +22,7 @@ import {
  * blob playback.
  */
 @Component({
+    providers: [WebAudioPlayerWav],
     selector: 'audio-player',
     templateUrl: 'audio-player.html'
 })

@@ -11,6 +11,7 @@ import {
  * to initialize.
  */
 @Component({
+    selector: 'loading-page',
     templateUrl: 'loading-page.html'
 })
 export class LoadingPage {

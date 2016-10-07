@@ -40,6 +40,7 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
  * The page from which we record audio and monitor microphone sound volume.
  */
 @Component({
+    selector: 'record-page',
     providers: [WebAudioRecorderWav],
     templateUrl: 'record-page.html'
 })

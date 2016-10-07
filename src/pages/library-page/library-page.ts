@@ -63,6 +63,7 @@ export function getFolderPath(folderNode: TreeNode): string {
  * music organizer.
  */
 @Component({
+    selector: 'library-page',
     templateUrl: 'library-page.html'
 })
 export class LibraryPage {

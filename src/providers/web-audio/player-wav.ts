@@ -36,7 +36,7 @@ import {
 } from '../master-clock/master-clock';
 
 // see: http://soundfile.sapp.org/doc/WaveFormat/
-function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
+export function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     'use strict';
     const arrayByteLength: number = int16Array.byteLength,
         headerView: DataView = new DataView(new ArrayBuffer(44)),

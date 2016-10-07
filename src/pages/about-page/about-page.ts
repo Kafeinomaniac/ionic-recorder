@@ -13,6 +13,7 @@ const APP_VERSION: string = '0.0.9-alpha.12';
  * among other info.
  */
 @Component({
+    selector: 'about-page',
     templateUrl: 'about-page.html'
 })
 export class AboutPage {
