@@ -121,7 +121,7 @@ export class TrackPage {
 
     private presentActionSheet(): void {
         this.actionSheetController.create({
-            title: 'Share as:',
+            title: 'Share as',
             buttons: [
                 {
                     text: 'Local file on device',

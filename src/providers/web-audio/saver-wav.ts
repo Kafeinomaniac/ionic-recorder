@@ -46,39 +46,28 @@ export class WebAudioSaverWav {
             (wavArray: Int16Array) => {
                 if (this.blob) {
                     // blob already exists, append to it
-                    console.log('START size: ' + this.blob.size);
-                    // this.blob = new Blob(
-                    //     [
-                    //         this.blob,
-                    //         int16ArrayToWavBlob(wavArray)
-                    //     ],
-                    //     { type: WAV_MIME_TYPE }
-                    // );
                     this.blob = new Blob(
-                        [ this.blob, wavArray],
+                        [this.blob, wavArray],
                         { type: WAV_MIME_TYPE }
                     );
-                    console.log('END size: ' + this.blob.size);
+                    console.log('Blob size: ' + this.blob.size);
                 }
                 else {
                     // no blob initialized yet, create it and init members
                     this.keyOffset = 0;
                     this.lastKeyOffset =
                         Math.floor(recordingInfo.nSamples / DB_CHUNK_LENGTH);
-
-                    const headerView: DataView =
-                        makeWavBlobHeaderView(
-                            recordingInfo.nSamples,
-                            recordingInfo.sampleRate
-                        );
-                    // this.blob = new Blob(
-                    //     [int16ArrayToWavBlob(wavArray)],
-                    //     { type: WAV_MIME_TYPE }
-                    // );
                     this.blob = new Blob(
-                        [ headerView, wavArray ],
+                        [
+                            makeWavBlobHeaderView(
+                                recordingInfo.nSamples,
+                                recordingInfo.sampleRate
+                            ),
+                            wavArray
+                        ],
                         { type: WAV_MIME_TYPE }
                     );
+                    console.log('Blob size: ' + this.blob.size);
                 }
                 if (this.keyOffset === this.lastKeyOffset) {
                     // base case: we're at the end of the recursion
