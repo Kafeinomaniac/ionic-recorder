@@ -114,11 +114,11 @@ export class TrackPage {
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
     }
+
     /**
      * UI callback handling 'share' button click
      * @returns {void}
      */
-
     private presentActionSheet(): void {
         this.actionSheetController.create({
             title: 'Share as',
@@ -142,6 +142,10 @@ export class TrackPage {
         }).present();
     }
 
+    /**
+     * UI callback handling 'share' button click
+     * @returns {void}
+     */
     public onClickShareButton(): void {
         console.log('onClickShareButton()');
         this.presentActionSheet();
