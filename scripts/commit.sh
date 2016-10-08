@@ -11,13 +11,18 @@ ABOUTFILE="app/pages/about-page/about-page.ts"
 
 # run unit tests 
 echo "Running unit tests ..."
-TEST_ERRORS="`npm test 2>&1  | grep gulp-tslint | grep -i error`"
 
-if [ "$TEST_ERRORS" != "" ]; then
-    echo "Unit tests failed, please fix those and try again, errors:"
-    echo "$TEST_ERRORS"
-    echo "Exiting ..."
-    exit 1
+if [ "$1" == "--no-test" ]; then
+    echo "no test!"
+else
+    # TEST_ERRORS="`npm test 2>&1 | grep gulp-tslint | grep -i error`"
+    TEST_ERRORS="`npm test 2>&1 | grep -i error`"
+    if [ "$TEST_ERRORS" != "" ]; then
+        echo "Unit tests failed, please fix those and try again, errors:"
+        echo "$TEST_ERRORS"
+        echo "Exiting ..."
+        exit 1
+    fi
 fi
 
 # grab a commit message
