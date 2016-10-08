@@ -55,7 +55,7 @@ export function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     //   0-4: ChunkId
     writeAscii(headerView, 0, 'RIFF');
     //   4-8: ChunkSize
-    headerView.setUint32(4, 36 + arrayByteLength * 2, true);
+    headerView.setUint32(4, 36 + arrayByteLength, true);
     //  8-12: Format
     writeAscii(headerView, 8, 'WAVE');
     // 12-16: Subchunk1ID
@@ -77,7 +77,7 @@ export function int16ArrayToWavBlob(int16Array: Int16Array): Blob {
     // 36-40: Subchunk2ID
     writeAscii(headerView, 36, 'data');
     // 40-44: Subchunk2Size
-    headerView.setUint32(40, arrayByteLength * 2, true);
+    headerView.setUint32(40, arrayByteLength, true);
 
     // attach data and convert to blob
     return new Blob([headerView, int16Array], { type: WAV_MIME_TYPE });
