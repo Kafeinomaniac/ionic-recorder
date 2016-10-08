@@ -34,6 +34,7 @@ import {
  * @description
  */
 @Component({
+    selector: 'track-page',
     providers: [WebAudioSaverWav],
     templateUrl: 'track-page.html'
 })
