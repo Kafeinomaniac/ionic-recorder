@@ -74,7 +74,12 @@ export class WebAudioSaverWav {
                     console.log('saving done!');
                     console.dir(this.blob);
                     // debugger;
-                    downloadBlob(this.blob, fileName);
+                    try {
+                        downloadBlob(this.blob, fileName);
+                    }
+                    catch (err) {
+                        alert('save err: ' + err);
+                    }
                     this.blob = null;
                 }
                 else {
