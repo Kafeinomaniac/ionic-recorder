@@ -13,7 +13,7 @@ import {
 } from 'ionic-angular';
 
 import {
-    File,
+    // File,
     StatusBar
 } from 'ionic-native';
 
@@ -138,8 +138,7 @@ export class IonicRecorderApp {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
-            // StatusBar.styleDefault();
-            // StatusBar.styleBlackOpaque();
+            StatusBar.styleDefault();
 
             // console.log('platform is mobile: ' + this.platform.is('mobile'));
             // console.log('availableBytes: ' + availableBytes());

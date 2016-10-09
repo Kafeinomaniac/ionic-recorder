@@ -63,7 +63,7 @@
     "deploy:before": "build",
     "build:before": "build",
     "run:before": "build",
-    "build:cordova": "ionic build; cordova build",
+    "run:cordova": "ionic build; cd www; ln -s assets/img ; cd .. ; cordova build; cordova run",
     "deploy": "ionic build; cordova build; scp platforms/browser/www/config.xml tracktunes.org:marketing_client/www/; ssh tracktunes.org '/bin/rm -fr marketing_client/www/ionic-recorder/*'; rsync -avz platforms/browser/www/ tracktunes.org:marketing_client/www/ionic-recorder/"
   },
   "dependencies": {

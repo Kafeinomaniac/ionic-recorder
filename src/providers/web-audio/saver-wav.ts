@@ -18,8 +18,8 @@ import {
 } from '../idb-app-data/idb-app-data';
 
 import {
-    makeWavBlobHeaderView,
-    downloadBlob
+    // downloadBlob,
+    makeWavBlobHeaderView
 } from '../../services/utils/wav';
 
 @Injectable()
@@ -73,13 +73,21 @@ export class WebAudioSaverWav {
                     // base case: we're at the end of the recursion
                     console.log('saving done!');
                     console.dir(this.blob);
-                    // debugger;
+                    /*
+                    // NOTE: we cannot use the below
+                    // (a) because some browsers don't support the url that's 
+                    // created the way it's created here as the href field;
+                    // (b) because chrome on android would not allow this - it
+                    //     considers it to be a cross origin request, so at  
+                    //     this point we cannot ownload anyway on mobile...
+
                     try {
                         downloadBlob(this.blob, fileName);
                     }
                     catch (err) {
                         alert('save err: ' + err);
                     }
+                    */
                     this.blob = null;
                 }
                 else {
