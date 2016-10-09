@@ -65,7 +65,6 @@
     "typescript": "^2.0.3",
     "typings": "1.4.0"
   },
-  "description": "ionic-recorder: An Ionic project",
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-console",

@@ -13,7 +13,8 @@ import {
 } from 'ionic-angular';
 
 import {
-    StatusBar
+    StatusBar,
+    File
 } from 'ionic-native';
 
 import {
@@ -96,6 +97,10 @@ export class IonicRecorderApp {
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
             StatusBar.styleDefault();
+
+            // console.log('platform is mobile: ' + this.platform.is('mobile'));
+            console.log('Free Disk Space: ' + File.getFreeDiskSpace());
+            console.dir(File.getFreeDiskSpace());
 
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
