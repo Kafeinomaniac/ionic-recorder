@@ -13,7 +13,7 @@ import {
 } from 'ionic-angular';
 
 import {
-    // File,
+    File,
     StatusBar
 } from 'ionic-native';
 
@@ -143,7 +143,7 @@ export class IonicRecorderApp {
             // console.log('platform is mobile: ' + this.platform.is('mobile'));
             // console.log('availableBytes: ' + availableBytes());
             // alert(File.getFreeDiskSpace());
-            // console.log('Free Disk Space: ' + File.getFreeDiskSpace());
+            console.log('Free Disk Space: ' + File.getFreeDiskSpace());
             // console.log(File.getFreeDiskSpace);
             // console.dir(File.getFreeDiskSpace);
 
