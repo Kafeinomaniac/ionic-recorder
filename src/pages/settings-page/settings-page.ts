@@ -27,6 +27,7 @@ import {
  * Change app settings.
  */
 @Component({
+    selector: 'settings-page',
     templateUrl: 'settings-page.html'
 })
 export class SettingsPage {

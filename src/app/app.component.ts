@@ -13,8 +13,8 @@ import {
 } from 'ionic-angular';
 
 import {
-    StatusBar,
-    File
+    File,
+    StatusBar
 } from 'ionic-native';
 
 import {
@@ -45,6 +45,48 @@ export interface TabPage {
     tabIndex: number;
     title: string;
     component: Component;
+}
+
+function availableBytes(
+    startBytes: number = 0,
+    endBytes: number = 1024 * 1024 * 1024 * 1024
+): number {
+    'use strict';
+
+    // console.log('availableBytes(' + startBytes + ', ' + endBytes + ')');
+
+    // 1024 below means precision of 1K
+    if (endBytes - startBytes < 1024) {
+        console.log('availableBytes() returning ... ' + startBytes);
+        return startBytes;
+    }
+    else {
+        window['requestFileSystem'] = window['requestFileSystem'] ||
+            window['webkitRequestFileSystem'];
+        // console.log('wrfs: ' + window['requestFileSystem']);
+        const midBytes: number = (endBytes - startBytes) / 2,
+            midToEndBytes: number = endBytes - midBytes;
+
+        window['requestFileSystem'](
+            1,
+            endBytes - midBytes,
+            (fileSystem: any) => {
+                // console.log('success req file system');
+                setTimeout(
+                    () => {
+                        availableBytes(midToEndBytes, endBytes);
+                    },
+                    0);
+            },
+            () => {
+                // console.log('error req file system');
+                setTimeout(
+                    () => {
+                        availableBytes(startBytes, midToEndBytes);
+                    },
+                    0);
+            });
+    }
 }
 
 @Component({
@@ -96,11 +138,15 @@ export class IonicRecorderApp {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
-            StatusBar.styleDefault();
+            // StatusBar.styleDefault();
+            // StatusBar.styleBlackOpaque();
 
             // console.log('platform is mobile: ' + this.platform.is('mobile'));
-            console.log('Free Disk Space: ' + File.getFreeDiskSpace());
-            console.dir(File.getFreeDiskSpace());
+            // console.log('availableBytes: ' + availableBytes());
+            // alert(File.getFreeDiskSpace());
+            // console.log('Free Disk Space: ' + File.getFreeDiskSpace());
+            // console.log(File.getFreeDiskSpace);
+            // console.dir(File.getFreeDiskSpace);
 
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
