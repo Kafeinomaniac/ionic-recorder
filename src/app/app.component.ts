@@ -149,7 +149,7 @@ export class IonicRecorderApp {
                     console.log('getFreeSpace() => ' + arg);
                 },
                 (arg: any) => {
-                    alert('Error calling getFreeSpace(): ' + arg);
+                    console.log('Error calling getFreeSpace(): ' + arg);
                 }
             );
 
