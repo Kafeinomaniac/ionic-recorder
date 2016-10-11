@@ -1,8 +1,11 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-//.record-page {
 #tabpanel-t0-1 {
-// record-page {
+  ion-header ion-navbar ion-buttons ion-badge {
+    background-color: color($colors, button-on-dark-bg, base);
+    color: color($colors, button-on-dark-bg, contrast);
+  }
+
   ion-content {
     background-color: color($colors, dark, base);
 
