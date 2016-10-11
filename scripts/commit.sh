@@ -7,22 +7,21 @@
 # path to file containing the version
 VERSIONFILE="VERSION"
 CONFIGFILE="config.xml"
-ABOUTFILE="app/pages/about-page/about-page.ts"
+ABOUTFILE="src/pages/about-page/about-page.ts"
 
 # run unit tests 
-echo "Running unit tests ..."
-
-if [ "$1" == "--no-test" ]; then
-    echo "no test!"
+if [ "$1" == "--no-tests" ]; then
+    echo "Running commit script with no tests!"
 else
-    # TEST_ERRORS="`npm test 2>&1 | grep gulp-tslint | grep -i error`"
-    TEST_ERRORS="`npm test 2>&1 | grep -i error`"
+    echo "Running unit tests ..."
+    TEST_ERRORS="`npm test 2>&1 | grep -i error | tail -n 1`"
     if [ "$TEST_ERRORS" != "" ]; then
-        echo "Unit tests failed, please fix those and try again, errors:"
-        echo "$TEST_ERRORS"
-        echo "Exiting ..."
+        echo "Unit tests failed. Fix and try again. Errors reported:"
+        echo "    $TEST_ERRORS"
+        echo "Exiting."
         exit 1
     fi
+    echo "Unit tests DONE"
 fi
 
 # grab a commit message
@@ -31,9 +30,10 @@ read MESSAGE
 
 # Throwing this one here to avoid developers introducing tabs in files.
 #
-# replace all tabs in text files in ./app with spaces.  (see:
-# stackoverflow.com/questions/4767396/linux-command-how-to-find-only-text-files)
-find ./app -type f -exec grep -Iq . {} \; -and -print \
+# replace all tabs in text files in ./src with spaces.  (see:
+# stackoverflow.com/questions ...
+# ... /4767396/linux-command-how-to-find-only-text-files)
+find ./src -type f -exec grep -Iq . {} \; -and -print \
     | xargs sed -i 's/[ \t]*$//'
 
 if [ ! -e $VERSIONFILE ]; then

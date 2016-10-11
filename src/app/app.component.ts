@@ -143,7 +143,16 @@ export class IonicRecorderApp {
             // console.log('platform is mobile: ' + this.platform.is('mobile'));
             // console.log('availableBytes: ' + availableBytes());
             // alert(File.getFreeDiskSpace());
-            console.log('Free Disk Space: ' + File.getFreeDiskSpace());
+
+            File.getFreeDiskSpace().then(
+                (arg: any) => {
+                    console.log('getFreeSpace() => ' + arg);
+                },
+                (arg: any) => {
+                    alert('Error calling getFreeSpace(): ' + arg);
+                }
+            );
+
             // console.log(File.getFreeDiskSpace);
             // console.dir(File.getFreeDiskSpace);
 

@@ -126,8 +126,9 @@ export class TrackPage {
                 {
                     text: 'Local file on device',
                     handler: () => {
-                        console.log('Share as local file clicked');
-                        console.dir(this.recordingInfo);
+                        console.log('Share as local file clicked, fname: ' +
+                            this.fileName + '.wav');
+                        // console.dir(this.recordingInfo);
                         this.webAudioSaverWav.save(
                             this.recordingInfo, this.fileName + '.wav');
                     }

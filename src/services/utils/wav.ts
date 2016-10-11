@@ -50,12 +50,11 @@ export function makeWavBlobHeaderView(
     return headerView;
 }
 
-/*
 // NOTE: we cannot use the below
 // (a) because some browsers don't support the url that's created
 //     the way it's created here as the href field;
 // (b) because chrome on android would not allow this - it considers
-//     it to be a cross origin request, so at this point we cannot 
+//     it to be a cross origin request, so at this point we cannot
 //     download anyway on mobile...
 
 // save data into a local file
@@ -76,4 +75,3 @@ export function downloadBlob(blob: Blob, fileName: string): void {
         100);
     console.log('saveBlob(): finished!');
 }
-*/
