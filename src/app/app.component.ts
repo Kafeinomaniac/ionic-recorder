@@ -47,48 +47,6 @@ export interface TabPage {
     component: Component;
 }
 
-function availableBytes(
-    startBytes: number = 0,
-    endBytes: number = 1024 * 1024 * 1024 * 1024
-): number {
-    'use strict';
-
-    // console.log('availableBytes(' + startBytes + ', ' + endBytes + ')');
-
-    // 1024 below means precision of 1K
-    if (endBytes - startBytes < 1024) {
-        console.log('availableBytes() returning ... ' + startBytes);
-        return startBytes;
-    }
-    else {
-        window['requestFileSystem'] = window['requestFileSystem'] ||
-            window['webkitRequestFileSystem'];
-        // console.log('wrfs: ' + window['requestFileSystem']);
-        const midBytes: number = (endBytes - startBytes) / 2,
-            midToEndBytes: number = endBytes - midBytes;
-
-        window['requestFileSystem'](
-            1,
-            endBytes - midBytes,
-            (fileSystem: any) => {
-                // console.log('success req file system');
-                setTimeout(
-                    () => {
-                        availableBytes(midToEndBytes, endBytes);
-                    },
-                    0);
-            },
-            () => {
-                // console.log('error req file system');
-                setTimeout(
-                    () => {
-                        availableBytes(startBytes, midToEndBytes);
-                    },
-                    0);
-            });
-    }
-}
-
 @Component({
     templateUrl: 'app.component.html'
 })
@@ -139,22 +97,31 @@ export class IonicRecorderApp {
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
             StatusBar.styleDefault();
+            StatusBar.backgroundColorByHexString('#000000');
 
-            // console.log('platform is mobile: ' + this.platform.is('mobile'));
-            // console.log('availableBytes: ' + availableBytes());
-            // alert(File.getFreeDiskSpace());
+            // File.getFreeDiskSpace().then(
+            //     (arg: any) => {
+            //         console.log('getFreeSpace() => ' + arg);
+            //     },
+            //     (arg: any) => {
+            //         console.log('Error calling getFreeSpace(): ' + arg);
+            //     }
+            // );
 
-            File.getFreeDiskSpace().then(
-                (arg: any) => {
-                    console.log('getFreeSpace() => ' + arg);
+            window.addEventListener(
+                'filePluginIsReady',
+                () => {
+                    console.log('File plugin is ready');
+                    File.getFreeDiskSpace().then(
+                        (arg: any) => {
+                            console.log('getFreeSpace() => ' + arg);
+                        },
+                        (arg: any) => {
+                            console.log('Error calling getFreeSpace(): ' + arg);
+                        }
+                    );
                 },
-                (arg: any) => {
-                    console.log('Error calling getFreeSpace(): ' + arg);
-                }
-            );
-
-            // console.log(File.getFreeDiskSpace);
-            // console.dir(File.getFreeDiskSpace);
+                false);
 
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
