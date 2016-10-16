@@ -107,9 +107,9 @@ interface MediaTrackSettings {
 }
 
 interface MediaStreamError {
-    name: string;
-    message: string;
-    constraintName: string;
+    // name: string;
+    // message: string;
+    // constraintName: string;
 }
 
 interface NavigatorGetUserMedia {

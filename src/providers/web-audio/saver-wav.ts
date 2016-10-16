@@ -18,9 +18,12 @@ import {
 } from '../idb-app-data/idb-app-data';
 
 import {
-    downloadBlob,
     makeWavBlobHeaderView
 } from '../../services/utils/wav';
+
+import {
+    downloadBlob
+} from '../../services/utils/utils';
 
 @Injectable()
 export class WebAudioSaverWav {
@@ -82,6 +85,7 @@ export class WebAudioSaverWav {
 
                     try {
                         downloadBlob(this.blob, fileName);
+                        // console.log(FileTransfer);
                     }
                     catch (err) {
                         alert('save err: ' + err);

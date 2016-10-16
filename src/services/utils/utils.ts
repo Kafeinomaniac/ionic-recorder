@@ -177,3 +177,29 @@ export function prependArray(value: any, arr: any[]): any[] {
     newArray.unshift(value);
     return newArray;
 }
+
+// NOTE: we cannot use the function below everywhere
+// (a) because some browsers don't support the url that's created
+//     the way it's created here as the href field;
+// (b) because chrome on android would not allow this - it considers
+//     it to be a cross origin request, so at this point we cannot
+//     download anyway on mobile...
+
+// save data into a local file
+export function downloadBlob(blob: Blob, fileName: string): void {
+    'use strict';
+    const url: string = window.URL.createObjectURL(blob);
+    let anchorElement: HTMLAnchorElement = document.createElement('a');
+    anchorElement.style.display = 'none';
+    anchorElement.href = url;
+    anchorElement.setAttribute('download', fileName);
+    document.body.appendChild(anchorElement);
+    anchorElement.click();
+    setTimeout(
+        () => {
+            document.body.removeChild(anchorElement);
+            window.URL.revokeObjectURL(url);
+        },
+        100);
+    console.log('saveBlob(): finished!');
+}
