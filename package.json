@@ -1,5 +1,6 @@
 {
   "name": "ionic-recorder",
+  "author": "Tracktunes Inc",
   "version": "0.0.9-alpha.17",
   "description": "ionic-recorder: An Ionic2 / WebAudioApi recorder app",
   "maintainers": [
@@ -15,16 +16,37 @@
   },
   "license": "GPL-2.0",
   "homepage": "https://github.com/tracktunes/ionic-recorder",
+  "scripts": {
+    "build": "ionic-app-scripts build",
+    "watch": "ionic-app-scripts watch",
+    "serve:before": "watch",
+    "emulate:before": "build",
+    "deploy:before": "build",
+    "build:before": "build",
+    "run:before": "build",
+    "cordova": "ionic build; cd www; ln -s assets/img; cd ..; cordova build; cordova run",
+    "deploy": "ionic build; cd www; ln -s assets/img; cd ..; cordova build; scp platforms/browser/www/config.xml tracktunes.org:marketing_client/www/; ssh tracktunes.org '/bin/rm -fr marketing_client/www/ionic-recorder/*'; rsync -avz platforms/browser/www/ tracktunes.org:marketing_client/www/ionic-recorder/"
+  },
   "dependencies": {
-    "ionic-angular": "^2.0.0-rc.0",
-    "ionicons": "^3.0.0",
+    "@angular/common": "^2.0.0",
+    "@angular/compiler": "^2.0.0",
+    "@angular/compiler-cli": "0.6.2",
+    "@angular/core": "^2.0.0",
+    "@angular/forms": "^2.0.0",
+    "@angular/http": "^2.0.0",
+    "@angular/platform-browser": "^2.0.0",
+    "@angular/platform-browser-dynamic": "^2.0.0",
+    "@angular/platform-server": "^2.0.0",
     "@ionic/storage": "^1.0.3",
-    "ionic-native": "^2.0.3"
+    "ionic-angular": "^2.0.0-rc.1",
+    "ionic-native": "^2.2.3",
+    "ionicons": "^3.0.0",
+    "rxjs": "5.0.0-beta.12",
+    "zone.js": "^0.6.21"
   },
   "devDependencies": {
-    "@ionic/app-scripts": "^0.0.27",
-    "typescript": "^2.0.3",
-    "typings": "1.4.0"
+    "@ionic/app-scripts": "^0.0.36",
+    "typescript": "^2.0.3"
   },
   "cordovaPlugins": [
     "cordova-plugin-device",
@@ -32,9 +54,7 @@
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
-    "ionic-plugin-keyboard",
-    "cordova-plugin-file",
-    "cordova-plugin-file-transfer"
+    "cordova-plugin-file"
   ],
   "cordovaPlatforms": [
     "browser"
@@ -79,27 +99,5 @@
     "webapp",
     "webkit audio",
     "webrtc"
-  ],
-  "scripts": {
-    "build": "ionic-app-scripts build",
-    "bundle": "ionic-app-scripts bundle",
-    "clean": "ionic-app-scripts clean",
-    "cleancss": "ionic-app-scripts cleancss",
-    "copy": "ionic-app-scripts copy",
-    "lint": "ionic-app-scripts lint",
-    "minify": "ionic-app-scripts minify",
-    "ngc": "ionic-app-scripts ngc",
-    "sass": "ionic-app-scripts sass",
-    "tsc": "ionic-app-scripts tsc",
-    "watch": "ionic-app-scripts watch",
-    "restore": "ionic state restore",
-    "serve:before": "watch",
-    "emulate:before": "build",
-    "deploy:before": "build",
-    "build:before": "build",
-    "run:before": "build",
-    "build:cordova": "ionic build; cd www; ln -s assets/img; cd ..; scp platforms/browser/www/config.xml tracktunes.org:marketing_client/www/; cordova build ",
-    "run:cordova": "npm run build:cordova; cordova run",
-    "deploy": "npm run build:cordova; ssh tracktunes.org '/bin/rm -fr marketing_client/www/ionic-recorder/*'; rsync -avz platforms/browser/www/ tracktunes.org:marketing_client/www/ionic-recorder/"
-  }
+  ]
 }

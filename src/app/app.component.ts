@@ -99,27 +99,31 @@ export class IonicRecorderApp {
             StatusBar.styleDefault();
             StatusBar.backgroundColorByHexString('#000000');
 
-            // File.getFreeDiskSpace().then(
-            //     (arg: any) => {
-            //         console.log('getFreeSpace() => ' + arg);
-            //     },
-            //     (arg: any) => {
-            //         console.log('Error calling getFreeSpace(): ' + arg);
-            //     }
-            // );
-
             window.addEventListener(
                 'filePluginIsReady',
                 () => {
                     console.log('File plugin is ready');
-                    File.getFreeDiskSpace().then(
-                        (arg: any) => {
-                            console.log('getFreeSpace() => ' + arg);
+                    // console.dir(File);
+                    File.listDir(
+                        'filesystem:file:///persistent',
+                        'xyzzx'
+                    ).then(
+                        (res: any) => {
+                            console.log('listDir() res.length: ' + res.length);
                         },
-                        (arg: any) => {
-                            console.log('Error calling getFreeSpace(): ' + arg);
-                        }
-                    );
+                        (err: any) => {
+                            console.log(
+                                'Error in listDir(): ' + err);
+                        });
+                    // File.getFreeDiskSpace().then(
+                    //     (arg: any) => {
+                    //         console.log('getFreeSpace() => ' + arg);
+                    //     },
+                    //     (err: any) => {
+                    //         console.log('Error calling getFreeSpace(): ' + 
+                    //                     err);
+                    //     }
+                    // );
                 },
                 false);
 
