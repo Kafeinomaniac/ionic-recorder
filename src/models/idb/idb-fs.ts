@@ -12,7 +12,7 @@ import {
     isPositiveWholeNumber,
     isUndefined,
     prependArray
-} from '../../services/utils/utils';
+} from '../../models/utils/utils';
 
 const NODE_STORE: string = 'storeIdbFS';
 export const ROOT_FOLDER_KEY: number = 1;
