@@ -1,3 +1,7 @@
+## 0.1.0-beta
+* Update to ionic-angular 2.0.0
+* We are now making this beta
+
 ## 0.0.9-alpha
 * Update to Ionic 2.0.0-beta.11 / Angular 2.0.0-rc.4
 * Chunked playback of wav files is the main feature - no more is

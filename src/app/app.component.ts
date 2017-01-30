@@ -89,7 +89,7 @@ export class IonicRecordApp {
                     //         console.log('getFreeSpace() => ' + arg);
                     //     },
                     //     (err: any) => {
-                    //         console.log('Error calling getFreeSpace(): ' + 
+                    //         console.log('Error calling getFreeSpace(): ' +
                     //                     err);
                     //     }
                     // );
