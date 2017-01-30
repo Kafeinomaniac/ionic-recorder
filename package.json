@@ -9,56 +9,13 @@
       "email": "doron@tracktunes.org"
     }
   ],
-  "private": false,
+  "private": true,
+  "license": "GPL-2.0",
+  "homepage": "https://github.com/tracktunes/ionic-recorder",
   "repository": {
     "type": "git",
     "url": "https://github.com/tracktunes/ionic-recorder"
   },
-  "license": "GPL-2.0",
-  "homepage": "https://github.com/tracktunes/ionic-recorder",
-  "scripts": {
-    "build": "ionic-app-scripts build",
-    "watch": "ionic-app-scripts watch",
-    "serve:before": "watch",
-    "emulate:before": "build",
-    "deploy:before": "build",
-    "build:before": "build",
-    "run:before": "build",
-    "cordova": "ionic build; cd www; ln -s assets/img; cd ..; cordova build; cordova run",
-    "deploy": "ionic build; cd www; ln -s assets/img; cd ..; cordova build; scp platforms/browser/www/config.xml tracktunes.org:marketing_client/www/; ssh tracktunes.org '/bin/rm -fr marketing_client/www/ionic-recorder/*'; rsync -avz platforms/browser/www/ tracktunes.org:marketing_client/www/ionic-recorder/"
-  },
-  "dependencies": {
-    "@angular/common": "^2.0.0",
-    "@angular/compiler": "^2.0.0",
-    "@angular/compiler-cli": "0.6.2",
-    "@angular/core": "^2.0.0",
-    "@angular/forms": "^2.0.0",
-    "@angular/http": "^2.0.0",
-    "@angular/platform-browser": "^2.0.0",
-    "@angular/platform-browser-dynamic": "^2.0.0",
-    "@angular/platform-server": "^2.0.0",
-    "@ionic/storage": "^1.0.3",
-    "ionic-angular": "^2.0.0-rc.1",
-    "ionic-native": "^2.2.3",
-    "ionicons": "^3.0.0",
-    "rxjs": "5.0.0-beta.12",
-    "zone.js": "^0.6.21"
-  },
-  "devDependencies": {
-    "@ionic/app-scripts": "^0.0.36",
-    "typescript": "^2.0.3"
-  },
-  "cordovaPlugins": [
-    "cordova-plugin-device",
-    "cordova-plugin-console",
-    "cordova-plugin-whitelist",
-    "cordova-plugin-splashscreen",
-    "cordova-plugin-statusbar",
-    "cordova-plugin-file"
-  ],
-  "cordovaPlatforms": [
-    "browser"
-  ],
   "keywords": [
     "angular app",
     "angular",
@@ -99,5 +56,42 @@
     "webapp",
     "webkit audio",
     "webrtc"
-  ]
+  ],
+  "scripts": {
+    "clean": "ionic-app-scripts clean",
+    "build": "ionic-app-scripts build",
+    "ionic:build": "ionic-app-scripts build",
+    "ionic:serve": "ionic-app-scripts serve"
+  },
+  "dependencies": {
+    "@angular/common": "2.2.1",
+    "@angular/compiler": "2.2.1",
+    "@angular/compiler-cli": "2.2.1",
+    "@angular/core": "2.2.1",
+    "@angular/forms": "2.2.1",
+    "@angular/http": "2.2.1",
+    "@angular/platform-browser": "2.2.1",
+    "@angular/platform-browser-dynamic": "2.2.1",
+    "@angular/platform-server": "2.2.1",
+    "@ionic/storage": "1.1.7",
+    "ionic-angular": "2.0.0",
+    "ionic-native": "2.4.1",
+    "ionicons": "3.0.0",
+    "rxjs": "5.0.0-beta.12",
+    "sw-toolbox": "3.4.0",
+    "zone.js": "0.6.26"
+  },
+  "devDependencies": {
+    "@ionic/app-scripts": "1.0.0",
+    "typescript": "2.0.9"
+  },
+  "cordovaPlugins": [
+    "cordova-plugin-whitelist",
+    "cordova-plugin-console",
+    "cordova-plugin-statusbar",
+    "cordova-plugin-device",
+    "cordova-plugin-splashscreen",
+    "ionic-plugin-keyboard"
+  ],
+  "cordovaPlatforms": [],
 }

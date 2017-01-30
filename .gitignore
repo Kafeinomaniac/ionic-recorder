@@ -6,7 +6,6 @@
 *.log
 *.tmp
 *.tmp.*
-*.bak
 log.txt
 *.sublime-project
 *.sublime-workspace
@@ -29,6 +28,10 @@ plugins/android.json
 plugins/ios.json
 www/
 $RECYCLE.BIN/
+
+# e2e
+/e2e/*.js
+/e2e/*.map
 
 .DS_Store
 Thumbs.db
