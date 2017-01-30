@@ -1,54 +1,17 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Component,
-    ViewChild
-} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { AlertController, NavController, Platform, 
+         Content } from 'ionic-angular';
+import { TreeNode, KeyDict, DB_KEY_PATH } from '../../models/idb/idb-fs';
+import { IdbAppFS, 
+         UNFILED_FOLDER_KEY } from '../../providers/idb-app-fs/idb-app-fs';
+import { isPositiveWholeNumber } from '../../models/utils/utils';
+import { alertAndDo } from '../../models/utils/alerts';
+import { IdbAppState } from '../../providers/idb-app-state/idb-app-state';
+import { TrackPage } from '../track-page/track-page';
+import { ButtonbarButton } from '../../components/button-bar/button-bar';
 
-import {
-    AlertController,
-    // ModalController,
-    NavController,
-    // Modal,
-    Platform,
-    Content
-} from 'ionic-angular';
-
-import {
-    TreeNode,
-    KeyDict,
-    // ParentChild,
-    DB_KEY_PATH
-} from '../../services/idb/idb-fs';
-
-import {
-    IdbAppFS,
-    UNFILED_FOLDER_KEY
-} from '../../providers/idb-app-fs/idb-app-fs';
-
-import {
-    isPositiveWholeNumber
-} from '../../services/utils/utils';
-
-import {
-    alertAndDo
-} from '../../services/utils/alerts';
-
-import {
-    IdbAppState
-} from '../../providers/idb-app-state/idb-app-state';
-
-// import {
-//     AddFolderPage
-// } from '../add-folder-page/add-folder-page';
-
-import {
-    TrackPage
-} from '../track-page/track-page';
-
-import {
-    ButtonbarButton
-} from '../../directives/button-bar/button-bar';
 
 export function getFolderPath(folderNode: TreeNode): string {
     'use strict';

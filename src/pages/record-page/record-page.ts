@@ -1,34 +1,14 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Component
-} from '@angular/core';
-
-import {
-    formatLocalTime
-} from '../../services/utils/utils';
-
-import {
-    IdbAppState,
-    GainState
-} from '../../providers/idb-app-state/idb-app-state';
-
-import {
-    WebAudioRecorderWav
-} from '../../providers/web-audio/recorder-wav';
-
-import {
-    RecorderStatus
-} from '../../providers/web-audio/recorder';
-
-import {
-    RecordingInfo
-} from '../../providers/web-audio/common';
-
-import {
-    IdbAppFS,
-    UNFILED_FOLDER_KEY
-} from '../../providers/idb-app-fs/idb-app-fs';
+import { Component } from '@angular/core';
+import { formatLocalTime } from '../../models/utils/utils';
+import { IdbAppState, 
+         GainState } from '../../providers/idb-app-state/idb-app-state';
+import { WebAudioRecordWav } from '../../providers/web-audio/record-wav';
+import { RecordStatus } from '../../providers/web-audio/record';
+import { RecordingInfo } from '../../providers/web-audio/common';
+import { IdbAppFS,
+         UNFILED_FOLDER_KEY } from '../../providers/idb-app-fs/idb-app-fs';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
@@ -41,7 +21,7 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
  */
 @Component({
     selector: 'record-page',
-    providers: [WebAudioRecorderWav],
+    providers: [WebAudioRecordWav],
     templateUrl: 'record-page.html'
 })
 export class RecordPage {
@@ -50,7 +30,7 @@ export class RecordPage {
     // recordButtonIcon referenced by template
     public recordButtonIcon: string = START_RESUME_ICON;
     // template members
-    public webAudioRecorder: WebAudioRecorderWav;
+    public webAudioRecord: WebAudioRecordWav;
     public percentGain: string;
     public maxGainFactor: number;
     public gainFactor: number;
@@ -68,13 +48,13 @@ export class RecordPage {
     constructor(
         idbAppState: IdbAppState,
         idbAppFS: IdbAppFS,
-        webAudioRecorder: WebAudioRecorderWav
+        webAudioRecord: WebAudioRecordWav
     ) {
         console.log('constructor():RecordPage');
 
         this.idbAppState = idbAppState;
         this.idbAppFS = idbAppFS;
-        this.webAudioRecorder = webAudioRecorder;
+        this.webAudioRecord = webAudioRecord;
 
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
 
@@ -97,12 +77,12 @@ export class RecordPage {
     }
 
     /**
-     * Returns whether this.ebAudioRecorder is fully initialized
+     * Returns whether this.ebAudioRecord is fully initialized
      * @returns {boolean}
      */
     public recorderIsReady(): boolean {
-        return this.webAudioRecorder &&
-            this.webAudioRecorder.status === RecorderStatus.READY_STATE;
+        return this.webAudioRecord &&
+            this.webAudioRecord.status === RecordStatus.READY_STATE;
     }
 
     public onResetGain(): void {
@@ -121,7 +101,7 @@ export class RecordPage {
         const position: number = sliderValue / MAX_GAIN_SLIDER_VALUE;
         this.gainFactor = position * this.maxGainFactor;
 
-        this.webAudioRecorder.setGainFactor(this.gainFactor);
+        this.webAudioRecord.setGainFactor(this.gainFactor);
 
         if (position === 0) {
             this.decibels = 'Muted';
@@ -155,20 +135,20 @@ export class RecordPage {
      */
     public onClickStartPauseButton(): void {
         // this.currentVolume += Math.abs(Math.random() * 10);
-        if (this.webAudioRecorder.isRecording) {
+        if (this.webAudioRecord.isRecording) {
             // we're recording (when clicked, so pause recording)
-            this.webAudioRecorder.pause();
+            this.webAudioRecord.pause();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
             // we're not recording (when clicked, so start/resume recording)
-            if (this.webAudioRecorder.isInactive) {
+            if (this.webAudioRecord.isInactive) {
                 // inactive, we're stopped (rather than paused) so start
-                this.webAudioRecorder.start();
+                this.webAudioRecord.start();
             }
             else {
                 // it's active, we're just paused, so resume
-                this.webAudioRecorder.resume();
+                this.webAudioRecord.resume();
             }
             this.recordButtonIcon = PAUSE_ICON;
         }
@@ -180,7 +160,7 @@ export class RecordPage {
      */
     public onClickStopButton(): void {
         this.recordButtonIcon = START_RESUME_ICON;
-        this.webAudioRecorder.stop().subscribe(
+        this.webAudioRecord.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
                 const fileName: string =
                     formatLocalTime(recordingInfo.dateCreated);
@@ -198,11 +178,11 @@ export class RecordPage {
 
     public ionViewDidEnter(): void {
         console.log('RecordPage:ionViewDidEnter()');
-        this.webAudioRecorder.startMonitoring();
+        this.webAudioRecord.startMonitoring();
     }
 
     public ionViewDidLeave(): void {
         console.log('RecordPage:ionViewDidLeave()');
-        this.webAudioRecorder.stopMonitoring();
+        this.webAudioRecord.stopMonitoring();
     }
 }

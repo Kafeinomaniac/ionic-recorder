@@ -1,33 +1,12 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Component
-} from '@angular/core';
-
-import {
-    NavParams,
-    ActionSheetController
-} from 'ionic-angular';
-
-import {
-    formatTime
-} from '../../services/utils/utils';
-
-import {
-    ButtonbarButton
-} from '../../directives/button-bar/button-bar';
-
-import {
-    RecordingInfo
-} from '../../providers/web-audio/common';
-
-import {
-    formatLocalTime
-} from '../../services/utils/utils';
-
-import {
-    WebAudioSaverWav
-} from '../../providers/web-audio/saver-wav';
+import { Component } from '@angular/core';
+import { NavParams, ActionSheetController } from 'ionic-angular';
+import { formatTime } from '../../models/utils/utils';
+import { ButtonbarButton } from '../../components/button-bar/button-bar';
+import { RecordingInfo } from '../../providers/web-audio/common';
+import { formatLocalTime } from '../../models/utils/utils';
+import { WebAudioSaveWav } from '../../providers/web-audio/save-wav';
 
 /**
  * @name TrackPage
@@ -35,11 +14,11 @@ import {
  */
 @Component({
     selector: 'track-page',
-    providers: [WebAudioSaverWav],
+    providers: [WebAudioSaveWav],
     templateUrl: 'track-page.html'
 })
 export class TrackPage {
-    private webAudioSaverWav: WebAudioSaverWav;
+    private webAudioSaveWav: WebAudioSaveWav;
     private actionSheetController: ActionSheetController;
     // used in template
     public fileName: string;
@@ -54,7 +33,7 @@ export class TrackPage {
      * TrackPage constructor
      */
     constructor(
-        webAudioSaverWav: WebAudioSaverWav,
+        webAudioSaveWav: WebAudioSaveWav,
         navParams: NavParams,
         actionSheetController: ActionSheetController
     ) {
@@ -63,7 +42,7 @@ export class TrackPage {
         this.actionSheetController = actionSheetController;
         const navData: any = navParams.data;
 
-        this.webAudioSaverWav = webAudioSaverWav;
+        this.webAudioSaveWav = webAudioSaveWav;
 
         this.fileName = navData.fileName;
         this.folderPath = navData.folderPath;
@@ -129,7 +108,7 @@ export class TrackPage {
                         console.log('Share as local file clicked, fname: ' +
                             this.fileName + '.wav');
                         // console.dir(this.recordingInfo);
-                        this.webAudioSaverWav.save(
+                        this.webAudioSaveWav.save(
                             this.recordingInfo, this.fileName + '.wav');
                     }
                 }, {
