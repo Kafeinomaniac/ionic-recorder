@@ -1,45 +1,14 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Component,
-    ViewChild
-} from '@angular/core';
-
-import {
-    Tabs,
-    Tab,
-    Platform,
-    MenuController
-} from 'ionic-angular';
-
-import {
-    File,
-    StatusBar
-} from 'ionic-native';
-
-import {
-    IdbAppState
-} from '../providers/idb-app-state/idb-app-state';
-
-import {
-    LoadingPage
-} from '../pages/loading-page/loading-page';
-
-import {
-    RecordPage
-} from '../pages/record-page/record-page';
-
-import {
-    LibraryPage
-} from '../pages/library-page/library-page';
-
-import {
-    SettingsPage
-} from '../pages/settings-page/settings-page';
-
-import {
-    AboutPage
-} from '../pages/about-page/about-page';
+import { Component, ViewChild } from '@angular/core';
+import { Tabs, Tab, Platform, MenuController } from 'ionic-angular';
+import { File, StatusBar } from 'ionic-native';
+import { IdbAppState } from '../providers/idb-app-state/idb-app-state';
+import { LoadingPage } from '../pages/loading-page/loading-page';
+import { RecordPage } from '../pages/record-page/record-page';
+import { LibraryPage } from '../pages/library-page/library-page';
+import { SettingsPage } from '../pages/settings-page/settings-page';
+import { AboutPage } from '../pages/about-page/about-page';
 
 export interface TabPage {
     tabIndex: number;
@@ -48,9 +17,9 @@ export interface TabPage {
 }
 
 @Component({
-    templateUrl: 'app.component.html'
+    templateUrl: 'app.html'
 })
-export class IonicRecorderApp {
+export class IonicRecordApp {
     // Use one of these @ViewChild declarations (both work):
     // @ViewChild(Tabs) private tabs: Tabs;
     @ViewChild('navTabs') public tabs: Tabs;
@@ -66,7 +35,7 @@ export class IonicRecorderApp {
         menu: MenuController,
         idbAppState: IdbAppState
     ) {
-        console.log('constructor(): IonicRecorderApp');
+        console.log('constructor(): IonicRecordApp');
         this.platform = platform;
         this.menu = menu;
         this.idbAppState = idbAppState;
