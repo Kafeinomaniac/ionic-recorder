@@ -1,18 +1,9 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Idb
-} from './idb';
-
-import {
-    Observable
-} from 'rxjs/Rx';
-
-import {
-    isPositiveWholeNumber,
-    isUndefined,
-    prependArray
-} from '../../models/utils/utils';
+import { Idb } from './idb';
+import { Observable } from 'rxjs/Rx';
+import { isPositiveWholeNumber, isUndefined,
+         prependArray } from '../../models/utils/utils';
 
 const NODE_STORE: string = 'storeIdbFS';
 export const ROOT_FOLDER_KEY: number = 1;

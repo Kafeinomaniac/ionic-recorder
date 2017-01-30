@@ -1,9 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Alert,
-    AlertController
-} from 'ionic-angular';
+import { Alert, AlertController } from 'ionic-angular';
 
 /**
  * Helper function to pop up questions and act upon user choice

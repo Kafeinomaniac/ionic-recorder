@@ -1,17 +1,8 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Observable
-} from 'rxjs/Rx';
-
-import {
-    Injectable
-} from '@angular/core';
-
-import {
-    Idb,
-    IdbConfig
-} from '../../models/idb/idb';
+import { Observable } from 'rxjs/Rx';
+import { Injectable } from '@angular/core';
+import { Idb, IdbConfig } from '../../models/idb/idb';
 
 export const DB_NAME: string = 'IdbAppData';
 const DB_VERSION: number = 1;

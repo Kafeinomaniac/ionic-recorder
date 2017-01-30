@@ -8,25 +8,11 @@
 // responsible for dealing with multiple-chunk files stored via indexedDB -
 // these extension classes use this base class for single buffer operations.
 
-import {
-    Injectable
-} from '@angular/core';
-
-import {
-    AUDIO_CONTEXT
-} from './common';
-
-import {
-    prependArray
-} from '../../models/utils/utils';
-
-import {
-    MasterClock
-} from '../master-clock/master-clock';
-
-import {
-    formatTime
-} from '../../models/utils/utils';
+import { Injectable } from '@angular/core';
+import { AUDIO_CONTEXT } from './common';
+import { prependArray } from '../../models/utils/utils';
+import { MasterClock } from '../master-clock/master-clock';
+import { formatTime } from '../../models/utils/utils';
 
 // the name of the function we give to master clock to run
 const CLOCK_FUNCTION_NAME: string = 'player';

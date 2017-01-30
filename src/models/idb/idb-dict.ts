@@ -1,16 +1,8 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Idb
-} from './idb';
-
-import {
-    Observable
-} from 'rxjs/Rx';
-
-import {
-    isUndefined
-} from '../utils/utils';
+import { Idb } from './idb';
+import { Observable } from 'rxjs/Rx';
+import { isUndefined } from '../utils/utils';
 
 const DICT_STORE: string = 'storeDict';
 

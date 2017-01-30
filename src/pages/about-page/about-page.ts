@@ -1,8 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Component
-} from '@angular/core';
+import { Component } from '@angular/core';
 
 const APP_VERSION: string = '0.0.9-alpha.17';
 

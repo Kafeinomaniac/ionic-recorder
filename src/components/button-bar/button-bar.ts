@@ -1,11 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Component,
-    Input,
-    OnChanges,
-    SimpleChange
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
 
 export interface ButtonbarButton {
     leftIcon: string;

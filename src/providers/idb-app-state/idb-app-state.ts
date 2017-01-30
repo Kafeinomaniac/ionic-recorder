@@ -1,20 +1,9 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Observable
-} from 'rxjs/Observable';
-
-import {
-    Injectable
-} from '@angular/core';
-
-import {
-    IdbDict
-} from '../../models/idb/idb-dict';
-
-import {
-    KeyDict
-} from '../../models/idb/idb-fs';
+import { Observable } from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
+import { IdbDict } from '../../models/idb/idb-dict';
+import { KeyDict } from '../../models/idb/idb-fs';
 
 export const DB_NAME: string = 'IdbAppState';
 const DB_VERSION: number = 1;

@@ -1,19 +1,8 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Component,
-    Input,
-    OnChanges,
-    SimpleChange
-} from '@angular/core';
-
-import {
-    WebAudioPlayWav
-} from '../../providers/web-audio/play-wav';
-
-import {
-    RecordingInfo
-} from '../../providers/web-audio/common';
+import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
+import { WebAudioPlayWav } from '../../providers/web-audio/play-wav';
+import { RecordingInfo } from '../../providers/web-audio/common';
 
 /**
  * @name AudioPlay

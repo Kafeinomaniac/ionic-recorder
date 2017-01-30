@@ -1,43 +1,14 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Observable
-} from 'rxjs/Rx';
-
-import {
-    Injectable
-} from '@angular/core';
-
-import {
-    AUDIO_CONTEXT,
-    WAV_MIME_TYPE,
-    RecordingInfo
-} from './common';
-
-import {
-    DB_CHUNK_LENGTH
-} from './record-wav';
-
-import {
-    WebAudioPlay
-} from './play';
-
-import {
-    isOdd,
-    formatTime
-} from '../../models/utils/utils';
-
-import {
-    IdbAppData
-} from '../idb-app-data/idb-app-data';
-
-import {
-    MasterClock
-} from '../master-clock/master-clock';
-
-import {
-    makeWavBlobHeaderView
-} from '../../models/utils/wav';
+import { Observable } from 'rxjs/Rx';
+import { Injectable } from '@angular/core';
+import { AUDIO_CONTEXT, WAV_MIME_TYPE, RecordingInfo } from './common';
+import { DB_CHUNK_LENGTH } from './record-wav';
+import { WebAudioPlay } from './play';
+import { isOdd, formatTime } from '../../models/utils/utils';
+import { IdbAppData } from '../idb-app-data/idb-app-data';
+import { MasterClock } from '../master-clock/master-clock';
+import { makeWavBlobHeaderView } from '../../models/utils/wav';
 
 /**
  * @name WebAudioPlay

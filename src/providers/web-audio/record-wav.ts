@@ -1,38 +1,13 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Observable
-} from 'rxjs/Rx';
-
-import {
-    Injectable
-} from '@angular/core';
-
-import {
-    IdbAppData
-} from '../idb-app-data/idb-app-data';
-
-import {
-    RecordingInfo,
-    WAV_MIME_TYPE
-} from './common';
-
-import {
-    DoubleBufferSetter
-} from '../../models/utils/double-buffer';
-
-import {
-    WebAudioRecord
-} from './record';
-
-import {
-    MasterClock
-} from '../master-clock/master-clock';
-
-import {
-    MAX,
-    MIN
-} from '../../models/utils/utils';
+import { Observable } from 'rxjs/Rx';
+import { Injectable } from '@angular/core';
+import { IdbAppData } from '../idb-app-data/idb-app-data';
+import { RecordingInfo, WAV_MIME_TYPE } from './common';
+import { DoubleBufferSetter } from '../../models/utils/double-buffer';
+import { WebAudioRecord } from './record';
+import { MasterClock } from '../master-clock/master-clock';
+import { MAX, MIN } from '../../models/utils/utils';
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH
 export const DB_CHUNK_LENGTH: number = 131072;
