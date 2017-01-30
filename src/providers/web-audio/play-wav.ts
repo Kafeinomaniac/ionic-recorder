@@ -16,16 +16,16 @@ import {
 
 import {
     DB_CHUNK_LENGTH
-} from './recorder-wav';
+} from './record-wav';
 
 import {
-    WebAudioPlayer
-} from './player';
+    WebAudioPlay
+} from './play';
 
 import {
     isOdd,
     formatTime
-} from '../../services/utils/utils';
+} from '../../models/utils/utils';
 
 import {
     IdbAppData
@@ -37,16 +37,16 @@ import {
 
 import {
     makeWavBlobHeaderView
-} from '../../services/utils/wav';
+} from '../../models/utils/wav';
 
 /**
- * @name WebAudioPlayer
+ * @name WebAudioPlay
  * @description
- * Audio Player functions based on WebAudio, originally based on code
+ * Audio Play functions based on WebAudio, originally based on code
  * of Ian McGregor here: http://codepen.io/ianmcgregor/pen/EjdJZZ
  */
 @Injectable()
-export class WebAudioPlayerWav extends WebAudioPlayer {
+export class WebAudioPlayWav extends WebAudioPlay {
     private idb: IdbAppData;
     private recordingInfo: RecordingInfo;
     private chunkDuration: number;
@@ -60,10 +60,10 @@ export class WebAudioPlayerWav extends WebAudioPlayer {
 
     constructor(masterClock: MasterClock, idb: IdbAppData) {
         super(masterClock);
-        console.log('constructor():WebAudioPlayerWav');
+        console.log('constructor():WebAudioPlayWav');
         this.idb = idb;
         if (!this.idb) {
-            throw Error('WebAudioPlayerWav:constructor(): db unavailable.');
+            throw Error('WebAudioPlayWav:constructor(): db unavailable.');
         }
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();

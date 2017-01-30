@@ -19,11 +19,11 @@ import {
 
 import {
     DoubleBufferSetter
-} from '../../services/utils/double-buffer';
+} from '../../models/utils/double-buffer';
 
 import {
-    WebAudioRecorder
-} from './recorder';
+    WebAudioRecord
+} from './record';
 
 import {
     MasterClock
@@ -32,7 +32,7 @@ import {
 import {
     MAX,
     MIN
-} from '../../services/utils/utils';
+} from '../../models/utils/utils';
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH
 export const DB_CHUNK_LENGTH: number = 131072;
@@ -42,12 +42,12 @@ const DB_CHUNK1: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
 const DB_CHUNK2: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
 
 /**
- * @name WebAudioRecorder
+ * @name WebAudioRecord
  * @description
- * Audio Recorder functions based on WebAudio.
+ * Audio Record functions based on WebAudio.
  */
 @Injectable()
-export class WebAudioRecorderWav extends WebAudioRecorder {
+export class WebAudioRecordWav extends WebAudioRecord {
     private idb: IdbAppData;
     private dbKeys: number[];
     private setter: DoubleBufferSetter;
@@ -56,7 +56,7 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
     constructor(masterClock: MasterClock, idb: IdbAppData) {
         super(masterClock);
 
-        console.log('constructor():WebAudioRecorderWav');
+        console.log('constructor():WebAudioRecordWav');
 
         this.idb = idb;
         this.dbKeys = [];
@@ -72,7 +72,7 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
         });
 
         // see:
-        // https://github.com/dorontal/Recorderjs/blob/master/dist/recorder.js
+        // https://github.com/dorontal/Recordjs/blob/master/dist/record.js
         this.valueCB = (rawFloat: number) => {
             const clipped: number = MAX(-1, MIN(1, rawFloat));
             this.setter.setNext(
@@ -86,7 +86,7 @@ export class WebAudioRecorderWav extends WebAudioRecorder {
      * @returns {void}
      */
     public stop(): Observable<RecordingInfo> {
-        console.log('WebAudioRecorderWav:stop()');
+        console.log('WebAudioRecordWav:stop()');
         let obs: Observable<RecordingInfo> = Observable.create((observer) => {
             super.stop().subscribe(
                 (recordingInfo: RecordingInfo) => {

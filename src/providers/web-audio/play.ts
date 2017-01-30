@@ -3,8 +3,8 @@
 // Lowest-level audio-buffer Web Audio Api playback class.
 // This class only deals with a single audio-buffer, it
 // knows nothing about multi-buffer streams or encodings.
-// Players for various encodings are in files with name player-X.ts
-// (where 'X' is, e.g, 'wav' or 'webm') in player-wav.ts and are
+// Plays for various encodings are in files with name player-X.ts
+// (where 'X' is, e.g, 'wav' or 'webm') in play-wav.ts and are
 // responsible for dealing with multiple-chunk files stored via indexedDB -
 // these extension classes use this base class for single buffer operations.
 
@@ -18,7 +18,7 @@ import {
 
 import {
     prependArray
-} from '../../services/utils/utils';
+} from '../../models/utils/utils';
 
 import {
     MasterClock
@@ -26,19 +26,19 @@ import {
 
 import {
     formatTime
-} from '../../services/utils/utils';
+} from '../../models/utils/utils';
 
 // the name of the function we give to master clock to run
 const CLOCK_FUNCTION_NAME: string = 'player';
 
 /**
- * @name WebAudioPlayer
+ * @name WebAudioPlay
  * @description
- * Audio Player functions based on WebAudio. Originally based on
+ * Audio Play functions based on WebAudio. Originally based on
  * code by Ian McGregor: http://codepen.io/ianmcgregor/pen/EjdJZZ
  */
 @Injectable()
-export class WebAudioPlayer {
+export class WebAudioPlay {
     private masterClock: MasterClock;
     private audioBuffer: AudioBuffer;
     protected sourceNode: AudioBufferSourceNode;
@@ -54,7 +54,7 @@ export class WebAudioPlayer {
     public displayDuration: string;
 
     constructor(masterClock: MasterClock) {
-        console.log('constructor():WebAudioPlayer');
+        console.log('constructor():WebAudioPlay');
 
         this.masterClock = masterClock;
 

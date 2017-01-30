@@ -11,7 +11,7 @@ import {
 
 import {
     DB_CHUNK_LENGTH
-} from './recorder-wav';
+} from './record-wav';
 
 import {
     IdbAppData
@@ -19,14 +19,14 @@ import {
 
 import {
     makeWavBlobHeaderView
-} from '../../services/utils/wav';
+} from '../../models/utils/wav';
 
 import {
     downloadBlob
-} from '../../services/utils/utils';
+} from '../../models/utils/utils';
 
 @Injectable()
-export class WebAudioSaverWav {
+export class WebAudioSaveWav {
     private idb: IdbAppData;
     private blob: Blob;
     private keyOffset: number;
@@ -40,7 +40,7 @@ export class WebAudioSaverWav {
     }
 
     public save(recordingInfo: RecordingInfo, fileName: string): void {
-        console.log('WebAudioSaverWav:save(' +
+        console.log('WebAudioSaveWav:save(' +
             recordingInfo.dbStartKey + this.keyOffset + ')');
         this.idb.readChunk(
             recordingInfo.dbStartKey +

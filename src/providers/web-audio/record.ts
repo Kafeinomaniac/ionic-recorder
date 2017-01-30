@@ -1,26 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    Injectable
-} from '@angular/core';
-
-import {
-    Observable
-} from 'rxjs/Rx';
-
-import {
-    AUDIO_CONTEXT,
-    RecordingInfo
-} from './common';
-
-import {
-    MasterClock
-} from '../master-clock/master-clock';
-
-import {
-    ABS,
-    formatTime
-} from '../../services/utils/utils';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { AUDIO_CONTEXT, RecordingInfo } from './common';
+import { MasterClock } from '../master-clock/master-clock';
+import { ABS, formatTime } from '../../models/utils/utils';
 
 // the name of the function we give to master clock to run
 export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
@@ -30,7 +14,7 @@ export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 const PROCESSING_BUFFER_LENGTH: number = 2048;
 
 // statuses
-export enum RecorderStatus {
+export enum RecordStatus {
     // uninitialized means we have not been initialized yet
     UNINITIALIZED_STATE,
     // error occured - no indexedDB available
@@ -47,6 +31,17 @@ export enum RecorderStatus {
     READY_STATE
 }
 
+// Add some web audio missing type definitions: See http://stackoverflow.com/..
+// ..questions/32797833/typescript-web-audio-api-missing-definitions
+
+interface MediaStreamAudioDestinationNode extends AudioNode {
+    stream: MediaStream;
+}
+
+interface AudioContext {
+    createMediaStreamDestination: () => any;
+}
+
 interface Gain {
     value: number;
 }
@@ -56,12 +51,12 @@ interface AudioGainNode extends AudioNode {
 }
 
 /**
- * @name WebAudioRecorder
+ * @name WebAudioRecord
  * @description
- * Audio Recorder functions based on WebAudio.
+ * Audio Record functions based on WebAudio.
  */
 @Injectable()
-export class WebAudioRecorder {
+export class WebAudioRecord {
     private masterClock: MasterClock;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
@@ -74,7 +69,7 @@ export class WebAudioRecorder {
 
     protected valueCB: (pcm: number) => any;
 
-    public status: RecorderStatus;
+    public status: RecordStatus;
     public sampleRate: number;
     public isInactive: boolean;
     public isRecording: boolean;
@@ -85,18 +80,18 @@ export class WebAudioRecorder {
 
     // this is how we signal
     constructor(masterClock: MasterClock) {
-        console.log('constructor():WebAudioRecorder');
+        console.log('constructor():WebAudioRecord');
 
         this.masterClock = masterClock;
 
         if (!AUDIO_CONTEXT) {
-            this.status = RecorderStatus.NO_CONTEXT_ERROR;
+            this.status = RecordStatus.NO_CONTEXT_ERROR;
             return;
         }
 
         this.valueCB = null;
 
-        this.status = RecorderStatus.UNINITIALIZED_STATE;
+        this.status = RecordStatus.UNINITIALIZED_STATE;
 
         // create nodes that do not require a stream in their constructor
         this.createNodes();
@@ -130,7 +125,7 @@ export class WebAudioRecorder {
                 .catch((error: any) => {
                     console.warn('NO MICROPHONE: ' + error);
                     console.dir(error);
-                    this.status = RecorderStatus.NO_MICROPHONE_ERROR;
+                    this.status = RecordStatus.NO_MICROPHONE_ERROR;
                 });
         }
         else {
@@ -150,21 +145,21 @@ export class WebAudioRecorder {
                         (error: any) => {
                             console.warn('initAudio(old1) ' + error);
                             alert('initAudio(old1) ' + error);
-                            this.status = RecorderStatus.NO_MICROPHONE_ERROR;
+                            this.status = RecordStatus.NO_MICROPHONE_ERROR;
                         });
                 }
                 catch (error) {
                     console.warn('initAudio(old2) ' + error);
                     console.dir(error);
                     alert('initAudio(old2) ' + error);
-                    this.status = RecorderStatus.GETUSERMEDIA_ERROR;
+                    this.status = RecordStatus.GETUSERMEDIA_ERROR;
                 }
             }
             else {
                 // neither old nor new getUserMedia are available
                 console.warn('initAudio() Error: no getUserMedia');
                 alert('initAudio() Error: no getUserMedia');
-                this.status = RecorderStatus.NO_GETUSERMEDIA_ERROR;
+                this.status = RecordStatus.NO_GETUSERMEDIA_ERROR;
             }
         }
     }
@@ -264,7 +259,7 @@ export class WebAudioRecorder {
         this.startMonitoring();
 
         // now you can tell the world we're ready
-        this.status = RecorderStatus.READY_STATE;
+        this.status = RecordStatus.READY_STATE;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -330,7 +325,7 @@ export class WebAudioRecorder {
      * @returns {void}
      */
     public setGainFactor(factor: number): void {
-        if (this.status === RecorderStatus.READY_STATE) {
+        if (this.status === RecordStatus.READY_STATE) {
             this.audioGainNode.gain.value = factor;
         }
         this.resetPeaks();
@@ -391,7 +386,7 @@ export class WebAudioRecorder {
      * @returns {Observable<RecordingInfo>}
      */
     public stop(): Observable<RecordingInfo> {
-        console.log('WebAudioRecorder:stop()');
+        console.log('WebAudioRecord:stop()');
         this.reset();
         return Observable.create((observer) => {
             observer.next({

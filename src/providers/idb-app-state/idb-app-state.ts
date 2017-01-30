@@ -10,11 +10,11 @@ import {
 
 import {
     IdbDict
-} from '../../services/idb/idb-dict';
+} from '../../models/idb/idb-dict';
 
 import {
     KeyDict
-} from '../../services/idb/idb-fs';
+} from '../../models/idb/idb-fs';
 
 export const DB_NAME: string = 'IdbAppState';
 const DB_VERSION: number = 1;
