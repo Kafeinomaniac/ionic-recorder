@@ -12,7 +12,6 @@ import { IdbAppState } from '../../providers/idb-app-state/idb-app-state';
 import { TrackPage } from '../track-page/track-page';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 
-
 export function getFolderPath(folderNode: TreeNode): string {
     'use strict';
     const path: string = folderNode.path + '/' + folderNode.name;
