@@ -2,7 +2,7 @@
 
 import { Component } from '@angular/core';
 import { formatLocalTime } from '../../models/utils/utils';
-import { IdbAppState, 
+import { IdbAppState,
          GainState } from '../../providers/idb-app-state/idb-app-state';
 import { WebAudioRecordWav } from '../../providers/web-audio/record-wav';
 import { RecordStatus } from '../../providers/web-audio/record';

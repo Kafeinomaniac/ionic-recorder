@@ -1,10 +1,10 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import { Component, ViewChild } from '@angular/core';
-import { AlertController, NavController, Platform, 
+import { AlertController, NavController, Platform,
          Content } from 'ionic-angular';
 import { TreeNode, KeyDict, DB_KEY_PATH } from '../../models/idb/idb-fs';
-import { IdbAppFS, 
+import { IdbAppFS,
          UNFILED_FOLDER_KEY } from '../../providers/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 import { alertAndDo } from '../../models/utils/alerts';

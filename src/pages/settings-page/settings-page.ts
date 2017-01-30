@@ -2,14 +2,13 @@
 
 import { Component } from '@angular/core';
 import { Idb } from '../../models/idb/idb';
-import { DB_NAME as APP_DATA_DB_NAME 
+import { DB_NAME as APP_DATA_DB_NAME
        } from '../../providers/idb-app-data/idb-app-data';
 import { DB_NAME as APP_FS_DB_NAME
        } from '../../providers/idb-app-fs/idb-app-fs';
 import { IdbAppState,
          DB_NAME as APP_STATE_DB_NAME
        } from '../../providers/idb-app-state/idb-app-state';
-
 
 /**
  * @name SettingsPage
