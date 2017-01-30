@@ -8,33 +8,33 @@ import {
 } from '@angular/core';
 
 import {
-    WebAudioPlayerWav
-} from '../../providers/web-audio/player-wav';
+    WebAudioPlayWav
+} from '../../providers/web-audio/play-wav';
 
 import {
     RecordingInfo
 } from '../../providers/web-audio/common';
 
 /**
- * @name AudioPlayer
+ * @name AudioPlay
  * @description
  * An toolbar-like (row on the screen) audio player for controlling
  * blob playback.
  */
 @Component({
-    providers: [WebAudioPlayerWav],
+    providers: [WebAudioPlayWav],
     selector: 'audio-player',
     templateUrl: 'audio-player.html'
 })
-export class AudioPlayer implements OnChanges {
+export class AudioPlay implements OnChanges {
     @Input() public recordingInfo: RecordingInfo;
-    public player: WebAudioPlayerWav;
+    public player: WebAudioPlayWav;
 
     /**
      * @constructor
      */
-    constructor(player: WebAudioPlayerWav) {
-        console.log('constructor():AudioPlayer');
+    constructor(player: WebAudioPlayWav) {
+        console.log('constructor():AudioPlay');
         this.player = player;
     }
 
@@ -46,14 +46,14 @@ export class AudioPlayer implements OnChanges {
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['recordingInfo'] && this.recordingInfo) {
-            console.log('AudioPlayer:ngOnChanges(): [recordingInfo]: ' +
+            console.log('AudioPlay:ngOnChanges(): [recordingInfo]: ' +
                 this.recordingInfo);
             this.player.setRecordingInfo(this.recordingInfo);
         }
     }
 
     public ngOnInit(): void {
-        console.log('AudioPlayer:ngOnInit()');
+        console.log('AudioPlay:ngOnInit()');
         // TODO: this maintains monitoring throughout app, you
         // can do this better by stopping to monitor when going to
         // another page but then there will need to be communication
@@ -67,7 +67,7 @@ export class AudioPlayer implements OnChanges {
     }
 
     public ngOnDestroy(): void {
-        console.log('AudioPlayer:ngOnDestroy()');
+        console.log('AudioPlay:ngOnDestroy()');
         this.player.stopMonitoring();
     }
 }

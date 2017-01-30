@@ -1,4 +1,4 @@
-# directives/ - Directive Components
+# components/ - Directive Components
 
 ## Contents
 
@@ -6,7 +6,7 @@
 
 | Name            | Content                                          |
 |-----------------|--------------------------------------------------|
-| audio-player    | Audio player widget wraps WebAudioPlayer         |
+| audio-player    | Audio player widget wraps WebAudioPlay         |
 | button-bar      | Row of buttons widget                            |
 | progress-slider | Clickable progress slider widget                 |
 | vu-gauge        | Colored LED volume monitoring widget             |
