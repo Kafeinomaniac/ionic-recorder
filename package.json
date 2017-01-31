@@ -1,20 +1,27 @@
 {
   "name": "ionic-recorder",
+  "version": "0.1.0-beta.2",
   "author": "Tracktunes Inc",
-  "version": "0.0.9-alpha.17",
+  "homepage": "https://github.com/tracktunes/ionic-recorder",
   "description": "ionic-recorder: An Ionic2 / WebAudioApi recorder app",
+  "private": false,
   "maintainers": [
     {
       "name": "@dorontal",
       "email": "doron@tracktunes.org"
     }
   ],
-  "private": true,
+
   "license": "GPL-2.0",
-  "homepage": "https://github.com/tracktunes/ionic-recorder",
   "repository": {
     "type": "git",
     "url": "https://github.com/tracktunes/ionic-recorder"
+  },
+  "scripts": {
+    "clean": "ionic-app-scripts clean",
+    "build": "ionic-app-scripts build",
+    "ionic:build": "ionic-app-scripts build",
+    "ionic:serve": "ionic-app-scripts serve"
   },
   "keywords": [
     "angular app",
@@ -57,12 +64,6 @@
     "webkit audio",
     "webrtc"
   ],
-  "scripts": {
-    "clean": "ionic-app-scripts clean",
-    "build": "ionic-app-scripts build",
-    "ionic:build": "ionic-app-scripts build",
-    "ionic:serve": "ionic-app-scripts serve"
-  },
   "dependencies": {
     "@angular/common": "2.2.1",
     "@angular/compiler": "2.2.1",
