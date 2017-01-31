@@ -1,9 +1,6 @@
 # ionic-recorder
 
-`ionic-recorder` is a sound recording hybrid app and also a progressive
-web app, based on the Ionic framework, Web Audio API and IndexedDB. This
-app is written to run in recent versions of the Chrome / Chromium browser
-on any device.
+`ionic-recorder` is a sound recording hybrid app ("hybrid" meaning the same code works in your browser if served from a web server or as a native app running on any of the platforms: Android, iOS or Windows Phone.
 
 `ionic-recorder` combines
 * [Ionic 2](http://ionicframework.com/docs/v2/)
@@ -12,15 +9,12 @@ on any device.
 * [IndexedDB](
         https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
 
-to build
-* A simple recording app (hybrid app that can run either in your browser or 
-  as an ios/android native app)
-* Useful real-time visualizations, stats and data-analysis of the recorded 
-  audio signal
-* A music organizer to keep your recordings as files and folders on your
-device or on the cloud (cloud code not yet implemented)
+### Features
+* Simple interface to record sounds
+* Real-time visualizations, stats and data-analysis of incoming audio
+* A file/folder music organizer for recordings and links
 
-## Note
+## Project Status
 This project is still very much a work in progress. 
 
 The recorder app is still in alpha, it does not yet have all features.
