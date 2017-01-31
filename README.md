@@ -1,6 +1,6 @@
 # ionic-recorder
 
-`ionic-recorder` is a sound recording hybrid app ("hybrid" meaning the same code works in your browser if served from a web server or as a native app running on any of the platforms: Android, iOS or Windows Phone.
+`ionic-recorder` is a sound recording hybrid app - "hybrid", meaning the same code works in your browser if served from a web server or as a native app running on any of the platforms: Android, iOS or Windows Phone.
 
 `ionic-recorder` combines
 * [Ionic 2](http://ionicframework.com/docs/v2/)
