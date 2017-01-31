@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Tracktunes Inc
+// Copyright (c) 2017 Tracktunes Inc
 
 import { Observable } from 'rxjs/Rx';
 import { isPositiveWholeNumber } from '../utils/utils';

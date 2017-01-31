@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Tracktunes Inc
+// Copyright (c) 2017 Tracktunes Inc
 
 // see: http://soundfile.sapp.org/doc/WaveFormat/
 export function makeWavBlobHeaderView(

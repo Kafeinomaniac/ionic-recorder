@@ -9,7 +9,7 @@
 * [IndexedDB](
         https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
 
-### Features
+## Features
 * Simple interface to record sounds
 * Real-time visualizations, stats and data-analysis of incoming audio
 * A file/folder music organizer for recordings and links
@@ -94,4 +94,4 @@ This software is licensed under the [GNU General Public License, version 2 (GPL-
 
 ## Copyright
 
-Copyright (C) 2016 Tracktunes Inc. ([tracktunes.org](https://tracktunes.org))
+Copyright (C) 2017 Tracktunes Inc. ([tracktunes.org](https://tracktunes.org))

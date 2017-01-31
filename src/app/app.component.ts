@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Tracktunes Inc
+// Copyright (c) 2017 Tracktunes Inc
 
 import { Component, ViewChild } from '@angular/core';
 import { Tabs, Tab, Platform, MenuController } from 'ionic-angular';

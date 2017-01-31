@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Tracktunes Inc
+// Copyright (c) 2017 Tracktunes Inc
 
 export abstract class DoubleBuffer {
     private buffer1: any;

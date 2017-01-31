@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Tracktunes Inc
+// Copyright (c) 2017 Tracktunes Inc
 
 import { Component } from '@angular/core';
 import { formatLocalTime } from '../../models/utils/utils';

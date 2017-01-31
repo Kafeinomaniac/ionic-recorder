@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Tracktunes Inc
+// Copyright (c) 2017 Tracktunes Inc
 
 import { Injectable } from '@angular/core';
 import { WAV_MIME_TYPE, RecordingInfo } from './common';

@@ -288,7 +288,7 @@ button - clicking the button switches tabs.
 * make db name, db version, db store name constants in localdb - unless we find out how
   to create a singleton that has constructor arguments
 * Make LocalDB an observable, see
-  * [this blog](http://blog.thoughtram.io/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html)
+  * [this blog](http://blog.thoughtram.io/angular/2017/01/06/taking-advantage-of-observables-in-angular2.html)
   * [this video](https://egghead.io/lessons/rxjs-rxjs-observables-vs-promises)
 * Design Library Page all the way up with current functionality of
   only adding recordings, even though some buttons won't work.  We

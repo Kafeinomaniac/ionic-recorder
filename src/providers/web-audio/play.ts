@@ -1,4 +1,4 @@
-// Copyright (c) 2016 Tracktunes Inc
+// Copyright (c) 2017 Tracktunes Inc
 
 // Lowest-level audio-buffer Web Audio Api playback class.
 // This class only deals with a single audio-buffer, it
