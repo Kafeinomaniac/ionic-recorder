@@ -23,7 +23,7 @@
   we're chunking and filling the temporary memory chunks and testing
   this and it runs for many days straight. We'll add the final save
   after some serious refactoring and testing of LocalDB, next, and
-  we'll keep this feature in the 0.0.8-alpha.x series.  The 0.0.9
+  we'll keep this feature in the 0.0.8-beta/.x series.  The 0.0.9
   series will start when we're playing thse DB files.
   
 ## 0.0.7-alpha
@@ -38,7 +38,7 @@
   the navbar to go blank or an error to be thrown
 
 ## 0.0.5-alpha
-* Returned to alpha.1, etc naming, because we're going to create a commit
+* Returned to beta/.1, etc naming, because we're going to create a commit
   script that automatically increments that number on each commit
 * Main change: got rid of master clock from record.ts, the app is 50% more 
   efficient now!

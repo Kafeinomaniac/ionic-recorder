@@ -1,6 +1,6 @@
 {
   "name": "ionic-recorder",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0-beta/.4",
   "author": "Tracktunes Inc",
   "homepage": "https://github.com/tracktunes/ionic-recorder",
   "description": "ionic-recorder: An Ionic2 / WebAudioApi recorder app",
