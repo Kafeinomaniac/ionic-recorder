@@ -1,4 +1,5 @@
-// This file is required by karma.conf.js and loads recursively all the .spec and framework files
+// This file is required by karma.conf.js and loads recursively all
+// the .spec and framework files
 
 import './polyfills.ts';
 
@@ -11,13 +12,16 @@ import 'zone.js/dist/fake-async-test';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getTestBed, TestBed } from '@angular/core/testing';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
-import { App, Config, Form, IonicModule, Keyboard, DomController, MenuController, NavController, Platform } from 'ionic-angular';
+import { BrowserDynamicTestingModule, platformBrowserDynamicTesting }
+from '@angular/platform-browser-dynamic/testing';
+import { App, Config, Form, IonicModule, Keyboard, DomController,
+         MenuController, NavController, Platform } from 'ionic-angular';
 import { ConfigMock, PlatformMock } from './mocks';
 // import { ClickersServiceMock } from './services/clickers.mock';
 // import { ClickersService } from './services';
 
-// Unfortunately there's no typing for the `__karma__` variable. Just declare it as any.
+// Unfortunately there's no typing for the `__karma__` variable. Just
+// declare it as any.
 declare var __karma__: any;
 declare var require: any;
 
@@ -40,37 +44,42 @@ __karma__.start();
 
 export class TestUtils {
 
-  public static beforeEachCompiler(components: Array<any>): Promise<{fixture: any, instance: any}> {
+  public static beforeEachCompiler(
+    components: Array<any>
+  ): Promise<{fixture: any, instance: any}> {
     return TestUtils.configureIonicTestingModule(components)
       .compileComponents().then(() => {
         let fixture: any = TestBed.createComponent(components[0]);
         return {
           fixture: fixture,
-          instance: fixture.debugElement.componentInstance,
+          instance: fixture.debugElement.componentInstance
         };
       });
   }
 
-  public static configureIonicTestingModule(components: Array<any>): typeof TestBed {
+  public static configureIonicTestingModule(
+    components: Array<any>
+  ): typeof TestBed {
     return TestBed.configureTestingModule({
       declarations: [
-        ...components,
+        ...components
       ],
       providers: [
         App, Form, Keyboard, DomController, MenuController, NavController,
         {provide: Platform, useClass: PlatformMock},
-        {provide: Config, useClass: ConfigMock},
         //  {provide: ClickersService, useClass: ClickersServiceMock},
+        {provide: Config, useClass: ConfigMock}
       ],
       imports: [
         FormsModule,
         IonicModule,
-        ReactiveFormsModule,
+        ReactiveFormsModule
       ],
     });
   }
 
-  // http://stackoverflow.com/questions/2705583/how-to-simulate-a-click-with-javascript
+  // http://stackoverflow.com/questions/2705583/..
+  // ..how-to-simulate-a-click-with-javascript
   public static eventFire(el: any, etype: string): void {
     if (el.fireEvent) {
       el.fireEvent('on' + etype);
