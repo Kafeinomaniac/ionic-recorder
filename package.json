@@ -11,7 +11,6 @@
       "email": "doron@tracktunes.org"
     }
   ],
-
   "license": "GPL-2.0",
   "repository": {
     "type": "git",
@@ -21,7 +20,8 @@
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
     "ionic:build": "ionic-app-scripts build",
-    "ionic:serve": "ionic-app-scripts serve"
+    "ionic:serve": "ionic-app-scripts serve",
+    "cordova": "ionic build; cd www; ln -s assets/img; cd ..; cordova build; cordova run"
   },
   "keywords": [
     "angular app",
@@ -94,5 +94,7 @@
     "cordova-plugin-splashscreen",
     "ionic-plugin-keyboard"
   ],
-  "cordovaPlatforms": []
+  "cordovaPlatforms": [
+    "browser"
+  ]
 }
