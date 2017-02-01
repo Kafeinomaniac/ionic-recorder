@@ -1,4 +1,4 @@
-## 0.1.0-beta
+## 0.1.0-alpha
 * Update to ionic-angular 2.0.0
 * We are now making this beta
 
@@ -16,7 +16,7 @@
 * Made karma / jasmine tests work after many breaking changes earlier
 * Changed from using MediaRecorder to ScriptProcessorNode approach
   no longer recording webm but recording wav instead
-* New chunking method that saves current recording one chunk at a 
+* New chunking method that saves current recording one chunk at a
   time to IndexedDB. This allows for recording as large a wav file as
   your hard drive would allow, but with very little memory overhead.
   At this stage we're almost writing to DB but not quite. However,
@@ -25,7 +25,7 @@
   after some serious refactoring and testing of LocalDB, next, and
   we'll keep this feature in the 0.0.8-alpha.x series.  The 0.0.9
   series will start when we're playing thse DB files.
-  
+
 ## 0.0.7-alpha
 * Both in `audio-player` and in `record`, the html now refers to `web-audio`
   functions directly.  This makes things simpler and makes `web-audio` more
@@ -40,7 +40,7 @@
 ## 0.0.5-alpha
 * Returned to alpha.1, etc naming, because we're going to create a commit
   script that automatically increments that number on each commit
-* Main change: got rid of master clock from record.ts, the app is 50% more 
+* Main change: got rid of master clock from record.ts, the app is 50% more
   efficient now!
 * Many other changes: got rid of monitor toggle, because now the monitor
   takes very little resources and can run continously - how cool!
@@ -48,9 +48,9 @@
 * Using no more `<input type="range">` or `<progress>` tag - they were
   hard to style and limited in functionality and required lots of hacks,
   so now we have a progress-slider component that does both: (1)
-  displays progress (of audio playback, in player) that can be 
+  displays progress (of audio playback, in player) that can be
   modified in real time (with a finger or the mouse, it can be
-  moved); (2) allows for input of a number - input slider functionality 
+  moved); (2) allows for input of a number - input slider functionality
   (used in recorder gain adjustment slider)
 * Dropped '.x' extension on version numbers - the minor version number
   (rightmost) is enough
