@@ -62,7 +62,6 @@ export class TestUtils {
   ): typeof TestBed {
     return TestBed.configureTestingModule({
       declarations: [
-        ...components
       ],
       providers: [
         App, Form, Keyboard, DomController, MenuController, NavController,
