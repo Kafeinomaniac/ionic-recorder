@@ -3,7 +3,7 @@
 * We are now making this beta
 
 ## 0.0.9-alpha
-* Update to Ionic 2.0.0-beta.11 / Angular 2.0.0-rc.4
+* Update to Ionic 2.0.0-alpha/.11 / Angular 2.0.0-rc.4
 * Chunked playback of wav files is the main feature - no more is
   this recorder app a strain on you device's memory, it will expand
   to use as much as your hard disk (typically flash on mobile) as is
@@ -11,7 +11,7 @@
   use for safety, later...).
 
 ## 0.0.8-alpha
-* Update to Ionic 2.0.0-beta.9 / Angular 2.0.0-rc.1
+* Update to Ionic 2.0.0-alpha/.9 / Angular 2.0.0-rc.1
   (numerous breaking changes were made since rc.1)
 * Made karma / jasmine tests work after many breaking changes earlier
 * Changed from using MediaRecorder to ScriptProcessorNode approach
