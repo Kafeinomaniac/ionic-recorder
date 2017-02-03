@@ -12,7 +12,9 @@
     "postinstall": "ionic state restore && webdriver-manager update",
     "start": "ionic serve",
     "test": "ng test",
-    "test-coverage": "ng test --code-coverage"
+    "test-coverage": "ng test --code-coverage",
+    "commit": "./scripts/commit.sh",
+    "deploy": "./scripts/deploy.sh"
   },
   "version": "0.1.0-alpha.6",
   "dependencies": {
