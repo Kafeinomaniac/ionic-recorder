@@ -118,6 +118,19 @@ export class WebAudioRecord {
             // We're in mozilla but not yet in chrome
             // new getUserMedia is available, use it to get microphone stream
             // console.log('Using NEW navigator.mediaDevices.getUserMedia');
+            navigator['permissions'].query({ name: 'microphone' }).then(function (result) {
+                if (result.state == 'granted') {
+                    alert('granted');
+                } else if (result.state == 'prompt') {
+                    alert('prompt');
+                } else if (result.state == 'denied') {
+                    alert('denied');
+                }
+                result.onchange = function () {
+                    alert('onchange');
+                };
+            });
+
             navigator.mediaDevices.getUserMedia(getUserMediaOptions)
                 .then((stream: MediaStream) => {
                     this.connectNodes(stream);
