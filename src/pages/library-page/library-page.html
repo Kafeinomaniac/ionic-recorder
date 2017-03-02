@@ -38,7 +38,7 @@
                     </span>
                 <ion-icon *ngIf="!folderItems[i].data" name="folder">
                 </ion-icon>
-                {{folderItems[i].name}}
+                &nbsp; {{folderItems[i].name}}
             </ion-label>
             <ion-checkbox [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])" item-left>
             </ion-checkbox>

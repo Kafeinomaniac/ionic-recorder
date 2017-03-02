@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { AUDIO_CONTEXT, RecordingInfo } from './common';
+import { AUDIO_CONTEXT,  RecordingInfo } from './common';
 import { MasterClock } from '../master-clock/master-clock';
 import { ABS, formatTime } from '../../models/utils/utils';
 
@@ -111,25 +111,16 @@ export class WebAudioRecord {
         this.sampleRate = AUDIO_CONTEXT.sampleRate;
         console.log('SAMPLE RATE: ' + this.sampleRate);
 
-        const getUserMediaOptions: Object = { video: false, audio: true };
+        const getUserMediaOptions: Object = {
+            video: false,
+            audio: true
+        };
 
         if (navigator.mediaDevices &&
             navigator.mediaDevices.getUserMedia) {
             // We're in mozilla but not yet in chrome
             // new getUserMedia is available, use it to get microphone stream
             // console.log('Using NEW navigator.mediaDevices.getUserMedia');
-            navigator['permissions'].query({ name: 'microphone' }).then(function (result) {
-                if (result.state == 'granted') {
-                    alert('granted');
-                } else if (result.state == 'prompt') {
-                    alert('prompt');
-                } else if (result.state == 'denied') {
-                    alert('denied');
-                }
-                result.onchange = function () {
-                    alert('onchange');
-                };
-            });
 
             navigator.mediaDevices.getUserMedia(getUserMediaOptions)
                 .then((stream: MediaStream) => {
@@ -140,8 +131,7 @@ export class WebAudioRecord {
                     console.dir(error);
                     this.status = RecordStatus.NO_MICROPHONE_ERROR;
                 });
-        }
-        else {
+        } else {
             // This is what is called if we're in chrome / chromium
             // console.log('Using OLD navigator.getUserMedia (new not there)');
             navigator.getUserMedia = navigator.getUserMedia ||
@@ -160,15 +150,13 @@ export class WebAudioRecord {
                             alert('initAudio(old1) ' + error);
                             this.status = RecordStatus.NO_MICROPHONE_ERROR;
                         });
-                }
-                catch (error) {
+                } catch (error) {
                     console.warn('initAudio(old2) ' + error);
                     console.dir(error);
                     alert('initAudio(old2) ' + error);
                     this.status = RecordStatus.GETUSERMEDIA_ERROR;
                 }
-            }
-            else {
+            } else {
                 // neither old nor new getUserMedia are available
                 console.warn('initAudio() Error: no getUserMedia');
                 alert('initAudio() Error: no getUserMedia');
@@ -297,15 +285,14 @@ export class WebAudioRecord {
                     // on new maximum, re-start counting peaks
                     this.resetPeaks();
                     this.maxVolumeSinceReset = this.currentVolume;
-                }
-                else if (this.currentVolume === this.maxVolumeSinceReset) {
+                } else if (this.currentVolume === this.maxVolumeSinceReset) {
                     this.nPeaksAtMax += 1;
                 }
 
                 // update percentPeaksAtMax property
                 this.percentPeaksAtMax =
                     (100 * this.nPeaksAtMax / this.nPeakMeasurements)
-                        .toFixed(1);
+                    .toFixed(1);
             });
     }
 
@@ -398,7 +385,7 @@ export class WebAudioRecord {
      * Stop recording
      * @returns {Observable<RecordingInfo>}
      */
-    public stop(): Observable<RecordingInfo> {
+    public stop(): Observable < RecordingInfo > {
         console.log('WebAudioRecord:stop()');
         this.reset();
         return Observable.create((observer) => {

@@ -21,13 +21,15 @@ addons:
 branches:
   only:
     - master
+    - rc0
 
 #
 # Build Lifecycle:
 #
 
 before_install:
-  - nvm use 4.1.2
+  - nvm install node
+  - nvm use node
   - npm install -g cordova ionic
   - ionic state clear
 
@@ -38,19 +40,12 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 
 script:
-  - npm test                             # unit tests
-  - npm run build                        # ionic build
-  # Serve with python as ionic serve needs interaction
-  - cd www && python -m SimpleHTTPServer 8100 >> python_serve.log 2>&1 &
-  - npm run e2e                          # run e2e tests against ionic
-
-after_failure:
-  # - cat /.../python_serve.log
-  # - cat /.../ionic_serve.log
+  - npm run test-ci  # unit tests
+  - npm run e2e      # run e2e tests against ionic
 
 after_success:
   # Send coverage info off to cloud ppl
-  - cat coverage/lcov.info | ./node_modules/.bin/codecov
+  - ./node_modules/.bin/codecov
 
 before_deploy:
   # start install android
@@ -58,6 +53,10 @@ before_deploy:
   - tar -xzvf android-sdk_r24.2-linux.tgz
   - echo "y" | ./android-sdk-linux/tools/android update sdk --no-ui --filter android-23,build-tools-23.0.1
   - export ANDROID_HOME=${PWD}/android-sdk-linux
+  # license fail workaround: http://stackoverflow.com/questions/38096225/automatically-accept-all-sdk-licences
+  - mkdir -p ${ANDROID_HOME}/licenses
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "${ANDROID_HOME}/licenses/android-sdk-license"
+  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "${ANDROID_HOME}/licenses/android-sdk-preview-license"
   # end install android
   - ionic state restore
   - ionic platform add android
