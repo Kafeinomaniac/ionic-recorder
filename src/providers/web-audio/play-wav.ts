@@ -167,8 +167,7 @@ export class WebAudioPlayWav extends WebAudioPlay {
                                     AUDIO_CONTEXT.sampleRate
                                 ),
                                 wavArray
-                            ],
-                            { type: WAV_MIME_TYPE })
+                            ], { type: WAV_MIME_TYPE })
                     );
                 });
         });
@@ -179,15 +178,15 @@ export class WebAudioPlayWav extends WebAudioPlay {
         this.stop(false);
         const
             absoluteSampleToSkipTo: number =
-                Math.floor(relativeTime * this.recordingInfo.nSamples),
+            Math.floor(relativeTime * this.recordingInfo.nSamples),
             chunkSampleToSkipTo: number =
-                absoluteSampleToSkipTo % DB_CHUNK_LENGTH,
+            absoluteSampleToSkipTo % DB_CHUNK_LENGTH,
             startKey: number =
-                this.recordingInfo.dbStartKey +
-                Math.floor(absoluteSampleToSkipTo / DB_CHUNK_LENGTH),
+            this.recordingInfo.dbStartKey +
+            Math.floor(absoluteSampleToSkipTo / DB_CHUNK_LENGTH),
             startOffset: number =
-                (startKey - this.recordingInfo.dbStartKey) *
-                this.chunkDuration;
+            (startKey - this.recordingInfo.dbStartKey) *
+            this.chunkDuration;
         this.chunkStartTime =
             chunkSampleToSkipTo * this.chunkDuration / DB_CHUNK_LENGTH;
         console.log('relativeTimeSeek(' + relativeTime.toFixed(2) +

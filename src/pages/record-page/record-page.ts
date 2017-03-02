@@ -2,13 +2,19 @@
 
 import { Component } from '@angular/core';
 import { formatLocalTime } from '../../models/utils/utils';
-import { IdbAppState,
-         GainState } from '../../providers/idb-app-state/idb-app-state';
+import {
+    IdbAppState,
+    GainState
+}
+from '../../providers/idb-app-state/idb-app-state';
 import { WebAudioRecordWav } from '../../providers/web-audio/record-wav';
 import { RecordStatus } from '../../providers/web-audio/record';
 import { RecordingInfo } from '../../providers/web-audio/common';
-import { IdbAppFS,
-         UNFILED_FOLDER_KEY } from '../../providers/idb-app-fs/idb-app-fs';
+import {
+    IdbAppFS,
+    UNFILED_FOLDER_KEY
+}
+from '../../providers/idb-app-fs/idb-app-fs';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';

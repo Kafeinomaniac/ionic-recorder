@@ -44,7 +44,8 @@ export class VuGauge implements OnChanges {
      */
     private fillColor(ledIndex: number, lightness: string): string {
         return ['hsl(', 120 - ledIndex * this.hStep,
-            ',100%,', lightness, ')'].join('');
+            ',100%,', lightness, ')'
+        ].join('');
     }
 
     /**
@@ -80,7 +81,8 @@ export class VuGauge implements OnChanges {
      * @returns {void}
      */
     public ngOnChanges(
-        changeRecord: { [propertyName: string]: SimpleChange }
+        changeRecord: {
+            [propertyName: string]: SimpleChange }
     ): void {
         if (this.leds.length > 0) {
             let fill: string, i: number;

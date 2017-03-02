@@ -1,9 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    DoubleBufferGetter,
-    DoubleBufferSetter
-} from './double-buffer';
+import { DoubleBufferGetter, DoubleBufferSetter } from './double-buffer';
 
 let buffer1: Int16Array,
     buffer2: Int16Array,

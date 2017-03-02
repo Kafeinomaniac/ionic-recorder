@@ -65,39 +65,40 @@ export class Idb {
         'use strict';
         console.log('deleteDb(' + dbName + ')');
         let deleteDbOnce: () => void = () => {
-            let request: IDBOpenDBRequest =
-                indexedDB.deleteDatabase(dbName);
-            request.onsuccess = function (): void {
-                // console.log('deleteDatabase: SUCCESS');
-            };
-            request.onerror = function (): void {
-                console.warn('deleteDatabase: ERROR');
-                throw Error('Idb:deleteDb() request error');
-            };
-            request.onblocked = function (): void {
-                console.warn('deleteDatabase: BLOCKED');
-                // we're going to stop throwing this error here because
-                // we notice that the DB gets deleted despite this error
-                // being thrown every time, keeping just the warning
-                // throw Error('Idb:deleteDb() request blocked error');
-            };
-        }, source: Observable<void> = Observable.create((observer) => {
-            let timerId: number,
-                repeat: () => void = () => {
-                    try {
-                        console.log('trying to delete ' + dbName + ' ...');
-                        deleteDbOnce();
-                    }
-                    catch (error) {
-                        console.warn('Error: ' + error);
-                        timerId = setTimeout(repeat, WAIT_MSEC);
-                    }
-                    clearTimeout(timerId);
-                    observer.next();
-                    observer.complete();
+                let request: IDBOpenDBRequest =
+                    indexedDB.deleteDatabase(dbName);
+                request.onsuccess = function(): void {
+                    // console.log('deleteDatabase: SUCCESS');
                 };
-            repeat();
-        });
+                request.onerror = function(): void {
+                    console.warn('deleteDatabase: ERROR');
+                    throw Error('Idb:deleteDb() request error');
+                };
+                request.onblocked = function(): void {
+                    console.warn('deleteDatabase: BLOCKED');
+                    // we're going to stop throwing this error here because
+                    // we notice that the DB gets deleted despite this error
+                    // being thrown every time, keeping just the warning
+                    // throw Error('Idb:deleteDb() request blocked error');
+                };
+            },
+            source: Observable<void> = Observable.create((observer) => {
+                let timerId: number,
+                    repeat: () => void = () => {
+                        try {
+                            console.log('trying to delete ' + dbName + ' ...');
+                            deleteDbOnce();
+                        }
+                        catch (error) {
+                            console.warn('Error: ' + error);
+                            timerId = setTimeout(repeat, WAIT_MSEC);
+                        }
+                        clearTimeout(timerId);
+                        observer.next();
+                        observer.complete();
+                    };
+                repeat();
+            });
         return source;
     }
 
@@ -192,10 +193,10 @@ export class Idb {
      * @returns {Observable<number>} Observable that emits the item key
      * that was automatically incremented for the newly created (stored) item.
      */
-    public create<T>(
+    public create < T > (
         storeName: string,
         item: T,
-        itemCB?: (item: T, key?: number) => T
+        itemCB?: (item: T, key ?: number) => T
     ): Observable<number> {
         let source: Observable<number> = Observable.create((observer) => {
             if (typeof item !== 'undefined' && item) {
@@ -249,7 +250,7 @@ export class Idb {
      * @returns {Observable<T>} Observable that emits the item as
      * soon as the db read request completes
      */
-    public read<T>(
+    public read <T> (
         storeName: string,
         key: number
     ): Observable<T> {
@@ -292,7 +293,7 @@ export class Idb {
      * to replace existing item in the db store
      * @returns {Observable<void>} Observable that emits after update ends
      */
-    public update<T>(
+    public update<T> (
         storeName: string,
         key: number,
         newItem: T
@@ -420,8 +421,8 @@ export class Idb {
         storeConfigs.forEach((sConfig: StoreConfig) => {
             let storeName: string = sConfig.name,
                 cursorRequest: IDBRequest =
-                    db.transaction(storeName, 'readonly')
-                        .objectStore(storeName).openCursor(null, 'prev');
+                db.transaction(storeName, 'readonly')
+                .objectStore(storeName).openCursor(null, 'prev');
 
             cursorRequest.onsuccess = (event: ErrorEvent) => {
                 let cursor: IDBCursorWithValue = cursorRequest.result;
@@ -462,8 +463,7 @@ export class Idb {
             sConfig.indexConfigs.forEach((iConfig: StoreIndexConfig) => {
                 store.createIndex(
                     iConfig.name,
-                    iConfig.name,
-                    { unique: iConfig.unique });
+                    iConfig.name, { unique: iConfig.unique });
             });
         });
     }
@@ -474,7 +474,7 @@ export class Idb {
      * when it's ready for use.
      */
     private openDB(config: IdbConfig): Observable<IDBDatabase> {
-        let source: Observable<IDBDatabase> = Observable.create((observer) => {
+        let source: Observable <IDBDatabase> = Observable.create((observer) => {
             let openRequest: IDBOpenDBRequest = indexedDB.open(
                 config.name, config.version);
 

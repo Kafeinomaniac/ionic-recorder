@@ -16,17 +16,13 @@ export class IdbDict extends Idb {
         super({
             name: dbName,
             version: dbVersion,
-            storeConfigs: [
-                {
-                    name: DICT_STORE,
-                    indexConfigs: [
-                        {
-                            name: 'key',
-                            unique: true
-                        }
-                    ]
-                }
-            ]
+            storeConfigs: [{
+                name: DICT_STORE,
+                indexConfigs: [{
+                    name: 'key',
+                    unique: true
+                }]
+            }]
         });
 
         this.waitForDB().subscribe(
@@ -86,7 +82,7 @@ export class IdbDict extends Idb {
     public addKeyValue(key: string, value: any): Observable<number> {
         console.log('addKeyValue(' + key + ', value)');
         let source: Observable<number> = Observable.create((observer) => {
-            this.create<KeyValuePair>(DICT_STORE, {
+            this.create<KeyValuePair> (DICT_STORE, {
                 key: key,
                 value: value
             }).subscribe(
@@ -147,7 +143,7 @@ export class IdbDict extends Idb {
                     let index: IDBIndex = store.index('key'),
                         keyRange: IDBKeyRange = IDBKeyRange.only(key),
                         cursorRequest: IDBRequest =
-                            index.openCursor(keyRange);
+                        index.openCursor(keyRange);
 
                     cursorRequest.onsuccess = (event: ErrorEvent) => {
                         let cursor: IDBCursorWithValue =

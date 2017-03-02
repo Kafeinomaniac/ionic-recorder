@@ -32,8 +32,7 @@ export class WebAudioSaveWav {
                 if (this.blob) {
                     // blob already exists, append to it
                     this.blob = new Blob(
-                        [this.blob, wavArray],
-                        { type: WAV_MIME_TYPE }
+                        [this.blob, wavArray], { type: WAV_MIME_TYPE }
                     );
                     console.log('Blob size: ' + this.blob.size);
                 }
@@ -49,8 +48,7 @@ export class WebAudioSaveWav {
                                 recordingInfo.sampleRate
                             ),
                             wavArray
-                        ],
-                        { type: WAV_MIME_TYPE }
+                        ], { type: WAV_MIME_TYPE }
                     );
                     console.log('Blob size: ' + this.blob.size);
                 }
@@ -83,6 +81,6 @@ export class WebAudioSaveWav {
                     this.save(recordingInfo, fileName);
                 }
             }
-            );
+        );
     }
 }

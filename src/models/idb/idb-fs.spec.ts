@@ -1,12 +1,6 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    IdbFS,
-    TreeNode,
-    KeyDict,
-    DB_KEY_PATH,
-    ParentChild
-} from './idb-fs';
+import { IdbFS, TreeNode, KeyDict, DB_KEY_PATH, ParentChild } from './idb-fs';
 
 const DB_NAME: string = 'testIdbFS';
 const DB_VERSION: number = 1;
@@ -204,7 +198,7 @@ describe('services/idb:IdbFS', () => {
                     (error) => {
                         fail(error);
                     }
-                    );
+                );
             },
             WAIT_MSEC);
     });
@@ -232,7 +226,7 @@ describe('services/idb:IdbFS', () => {
                     (error) => {
                         fail(error);
                     }
-                    );
+                );
             },
             WAIT_MSEC);
     });
@@ -260,21 +254,21 @@ describe('services/idb:IdbFS', () => {
             () => {
                 idbFS.createNode('item6', folder5[DB_KEY_PATH], 'item6 datum')
                     .subscribe(
-                    (parentChild: ParentChild) => {
-                        item6 = parentChild.child;
-                        expect(item6.parentKey).toEqual(folder5[DB_KEY_PATH]);
-                        expect(item6.name).toEqual('item6');
-                        expect(item6.data).toBe('item6 datum');
-                        expect(item6.timeStamp).not.toBeFalsy();
-                        folder5 = parentChild.parent;
-                        expect(folder5.childOrder).toEqual([
-                            item6[DB_KEY_PATH]
-                        ]);
-                        done();
-                    },
-                    (error) => {
-                        fail(error);
-                    }
+                        (parentChild: ParentChild) => {
+                            item6 = parentChild.child;
+                            expect(item6.parentKey).toEqual(folder5[DB_KEY_PATH]);
+                            expect(item6.name).toEqual('item6');
+                            expect(item6.data).toBe('item6 datum');
+                            expect(item6.timeStamp).not.toBeFalsy();
+                            folder5 = parentChild.parent;
+                            expect(folder5.childOrder).toEqual([
+                                item6[DB_KEY_PATH]
+                            ]);
+                            done();
+                        },
+                        (error) => {
+                            fail(error);
+                        }
                     );
             },
             WAIT_MSEC);
@@ -303,7 +297,7 @@ describe('services/idb:IdbFS', () => {
                     (error) => {
                         fail(error);
                     }
-                    );
+                );
             },
             WAIT_MSEC);
     });
@@ -332,7 +326,7 @@ describe('services/idb:IdbFS', () => {
                     (error) => {
                         fail(error);
                     }
-                    );
+                );
             },
             WAIT_MSEC);
     });

@@ -9,13 +9,13 @@ export function makeWavBlobHeaderView(
     const arrayByteLength: number = nSamples * 2,
         headerView: DataView = new DataView(new ArrayBuffer(44)),
         writeAscii:
-            (dataView: DataView, offset: number, text: string) => void =
-            (dataView: DataView, offset: number, text: string) => {
-                const len: number = text.length;
-                for (let i: number = 0; i < len; i++) {
-                    dataView.setUint8(offset + i, text.charCodeAt(i));
-                }
-            };
+        (dataView: DataView, offset: number, text: string) => void =
+        (dataView: DataView, offset: number, text: string) => {
+            const len: number = text.length;
+            for (let i: number = 0; i < len; i++) {
+                dataView.setUint8(offset + i, text.charCodeAt(i));
+            }
+        };
     //
     // NB: this is single-channel (mono)
     //

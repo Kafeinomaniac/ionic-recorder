@@ -29,7 +29,7 @@ export class MasterClock {
         console.log('constructor():MasterClock');
         this.isRunning = false;
         this.intervalId = null;
-        this.ngZone =  new NgZone({ enableLongStackTrace: false });
+        this.ngZone = new NgZone({ enableLongStackTrace: false });
         this.functions = {};
     }
 

@@ -1,11 +1,19 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Component, ViewChild } from '@angular/core';
-import { AlertController, NavController, Platform,
-         Content } from 'ionic-angular';
+import {
+    AlertController,
+    NavController,
+    Platform,
+    Content
+}
+from 'ionic-angular';
 import { TreeNode, KeyDict, DB_KEY_PATH } from '../../models/idb/idb-fs';
-import { IdbAppFS,
-         UNFILED_FOLDER_KEY } from '../../providers/idb-app-fs/idb-app-fs';
+import {
+    IdbAppFS,
+    UNFILED_FOLDER_KEY
+}
+from '../../providers/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 import { alertAndDo } from '../../models/utils/alerts';
 import { IdbAppState } from '../../providers/idb-app-state/idb-app-state';
@@ -64,12 +72,10 @@ export class LibraryPage {
         this.folderItems = {};
         this.selectedNodes = {};
         this.totalSelectedCounter = 0;
-        this.headerButtons = [
-            {
+        this.headerButtons = [{
                 text: 'Selection',
                 leftIcon: platform.is('ios') ?
-                    'radio-button-off' :
-                    'square-outline',
+                    'radio-button-off' : 'square-outline',
                 rightIcon: 'md-arrow-dropdown',
                 clickCB: () => {
                     this.onClickSelectButton();
@@ -100,8 +106,7 @@ export class LibraryPage {
             }
         ];
 
-        this.footerButtons = [
-            {
+        this.footerButtons = [{
                 text: 'Info',
                 leftIcon: 'information-circle',
                 clickCB: () => {
@@ -149,14 +154,14 @@ export class LibraryPage {
                 this.selectedNodes = selectedNodes;
                 this.idbAppState.getProperty('lastViewedFolderKey')
                     .subscribe(
-                    (lastViewedFolderKey: any) => {
-                        // swich folders, according to IdbAppState
-                        this.switchFolder(lastViewedFolderKey, false);
-                        console.log(
-                            'LibraryPage:ionViewWillEnter(): ' +
-                            'lastViewedFolderKey=' +
-                            lastViewedFolderKey);
-                    });
+                        (lastViewedFolderKey: any) => {
+                            // swich folders, according to IdbAppState
+                            this.switchFolder(lastViewedFolderKey, false);
+                            console.log(
+                                'LibraryPage:ionViewWillEnter(): ' +
+                                'lastViewedFolderKey=' +
+                                lastViewedFolderKey);
+                        });
             }
         );
     }
@@ -286,11 +291,11 @@ export class LibraryPage {
     private checkIfDeletingInOtherFolders(): void {
         let nSelectedNodes: number = Object.keys(this.selectedNodes).length,
             selectedNodesHere: KeyDict =
-                this.selectedNodesHere(),
+            this.selectedNodesHere(),
             nSelectedNodesHere: number =
-                Object.keys(selectedNodesHere).length,
+            Object.keys(selectedNodesHere).length,
             nSelectedNodesNotHere: number =
-                nSelectedNodes - nSelectedNodesHere;
+            nSelectedNodes - nSelectedNodesHere;
 
         if (nSelectedNodes === 0) {
             // for the case of unselecting only Unfiled folder in the alert
@@ -302,8 +307,7 @@ export class LibraryPage {
         if (nSelectedNodesNotHere) {
             if (nSelectedNodesHere) {
                 alertAndDo(
-                    this.alertController,
-                    [
+                    this.alertController, [
                         'You have ', nSelectedNodesNotHere,
                         ' selected item',
                         nSelectedNodesNotHere > 1 ? 's' : '',
@@ -345,8 +349,7 @@ export class LibraryPage {
         if (this.selectedNodes[UNFILED_FOLDER_KEY]) {
             console.log('onClickDeleteButton()');
             alertAndDo(
-                this.alertController,
-                [
+                this.alertController, [
                     'The Unfiled folder is selected for deletion, ',
                     'but the Unfiled folder cannot be deleted. Unselect it ',
                     'and delete the rest?'
@@ -436,7 +439,8 @@ export class LibraryPage {
                 }
                 // we read all child nodes of the folder we're
                 // switching to in order to fill up this.folderItems
-                let newFolderItems: { [id: string]: TreeNode } = {};
+                let newFolderItems: {
+                    [id: string]: TreeNode } = {};
                 this.idbAppFS.readChildNodes(folderNode).subscribe(
                     (childNodes: TreeNode[]) => {
                         this.folderItems = {};

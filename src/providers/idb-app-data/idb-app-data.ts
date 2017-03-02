@@ -11,12 +11,10 @@ const STORE_NAME: string = 'RecordedChunks';
 const DB_CONFIG: IdbConfig = {
     name: DB_NAME,
     version: DB_VERSION,
-    storeConfigs: [
-        {
-            name: STORE_NAME,
-            indexConfigs: []
-        }
-    ]
+    storeConfigs: [{
+        name: STORE_NAME,
+        indexConfigs: []
+    }]
 };
 
 @Injectable()
@@ -27,10 +25,10 @@ export class IdbAppData extends Idb {
     }
 
     public createChunk(item: Int16Array): Observable<number> {
-        return this.create<Int16Array>(STORE_NAME, item);
+        return this.create < Int16Array > (STORE_NAME, item);
     }
 
     public readChunk(key: number): Observable<Int16Array> {
-        return this.read<Int16Array>(STORE_NAME, key);
+        return this.read < Int16Array > (STORE_NAME, key);
     }
 }

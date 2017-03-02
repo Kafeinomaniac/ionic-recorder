@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { AUDIO_CONTEXT,  RecordingInfo } from './common';
+import { AUDIO_CONTEXT, RecordingInfo } from './common';
 import { MasterClock } from '../master-clock/master-clock';
 import { ABS, formatTime } from '../../models/utils/utils';
 
@@ -131,7 +131,8 @@ export class WebAudioRecord {
                     console.dir(error);
                     this.status = RecordStatus.NO_MICROPHONE_ERROR;
                 });
-        } else {
+        }
+        else {
             // This is what is called if we're in chrome / chromium
             // console.log('Using OLD navigator.getUserMedia (new not there)');
             navigator.getUserMedia = navigator.getUserMedia ||
@@ -150,13 +151,15 @@ export class WebAudioRecord {
                             alert('initAudio(old1) ' + error);
                             this.status = RecordStatus.NO_MICROPHONE_ERROR;
                         });
-                } catch (error) {
+                }
+                catch (error) {
                     console.warn('initAudio(old2) ' + error);
                     console.dir(error);
                     alert('initAudio(old2) ' + error);
                     this.status = RecordStatus.GETUSERMEDIA_ERROR;
                 }
-            } else {
+            }
+            else {
                 // neither old nor new getUserMedia are available
                 console.warn('initAudio() Error: no getUserMedia');
                 alert('initAudio() Error: no getUserMedia');
@@ -277,7 +280,7 @@ export class WebAudioRecord {
             // the monitoring actions are in the following function:
             () => {
                 // update currentTime property
-                this.currentTime = formatTime(this.getTime());
+                this.currentTime = formatTime(this.getTime(), Infinity);
 
                 // update currentVolume property
                 this.nPeakMeasurements += 1;
@@ -285,7 +288,8 @@ export class WebAudioRecord {
                     // on new maximum, re-start counting peaks
                     this.resetPeaks();
                     this.maxVolumeSinceReset = this.currentVolume;
-                } else if (this.currentVolume === this.maxVolumeSinceReset) {
+                }
+                else if (this.currentVolume === this.maxVolumeSinceReset) {
                     this.nPeaksAtMax += 1;
                 }
 
@@ -385,7 +389,7 @@ export class WebAudioRecord {
      * Stop recording
      * @returns {Observable<RecordingInfo>}
      */
-    public stop(): Observable < RecordingInfo > {
+    public stop(): Observable<RecordingInfo> {
         console.log('WebAudioRecord:stop()');
         this.reset();
         return Observable.create((observer) => {

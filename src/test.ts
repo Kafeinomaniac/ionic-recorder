@@ -66,7 +66,7 @@ export class TestUtils {
     public static beforeEachCompiler(components: Array < any > ): Promise < {
         fixture: any,
         instance: any
-    } > {
+    }> {
         return TestUtils.configureIonicTestingModule(components)
             .compileComponents().then(() => {
                 let fixture: any = TestBed.createComponent(components[0]);

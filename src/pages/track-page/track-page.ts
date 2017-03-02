@@ -53,8 +53,7 @@ export class TrackPage {
             this.recordingInfo.nSamples / this.recordingInfo.sampleRate;
         this.displayDuration = formatTime(this.duration, this.duration);
 
-        this.headerButtons = [
-            {
+        this.headerButtons = [{
                 text: 'Move',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
@@ -101,24 +100,22 @@ export class TrackPage {
     private presentActionSheet(): void {
         this.actionSheetController.create({
             title: 'Share as',
-            buttons: [
-                {
-                    text: 'Local file on device',
-                    handler: () => {
-                        console.log('Share as local file clicked, fname: ' +
-                            this.fileName + '.wav');
-                        // console.dir(this.recordingInfo);
-                        this.webAudioSaveWav.save(
-                            this.recordingInfo, this.fileName + '.wav');
-                    }
-                }, {
-                    text: 'Cancel',
-                    role: 'cancel',
-                    handler: () => {
-                        console.log('Cancel clicked');
-                    }
+            buttons: [{
+                text: 'Local file on device',
+                handler: () => {
+                    console.log('Share as local file clicked, fname: ' +
+                        this.fileName + '.wav');
+                    // console.dir(this.recordingInfo);
+                    this.webAudioSaveWav.save(
+                        this.recordingInfo, this.fileName + '.wav');
                 }
-            ]
+            }, {
+                text: 'Cancel',
+                role: 'cancel',
+                handler: () => {
+                    console.log('Cancel clicked');
+                }
+            }]
         }).present();
     }
 

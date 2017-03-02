@@ -11,7 +11,8 @@ import {
     isFunction,
     isUndefined,
     isString
-} from './utils';
+}
+from './utils';
 
 describe('utils/utils:isPositiveWholeNumber()', () => {
     it('isX() functions work as expected', () => {
@@ -58,11 +59,11 @@ describe('utils/utils:isPositiveWholeNumber()', () => {
         let x: string = formatTime(0, 0);
         alert(x);
         expect(x).toEqual('00.00');
-        x = formatTime(0);
+        x = formatTime(0, Infinity);
         expect(x).toEqual('0:00:00.00');
         x = formatTime(555.12, 555.12);
         expect(x).toEqual('09:15.12');
-        x = formatTime(55555.12);
+        x = formatTime(55555.12, Infinity);
         expect(x).toEqual('15:25:55.12');
     });
 
@@ -83,9 +84,9 @@ describe('utils/utils:isPositiveWholeNumber()', () => {
 
     it('can copyFromObject', () => {
         let obj1: Object = {
-            a: 1,
-            b: 2
-        },
+                a: 1,
+                b: 2
+            },
             obj2: Object = {
                 c: 3
             },

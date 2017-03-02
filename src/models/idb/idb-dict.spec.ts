@@ -1,12 +1,7 @@
 // Copyright (c) 2016 Tracktunes Inc
 
-import {
-    IdbDict
-} from './idb-dict';
-
-import {
-    isPositiveWholeNumber
-} from '../utils/utils';
+import { IdbDict } from './idb-dict';
+import { isPositiveWholeNumber } from '../utils/utils';
 
 const DB_NAME: string = 'testIdbDict';
 const DB_VERSION: number = 1;

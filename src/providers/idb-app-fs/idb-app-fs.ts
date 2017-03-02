@@ -1,8 +1,13 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Injectable } from '@angular/core';
-import { IdbFS, TreeNode, DB_KEY_PATH,
-         ROOT_FOLDER_KEY } from '../../models/idb/idb-fs';
+import {
+    IdbFS,
+    TreeNode,
+    DB_KEY_PATH,
+    ROOT_FOLDER_KEY
+}
+from '../../models/idb/idb-fs';
 
 const DB_VERSION: number = 1;
 

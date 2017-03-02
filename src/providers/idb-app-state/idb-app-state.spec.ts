@@ -2,11 +2,13 @@
 
 import {
     IdbAppState
-} from './idb-app-state';
+}
+from './idb-app-state';
 
 import {
     isPositiveWholeNumber
-} from '../../models/utils/utils';
+}
+from '../../models/utils/utils';
 
 const WAIT_MSEC: number = 60;
 
@@ -68,14 +70,14 @@ describe('When idbAppState initialized', () => {
             () => {
                 idbAppState.updateProperty('lastTabIndex', savedTabIndex)
                     .subscribe(
-                    (bUpdated: boolean) => {
-                        expect(bUpdated).toBe(true);
-                        idbAppState.getProperty('lastTabIndex').subscribe(
-                            (prop: any) => {
-                                expect(prop).toBe(savedTabIndex);
-                                done();
-                            });
-                    });
+                        (bUpdated: boolean) => {
+                            expect(bUpdated).toBe(true);
+                            idbAppState.getProperty('lastTabIndex').subscribe(
+                                (prop: any) => {
+                                    expect(prop).toBe(savedTabIndex);
+                                    done();
+                                });
+                        });
             },
             WAIT_MSEC);
     });

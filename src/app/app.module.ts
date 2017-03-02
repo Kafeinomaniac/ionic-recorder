@@ -52,4 +52,4 @@ import { MasterClock } from '../providers/master-clock/master-clock';
         MasterClock
     ]
 })
-export class AppModule { }
+export class AppModule {}
