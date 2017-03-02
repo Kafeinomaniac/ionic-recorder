@@ -61,7 +61,7 @@ export function isString(obj: any): boolean {
  */
 export function isPositiveWholeNumber(num: number): boolean {
     'use strict';
-    return <boolean>(
+    return <boolean > (
         num &&
         !isNaN(num) &&
         num > 0 &&
@@ -91,9 +91,12 @@ export function isEven(num: number): boolean {
  */
 export function formatTime(
     timeInSeconds: number,
-    maxTimeInSeconds: number = Infinity
+    maxTimeInSeconds: number
 ): string {
     'use strict';
+    if (isUndefined(maxTimeInSeconds)) {
+        maxTimeInSeconds = Infinity;
+    }
     let nSeconds: number = Math.floor(timeInSeconds),
         // initialize the result with the centiseconds portion and period
         result: string = (timeInSeconds - nSeconds).toFixed(2).substr(1),
@@ -104,8 +107,7 @@ export function formatTime(
     if (timeInSeconds < 60 && maxTimeInSeconds < 60) {
         // no minutes
         result = addZero(nSeconds) + nSeconds.toString() + result;
-    }
-    else {
+    } else {
         // yes minutes
         let nMinutes: number = Math.floor(nSeconds / 60.0);
         nSeconds -= nMinutes * 60;
@@ -113,8 +115,7 @@ export function formatTime(
         if (timeInSeconds < 3600 && maxTimeInSeconds < 3600) {
             // no hours
             result = addZero(nMinutes) + nMinutes.toString() + result;
-        }
-        else {
+        } else {
             // yes hours
             let nHours: number = Math.floor(nMinutes / 60.0);
             nMinutes -= nHours * 60;
