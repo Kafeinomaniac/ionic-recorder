@@ -16,7 +16,7 @@
     "commit": "./scripts/commit.sh",
     "deploy": "./scripts/deploy.sh"
   },
-  "version": "0.1.0-alpha.6",
+  "version": "0.1.0-alpha.7",
   "dependencies": {
     "@angular/common": "2.4.0",
     "@angular/compiler": "2.4.0",
