@@ -65,8 +65,9 @@ export class IonicRecordApp {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
-            StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#000000');
+            // StatusBar.styleDefault();
+            // StatusBar.backgroundColorByHexString('#000000');
+            StatusBar.hide();
 
             window.addEventListener(
                 'filePluginIsReady',

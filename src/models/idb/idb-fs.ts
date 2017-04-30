@@ -78,7 +78,7 @@ export class IdbFS extends Idb {
         let source: Observable<void> = Observable.create((observer) => {
             this.waitForDB().subscribe(
                 (db: IDBDatabase) => {
-                    this.read < TreeNode > (NODE_STORE, ROOT_FOLDER_KEY).subscribe(
+                    this.read<TreeNode>(NODE_STORE, ROOT_FOLDER_KEY).subscribe(
                         (rootNode: TreeNode) => {
                             if (rootNode) {
                                 observer.next();
@@ -103,7 +103,8 @@ export class IdbFS extends Idb {
                                             }
                                         },
                                         (error) => {
-                                            observer.error('waitForFilesystem():' +
+                                            observer.error(
+                                                'waitForFilesystem():' +
                                                 'waitForDB():readNode():' +
                                                 'create(): ' + error);
                                         });

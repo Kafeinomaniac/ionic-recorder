@@ -167,7 +167,8 @@ export class WebAudioPlayWav extends WebAudioPlay {
                                     AUDIO_CONTEXT.sampleRate
                                 ),
                                 wavArray
-                            ], { type: WAV_MIME_TYPE })
+                            ], 
+                            { type: WAV_MIME_TYPE })
                     );
                 });
         });
