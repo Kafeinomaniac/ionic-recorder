@@ -92,7 +92,7 @@ describe('services/idb:Idb', () => {
     it('can create(item1), key == 1', (done) => {
         setTimeout(
             () => {
-                idb.create < Int16Array > (STORE_NAME, item1).subscribe(
+                idb.create <Int16Array>(STORE_NAME, item1).subscribe(
                     (key: number) => {
                         key1 = key;
                         // db has just been deleted first key should be 1
@@ -106,7 +106,7 @@ describe('services/idb:Idb', () => {
     it('can create(item2), key == 2', (done) => {
         setTimeout(
             () => {
-                idb.create < Int16Array > (STORE_NAME, item2).subscribe(
+                idb.create <Int16Array>(STORE_NAME, item2).subscribe(
                     (key: number) => {
                         key2 = key;
                         // tests that keys are created as successive ints
@@ -132,7 +132,7 @@ describe('services/idb:Idb', () => {
     it('can create(item1), key == 3', (done) => {
         setTimeout(
             () => {
-                idb.create < Int16Array > (STORE_NAME, item1).subscribe(
+                idb.create <Int16Array>(STORE_NAME, item1).subscribe(
                     (key: number) => {
                         key1 = key;
                         expect(key1).toEqual(3);
@@ -145,7 +145,7 @@ describe('services/idb:Idb', () => {
     it('can create(item2), key == 4', (done) => {
         setTimeout(
             () => {
-                idb.create < Int16Array > (STORE_NAME, item2).subscribe(
+                idb.create <Int16Array>(STORE_NAME, item2).subscribe(
                     (key: number) => {
                         key2 = key;
                         expect(key2).toEqual(4);
@@ -158,7 +158,7 @@ describe('services/idb:Idb', () => {
     it('can read(item1)', (done) => {
         setTimeout(
             () => {
-                idb.read < Int16Array > (STORE_NAME, key1).subscribe(
+                idb.read <Int16Array>(STORE_NAME, key1).subscribe(
                     (result: Int16Array) => {
                         expect(whichItem(result)).toEqual(1);
                         done();
@@ -187,7 +187,7 @@ describe('services/idb:Idb', () => {
     it('can read(item2)', (done) => {
         setTimeout(
             () => {
-                idb.read < Int16Array > (STORE_NAME, key2).subscribe(
+                idb.read <Int16Array>(STORE_NAME, key2).subscribe(
                     (result: Int16Array) => {
                         expect(whichItem(result)).toEqual(2);
                         done();
@@ -200,7 +200,7 @@ describe('services/idb:Idb', () => {
     it('can create(item1) again, key == 5', (done) => {
         setTimeout(
             () => {
-                idb.create < Int16Array > (STORE_NAME, item1).subscribe(
+                idb.create <Int16Array>(STORE_NAME, item1).subscribe(
                     (key: number) => {
                         key1 = key;
                         expect(key1).toEqual(5);
@@ -213,7 +213,7 @@ describe('services/idb:Idb', () => {
     it('can update(key1, item2)', (done) => {
         setTimeout(
             () => {
-                idb.update < Int16Array > (STORE_NAME, key1, item2).subscribe(
+                idb.update <Int16Array>(STORE_NAME, key1, item2).subscribe(
                     () => {
                         // read it after updating ensure same as item2
                         idb.read(STORE_NAME, key1).subscribe(
@@ -229,7 +229,7 @@ describe('services/idb:Idb', () => {
     it('can update(key2, item1)', (done) => {
         setTimeout(
             () => {
-                idb.update < Int16Array > (STORE_NAME, key2, item1).subscribe(
+                idb.update <Int16Array>(STORE_NAME, key2, item1).subscribe(
                     () => {
                         // read it after updating ensure length same as item1
                         idb.read(STORE_NAME, key2).subscribe(
@@ -247,7 +247,7 @@ describe('services/idb:Idb', () => {
             () => {
                 // db.close(); - no need, multiple conections supported
                 let idb2: Idb = new Idb(DB_CONFIG);
-                idb2.create < Int16Array > (STORE_NAME, item2).subscribe(
+                idb2.create <Int16Array>(STORE_NAME, item2).subscribe(
                     (key: number) => {
                         key2 = key;
                         // tests that keys continue to get incremented

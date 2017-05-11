@@ -82,7 +82,7 @@ export class IdbDict extends Idb {
     public addKeyValue(key: string, value: any): Observable<number> {
         console.log('addKeyValue(' + key + ', value)');
         let source: Observable<number> = Observable.create((observer) => {
-            this.create<KeyValuePair> (DICT_STORE, {
+            this.create<KeyValuePair>(DICT_STORE, {
                 key: key,
                 value: value
             }).subscribe(

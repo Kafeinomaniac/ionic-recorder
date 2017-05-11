@@ -1,6 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Component, ViewChild } from '@angular/core';
+import { Storage } from '@ionic/storage';
 import { Tabs, Tab, Platform, MenuController } from 'ionic-angular';
 import { File, StatusBar } from 'ionic-native';
 import { IdbAppState } from '../providers/idb-app-state/idb-app-state';
@@ -23,12 +24,14 @@ export class IonicRecordApp {
     // Use one of these @ViewChild declarations (both work):
     // @ViewChild(Tabs) private tabs: Tabs;
     @ViewChild('navTabs') public tabs: Tabs;
+
     public rootPage: Component;
     public pages: TabPage[];
 
     private platform: Platform;
     private menu: MenuController;
     private idbAppState: IdbAppState;
+    private storage: Storage;
 
     constructor(
         platform: Platform,
@@ -99,7 +102,10 @@ export class IonicRecordApp {
 
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
-
+            this.storage.get('lastTabIndex')
+                .then((lastTabIndex) => {
+                    
+                }
             this.idbAppState.getProperty('lastTabIndex').subscribe(
                 (lastTabIndex: number) => {
                     console.log('initializeApp():lastTabIndex = ' +
@@ -151,5 +157,4 @@ export class IonicRecordApp {
         }
         this.menu.close();
     }
-
 }

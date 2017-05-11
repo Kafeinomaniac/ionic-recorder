@@ -193,7 +193,7 @@ export class Idb {
      * @returns {Observable<number>} Observable that emits the item key
      * that was automatically incremented for the newly created (stored) item.
      */
-    public create < T > (
+    public create < T >(
         storeName: string,
         item: T,
         itemCB?: (item: T, key ?: number) => T
@@ -250,7 +250,7 @@ export class Idb {
      * @returns {Observable<T>} Observable that emits the item as
      * soon as the db read request completes
      */
-    public read <T> (
+    public read <T>(
         storeName: string,
         key: number
     ): Observable<T> {
@@ -293,7 +293,7 @@ export class Idb {
      * to replace existing item in the db store
      * @returns {Observable<void>} Observable that emits after update ends
      */
-    public update<T> (
+    public update<T>(
         storeName: string,
         key: number,
         newItem: T
@@ -474,7 +474,7 @@ export class Idb {
      * when it's ready for use.
      */
     private openDB(config: IdbConfig): Observable<IDBDatabase> {
-        let source: Observable <IDBDatabase> = Observable.create((observer) => {
+        let source: Observable<IDBDatabase> = Observable.create((observer) => {
             let openRequest: IDBOpenDBRequest = indexedDB.open(
                 config.name, config.version);
 

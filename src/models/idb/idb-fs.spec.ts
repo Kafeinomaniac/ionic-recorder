@@ -256,7 +256,8 @@ describe('services/idb:IdbFS', () => {
                     .subscribe(
                         (parentChild: ParentChild) => {
                             item6 = parentChild.child;
-                            expect(item6.parentKey).toEqual(folder5[DB_KEY_PATH]);
+                            expect(item6.parentKey)
+                                .toEqual(folder5[DB_KEY_PATH]);
                             expect(item6.name).toEqual('item6');
                             expect(item6.data).toBe('item6 datum');
                             expect(item6.timeStamp).not.toBeFalsy();
