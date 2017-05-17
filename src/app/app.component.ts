@@ -1,9 +1,8 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Component, ViewChild } from '@angular/core';
-import { Storage } from '@ionic/storage';
 import { Tabs, Tab, Platform, MenuController } from 'ionic-angular';
-import { File, StatusBar } from 'ionic-native';
+import { StatusBar } from '@ionic-native/status-bar';
 import { IdbAppState } from '../providers/idb-app-state/idb-app-state';
 import { LoadingPage } from '../pages/loading-page/loading-page';
 import { RecordPage } from '../pages/record-page/record-page';
@@ -20,7 +19,7 @@ export interface TabPage {
 @Component({
     templateUrl: 'app.html'
 })
-export class IonicRecordApp {
+export class IonicRecorderApp {
     // Use one of these @ViewChild declarations (both work):
     // @ViewChild(Tabs) private tabs: Tabs;
     @ViewChild('navTabs') public tabs: Tabs;
@@ -31,11 +30,11 @@ export class IonicRecordApp {
     private platform: Platform;
     private menu: MenuController;
     private idbAppState: IdbAppState;
-    private storage: Storage;
 
     constructor(
         platform: Platform,
         menu: MenuController,
+        statusBar: StatusBar,
         idbAppState: IdbAppState
     ) {
         console.log('constructor(): IonicRecordApp');
@@ -56,58 +55,17 @@ export class IonicRecordApp {
             { tabIndex: 4, title: 'About', component: AboutPage }
         ];
 
-        this.initializeApp();
-    }
-
-    /**
-     * Initialize native stuff once platform is ready
-     * @returns {void}
-     */
-    public initializeApp(): void {
-        this.platform.ready().then(() => {
+        platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
-            StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#000000');
-            StatusBar.hide();
-            /*
-            window.addEventListener(
-                'filePluginIsReady',
-                () => {
-                    console.log('File plugin is ready');
-                    // console.dir(File);
-                    File.listDir(
-                        'filesystem:file:///persistent',
-                        'xyzzx'
-                    ).then(
-                        (res: any) => {
-                            console.log('listDir() res.length: ' + res.length);
-                        },
-                        (err: any) => {
-                            console.log(
-                                'Error in listDir(): ' + err);
-                        });
-                    // File.getFreeDiskSpace().then(
-                    //     (arg: any) => {
-                    //         console.log('getFreeSpace() => ' + arg);
-                    //     },
-                    //     (err: any) => {
-                    //         console.log('Error calling getFreeSpace(): ' +
-                    //                     err);
-                    //     }
-                    // );
-                },
-                false);
-            */
+            statusBar.styleDefault();
+            statusBar.backgroundColorByHexString('#000000');
+            statusBar.hide();
 
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
-            this.storage.get('lastTabIndex')
-                .then((lastTabIndex) => {
-                    this.tabs.select(lastTabIndex)    
-                });
-            /*
+
             this.idbAppState.getProperty('lastTabIndex').subscribe(
                 (lastTabIndex: number) => {
                     console.log('initializeApp():lastTabIndex = ' +
@@ -115,7 +73,6 @@ export class IonicRecordApp {
                     this.tabs.select(lastTabIndex);
                 }
             );
-            */
         });
     }
 

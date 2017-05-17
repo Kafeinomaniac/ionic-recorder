@@ -1,8 +1,12 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { NgModule } from '@angular/core';
-import { IonicApp, IonicModule } from 'ionic-angular';
-import { IonicRecordApp } from './app.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+
+import { IonicRecorderApp } from './app.component';
 import { AboutPage } from '../pages/about-page/about-page';
 import { LibraryPage } from '../pages/library-page/library-page';
 import { LoadingPage } from '../pages/loading-page/loading-page';
@@ -20,7 +24,7 @@ import { MasterClock } from '../providers/master-clock/master-clock';
 
 @NgModule({
     declarations: [
-        IonicRecordApp,
+        IonicRecorderApp,
         AboutPage,
         LibraryPage,
         LoadingPage,
@@ -33,11 +37,12 @@ import { MasterClock } from '../providers/master-clock/master-clock';
         VuGauge
     ],
     imports: [
-        IonicModule.forRoot(IonicRecordApp)
+        BrowserModule,
+        IonicModule.forRoot(IonicRecorderApp)
     ],
     bootstrap: [IonicApp],
     entryComponents: [
-        IonicRecordApp,
+        IonicRecorderApp,
         AboutPage,
         LibraryPage,
         LoadingPage,
@@ -46,6 +51,9 @@ import { MasterClock } from '../providers/master-clock/master-clock';
         TrackPage
     ],
     providers: [
+        StatusBar,
+        SplashScreen,
+        { provide: ErrorHandler, useClass: IonicErrorHandler},
         IdbAppData,
         IdbAppFS,
         IdbAppState,
