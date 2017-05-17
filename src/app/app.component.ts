@@ -68,10 +68,10 @@ export class IonicRecordApp {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
-            // StatusBar.styleDefault();
-            // StatusBar.backgroundColorByHexString('#000000');
+            StatusBar.styleDefault();
+            StatusBar.backgroundColorByHexString('#000000');
             StatusBar.hide();
-
+            /*
             window.addEventListener(
                 'filePluginIsReady',
                 () => {
@@ -99,13 +99,15 @@ export class IonicRecordApp {
                     // );
                 },
                 false);
+            */
 
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
             this.storage.get('lastTabIndex')
                 .then((lastTabIndex) => {
-                    
-                }
+                    this.tabs.select(lastTabIndex)    
+                });
+            /*
             this.idbAppState.getProperty('lastTabIndex').subscribe(
                 (lastTabIndex: number) => {
                     console.log('initializeApp():lastTabIndex = ' +
@@ -113,6 +115,7 @@ export class IonicRecordApp {
                     this.tabs.select(lastTabIndex);
                 }
             );
+            */
         });
     }
 
