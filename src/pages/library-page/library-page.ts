@@ -440,7 +440,8 @@ export class LibraryPage {
                 // we read all child nodes of the folder we're
                 // switching to in order to fill up this.folderItems
                 let newFolderItems: {
-                    [id: string]: TreeNode } = {};
+                    [id: string]: TreeNode
+                } = {};
                 this.idbAppFS.readChildNodes(folderNode).subscribe(
                     (childNodes: TreeNode[]) => {
                         this.folderItems = {};
@@ -515,10 +516,10 @@ export class LibraryPage {
 
         const nodeKey: number = node[DB_KEY_PATH],
             nSelected: number = Object.keys(this.selectedNodes).length,
-            isSelected: TreeNode = this.selectedNodes[nodeKey];
+            selectedNode: TreeNode = this.selectedNodes[nodeKey];
 
-        if (isSelected) {
-            // uncheck it
+        if (selectedNode) {
+            // the node is selected, meaning it is checked, uncheck it
             delete this.selectedNodes[nodeKey];
             if (nSelected === 1) {
                 // we're about to transition from something selected to nothing
@@ -638,7 +639,7 @@ export class LibraryPage {
      * @params {boolean} if true, select all, if false, select none
      * @returns {void}
      */
-    private selectAllOrNoneInFolder(all: boolean): void {
+    private selectAllOrNoneInFolder(selectAll: boolean): void {
         // go through all folderItems
         // for each one, ask if it's in selectedNodes
         // for this to work, we need to make selectedNodes a dictionary
@@ -653,16 +654,15 @@ export class LibraryPage {
             itemNode = this.folderItems[key];
             itemKey = itemNode[DB_KEY_PATH];
 
-            let isSelected: TreeNode = this.selectedNodes[itemKey];
-
-            if (all && !isSelected) {
-                changed = true;
+            let nodeIsSelected: TreeNode = this.selectedNodes[itemKey];
+            if (selectAll && !nodeIsSelected) {
                 // not selected, check it
+                changed = true;
                 this.selectedNodes[itemKey] = itemNode;
             }
-            if (!all && isSelected) {
-                changed = true;
+            else if (!selectAll && nodeIsSelected) {
                 // selected, uncheck it
+                changed = true;
                 delete this.selectedNodes[itemKey];
             }
         }

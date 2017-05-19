@@ -61,7 +61,7 @@ export class IonicRecorderApp {
             // [ NOTE: cordova must be available for StatusBar ]
             statusBar.styleDefault();
             statusBar.backgroundColorByHexString('#000000');
-            statusBar.hide();
+            // statusBar.hide();
 
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
