@@ -16,7 +16,7 @@ import {
 from '../../providers/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 import { alertAndDo } from '../../models/utils/alerts';
-import { IdbAppState } from '../../providers/idb-app-state/idb-app-state';
+import { AppState } from '../../providers/app-state/app-state';
 import { TrackPage } from '../track-page/track-page';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 
@@ -41,7 +41,7 @@ export class LibraryPage {
     private navController: NavController;
     private alertController: AlertController;
     private idbAppFS: IdbAppFS;
-    private idbAppState: IdbAppState;
+    private appState: AppState;
 
     public folderNode: TreeNode;
     private folderItems: KeyDict;
@@ -59,7 +59,7 @@ export class LibraryPage {
         alertController: AlertController,
         // modalController: ModalController,
         idbAppFS: IdbAppFS,
-        idbAppState: IdbAppState,
+        appState: AppState,
         platform: Platform
     ) {
         console.log('constructor():LibraryPage');
@@ -67,7 +67,7 @@ export class LibraryPage {
         this.alertController = alertController;
         // this.modalController = modalController;
         this.idbAppFS = idbAppFS;
-        this.idbAppState = idbAppState;
+        this.appState = appState;
         this.folderNode = null;
         this.folderItems = {};
         this.selectedNodes = {};
@@ -149,13 +149,13 @@ export class LibraryPage {
      * @returns {void}
      */
     public ionViewWillEnter(): void {
-        this.idbAppState.getProperty('selectedNodes').subscribe(
+        this.appState.getProperty('selectedNodes').subscribe(
             (selectedNodes: any) => {
                 this.selectedNodes = selectedNodes;
-                this.idbAppState.getProperty('lastViewedFolderKey')
+                this.appState.getProperty('lastViewedFolderKey')
                     .subscribe(
                         (lastViewedFolderKey: any) => {
-                            // swich folders, according to IdbAppState
+                            // swich folders, according to AppState
                             this.switchFolder(lastViewedFolderKey, false);
                             console.log(
                                 'LibraryPage:ionViewWillEnter(): ' +
@@ -271,7 +271,7 @@ export class LibraryPage {
                             }
                         } // for (i = 0; i < nNodes; i++) {
                         if (bSelectionChanged) {
-                            this.idbAppState.updateProperty(
+                            this.appState.updateProperty(
                                 'selectedNodes',
                                 this.selectedNodes).subscribe();
                         }
@@ -470,7 +470,7 @@ export class LibraryPage {
 
         // update last viewed folder state in DB
         if (updateState) {
-            this.idbAppState.updateProperty('lastViewedFolderKey', key)
+            this.appState.updateProperty('lastViewedFolderKey', key)
                 .subscribe();
         }
     }
@@ -538,7 +538,7 @@ export class LibraryPage {
         }
 
         // update state with new list of selected nodes
-        this.idbAppState.updateProperty('selectedNodes', this.selectedNodes)
+        this.appState.updateProperty('selectedNodes', this.selectedNodes)
             .subscribe();
     }
 
@@ -664,6 +664,7 @@ export class LibraryPage {
                 // selected, uncheck it
                 changed = true;
                 delete this.selectedNodes[itemKey];
+                this.content.resize();
             }
         }
         if (changed) {
@@ -672,7 +673,7 @@ export class LibraryPage {
 
             // update state with new list of selected nodes
             // TODO: handle errors here
-            this.idbAppState.updateProperty(
+            this.appState.updateProperty(
                 'selectedNodes',
                 this.selectedNodes).subscribe();
         }

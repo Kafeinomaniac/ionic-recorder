@@ -3,7 +3,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Tabs, Tab, Platform, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
-import { IdbAppState } from '../providers/idb-app-state/idb-app-state';
+import { AppState } from '../providers/app-state/app-state';
 import { LoadingPage } from '../pages/loading-page/loading-page';
 import { RecordPage } from '../pages/record-page/record-page';
 import { LibraryPage } from '../pages/library-page/library-page';
@@ -29,18 +29,18 @@ export class IonicRecorderApp {
 
     private platform: Platform;
     private menu: MenuController;
-    private idbAppState: IdbAppState;
+    private appState: AppState;
 
     constructor(
         platform: Platform,
         menu: MenuController,
         statusBar: StatusBar,
-        idbAppState: IdbAppState
+        appState: AppState
     ) {
         console.log('constructor(): IonicRecordApp');
         this.platform = platform;
         this.menu = menu;
-        this.idbAppState = idbAppState;
+        this.appState = appState;
 
         // set root of the hidden (first, default) tab
         this.rootPage = LoadingPage;
@@ -65,14 +65,16 @@ export class IonicRecorderApp {
 
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);
-
-            this.idbAppState.getProperty('lastTabIndex').subscribe(
+            /* ***
+            this.appState.getProperty('lastTabIndex').subscribe(
                 (lastTabIndex: number) => {
                     console.log('initializeApp():lastTabIndex = ' +
                         lastTabIndex);
                     this.tabs.select(lastTabIndex);
                 }
             );
+            */
+            this.goToPage(this.pages[0]);
         });
     }
 
@@ -97,8 +99,9 @@ export class IonicRecorderApp {
             // the app it starts with the last tab you've visited last
             // time you used it
             // console.log('updating tab index to be: ' + tabIndex);
-            this.idbAppState.updateProperty('lastTabIndex', tabIndex)
-                .subscribe();
+            // ***
+            // this.appState.updateProperty('lastTabIndex', tabIndex)
+            //     .subscribe();
         }
     }
 

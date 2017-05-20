@@ -5,7 +5,12 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
-* Add testing
+* Use ionic storage instead of indexed-db for app-state:
+  a) rename idb-app-state to app-state
+  b) use storage: but be 100% compatible with current API, which 
+     means app-state class has only two methods: getProperty and
+     updateProperty - rename those to get and set 
+* Add missing tests
 * OK: major decision: only wav from now on.
 * Connect library page with track page - when somebody clicks on a track
   page, bring up the track page - we may need to make sure the design is

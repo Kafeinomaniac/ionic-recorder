@@ -19,7 +19,7 @@ import { ProgressSlider } from '../components/progress-slider/progress-slider';
 import { VuGauge } from '../components/vu-gauge/vu-gauge';
 import { IdbAppData } from '../providers/idb-app-data/idb-app-data';
 import { IdbAppFS } from '../providers/idb-app-fs/idb-app-fs';
-import { IdbAppState } from '../providers/idb-app-state/idb-app-state';
+import { AppState } from '../providers/app-state/app-state';
 import { MasterClock } from '../providers/master-clock/master-clock';
 
 @NgModule({
@@ -56,7 +56,7 @@ import { MasterClock } from '../providers/master-clock/master-clock';
         { provide: ErrorHandler, useClass: IonicErrorHandler},
         IdbAppData,
         IdbAppFS,
-        IdbAppState,
+        AppState,
         MasterClock
     ]
 })

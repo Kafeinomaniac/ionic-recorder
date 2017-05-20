@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 /**
  * @name LoadingPage
  * @description
- * Load initial page, first wait for DB and IdbAppState singletons
+ * Load initial page, first wait for DB and AppState singletons
  * to initialize.
  */
 @Component({

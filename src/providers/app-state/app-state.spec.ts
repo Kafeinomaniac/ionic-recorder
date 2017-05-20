@@ -1,9 +1,9 @@
 // Copyright (c) 2016 Tracktunes Inc
 
 import {
-    IdbAppState
+    AppState
 }
-from './idb-app-state';
+from './app-state';
 
 import {
     isPositiveWholeNumber
@@ -12,11 +12,11 @@ from '../../models/utils/utils';
 
 const WAIT_MSEC: number = 60;
 
-let idbAppState: IdbAppState = new IdbAppState(),
+let appState: AppState = new AppState(),
     savedTabIndex: number;
 
 beforeEach((done: Function) => {
-    idbAppState.waitForDB().subscribe(
+    appState.waitForDB().subscribe(
         (database: IDBDatabase) => {
             done();
         },
@@ -25,11 +25,11 @@ beforeEach((done: Function) => {
         });
 });
 
-describe('When idbAppState initialized', () => {
-    it('idbAppState is not falsy', (done) => {
+describe('When appState initialized', () => {
+    it('appState is not falsy', (done) => {
         setTimeout(
             () => {
-                expect(idbAppState).not.toBeFalsy();
+                expect(appState).not.toBeFalsy();
                 done();
             },
             WAIT_MSEC);
@@ -38,7 +38,7 @@ describe('When idbAppState initialized', () => {
     it('can read lastTabIndex', (done) => {
         setTimeout(
             () => {
-                idbAppState.getProperty('lastTabIndex').subscribe(
+                appState.getProperty('lastTabIndex').subscribe(
                     (idx: number) => {
                         savedTabIndex = idx;
                         expect(isPositiveWholeNumber(idx)).toBe(true);
@@ -52,10 +52,10 @@ describe('When idbAppState initialized', () => {
     it('can update lastTabIndex and read it', (done) => {
         setTimeout(
             () => {
-                idbAppState.updateProperty('lastTabIndex', 9999).subscribe(
+                appState.updateProperty('lastTabIndex', 9999).subscribe(
                     (bUpdated: boolean) => {
                         expect(bUpdated).toBe(true);
-                        idbAppState.getProperty('lastTabIndex').subscribe(
+                        appState.getProperty('lastTabIndex').subscribe(
                             (prop: any) => {
                                 expect(prop).toBe(9999);
                                 done();
@@ -68,11 +68,11 @@ describe('When idbAppState initialized', () => {
     it('can update lastTabIndex back to what it was', (done) => {
         setTimeout(
             () => {
-                idbAppState.updateProperty('lastTabIndex', savedTabIndex)
+                appState.updateProperty('lastTabIndex', savedTabIndex)
                     .subscribe(
                         (bUpdated: boolean) => {
                             expect(bUpdated).toBe(true);
-                            idbAppState.getProperty('lastTabIndex').subscribe(
+                            appState.getProperty('lastTabIndex').subscribe(
                                 (prop: any) => {
                                     expect(prop).toBe(savedTabIndex);
                                     done();

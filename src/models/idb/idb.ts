@@ -539,4 +539,4 @@ export class Idb {
 // TODO: these next three lines need to go elsewhere ...
 // Idb.deleteDb('IdbAppData').subscribe();
 // Idb.deleteDb('IdbAppFS').subscribe();
-// Idb.deleteDb('IdbAppState').subscribe();
+// Idb.deleteDb('AppState').subscribe();

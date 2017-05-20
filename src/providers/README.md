@@ -10,7 +10,7 @@ Each directory here is a singleton class injected via angular2 direct-injection.
 |---------------|----------------------------------------------------|
 | idb-app-data  | DB access to app recordings                        |
 | idb-app-fs    | DB access to app's filesystem of files and folders |
-| idb-app-state | DB access to app's state                           |
+| app-state | DB access to app's state                           |
 | master-clock  | Master clock loop for monitoring                   |
 | web-audio     | Web Audio API interface                            |
 

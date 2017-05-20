@@ -3,10 +3,10 @@
 import { Component } from '@angular/core';
 import { formatLocalTime } from '../../models/utils/utils';
 import {
-    IdbAppState,
+    AppState,
     GainState
 }
-from '../../providers/idb-app-state/idb-app-state';
+from '../../providers/app-state/app-state';
 import { WebAudioRecordWav } from '../../providers/web-audio/record-wav';
 import { RecordStatus } from '../../providers/web-audio/record';
 import { RecordingInfo } from '../../providers/web-audio/common';
@@ -31,7 +31,7 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
     templateUrl: 'record-page.html'
 })
 export class RecordPage {
-    private idbAppState: IdbAppState;
+    private appState: AppState;
     private idbAppFS: IdbAppFS;
     // recordButtonIcon referenced by template
     public recordButtonIcon: string = START_RESUME_ICON;
@@ -52,20 +52,20 @@ export class RecordPage {
      * @constructor
      */
     constructor(
-        idbAppState: IdbAppState,
+        appState: AppState,
         idbAppFS: IdbAppFS,
         webAudioRecord: WebAudioRecordWav
     ) {
         console.log('constructor():RecordPage');
 
-        this.idbAppState = idbAppState;
+        this.appState = appState;
         this.idbAppFS = idbAppFS;
         this.webAudioRecord = webAudioRecord;
 
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
 
         // initialize with "remembered" gain values
-        this.idbAppState.getProperty('gain').subscribe(
+        this.appState.getProperty('gain').subscribe(
             (gain: GainState) => {
                 this.gainFactor = gain.factor;
                 this.maxGainFactor = gain.maxFactor;
@@ -125,7 +125,7 @@ export class RecordPage {
         console.log('onGainChangeEnd(' + position.toFixed(2) + '): ' +
             this.gainFactor + ', ' + this.maxGainFactor);
         this.onGainChange(position);
-        this.idbAppState.updateProperty('gain', {
+        this.appState.updateProperty('gain', {
             factor: this.gainFactor,
             maxFactor: this.maxGainFactor
         }).subscribe(null, (error: any) => {

@@ -11,10 +11,10 @@ import {
 }
 from '../../providers/idb-app-fs/idb-app-fs';
 import {
-    IdbAppState,
+    AppState,
     DB_NAME as APP_STATE_DB_NAME
 }
-from '../../providers/idb-app-state/idb-app-state';
+from '../../providers/app-state/app-state';
 
 /**
  * @name SettingsPage
@@ -26,15 +26,15 @@ from '../../providers/idb-app-state/idb-app-state';
     templateUrl: 'settings-page.html'
 })
 export class SettingsPage {
-    private idbAppState: IdbAppState;
+    private appState: AppState;
 
     /**
      * @constructor
      * @param {NavController} nav
      */
-    constructor(idbAppState: IdbAppState) {
+    constructor(appState: AppState) {
         console.log('constructor():SettingsPage');
-        this.idbAppState = idbAppState;
+        this.appState = appState;
     }
 
     public deleteDb(): void {
