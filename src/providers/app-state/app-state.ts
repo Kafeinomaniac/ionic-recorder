@@ -47,6 +47,7 @@ export class AppState {
      * @returns {Observable<any>} Observable of value of property obtained
      */
     public getProperty(key: string): Promise<any> {
+        // TODO: verify key
         return this.storage.get(key);
     }
 
@@ -57,6 +58,7 @@ export class AppState {
      * have made the update in the DB (emits true in that case)
      */
     public updateProperty(key: string, value: any): Promise<any> {
+        // TODO: verify key
         return this.storage.set(key, value);
     }
 }
