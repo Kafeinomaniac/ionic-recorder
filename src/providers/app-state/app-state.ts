@@ -1,18 +1,13 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
 import { KeyDict } from '../../models/idb/idb-fs';
 
-export const DB_NAME: string = 'AppState';
-const DB_VERSION: number = 1;
-const DEFAULT_STATE: State = {
-    lastTabIndex: 1,
-    lastViewedFolderKey: 2,
-    selectedNodes: {},
-    gain: { factor: 1.0, maxFactor: 2.0 }
-};
-const WAIT_MSEC: number = 50;
+export interface GainState {
+    factor: number;
+    maxFactor: number;
+}
 
 interface State {
     lastTabIndex: number;
@@ -21,10 +16,12 @@ interface State {
     gain: GainState;
 }
 
-export interface GainState {
-    factor: number;
-    maxFactor: number;
-}
+const DEFAULT_STATE: State = {
+    lastTabIndex: 1,
+    lastViewedFolderKey: 2,
+    selectedNodes: {},
+    gain: { factor: 1.0, maxFactor: 2.0 }
+};
 
 /**
  * @name AppState
@@ -34,35 +31,23 @@ export interface GainState {
 export class AppState {
     public isReady: boolean;
     private cachedState: Object;
+    private storage: Storage;
 
     /**
      * @constructor
      */
-    constructor() {
+    constructor(storage: Storage) {
         console.log('constructor():AppState');
         this.cachedState = DEFAULT_STATE;
+        this.storage = storage;
     }
 
     /**
      * Gets a state property (from DB if necessary)
      * @returns {Observable<any>} Observable of value of property obtained
      */
-    public getProperty(key: string): Observable<any> {
-        // TODO: check that key is allowed and if not throw exception
-        // return this.cachedState[key];
-        // NOTE:this loop should only repeat a handful of times or so
-        let source: Observable<any> = Observable.create((observer) => {
-            this.waitForAppState().subscribe(
-                () => {
-                    observer.next(this.cachedState[key]);
-                    observer.complete();
-                },
-                (error) => {
-                    observer.error('getProperty(): waitForAppState(): ' +
-                        error);
-                });
-        });
-        return source;
+    public getProperty(key: string): Promise<any> {
+        return this.storage.get(key);
     }
 
     /**
@@ -71,33 +56,7 @@ export class AppState {
      * there is no need for an update (emits false in that case) or after we
      * have made the update in the DB (emits true in that case)
      */
-    public updateProperty(key: string, value: any): Observable<boolean> {
-        let source: Observable<boolean> = Observable.create((observer) => {
-            this.waitForAppState().subscribe(
-                () => {
-                    if (this.cachedState[key] === value) {
-                        observer.next(false);
-                        observer.complete();
-                    }
-                    else {
-                        this.cachedState[key] = value;
-                        this.updateValue(key, value).subscribe(
-                            () => {
-                                observer.next(true);
-                                observer.complete();
-                            },
-                            (error) => {
-                                observer.error('updateProperty():' +
-                                    'waitForAppState():updateValue()' + error);
-                            });
-                    }
-                },
-                (error) => {
-                    observer.error('updateProperty():waitForAppState(): ' +
-                        error);
-                });
-        });
-        return source;
+    public updateProperty(key: string, value: any): Promise<any> {
+        return this.storage.set(key, value);
     }
-
 }
