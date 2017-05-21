@@ -10,11 +10,11 @@ import {
     DB_NAME as APP_FS_DB_NAME
 }
 from '../../providers/idb-app-fs/idb-app-fs';
-import {
-    AppState,
-    DB_NAME as APP_STATE_DB_NAME
-}
-from '../../providers/app-state/app-state';
+// import {
+//     AppState,
+//     DB_NAME as APP_STATE_DB_NAME
+// }
+// from '../../providers/app-state/app-state';
 
 /**
  * @name SettingsPage
@@ -26,16 +26,16 @@ from '../../providers/app-state/app-state';
     templateUrl: 'settings-page.html'
 })
 export class SettingsPage {
-    private appState: AppState;
+    // private appState: AppState;
 
     /**
      * @constructor
      * @param {NavController} nav
      */
-    constructor(appState: AppState) {
-        console.log('constructor():SettingsPage');
-        this.appState = appState;
-    }
+    // constructor(appState: AppState) {
+    //     console.log('constructor():SettingsPage');
+    //     this.appState = appState;
+    // }
 
     public deleteDb(): void {
         console.log('deleteDb()');
@@ -49,11 +49,11 @@ export class SettingsPage {
                         () => {
                             console.log('deleteDb(): DONE: ' +
                                 APP_FS_DB_NAME);
-                            Idb.deleteDb(APP_STATE_DB_NAME).subscribe(
-                                () => {
-                                    console.log('deleteDb(): DONE: ' +
-                                        APP_STATE_DB_NAME);
-                                });
+                            // Idb.deleteDb(APP_STATE_DB_NAME).subscribe(
+                            //     () => {
+                            //         console.log('deleteDb(): DONE: ' +
+                            //             APP_STATE_DB_NAME);
+                            //     });
                         });
                 });
         }

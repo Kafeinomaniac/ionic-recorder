@@ -47,8 +47,24 @@ export class AppState {
      * @returns {Observable<any>} Observable of value of property obtained
      */
     public getProperty(key: string): Promise<any> {
-        // TODO: verify key
-        return this.storage.get(key);
+        if (key in DEFAULT_STATE) {
+            // TODO: if key is not stored yet then we want to store 
+            // it in storage, as taken from DEFAULT_STATE
+            this.storage.get(key).then((value: any) => {
+                if (value) {
+                    // key is in storage
+                    // return new Promise<any>()
+                }
+                else {
+                    // key is not in storage, set it in storage, get it from 
+                    // DEFAULT_STATE
+                    // return new Promise<any>();
+                }
+            });
+        }
+        else {
+            throw Error('Wrong key used in getProperty()');
+        }
     }
 
     /**
@@ -58,7 +74,11 @@ export class AppState {
      * have made the update in the DB (emits true in that case)
      */
     public updateProperty(key: string, value: any): Promise<any> {
-        // TODO: verify key
-        return this.storage.set(key, value);
+        if (key in DEFAULT_STATE) {
+            return this.storage.set(key, value);
+        }
+        else {
+            throw Error('Wrong key used in setProperty()');
+        }
     }
 }

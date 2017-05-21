@@ -149,11 +149,11 @@ export class LibraryPage {
      * @returns {void}
      */
     public ionViewWillEnter(): void {
-        this.appState.getProperty('selectedNodes').subscribe(
+        this.appState.getProperty('selectedNodes').then(
             (selectedNodes: any) => {
                 this.selectedNodes = selectedNodes;
                 this.appState.getProperty('lastViewedFolderKey')
-                    .subscribe(
+                    .then(
                         (lastViewedFolderKey: any) => {
                             // swich folders, according to AppState
                             this.switchFolder(lastViewedFolderKey, false);
@@ -273,7 +273,7 @@ export class LibraryPage {
                         if (bSelectionChanged) {
                             this.appState.updateProperty(
                                 'selectedNodes',
-                                this.selectedNodes).subscribe();
+                                this.selectedNodes).then();
                         }
                         else {
                             console.log('SUCCESS DELETING ALL');
@@ -471,7 +471,7 @@ export class LibraryPage {
         // update last viewed folder state in DB
         if (updateState) {
             this.appState.updateProperty('lastViewedFolderKey', key)
-                .subscribe();
+                .then();
         }
     }
 
@@ -539,7 +539,7 @@ export class LibraryPage {
 
         // update state with new list of selected nodes
         this.appState.updateProperty('selectedNodes', this.selectedNodes)
-            .subscribe();
+            .then();
     }
 
     /**
@@ -675,7 +675,7 @@ export class LibraryPage {
             // TODO: handle errors here
             this.appState.updateProperty(
                 'selectedNodes',
-                this.selectedNodes).subscribe();
+                this.selectedNodes).then();
         }
     }
 

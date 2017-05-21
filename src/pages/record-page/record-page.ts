@@ -65,7 +65,7 @@ export class RecordPage {
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
 
         // initialize with "remembered" gain values
-        this.appState.getProperty('gain').subscribe(
+        this.appState.getProperty('gain').then(
             (gain: GainState) => {
                 this.gainFactor = gain.factor;
                 this.maxGainFactor = gain.maxFactor;
@@ -128,7 +128,7 @@ export class RecordPage {
         this.appState.updateProperty('gain', {
             factor: this.gainFactor,
             maxFactor: this.maxGainFactor
-        }).subscribe(null, (error: any) => {
+        }).then(null, (error: any) => {
             const msg: string = 'AppState:updateProperty(): ' + error;
             alert(msg);
             throw Error(msg);

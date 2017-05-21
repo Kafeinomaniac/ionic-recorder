@@ -1,5 +1,5 @@
 // Copyright (c) 2016 Tracktunes Inc
-
+/*
 import {
     AppState
 }
@@ -82,3 +82,4 @@ describe('When appState initialized', () => {
             WAIT_MSEC);
     });
 });
+*/
