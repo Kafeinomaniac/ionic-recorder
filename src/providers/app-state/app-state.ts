@@ -29,8 +29,6 @@ const DEFAULT_STATE: State = {
  */
 @Injectable()
 export class AppState {
-    public isReady: boolean;
-    private cachedState: Object;
     private storage: Storage;
 
     /**
@@ -38,7 +36,6 @@ export class AppState {
      */
     constructor(storage: Storage) {
         console.log('constructor():AppState');
-        this.cachedState = DEFAULT_STATE;
         this.storage = storage;
     }
 
@@ -47,24 +44,28 @@ export class AppState {
      * @returns {Observable<any>} Observable of value of property obtained
      */
     public getProperty(key: string): Promise<any> {
-        if (key in DEFAULT_STATE) {
-            // TODO: if key is not stored yet then we want to store 
-            // it in storage, as taken from DEFAULT_STATE
-            this.storage.get(key).then((value: any) => {
-                if (value) {
-                    // key is in storage
-                    // return new Promise<any>()
-                }
-                else {
-                    // key is not in storage, set it in storage, get it from 
-                    // DEFAULT_STATE
-                    // return new Promise<any>();
-                }
-            });
-        }
-        else {
-            throw Error('Wrong key used in getProperty()');
-        }
+        return new Promise((resolve, reject) => {
+            if (key in DEFAULT_STATE) {
+                // TODO: if key is not stored yet then we want to store 
+                // it in storage, as taken from DEFAULT_STATE
+                this.storage.get(key).then((value: any) => {
+                    if (value === null) {
+                        console.log('VALUE NOT IN STORAGE!');
+                        value = DEFAULT_STATE[key];
+                        this.updateProperty(key, value).then(() => {
+                            console.log('UPDATED STORAGE: key=' + key +
+                                ', value=' + value);
+                            resolve(value);
+                        });
+                    }
+                    else {
+                        console.log('VALUE IN STORAGE: key=' + key +
+                                ', value=' + value);
+                        resolve(value);
+                    }
+                });
+            }
+        });
     }
 
     /**
