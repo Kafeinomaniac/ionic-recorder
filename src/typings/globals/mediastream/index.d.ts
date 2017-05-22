@@ -81,10 +81,10 @@ interface MediaStream extends EventTarget {
     removeTrack(track: MediaStreamTrack): void;
 }
 
-declare enum MediaStreamTrackState {
-    'live',
-    'ended'
-}
+// declare enum MediaStreamTrackState {
+//     'live',
+//     'ended'
+// }
 
 interface MediaStreamTrack extends EventTarget {
     enabled: boolean;
