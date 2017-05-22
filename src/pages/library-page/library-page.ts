@@ -455,7 +455,7 @@ export class LibraryPage {
                         this.folderNode = folderNode;
                         this.folderItems = newFolderItems;
                         // resize content, because a change in this.folderNode
-                        // can affect the header's visibility of the
+                        // can affect the header's visibility
                         this.content.resize();
                     },
                     (error: any) => {
@@ -481,6 +481,8 @@ export class LibraryPage {
      * @returns {TreeNode} if 'node' is selected, undefined otherwise.
      */
     public isSelected(node: TreeNode): TreeNode {
+        console.log('isSelected(): ' +
+            this.selectedNodes[node[DB_KEY_PATH]]);
         return this.selectedNodes[node[DB_KEY_PATH]];
     }
 
@@ -654,28 +656,29 @@ export class LibraryPage {
             itemNode = this.folderItems[key];
             itemKey = itemNode[DB_KEY_PATH];
 
-            let nodeIsSelected: TreeNode = this.selectedNodes[itemKey];
-            if (selectAll && !nodeIsSelected) {
+            let selectedNode: TreeNode = this.selectedNodes[itemKey];
+            if (selectAll && !selectedNode) {
                 // not selected, check it
                 changed = true;
                 this.selectedNodes[itemKey] = itemNode;
             }
-            else if (!selectAll && nodeIsSelected) {
+            else if (!selectAll && selectedNode) {
                 // selected, uncheck it
                 changed = true;
                 delete this.selectedNodes[itemKey];
-                this.content.resize();
             }
         }
         if (changed) {
-            // resize if anything changed
-            this.resize();
-
+            console.log('CHANGED!!!!!!!!!!!!!!!!!!!!! ' +
+                Object.keys(this.selectedNodes).length);
             // update state with new list of selected nodes
             // TODO: handle errors here
             this.appState.updateProperty(
                 'selectedNodes',
                 this.selectedNodes).then();
+
+            // resize if anything changed
+            this.resize();
         }
     }
 
