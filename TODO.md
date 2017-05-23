@@ -5,6 +5,10 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* we got rid of idb-app-state now we get rid of idb-app-fs
+  use cordova-file plugin!
+  * write a blog about how you build the file browser app
+  * write an entire file-browser app (library-tab)
 * Use ionic storage instead of indexed-db for app-state:
   a) rename idb-app-state to app-state
   b) use storage: but be 100% compatible with current API, which 
