@@ -76,6 +76,8 @@ export class AppState {
      */
     public updateProperty(key: string, value: any): Promise<any> {
         if (key in DEFAULT_STATE) {
+            console.log('=====> APP STATE UPDATE <======= key:' +
+                key + ', value:' + value);
             return this.storage.set(key, value);
         }
         else {

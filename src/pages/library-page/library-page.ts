@@ -470,8 +470,7 @@ export class LibraryPage {
 
         // update last viewed folder state in DB
         if (updateState) {
-            this.appState.updateProperty('lastViewedFolderKey', key)
-                .then();
+            this.appState.updateProperty('lastViewedFolderKey', key).then();
         }
     }
 
