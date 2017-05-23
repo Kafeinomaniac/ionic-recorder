@@ -46,7 +46,7 @@ export class AppState {
     public getProperty(key: string): Promise<any> {
         return new Promise((resolve, reject) => {
             if (key in DEFAULT_STATE) {
-                // TODO: if key is not stored yet then we want to store 
+                // TODO: if key is not stored yet then we want to store
                 // it in storage, as taken from DEFAULT_STATE
                 this.storage.get(key).then((value: any) => {
                     if (value === null) {
