@@ -40,7 +40,7 @@
                 </ion-icon>
                 &nbsp; {{folderItems[i].name}}
             </ion-label>
-            <ion-checkbox item-left [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])">
+            <ion-checkbox item-left [ngModel]="isSelected(folderItems[i])" checked="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])">
             </ion-checkbox>
         </ion-item>
         <ion-item class="library-empty-folder-message" *ngIf="!folderNode.childOrder.length">

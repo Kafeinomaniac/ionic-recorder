@@ -1,7 +1,8 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { formatLocalTime } from '../../models/utils/utils';
+import { Content } from 'ionic-angular';
 import {
     AppState,
     GainState
@@ -31,6 +32,7 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
     templateUrl: 'record-page.html'
 })
 export class RecordPage {
+    @ViewChild(Content) public content: Content;
     private appState: AppState;
     private idbAppFS: IdbAppFS;
     // recordButtonIcon referenced by template
@@ -185,6 +187,9 @@ export class RecordPage {
     public ionViewDidEnter(): void {
         console.log('RecordPage:ionViewDidEnter()');
         this.webAudioRecord.startMonitoring();
+        // if we don't do this.content.resize() here then
+        // the volume gauge does not show
+        this.content.resize();
     }
 
     public ionViewDidLeave(): void {
