@@ -29,8 +29,9 @@ export class ButtonBar implements OnChanges {
      */
     constructor() {
         console.log('constructor():ButtonBar');
-        this.buttons = [];
+        // this.buttons = [];
     }
+
     /**
      * Handle changes
      * @returns {void}
