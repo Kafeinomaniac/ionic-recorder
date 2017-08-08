@@ -50,8 +50,8 @@ export class Idb {
             (db: IDBDatabase) => {
                 this.db = db;
             },
-            (error) => {
-                console.error('openDB: ' + error);
+            (err: Error) => {
+                console.error('openDB: ' + err);
             });
     }
 
@@ -59,7 +59,7 @@ export class Idb {
      * Delete entire DB, keep trying if there is an error.
      * @params {string} dbName - the name of the database to delete
      * @returns {Observable<void>} Observable that yields when the
-     * delete operation returns without error
+     * delete operation ends without error
      */
     public static deleteDb(dbName: string): Observable<void> {
         'use strict';
@@ -89,8 +89,8 @@ export class Idb {
                             console.log('trying to delete ' + dbName + ' ...');
                             deleteDbOnce();
                         }
-                        catch (error) {
-                            console.warn('Error: ' + error);
+                        catch (err) {
+                            console.warn('Error: ' + err);
                             timerId = setTimeout(repeat, WAIT_MSEC);
                         }
                         clearTimeout(timerId);
@@ -171,8 +171,8 @@ export class Idb {
                             event.target);
                     };
                 },
-                (error) => {
-                    observer.error('Idb:clearStore(): ' + error);
+                (err: Error) => {
+                    observer.error('Idb:clearStore(): ' + err);
                 }
             );
         });
@@ -230,8 +230,8 @@ export class Idb {
                                 ', item: ' + JSON.stringify(item));
                         };
                     },
-                    (error) => {
-                        observer.error('Idb:create(): ' + error);
+                    (err: Error) => {
+                        observer.error('Idb:create(): ' + err);
                     }
                 ); // this.getStore(storeName, 'readwrite').subscribe(
             } // if (typeof item !== 'undefined' && item) {
@@ -272,8 +272,8 @@ export class Idb {
                             observer.error('in getRequest.onerror');
                         };
                     },
-                    (error) => {
-                        observer.error('in getStore: ' + error);
+                    (err: Error) => {
+                        observer.error('in getStore: ' + err);
                     }
                 ); // this.getStore(storeName, 'readonly').subscribe(
             } // if (isPositiveWholeNumber(key)) {
@@ -379,8 +379,8 @@ export class Idb {
                             observer.error('delete request');
                         };
                     },
-                    (error) => {
-                        observer.error(error);
+                    (err: Error) => {
+                        observer.error(err);
                     }
                 ); // this.getStore(storeName, 'readwrite').subscribe(
             } // if (isPositiveWholeNumber(key)) {
@@ -497,8 +497,8 @@ export class Idb {
                 try {
                     this.createStores(config.storeConfigs, openRequest);
                 }
-                catch (error) {
-                    observer.error('openRequest.onupgradeended: ' + error);
+                catch (err) {
+                    observer.error('openRequest.onupgradeended: ' + err);
                 }
             }; // openRequest.onupgradeneeded = ..
         });
@@ -526,8 +526,8 @@ export class Idb {
                         ).objectStore(storeName));
                         observer.complete();
                     },
-                    (error) => {
-                        observer.error('Idb:getStore(): ' + error);
+                    (err: Error) => {
+                        observer.error('Idb:getStore(): ' + err);
                     }
                 ); // this.waitForDB().subscribe(
             });
