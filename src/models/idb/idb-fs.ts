@@ -74,19 +74,20 @@ export class IdbFS extends Idb {
         let source: Observable<void> = Observable.create((observer) => {
             this.waitForDB().subscribe(
                 (db: IDBDatabase) => {
-                    this.read <TreeNode>(NODE_STORE, ROOT_FOLDER_KEY).subscribe(
+                    this.read<TreeNode>(NODE_STORE, ROOT_FOLDER_KEY).subscribe(
                         (rootNode: TreeNode) => {
                             if (rootNode) {
                                 observer.next();
                                 observer.complete();
                             }
                             else {
+                                alert('could not read root node: ' + rootNode);
                                 let newNode: TreeNode = IdbFS.makeTreeNode('');
                                 newNode[DB_KEY_PATH] = 1;
                                 if (!newNode.childOrder) {
                                     console.warn('no childOrder in root!');
                                 }
-                                this.create <TreeNode>(NODE_STORE, newNode)
+                                this.create<TreeNode>(NODE_STORE, newNode)
                                     .subscribe(
                                         (key: number) => {
                                             if (key !== ROOT_FOLDER_KEY) {
@@ -238,6 +239,7 @@ export class IdbFS extends Idb {
         return this.readNodesById(parentNode.childOrder);
     }
 
+    // TODO: why is readOrCreateNode part of idb-fs?  Shouldn't it be idb?
     public readOrCreateNode(
         key: number,
         name: string,
