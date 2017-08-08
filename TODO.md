@@ -5,6 +5,7 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* add splash screen to ionic-recorder
 * we got rid of idb-app-state now we get rid of idb-app-fs
   use cordova-file plugin!
   * write a blog about how you build the file browser app

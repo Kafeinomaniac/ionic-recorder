@@ -1,15 +1,13 @@
-// Protractor configuration file, see link for more information
-// https://github.com/angular/protractor/blob/master/lib/config.ts
-
-const { SpecReporter } = require('jasmine-spec-reporter');
-
 exports.config = {
   allScriptsTimeout: 11000,
   specs: [
     './e2e/**/*.e2e-spec.ts'
   ],
   capabilities: {
-    'browserName': 'chrome'
+    'browserName': 'chrome',
+    chromeOptions: {
+      args: ['--no-sandbox']
+    }
   },
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
@@ -28,6 +26,16 @@ exports.config = {
     require('connect')().use(require('serve-static')('www')).listen(4200);
   },
   onPrepare() {
-    jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: true } }));
+    var jasmineReporters = require('jasmine-reporters');
+    jasmine.getEnv().addReporter(new jasmineReporters.TerminalReporter({
+      verbosity: 3,
+      color: true,
+      showStack: true
+    }));
+    jasmine.getEnv().addReporter(new jasmineReporters.JUnitXmlReporter({
+      savePath: process.env.JUNIT_REPORT_PATH,
+      outputFile: process.env.JUNIT_REPORT_NAME,
+      consolidateAll: true
+    }));
   }
 };

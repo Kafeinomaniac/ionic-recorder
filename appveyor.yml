@@ -1,23 +1,26 @@
 # Test against this version of Node.js
 environment:
-  nodejs_version: "6.5"
+  nodejs_version: "7.10"
 
 # Install scripts. (runs after repo cloning)
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # install modules
-  - npm install -g cordova ionic
-  - ionic state clear
+  - npm install -g cordova@7.0.1 ionic@3.4.0
   - npm install
+
+build: none
 
 # Post-install test scripts.
 test_script:
   # Output useful info for debugging.
-  - node --version
-  - npm --version
+  - ionic --info
   # run tests
+  - npm run lint
   - npm run test-ci
   - npm run e2e
+  # build
+  - ionic cordova prepare
+  - ionic cordova build browser
 
-build: off

@@ -6,6 +6,6 @@
 ionic cordova platform add browser
 cordova prepare 
 cordova build 
-webdriver-manager update
+webdriver-manager update --gecko false
 
 

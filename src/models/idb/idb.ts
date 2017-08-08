@@ -83,7 +83,7 @@ export class Idb {
                 };
             },
             source: Observable<void> = Observable.create((observer) => {
-                let timerId: number,
+                let timerId: NodeJS.Timer,
                     repeat: () => void = () => {
                         try {
                             console.log('trying to delete ' + dbName + ' ...');
@@ -193,7 +193,7 @@ export class Idb {
      * @returns {Observable<number>} Observable that emits the item key
      * that was automatically incremented for the newly created (stored) item.
      */
-    public create < T >(
+    public create<T>(
         storeName: string,
         item: T,
         itemCB?: (item: T, key ?: number) => T
@@ -514,7 +514,7 @@ export class Idb {
      */
     protected getStore(
         storeName: string,
-        mode: string
+        mode: IDBTransactionMode
     ): Observable<IDBObjectStore> {
         let source: Observable<IDBObjectStore> =
             Observable.create((observer) => {
