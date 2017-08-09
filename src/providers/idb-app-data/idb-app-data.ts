@@ -24,11 +24,11 @@ export class IdbAppData extends Idb {
         console.log('constructor():IdbAppData');
     }
 
-    public createChunk(item: Int16Array): Observable<number>{
+    public createChunk(item: Int16Array): Observable<number> {
         return this.create<Int16Array>(STORE_NAME, item);
     }
 
-    public readChunk(key: number): Observable<Int16Array>{
+    public readChunk(key: number): Observable<Int16Array> {
         return this.read<Int16Array>(STORE_NAME, key);
     }
 }

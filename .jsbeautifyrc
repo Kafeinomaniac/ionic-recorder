@@ -16,7 +16,7 @@
         "js": {
             "type": ["javascript", "json"],
             "filename": [".jshintrc", ".jsbeautify"],
-            "ext": ["js", "json"]
+            "ext": ["js", "json", "ts"]
         },
         "css": ["css", "scss"],
         "html": ["htm", "html"]

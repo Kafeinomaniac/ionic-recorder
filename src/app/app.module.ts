@@ -55,7 +55,7 @@ import { MasterClock } from '../providers/master-clock/master-clock';
     providers: [
         StatusBar,
         SplashScreen,
-        { provide: ErrorHandler, useClass: IonicErrorHandler},
+        { provide: ErrorHandler, useClass: IonicErrorHandler },
         IdbAppData,
         IdbAppFS,
         AppState,

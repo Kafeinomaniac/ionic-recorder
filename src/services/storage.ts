@@ -15,15 +15,15 @@ export class StorageService {
     return new Storage({});
   }
 
-  public get(key: string): Promise<{}>{
+  public get(key: string): Promise<{}> {
     return this.storage.get(key);
   }
 
-  public set(key: string, value: string): Promise<{}>{
+  public set(key: string, value: string): Promise<{}> {
     return this.storage.set(key, value);
   }
 
-  public remove(key: string): Promise<{}>{
+  public remove(key: string): Promise<{}> {
     return this.storage.remove(key);
   }
 }

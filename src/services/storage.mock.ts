@@ -2,9 +2,9 @@
 
 export class StorageMock {
 
-  public static CLICKER_IDS: Array<string>= ['yy5d8klsj0', 'q20iexxg4a', 'wao2xajl8a'];
+  public static CLICKER_IDS: Array<string> = ['yy5d8klsj0', 'q20iexxg4a', 'wao2xajl8a'];
 
-  public get(key: string): Promise<{}>{
+  public get(key: string): Promise<{}> {
     let rtn: string = null;
 
     switch (key) {
@@ -29,13 +29,13 @@ export class StorageMock {
     });
   }
 
-  public set(key: string, value: string): Promise<{}>{
+  public set(key: string, value: string): Promise<{}> {
     return new Promise((resolve: Function) => {
       resolve({key: key, value: value});
     });
   }
 
-  public remove(key: string): Promise<{}>{
+  public remove(key: string): Promise<{}> {
     return new Promise((resolve: Function) => {
       resolve({key: key});
     });

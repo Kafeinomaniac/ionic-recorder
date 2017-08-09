@@ -60,9 +60,9 @@ export class WebAudioRecordWav extends WebAudioRecord {
      * Precondition: called start() already
      * @returns {void}
      */
-    public stop(): Observable<RecordingInfo>{
+    public stop(): Observable<RecordingInfo> {
         console.log('WebAudioRecordWav:stop()');
-        let obs: Observable<RecordingInfo>= Observable.create((observer) =>{
+        let obs: Observable<RecordingInfo> = Observable.create((observer) => {
             super.stop().subscribe(
                 (recordingInfo: RecordingInfo) => {
                     const lastChunk: Int16Array = this.setter.activeBuffer

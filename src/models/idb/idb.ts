@@ -61,7 +61,7 @@ export class Idb {
      * @returns {Observable<void>} Observable that yields when the
      * delete operation ends without error
      */
-    public static deleteDb(dbName: string): Observable<void>{
+    public static deleteDb(dbName: string): Observable<void> {
         'use strict';
         console.log('deleteDb(' + dbName + ')');
         let deleteDbOnce: () => void = () => {
@@ -82,7 +82,7 @@ export class Idb {
                     // throw Error('Idb:deleteDb() request blocked error');
                 };
             },
-            source: Observable<void>= Observable.create((observer) =>{
+            source: Observable<void> = Observable.create((observer) => {
                 let timerId: NodeJS.Timer,
                     repeat: () => void = () => {
                         try {
@@ -131,9 +131,9 @@ export class Idb {
      * @returns {Observable<IDBDatabase>} Observable that emits the database
      * when it's ready for use.
      */
-    public waitForDB(): Observable<IDBDatabase>{
+    public waitForDB(): Observable<IDBDatabase> {
         // NOTE:this loop should only repeat a handful of times or so
-        let source: Observable<IDBDatabase>= Observable.create((observer) =>{
+        let source: Observable<IDBDatabase> = Observable.create((observer) => {
             let repeat: () => void = () => {
                 if (this.db) {
                     observer.next(this.db);
@@ -154,8 +154,8 @@ export class Idb {
      * @returns {Observable<void>} Obervable that emits when the clear
      * operation is done
      */
-    public clearStore(storeName: string): Observable<void>{
-        let source: Observable<void>= Observable.create((observer) =>{
+    public clearStore(storeName: string): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
             this.getStore(storeName, 'readwrite').subscribe(
                 (store: IDBObjectStore) => {
                     let clearRequest: IDBRequest = store.clear();
@@ -196,9 +196,9 @@ export class Idb {
     public create<T>(
         storeName: string,
         item: T,
-        itemCB?: (item: T, key ?: number) => T
-    ): Observable<number>{
-        let source: Observable<number>= Observable.create((observer) =>{
+        itemCB ? : (item: T, key ? : number) => T
+    ): Observable<number> {
+        let source: Observable<number> = Observable.create((observer) => {
             if (typeof item !== 'undefined' && item) {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
@@ -253,8 +253,8 @@ export class Idb {
     public read<T>(
         storeName: string,
         key: number
-    ): Observable<T>{
-        let source: Observable<T>= Observable.create((observer) =>{
+    ): Observable<T> {
+        let source: Observable<T> = Observable.create((observer) => {
             if (isPositiveWholeNumber(key)) {
                 this.getStore(storeName, 'readonly').subscribe(
                     (store: IDBObjectStore) => {
@@ -297,8 +297,8 @@ export class Idb {
         storeName: string,
         key: number,
         newItem: T
-    ): Observable<void>{
-        let source: Observable<void>= Observable.create((observer) =>{
+    ): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
             if (isPositiveWholeNumber(key)) {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
@@ -363,8 +363,8 @@ export class Idb {
     public delete(
         storeName: string,
         key: number
-    ): Observable<void>{
-        let source: Observable<void>= Observable.create((observer) =>{
+    ): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
             if (isPositiveWholeNumber(key)) {
                 this.getStore(storeName, 'readwrite').subscribe(
                     (store: IDBObjectStore) => {
@@ -473,8 +473,8 @@ export class Idb {
      * @returns {Observable<IDBDatabase>} Observable that emits the database
      * when it's ready for use.
      */
-    private openDB(config: IdbConfig): Observable<IDBDatabase>{
-        let source: Observable<IDBDatabase>= Observable.create((observer) =>{
+    private openDB(config: IdbConfig): Observable<IDBDatabase> {
+        let source: Observable<IDBDatabase> = Observable.create((observer) => {
             let openRequest: IDBOpenDBRequest = indexedDB.open(
                 config.name, config.version);
 
@@ -515,7 +515,7 @@ export class Idb {
     protected getStore(
         storeName: string,
         mode: IDBTransactionMode
-    ): Observable<IDBObjectStore>{
+    ): Observable<IDBObjectStore> {
         let source: Observable<IDBObjectStore>=
             Observable.create((observer) => {
                 this.waitForDB().subscribe(

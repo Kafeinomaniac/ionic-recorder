@@ -389,7 +389,7 @@ export class WebAudioRecord {
      * Stop recording
      * @returns {Observable<RecordingInfo>}
      */
-    public stop(): Observable<RecordingInfo>{
+    public stop(): Observable<RecordingInfo> {
         console.log('WebAudioRecord:stop()');
         this.reset();
         return Observable.create((observer) => {
