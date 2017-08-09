@@ -1,1 +1,1 @@
-/// <reference path="globals/mediastream/index.d.ts" />
+///<reference path="globals/mediastream/index.d.ts" />

@@ -38,7 +38,7 @@ export class IdbDict extends Idb {
      * @returns {Observable<void>} - observable that completes when the
      * data store has been totally cleared.
      */
-    public clearAll(): Observable<void> {
+    public clearAll(): Observable<void>{
         return this.clearStore(DICT_STORE);
     }
 
@@ -47,7 +47,7 @@ export class IdbDict extends Idb {
      * @param {string} key - the key of the vfalue we're reading
      */
     public getValue(key: string): any {
-        let source: Observable<any> = Observable.create((observer) => {
+        let source: Observable<any>= Observable.create((observer) =>{
             this.getStore(DICT_STORE, 'readonly').subscribe(
                 (store: IDBObjectStore) => {
                     let index: IDBIndex = store.index('key'),
@@ -79,9 +79,9 @@ export class IdbDict extends Idb {
         return source;
     }
 
-    public addKeyValue(key: string, value: any): Observable<number> {
+    public addKeyValue(key: string, value: any): Observable<number>{
         console.log('addKeyValue(' + key + ', value)');
-        let source: Observable<number> = Observable.create((observer) => {
+        let source: Observable<number>= Observable.create((observer) =>{
             this.create<KeyValuePair>(DICT_STORE, {
                 key: key,
                 value: value
@@ -100,8 +100,8 @@ export class IdbDict extends Idb {
         return source;
     }
 
-    public getOrAddValue(key: string, value: any): Observable<any> {
-        let source: Observable<any> = Observable.create((observer) => {
+    public getOrAddValue(key: string, value: any): Observable<any>{
+        let source: Observable<any>= Observable.create((observer) =>{
             // first we try to get the value
             this.getValue(key).subscribe(
                 (dbValue: any) => {
@@ -133,11 +133,11 @@ export class IdbDict extends Idb {
         return source;
     }
 
-    public updateValue(key: string, value: any): Observable<void> {
+    public updateValue(key: string, value: any): Observable<void>{
         // we will need to first find the value by using the index on key
         // then once we find it, we know what the db key (int) is and we
         // can use the
-        let source: Observable<void> = Observable.create((observer) => {
+        let source: Observable<void>= Observable.create((observer) =>{
             this.getStore(DICT_STORE, 'readonly').subscribe(
                 (store: IDBObjectStore) => {
                     let index: IDBIndex = store.index('key'),

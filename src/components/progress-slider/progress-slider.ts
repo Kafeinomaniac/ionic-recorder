@@ -122,7 +122,7 @@ export class ProgressSlider {
 
     public onMouseUp(event: MouseEvent): void {
         console.log('onMouseeUp()');
-        // free up the listening to mouse up from <body> now that it happened
+        // free up the listening to mouse up from<body>now that it happened
         // until the next time we click on the progress-bar
         this.freeMouseUpListener();
         this.freeMouseMoveListener();

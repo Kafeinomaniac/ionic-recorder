@@ -33,7 +33,7 @@ export class VuGauge implements OnChanges {
         this.maxIndex = 0;
         // some error checking
         if (parseInt(this.height, 10)) {
-            throw Error('<vu-gauge> must have a height attribute');
+            throw Error('<vu-gauge>must have a height attribute');
         }
     }
 

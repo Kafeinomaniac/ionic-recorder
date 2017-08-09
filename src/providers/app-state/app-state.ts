@@ -43,7 +43,7 @@ export class AppState {
      * Gets a state property (from DB if necessary)
      * @returns {Observable<any>} Observable of value of property obtained
      */
-    public getProperty(key: string): Promise<any> {
+    public getProperty(key: string): Promise<any>{
         return new Promise((resolve, reject) => {
             if (key in DEFAULT_STATE) {
                 // TODO: if key is not stored yet then we want to store
@@ -74,7 +74,7 @@ export class AppState {
      * there is no need for an update (emits false in that case) or after we
      * have made the update in the DB (emits true in that case)
      */
-    public updateProperty(key: string, value: any): Promise<any> {
+    public updateProperty(key: string, value: any): Promise<any>{
         if (key in DEFAULT_STATE) {
             console.log('=====> APP STATE UPDATE <======= key:' +
                 key + ', value:' + value);

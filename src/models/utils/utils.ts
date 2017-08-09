@@ -61,7 +61,7 @@ export function isString(obj: any): boolean {
  */
 export function isPositiveWholeNumber(num: number): boolean {
     'use strict';
-    return <boolean >(
+    return<boolean>(
         num &&
         !isNaN(num) &&
         num > 0 &&

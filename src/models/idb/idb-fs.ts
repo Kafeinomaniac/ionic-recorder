@@ -2,8 +2,7 @@
 
 import { Idb } from './idb';
 import { Observable } from 'rxjs/Rx';
-import { isPositiveWholeNumber, isUndefined, prependArray } from
-    '../../models/utils/utils';
+import { isPositiveWholeNumber, isUndefined, prependArray } from '../../models/utils/utils';
 
 export const ROOT_FOLDER_KEY: number = 1;
 
@@ -20,9 +19,9 @@ export interface TreeNode {
     name: string;
     parentKey: number;
     timeStamp: number;
-    data?: any;
-    childOrder?: number[];
-    path?: string;
+    data ? : any;
+    childOrder ? : number[];
+    path ? : string;
 }
 
 export interface ParentChild {
@@ -70,10 +69,10 @@ export class IdbFS extends Idb {
         );
     }
 
-    // read or create root folder, returns Observable<void> that ends
+    // read or create root folder, returns Observable<void>that ends
     // when filesystem is ready for use
-    public waitForFilesystem(): Observable<void> {
-        let source: Observable<void> = Observable.create((observer) => {
+    public waitForFilesystem(): Observable<void>{
+        let source: Observable<void>= Observable.create((observer) =>{
             this.waitForDB().subscribe(
                 (db: IDBDatabase) => {
                     this.read<TreeNode>(NODE_STORE, ROOT_FOLDER_KEY).subscribe(
@@ -116,7 +115,7 @@ export class IdbFS extends Idb {
                                                     'waitForDB():readNode():' +
                                                     'create(): ' + err);
                                             }
-                                                });
+                                        });
                             }
                             else {
                                 observer.next();
@@ -147,8 +146,8 @@ export class IdbFS extends Idb {
     // if you do not supply a parent key it's a root node
     public static makeTreeNode(
         name: string,
-        parentKey?: number,
-        data?: any
+        parentKey ? : number,
+        data ? : any
     ): TreeNode {
         let treeNode: TreeNode = {
             name: name,
@@ -173,7 +172,7 @@ export class IdbFS extends Idb {
     // just check localdb for the api
 
     // creates either a folder or a data node, depending on data
-    // returns Observable<ParentChild> of both the newly created
+    // returns Observable<ParentChild>of both the newly created
     // child TreeNode and the (existing)  parent TreeNode, which has an
     // updated childOrder.
     // Note that we require a parentKey.  Since this db is created with
@@ -182,12 +181,12 @@ export class IdbFS extends Idb {
     public createNode(
         name: string,
         parentKey: number,
-        data?: any
-    ): Observable<ParentChild> {
-        let source: Observable<ParentChild> = Observable.create((observer) => {
+        data ? : any
+    ): Observable<ParentChild>{
+        let source: Observable<ParentChild>= Observable.create((observer) =>{
             let childNode: TreeNode =
                 IdbFS.makeTreeNode(name, parentKey, data);
-            this.create <TreeNode>(
+            this.create<TreeNode>(
                 NODE_STORE,
                 childNode,
                 (node: TreeNode, key: number) => {
@@ -218,7 +217,7 @@ export class IdbFS extends Idb {
     }
 
     // returns Observable<TreeNode>
-    // public readNode(key: number): Observable<TreeNode> {
+    // public readNode(key: number): Observable<TreeNode>{
     //     return this.read<TreeNode>(NODE_STORE, key);
     // }
     /**
@@ -227,9 +226,9 @@ export class IdbFS extends Idb {
      * @returns {Observable<TreeNode>} an observable that emits the
      * TreeNode read.
      */
-    public readNode(key: number): Observable<TreeNode> {
-        let source: Observable<TreeNode> = Observable.create((observer) => {
-            this.read <TreeNode>(NODE_STORE, key).subscribe(
+    public readNode(key: number): Observable<TreeNode>{
+        let source: Observable<TreeNode>= Observable.create((observer) =>{
+            this.read<TreeNode>(NODE_STORE, key).subscribe(
                 (treeNode: TreeNode) => {
                     // if (treeNode === undefined || !treeNode) {
                     //     observer.error('node does not exist');
@@ -251,7 +250,7 @@ export class IdbFS extends Idb {
      * @returns {Observable<TreeNode[]>} observable of an array of TreeNode
      * objects whose ids are children of parentNode
      */
-    public readChildNodes(parentNode: TreeNode): Observable<TreeNode[]> {
+    public readChildNodes(parentNode: TreeNode): Observable<TreeNode[]>{
         return this.readNodesById(parentNode.childOrder);
     }
 
@@ -260,8 +259,8 @@ export class IdbFS extends Idb {
         key: number,
         name: string,
         parentKey: number
-    ): Observable<TreeNode> {
-        let source: Observable<TreeNode> = Observable.create((observer) => {
+    ): Observable<TreeNode>{
+        let source: Observable<TreeNode>= Observable.create((observer) =>{
             // first we try to get the value
             this.readNode(key).subscribe(
                 (readNode: TreeNode) => {
@@ -288,8 +287,8 @@ export class IdbFS extends Idb {
         return source;
     }
 
-    // returns Observable<void> when done
-    public updateNode(key: number, changes: Object): Observable<void> {
+    // returns Observable<void>when done
+    public updateNode(key: number, changes: Object): Observable<void>{
         return this.update(NODE_STORE, key, changes);
     }
 
@@ -299,8 +298,8 @@ export class IdbFS extends Idb {
      * @returns {Observable<void>} - observable that emits after deletion has
      * completed successfully
      */
-    public deleteNodes(keyDict: KeyDict): Observable<void> {
-        let source: Observable<void> = Observable.create((observer) => {
+    public deleteNodes(keyDict: KeyDict): Observable<void>{
+        let source: Observable<void>= Observable.create((observer) =>{
             this.detachForDeleteNodes(keyDict).subscribe(
                 (detachedKeyDict: Object) => {
                     let nNodes: number = Object.keys(keyDict).length,
@@ -332,8 +331,8 @@ export class IdbFS extends Idb {
      * @returns {Observable<TreeNode[]>} observable of an array of TreeNode
      * objects whose ids are in nodeKeys
      */
-    public readNodesById(nodeKeys: number[]): Observable<TreeNode[]> {
-        let source: Observable<TreeNode[]> = Observable.create((observer) => {
+    public readNodesById(nodeKeys: number[]): Observable<TreeNode[]>{
+        let source: Observable<TreeNode[]>= Observable.create((observer) =>{
             let childNodes: TreeNode[] = [];
             // asynchronously read childOrder array  nodes, emits TreeNode[]
             this.ls(nodeKeys).subscribe(
@@ -352,7 +351,7 @@ export class IdbFS extends Idb {
         return source;
     }
 
-    // Returns an Observable<TreeNode[]> of all nodes obtained by name
+    // Returns an Observable<TreeNode[]>of all nodes obtained by name
     // regardless of where they are in the tree - this is a way to use
     // the tree as a key/value pair, by the way: just put the key in
     // name and the value goes in the data object of the node.  If nodes
@@ -363,8 +362,8 @@ export class IdbFS extends Idb {
     // same name to be in the same folder so if you have X unique names,
     // there must be at least X folders in the database and the number of
     // folders grows much slower than the number of data nodes, typically.
-    public readNodesByName(name: string): Observable<TreeNode[]> {
-        let source: Observable<TreeNode[]> = Observable.create((observer) => {
+    public readNodesByName(name: string): Observable<TreeNode[]>{
+        let source: Observable<TreeNode[]>= Observable.create((observer) =>{
             let nodes: TreeNode[] = [];
             this.getStore(NODE_STORE, 'readonly').subscribe(
                 (store: IDBObjectStore) => {
@@ -395,14 +394,14 @@ export class IdbFS extends Idb {
         return source;
     }
 
-    // Returns an Observable<TreeNode> of node read by name 'name'
+    // Returns an Observable<TreeNode>of node read by name 'name'
     // in parent folder whose key is 'parentKey'.  If such a node does
     // not exist the TreeNode object returned is null.
     public readNodeByNameInParent(
         name: string,
         parentKey: number
-    ): Observable<TreeNode> {
-        let source: Observable<TreeNode> = Observable.create((observer) => {
+    ): Observable<TreeNode>{
+        let source: Observable<TreeNode>= Observable.create((observer) =>{
             this.readNodesByName(name).subscribe(
                 (nodes: TreeNode[]) => {
                     let nodeFound: TreeNode = null,
@@ -440,11 +439,11 @@ export class IdbFS extends Idb {
      * collects the entire list of subtree nodes and returns them in one single
      * array, emitted by an observable when all its elements are available.
      * @param {TreeNode} node - the node whose subtree we're getting
-     * @return Observable<TreeNode[]> Observable that emits when the array of
+     * @return Observable<TreeNode[]>Observable that emits when the array of
      * all subtree nodes has been traversed in the db.
      */
-    public getSubtreeNodesArray(node: TreeNode): Observable<TreeNode[]> {
-        let source: Observable<TreeNode[]> = Observable.create((observer) => {
+    public getSubtreeNodesArray(node: TreeNode): Observable<TreeNode[]>{
+        let source: Observable<TreeNode[]>= Observable.create((observer) =>{
             let nodes: TreeNode[] = [];
             this.getSubtreeNodes(node).subscribe(
                 (subtreeNode: TreeNode) => {
@@ -470,8 +469,8 @@ export class IdbFS extends Idb {
     private attachToParent(
         childKey: number,
         childNode: TreeNode
-    ): Observable<TreeNode> {
-        let source: Observable<TreeNode> = Observable.create((observer) => {
+    ): Observable<TreeNode>{
+        let source: Observable<TreeNode>= Observable.create((observer) =>{
             // you have to read the existing child order first,
             // in order to add to the front of it
             this.readNode(childNode.parentKey).subscribe(
@@ -482,7 +481,7 @@ export class IdbFS extends Idb {
                         childNode[DB_KEY_PATH],
                         parentNode.childOrder);
                     // now you update the node with new childOrder
-                    this.update <TreeNode>(
+                    this.update<TreeNode>(
                         NODE_STORE,
                         childNode.parentKey,
                         parentNode).subscribe(
@@ -491,7 +490,7 @@ export class IdbFS extends Idb {
                             if (IdbFS.isFolderNode(childNode)) {
                                 childNode.path = parentNode.path + '/' +
                                     parentNode.name;
-                                this.update <TreeNode>(
+                                this.update<TreeNode>(
                                     NODE_STORE,
                                     childKey,
                                     childNode).subscribe(
@@ -533,8 +532,8 @@ export class IdbFS extends Idb {
      * @returns {Observable<KeyDict>} - same type as input
      * (keyDict) but expanded with potentially more (contained) nodes
      */
-    private detachForDeleteNodes(keyDict: KeyDict): Observable<KeyDict> {
-        let source: Observable<KeyDict> = Observable.create((observer) => {
+    private detachForDeleteNodes(keyDict: KeyDict): Observable<KeyDict>{
+        let source: Observable<KeyDict>= Observable.create((observer) =>{
             this.expandKeyDict(keyDict).subscribe(
                 (expandedKeyDict: KeyDict) => {
                     let i: number,
@@ -577,8 +576,8 @@ export class IdbFS extends Idb {
      * @returns {Observable<KeyDict>} - same type as input
      * (keyDict) but expanded with potentially more (contained) nodes
      */
-    private expandKeyDict(keyDict: KeyDict): Observable<KeyDict> {
-        let source: Observable<KeyDict> = Observable.create((observer) => {
+    private expandKeyDict(keyDict: KeyDict): Observable<KeyDict>{
+        let source: Observable<KeyDict>= Observable.create((observer) =>{
             // add nodes supplied argument nodes into the keyDict
             // if a node is a folder node, we get its subtree and
             // add those to the keydict as well, we're done when
@@ -635,7 +634,7 @@ export class IdbFS extends Idb {
     }
 
     /**
-     * Returns a stream Observable<TreeNode> that emits a new TreeNode
+     * Returns a stream Observable<TreeNode>that emits a new TreeNode
      * that is one of the input's childern (obviously, input must be a
      * folder TreeNode then) - the stream of observables is of children
      * of the given TreeNode.
@@ -643,7 +642,7 @@ export class IdbFS extends Idb {
      * @returns {Observable<TreeNode>} observable that emits one at a
      * time the children of 'node'
      */
-    private lsNode(node: TreeNode): Observable<TreeNode> {
+    private lsNode(node: TreeNode): Observable<TreeNode>{
         return this.ls(node.childOrder);
     }
 
@@ -663,22 +662,22 @@ export class IdbFS extends Idb {
      * Traverses a tree recursively. Based on
      * https://www.reddit.com/r/javascript/comments/3abv2k/ ...
      *      ... /how_can_i_do_a_recursive_readdir_with_rxjs_or_any/
-     * @returns Observable<TreeNode> Observable of all subtree nodes of
+     * @returns Observable<TreeNode>Observable of all subtree nodes of
      * input folder TreeNode
      */
-    private getSubtreeNodes(node: TreeNode): Observable<TreeNode> {
+    private getSubtreeNodes(node: TreeNode): Observable<TreeNode>{
         return this.lsNode(node)
-            .expand <TreeNode>((childNode: TreeNode) =>
+            .expand<TreeNode>((childNode: TreeNode) =>
                 this.isLeaf(childNode) ?
                 <
-                Observable<TreeNode>> Observable.empty() :
+                Observable<TreeNode>>Observable.empty() :
                 this.lsNode(childNode));
     }
 
     private detachNodesFromParent(
         childNodes: TreeNode[]
-    ): Observable<TreeNode> {
-        let source: Observable<TreeNode> = Observable.create((observer) => {
+    ): Observable<TreeNode>{
+        let source: Observable<TreeNode>= Observable.create((observer) =>{
             let nNodes: number = childNodes.length;
             if (nNodes === 0) {
                 // verify that some nodes were supplied
@@ -718,7 +717,7 @@ export class IdbFS extends Idb {
                                 parentNode.childOrder = childOrder;
                                 // now you update the node with new childOrder
                                 // this.updateNode(parentNode).subscribe(
-                                this.update <TreeNode>(
+                                this.update<TreeNode>(
                                     NODE_STORE,
                                     parentNode[DB_KEY_PATH],
                                     parentNode
@@ -742,8 +741,8 @@ export class IdbFS extends Idb {
         return source;
     }
 
-    private detachNodesFromParents(nodes: TreeNode[]): Observable<void> {
-        let source: Observable<void> = Observable.create((observer) => {
+    private detachNodesFromParents(nodes: TreeNode[]): Observable<void>{
+        let source: Observable<void>= Observable.create((observer) =>{
             // 1) group parents
             let i: number,
                 childNode: TreeNode,
@@ -804,13 +803,13 @@ export class IdbFS extends Idb {
     }
 
     /**
-     * Returns a stream Observable<TreeNode> that emits a new TreeNode on
+     * Returns a stream Observable<TreeNode>that emits a new TreeNode on
      * each request that's got the key of one of the nodeKeys keys
      * @returns {Observable<TreeNode>} observable that emits one at a
      * time one of the nodes with keys in 'nodeKeys'
      */
-    private ls(nodeKeys: number[]): Observable<TreeNode> {
-        return <Observable<TreeNode>> Observable.from(nodeKeys)
+    private ls(nodeKeys: number[]): Observable<TreeNode>{
+        return<Observable<TreeNode>>Observable.from(nodeKeys)
             .flatMap((key: number) => this.readNode(key));
     }
 

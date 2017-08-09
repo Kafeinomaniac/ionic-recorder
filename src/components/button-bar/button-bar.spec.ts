@@ -2,7 +2,7 @@ import { ComponentFixture, async } from '@angular/core/testing';
 import { TestUtils } from '../../test';
 import { ButtonbarButton, ButtonBar } from './button-bar';
 
-let FIXTURE: ComponentFixture<ButtonBar> = null;
+let FIXTURE: ComponentFixture<ButtonBar>= null;
 let INSTANCE: any = null;
 let ACTION: string = '';
 
