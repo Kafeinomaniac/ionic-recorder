@@ -13,6 +13,9 @@ export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 // to reduce latency and to compute time as accurately as possible)
 const PROCESSING_BUFFER_LENGTH: number = 2048;
 
+// wait-time between checks that WAA is initialized
+const WAIT_MSEC: number = 10;
+
 // statuses
 export enum RecordStatus {
     // uninitialized means we have not been initialized yet
@@ -101,6 +104,29 @@ export class WebAudioRecord {
 
         // grab microphone, init nodes that rely on stream, connect nodes
         this.initAudio();
+    }
+
+    /**
+     * Wait indefinitely until DB is ready for use, via an observable.
+     * @returns {Observable<IDBDatabase>} Observable that emits the database
+     * when it's ready for use.
+     */
+    public waitForWAA(): Observable<void> {
+        // NOTE:this loop should only repeat a handful of times or so
+        let source: Observable<void> = Observable.create((observer) => {
+            let repeat: () => void = () => {
+                console.log('WAIT FOR WAA - REPEAT');
+                if (this.status != RecordStatus.UNINITIALIZED_STATE) {
+                    observer.next();
+                    observer.complete();
+                }
+                else {
+                    setTimeout(repeat, WAIT_MSEC);
+                }
+            };
+            repeat();
+        });
+        return source;
     }
 
     /**

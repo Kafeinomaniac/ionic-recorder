@@ -79,7 +79,16 @@ export class RecordPage {
                 // always show up as gain == 0.
                 this.gainRangeSliderValue =
                     MAX_GAIN_SLIDER_VALUE * gain.factor / gain.maxFactor;
-                this.onGainChange(this.gainRangeSliderValue, false);
+
+                console.log(webAudioRecord['status']);
+
+                webAudioRecord.waitForWAA().subscribe(
+                    () => {
+                        this.onGainChange(this.gainRangeSliderValue, false);
+                        webAudioRecord.resetPeaks();
+                        console.log(webAudioRecord['status']);
+                    }
+                );
             }
         );
     }
