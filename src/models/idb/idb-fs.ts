@@ -4,8 +4,6 @@ import { Idb } from './idb';
 import { Observable } from 'rxjs/Rx';
 import { isPositiveWholeNumber, isUndefined, prependArray } from '../../models/utils/utils';
 
-export const ROOT_FOLDER_KEY: number = 1;
-
 const NODE_STORE: string = 'storeIdbFS';
 const KEY_ERROR: string = 'Key already exists';
 
@@ -13,6 +11,7 @@ const KEY_ERROR: string = 'Key already exists';
 /// START: Public API
 ///////////////////////////////////////////////////////////////////////////////
 
+export const ROOT_FOLDER_KEY: number = 1;
 export const DB_KEY_PATH: string = 'id';
 
 export interface TreeNode {
