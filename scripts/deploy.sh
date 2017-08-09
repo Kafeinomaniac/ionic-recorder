@@ -1,7 +1,11 @@
 #!/bin/bash
 
 DEST_HOST="tracktunes.org"
-DEST_DIR="marketing_client/www/ionic-recorder"
+
+
+
+
+DEST_DIR="tracktunes-homepage/platforms/browser/www/ionic-recorder"
 SRC_DIR="platforms/browser/www"
 RSYNC_DEST="${DEST_HOST}:${DEST_DIR}/"
 
@@ -11,9 +15,9 @@ cd "${0%/*}/.."
 echo "SRC: `hostname -s`:`pwd`"
 echo "DEST: $RSYNC_DEST"
 
-npm build
+npm run build
 
-cordova build
+# TODO: commit here
 
 # remove destination dir remotely first
 ssh "$DEST_HOST" "/bin/rm -fr $DEST_DIR/*"
