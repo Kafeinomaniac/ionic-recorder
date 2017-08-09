@@ -55,12 +55,14 @@ export class AppState {
                         this.updateProperty(key, value).then(() => {
                             console.log('UPDATED STORAGE: key=' + key +
                                 ', value=' + value);
+                            console.dir(value);
                             resolve(value);
                         });
                     }
                     else {
                         console.log('VALUE IN STORAGE: key=' + key +
                                 ', value=' + value);
+                        console.dir(value);
                         resolve(value);
                     }
                 });

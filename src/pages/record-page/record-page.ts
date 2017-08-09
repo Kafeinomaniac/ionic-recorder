@@ -79,7 +79,7 @@ export class RecordPage {
                 // always show up as gain == 0.
                 this.gainRangeSliderValue =
                     MAX_GAIN_SLIDER_VALUE * gain.factor / gain.maxFactor;
-                this.onGainChangeEnd(this.gainRangeSliderValue);
+                this.onGainChange(this.gainRangeSliderValue, false);
             }
         );
     }
@@ -100,13 +100,19 @@ export class RecordPage {
         // this.gainRangeSliderValue = 0.5;
         this.gainRangeSliderValue = 0.5 * MAX_GAIN_SLIDER_VALUE;
 
-        this.onGainChangeEnd(this.gainRangeSliderValue);
+        this.onGainChange(this.gainRangeSliderValue);
     }
 
-    // public onGainChange(position: number): void {
-    //     this.gainFactor = position * this.maxGainFactor;
-    public onGainChange(sliderValue: number): void {
+    public onGainChange(
+        sliderValue: number,
+        updateStorage: boolean = true
+    ): void {
+        // this.onGainChange(position);
         const position: number = sliderValue / MAX_GAIN_SLIDER_VALUE;
+
+        console.log('onGainChange(' + position.toFixed(2) + '): ' +
+            this.gainFactor + ', ' + this.maxGainFactor);
+
         this.gainFactor = position * this.maxGainFactor;
 
         this.webAudioRecord.setGainFactor(this.gainFactor);
@@ -121,20 +127,17 @@ export class RecordPage {
             // this.gainSliderLeftIcon = 'mic';
         }
         this.percentGain = (this.gainFactor * 100.0).toFixed(0);
-    }
 
-    public onGainChangeEnd(position: number): void {
-        console.log('onGainChangeEnd(' + position.toFixed(2) + '): ' +
-            this.gainFactor + ', ' + this.maxGainFactor);
-        this.onGainChange(position);
-        this.appState.updateProperty('gain', {
-            factor: this.gainFactor,
-            maxFactor: this.maxGainFactor
-        }).then(null, (error: any) => {
-            const msg: string = 'AppState:updateProperty(): ' + error;
-            alert(msg);
-            throw Error(msg);
-        });
+        if (updateStorage) {
+            this.appState.updateProperty('gain', {
+                factor: this.gainFactor,
+                maxFactor: this.maxGainFactor
+            }).then(null, (error: any) => {
+                const msg: string = 'AppState:updateProperty(): ' + error;
+                alert(msg);
+                throw Error(msg);
+            });
+        }
     }
 
     /**
