@@ -25,10 +25,10 @@ let instance: IonicRecorderApp = null;
 
 describe('IonicRecorderApp', () => {
     beforeEach(() => {
-        instance = new IonicRecorderApp( 
-            <any>PlatformMock.instance(), 
-            <any>MenuMock.instance(), 
-            <any>StatusBarMock.instance(), 
+        instance = new IonicRecorderApp(
+            <any>PlatformMock.instance(),
+            <any>MenuMock.instance(),
+            <any>StatusBarMock.instance(),
             <any>AppStateMock)
     });
 

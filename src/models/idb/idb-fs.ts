@@ -95,11 +95,11 @@ export class IdbFS extends Idb {
                                             }
                                         },
                                         (err) => {
-                                            // it is possible for the root 
+                                            // it is possible for the root
                                             // node to be there, even though
-                                            // when we tried reading it it 
+                                            // when we tried reading it it
                                             // came up as undefined. so we
-                                            // check if the error is 
+                                            // check if the error is
                                             // 'key already exists' and if so
                                             // we don't consider that an error,
                                             // we just let this create() call
