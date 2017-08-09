@@ -250,7 +250,7 @@ export class Idb {
      * @returns {Observable<T>} Observable that emits the item as
      * soon as the db read request completes
      */
-    public read <T>(
+    public read<T>(
         storeName: string,
         key: number
     ): Observable<T> {

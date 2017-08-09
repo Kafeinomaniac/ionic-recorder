@@ -5,8 +5,10 @@ import { Observable } from 'rxjs/Rx';
 import { isPositiveWholeNumber, isUndefined, prependArray } from
     '../../models/utils/utils';
 
-const NODE_STORE: string = 'storeIdbFS';
 export const ROOT_FOLDER_KEY: number = 1;
+
+const NODE_STORE: string = 'storeIdbFS';
+const KEY_ERROR: string = 'Key already exists';
 
 ///////////////////////////////////////////////////////////////////////////////
 /// START: Public API
@@ -76,17 +78,12 @@ export class IdbFS extends Idb {
                 (db: IDBDatabase) => {
                     this.read<TreeNode>(NODE_STORE, ROOT_FOLDER_KEY).subscribe(
                         (rootNode: TreeNode) => {
-                            if (rootNode) {
-                                observer.next();
-                                observer.complete();
-                            }
-                            else {
-                                alert('could not read root node: ' + rootNode);
+                            if (isUndefined(rootNode)) {
                                 let newNode: TreeNode = IdbFS.makeTreeNode('');
-                                newNode[DB_KEY_PATH] = 1;
-                                if (!newNode.childOrder) {
-                                    console.warn('no childOrder in root!');
-                                }
+                                newNode[DB_KEY_PATH] = ROOT_FOLDER_KEY;
+                                // if (!newNode.childOrder) {
+                                //     console.warn('no childOrder in root!');
+                                // }
                                 this.create<TreeNode>(NODE_STORE, newNode)
                                     .subscribe(
                                         (key: number) => {
@@ -99,12 +96,29 @@ export class IdbFS extends Idb {
                                                 observer.complete();
                                             }
                                         },
-                                        (error) => {
-                                            observer.error(
-                                                'waitForFilesystem():' +
-                                                'waitForDB():readNode():' +
-                                                'create(): ' + error);
-                                        });
+                                        (err) => {
+                                            // it is possible for the root 
+                                            // node to be there, even though
+                                            // when we tried reading it it 
+                                            // came up as undefined. so we
+                                            // check if the error is 
+                                            // 'key already exists' and if so
+                                            // we don't consider that an error
+                                            if (err.indexOf(KEY_ERROR) != -1) {
+                                                observer.next();
+                                                observer.complete();
+                                            }
+                                            else {
+                                                observer.error(
+                                                    'waitForFilesystem():' +
+                                                    'waitForDB():readNode():' +
+                                                    'create(): ' + err);
+                                            }
+                                                });
+                            }
+                            else {
+                                observer.next();
+                                observer.complete();
                             }
                         },
                         (error) => {
@@ -112,8 +126,8 @@ export class IdbFS extends Idb {
                                 'readNode(): ' + error);
                         });
                 },
-                (error) => {
-                    observer.error('waitForFilesystem():waitForDB() ' + error);
+                (err) => {
+                    observer.error('waitForFilesystem():waitForDB() ' + err);
                 });
         });
         return source;
