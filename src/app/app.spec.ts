@@ -36,10 +36,6 @@ describe('IonicRecorderApp', () => {
         expect(instance['pages'].length).toEqual(4);
     });
 
-    it('initialises with a root page', () => {
-        expect(instance['rootPage']).not.toBe(null);
-    });
-
     it('has LoadingPage as its root page', () => {
         expect(instance['rootPage']).toEqual(LoadingPage);
     });
