@@ -68,7 +68,7 @@ export class Idb {
                 let request: IDBOpenDBRequest =
                     indexedDB.deleteDatabase(dbName);
                 request.onsuccess = function(): void {
-                    // console.log('deleteDatabase: SUCCESS');
+                    console.log('deleteDatabase: SUCCESS');
                 };
                 request.onerror = function(): void {
                     console.warn('deleteDatabase: ERROR');
@@ -79,7 +79,7 @@ export class Idb {
                     // we're going to stop throwing this error here because
                     // we notice that the DB gets deleted despite this error
                     // being thrown every time, keeping just the warning
-                    // throw Error('Idb:deleteDb() request blocked error');
+                    throw Error('Idb:deleteDb() request blocked error');
                 };
             },
             source: Observable<void> = Observable.create((observer) => {

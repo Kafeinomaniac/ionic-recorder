@@ -1,7 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 // Simple injectable provider class that adds a clock that fires every
-// CLOCK_INTERVAL_MSEC in our Ionic2/Angular2 app, to which we can
+// CLOCK_INTERVAL_MSEC in our Ionic/Angular app, to which we can
 // attach functions to do things at the clock's frequency. This is
 // basically an integration of setInterval() with zone.js, e.g. see
 // http://blog.thoughtram.io/angular/2017/02/01/zones-in-angular-2.html

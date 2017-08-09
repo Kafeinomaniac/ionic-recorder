@@ -5,6 +5,7 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* settings page - delete db - why need it twice? fix!
 * why is readOrCreateNode in idb-fs, shouldn't it be idb?  also check the
   read-or-create startup of idb-fs because we still get complaints that
   the key is already in the db when it is...  we want to make sure that
