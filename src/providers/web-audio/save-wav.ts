@@ -48,8 +48,7 @@ export class WebAudioSaveWav {
                                 recordingInfo.sampleRate
                             ),
                             wavArray
-                        ],
-                        { type: WAV_MIME_TYPE }
+                        ], { type: WAV_MIME_TYPE }
                     );
                     console.log('Blob size: ' + this.blob.size);
                 }

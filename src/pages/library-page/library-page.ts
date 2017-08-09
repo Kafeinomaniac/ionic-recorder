@@ -480,8 +480,6 @@ export class LibraryPage {
      * @returns {TreeNode} if 'node' is selected, undefined otherwise.
      */
     public isSelected(node: TreeNode): TreeNode {
-        console.log('isSelected(): ' +
-            this.selectedNodes[node[DB_KEY_PATH]]);
         return this.selectedNodes[node[DB_KEY_PATH]];
     }
 
