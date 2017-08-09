@@ -103,7 +103,9 @@ export class IdbFS extends Idb {
                                             // came up as undefined. so we
                                             // check if the error is 
                                             // 'key already exists' and if so
-                                            // we don't consider that an error
+                                            // we don't consider that an error,
+                                            // we just let this create() call
+                                            // do nothing and continue...
                                             if (err.indexOf(KEY_ERROR) != -1) {
                                                 observer.next();
                                                 observer.complete();
