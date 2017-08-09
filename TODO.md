@@ -5,7 +5,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* remember gain value - it doesn't remember it currently
 * settings page - delete db - why need it twice? fix!
+  NOTE: you have to do it twice only if going to record page first
+  and then clicking 'delete db' after that - the record page somehow
+  keeps hold of the db and that blocks the deletion, probably
 * why is readOrCreateNode in idb-fs, shouldn't it be idb?  also check the
   read-or-create startup of idb-fs because we still get complaints that
   the key is already in the db when it is...  we want to make sure that
