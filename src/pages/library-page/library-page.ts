@@ -565,6 +565,12 @@ export class LibraryPage {
      * @returns {void}
      */
     public onClickAddButton(): void {
+        console.log('onClickAddButton() - navController: ' +
+            this.navController);
+
+        let alert = this.alertController.create({
+
+        });
         // note we consider the current folder (this.folderNode) the parent
         // let addFolderModal: Modal =
         //     this.modalController.create(AddFolderPage, {
@@ -572,8 +578,6 @@ export class LibraryPage {
         //         parentItems: this.folderItems
         //     });
 
-        console.log('onClickAddButton() - navController: ' +
-            this.navController);
 
         // this.navController.push(AddFolderPage);
 
