@@ -16,6 +16,7 @@ export function makeWavBlobHeaderView(
                 dataView.setUint8(offset + i, text.charCodeAt(i));
             }
         };
+
     //
     // NB: this is single-channel (mono)
     //
