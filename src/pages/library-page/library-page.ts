@@ -38,17 +38,15 @@ export function getFolderPath(folderNode: TreeNode): string {
 })
 export class LibraryPage {
     @ViewChild(Content) public content: Content;
+    public folderNode: TreeNode;
+    public headerButtons: ButtonbarButton[];
+    public footerButtons: ButtonbarButton[];
     private navController: NavController;
     private alertController: AlertController;
     private idbAppFS: IdbAppFS;
     private appState: AppState;
-
-    public folderNode: TreeNode;
     private folderItems: KeyDict;
     private selectedNodes: KeyDict;
-    private totalSelectedCounter: number;
-    public headerButtons: ButtonbarButton[];
-    public footerButtons: ButtonbarButton[];
 
     /**
      * @constructor
@@ -71,7 +69,6 @@ export class LibraryPage {
         this.folderNode = null;
         this.folderItems = {};
         this.selectedNodes = {};
-        this.totalSelectedCounter = 0;
         this.headerButtons = [{
                 text: 'Selection',
                 leftIcon: platform.is('ios') ?
@@ -483,14 +480,6 @@ export class LibraryPage {
         return this.selectedNodes[node[DB_KEY_PATH]];
     }
 
-    /**
-     * UI calls this when the # of selected items badge is clicked
-     * @returns {void}
-     */
-    public onClickTotalSelected(): void {
-        this.totalSelectedCounter++;
-    }
-
     private resize(): void {
         setTimeout(
             () => {
@@ -510,8 +499,6 @@ export class LibraryPage {
      */
     public onClickCheckbox(node: TreeNode): void {
         console.log('onClickCheckbox');
-        // reset the counter for flipping through selected nodes
-        this.totalSelectedCounter = 0;
 
         const nodeKey: number = node[DB_KEY_PATH],
             nSelected: number = Object.keys(this.selectedNodes).length,
