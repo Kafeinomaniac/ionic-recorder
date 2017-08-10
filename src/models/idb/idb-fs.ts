@@ -18,9 +18,9 @@ export interface TreeNode {
     name: string;
     parentKey: number;
     timeStamp: number;
-    data ? : any;
-    childOrder ? : number[];
-    path ? : string;
+    data?: any;
+    childOrder?: number[];
+    path?: string;
 }
 
 export interface ParentChild {
@@ -145,8 +145,8 @@ export class IdbFS extends Idb {
     // if you do not supply a parent key it's a root node
     public static makeTreeNode(
         name: string,
-        parentKey ? : number,
-        data ? : any
+        parentKey?: number,
+        data?: any
     ): TreeNode {
         let treeNode: TreeNode = {
             name: name,
@@ -180,7 +180,7 @@ export class IdbFS extends Idb {
     public createNode(
         name: string,
         parentKey: number,
-        data ? : any
+        data?: any
     ): Observable<ParentChild> {
         let source: Observable<ParentChild> = Observable.create((observer) => {
             let childNode: TreeNode =

@@ -8,7 +8,13 @@ import {
     Content
 }
 from 'ionic-angular';
-import { TreeNode, KeyDict, DB_KEY_PATH } from '../../models/idb/idb-fs';
+import {
+    TreeNode,
+    KeyDict,
+    DB_KEY_PATH,
+    ParentChild
+}
+from '../../models/idb/idb-fs';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
@@ -569,8 +575,46 @@ export class LibraryPage {
             this.navController);
 
         let alert = this.alertController.create({
-
+            title: 'New Folder',
+            // message: 'Enter the folder name',
+            inputs: [
+                {
+                    name: 'folderName',
+                    placeholder: 'Folder name ...'
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Cancel',
+                    handler: (data: any) => {
+                        console.log('Cancel clicked in add-folder alert');
+                    }
+                },
+                {
+                    text: 'Done',
+                    handler: (data: any) => {
+                        console.log('Done clicked in add-folder alert');
+                        this.idbAppFS.createNode(
+                            data.folderName,
+                            this.folderNode[DB_KEY_PATH]
+                        ).subscribe(
+                            (parentChild: ParentChild) => {
+                                let childNode: TreeNode = parentChild.child,
+                                    parentNode: TreeNode = parentChild.parent,
+                                    childNodeKey: number = childNode[DB_KEY_PATH];
+                                console.log('childNode: ' + childNode.name +
+                                    ', parentNode: ' + parentNode.name);
+                                console.dir(childNode);
+                                // update folder items dictionary of this page
+                                this.folderItems[childNodeKey] = childNode;
+                                this.folderNode = parentNode;
+                            }
+                        ); // createFolderNode().subscribe(
+                    }
+                }
+            ]
         });
+        alert.present();
         // note we consider the current folder (this.folderNode) the parent
         // let addFolderModal: Modal =
         //     this.modalController.create(AddFolderPage, {

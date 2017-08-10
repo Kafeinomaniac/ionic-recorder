@@ -196,7 +196,7 @@ export class Idb {
     public create<T>(
         storeName: string,
         item: T,
-        itemCB ? : (item: T, key ? : number) => T
+        itemCB?: (item: T, key ? : number) => T
     ): Observable<number> {
         let source: Observable<number> = Observable.create((observer) => {
             if (typeof item !== 'undefined' && item) {

@@ -28,3 +28,8 @@ find src -name \*\.ts -exec \
      perl -i -pe \
      's/>\{/> \{/g' \
      '{}' \;
+
+find src -name \*\.ts -exec \
+     perl -i -pe \
+     's/ \? :/\?:/' \
+     '{}' \;
