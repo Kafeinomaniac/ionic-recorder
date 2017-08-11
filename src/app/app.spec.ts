@@ -11,7 +11,7 @@ from 'ionic-mocks';
 import {
     AppStateMock
 }
-from '../providers/app-state/app-state.mock';
+from '../services/app-state/app-state.mock';
 import {
     LibraryPage
 }

@@ -18,10 +18,10 @@ import { AudioPlay } from '../components/audio-player/audio-player';
 import { ButtonBar } from '../components/button-bar/button-bar';
 import { ProgressSlider } from '../components/progress-slider/progress-slider';
 import { VuGauge } from '../components/vu-gauge/vu-gauge';
-import { IdbAppData } from '../providers/idb-app-data/idb-app-data';
-import { IdbAppFS } from '../providers/idb-app-fs/idb-app-fs';
-import { AppState } from '../providers/app-state/app-state';
-import { MasterClock } from '../providers/master-clock/master-clock';
+import { IdbAppData } from '../services/idb-app-data/idb-app-data';
+import { IdbAppFS } from '../services/idb-app-fs/idb-app-fs';
+import { AppState } from '../services/app-state/app-state';
+import { MasterClock } from '../services/master-clock/master-clock';
 
 @NgModule({
     declarations: [

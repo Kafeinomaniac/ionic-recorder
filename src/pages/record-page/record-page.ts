@@ -7,15 +7,15 @@ import {
     AppState,
     GainState
 }
-from '../../providers/app-state/app-state';
-import { WebAudioRecordWav } from '../../providers/web-audio/record-wav';
-import { RecordStatus } from '../../providers/web-audio/record';
-import { RecordingInfo } from '../../providers/web-audio/common';
+from '../../services/app-state/app-state';
+import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
+import { RecordStatus } from '../../services/web-audio/record';
+import { RecordingInfo } from '../../services/web-audio/common';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
 }
-from '../../providers/idb-app-fs/idb-app-fs';
+from '../../services/idb-app-fs/idb-app-fs';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';

@@ -3,7 +3,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Tabs, Tab, Platform, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
-import { AppState } from '../providers/app-state/app-state';
+import { AppState } from '../services/app-state/app-state';
 import { LoadingPage } from '../pages/loading-page/loading-page';
 import { RecordPage } from '../pages/record-page/record-page';
 import { LibraryPage } from '../pages/library-page/library-page';

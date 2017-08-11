@@ -19,10 +19,10 @@ import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
 }
-from '../../providers/idb-app-fs/idb-app-fs';
+from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 import { alertAndDo } from '../../models/utils/alerts';
-import { AppState } from '../../providers/app-state/app-state';
+import { AppState } from '../../services/app-state/app-state';
 import { TrackPage } from '../track-page/track-page';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 

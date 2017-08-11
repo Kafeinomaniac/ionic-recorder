@@ -5,16 +5,16 @@ import { Idb } from '../../models/idb/idb';
 import {
     DB_NAME as APP_DATA_DB_NAME
 }
-from '../../providers/idb-app-data/idb-app-data';
+from '../../services/idb-app-data/idb-app-data';
 import {
     DB_NAME as APP_FS_DB_NAME
 }
-from '../../providers/idb-app-fs/idb-app-fs';
+from '../../services/idb-app-fs/idb-app-fs';
 // import {
 //     AppState,
 //     DB_NAME as APP_STATE_DB_NAME
 // }
-// from '../../providers/app-state/app-state';
+// from '../../services/app-state/app-state';
 
 /**
  * @name SettingsPage

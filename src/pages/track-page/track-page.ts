@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
 import { NavParams, ActionSheetController } from 'ionic-angular';
 import { formatTime } from '../../models/utils/utils';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { RecordingInfo } from '../../providers/web-audio/common';
+import { RecordingInfo } from '../../services/web-audio/common';
 import { formatLocalTime } from '../../models/utils/utils';
-import { WebAudioSaveWav } from '../../providers/web-audio/save-wav';
+import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
 
 /**
  * @name TrackPage

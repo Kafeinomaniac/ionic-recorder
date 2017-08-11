@@ -5,6 +5,9 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* do some e2e tests - destroy db from settings page,
+  then reload browser page and go to
+  library tab. or just destroy db 
 * remember gain value - it doesn't remember it currently
 * settings page - delete db - why need it twice? fix!
   NOTE: you have to do it twice only if going to record page first
