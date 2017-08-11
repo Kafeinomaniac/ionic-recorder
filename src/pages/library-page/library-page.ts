@@ -4,26 +4,25 @@ import { Component, ViewChild } from '@angular/core';
 import {
     AlertController,
     NavController,
+    ModalController,
     Platform,
     Content
-}
-from 'ionic-angular';
+} from 'ionic-angular';
 import {
     TreeNode,
     KeyDict,
     DB_KEY_PATH,
     ParentChild
-}
-from '../../models/idb/idb-fs';
+} from '../../models/idb/idb-fs';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-}
-from '../../services/idb-app-fs/idb-app-fs';
+} from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 import { alertAndDo } from '../../models/utils/alerts';
 import { AppState } from '../../services/app-state/app-state';
 import { TrackPage } from '../track-page/track-page';
+import { MoveToPage } from '../moveto-page/moveto-page';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 
 export function getFolderPath(folderNode: TreeNode): string {
@@ -49,6 +48,7 @@ export class LibraryPage {
     public footerButtons: ButtonbarButton[];
     private navController: NavController;
     private alertController: AlertController;
+    private modalController: ModalController;
     private idbAppFS: IdbAppFS;
     private appState: AppState;
     private folderItems: KeyDict;
@@ -61,7 +61,7 @@ export class LibraryPage {
     constructor(
         navController: NavController,
         alertController: AlertController,
-        // modalController: ModalController,
+        modalController: ModalController,
         idbAppFS: IdbAppFS,
         appState: AppState,
         platform: Platform
@@ -69,13 +69,14 @@ export class LibraryPage {
         console.log('constructor():LibraryPage');
         this.navController = navController;
         this.alertController = alertController;
-        // this.modalController = modalController;
+        this.modalController = modalController;
         this.idbAppFS = idbAppFS;
         this.appState = appState;
         this.folderNode = null;
         this.folderItems = {};
         this.selectedNodes = {};
-        this.headerButtons = [{
+        this.headerButtons = [
+            {
                 text: 'Selection',
                 leftIcon: platform.is('ios') ?
                     'radio-button-off' : 'square-outline',
@@ -109,7 +110,8 @@ export class LibraryPage {
             }
         ];
 
-        this.footerButtons = [{
+        this.footerButtons = [
+            {
                 text: 'Info',
                 leftIcon: 'information-circle',
                 clickCB: () => {
@@ -191,6 +193,7 @@ export class LibraryPage {
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
+        this.modalController.create(MoveToPage).present();
     }
 
     /**
