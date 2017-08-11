@@ -5,6 +5,26 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* We're going to implement 'move selected items'
+  1) UI/UX - use a full-page modal that looks just like
+  library page, except: (a) no bottom button bar,
+  (b) no selection boxes, (c) left 'select' button is
+  gone. so you only have three buttons on top: 
+  - home
+  - to parent
+  - new folder
+  as soon as you hit a folder it will display a confirmation alert
+  before doing anything because this is pretty destructive an operation
+  2) engine: with CRUD this is just looping through the selected nodes,
+  and, because they are so small in size (they are just pointers to the
+  data just like UNIX nodes) you do: step 1 = create all selected nodes
+  anew (a new copy) at the destination location, step 2 = delete all 
+  of the original ones, if everything went perfectly well in step 1 -
+  perhaps even adding a verification; but if things did not go well,
+  then delete the new ones you've just created and report the error.
+* when you click the 'N selected' badge on the top right, it pops up
+  an alert (not full size window, with a backdrop) that has a scrolling
+  list of all files and folders (items) that are selected
 * do some e2e tests - destroy db from settings page,
   then reload browser page and go to
   library tab. or just destroy db 
