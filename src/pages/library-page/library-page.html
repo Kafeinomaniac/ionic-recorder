@@ -2,16 +2,12 @@
 
 <ion-header>
     <ion-navbar no-border-bottom>
-        <ion-buttons start>
-            <button ion-button menuToggle>
+        <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        </ion-buttons>
-
         <ion-title *ngIf="folderNode">
             Library
         </ion-title>
-
         <ion-buttons end *ngIf="nSelectedNodes()">
             <button ion-button small>
                 <ion-badge item-right>

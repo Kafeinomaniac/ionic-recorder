@@ -2,11 +2,9 @@
 
 <ion-header>
     <ion-navbar no-border-bottom color="dark">
-        <ion-buttons start>
-            <button ion-button menuToggle>
-                <ion-icon name="menu"></ion-icon>
-            </button>
-        </ion-buttons>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
         <ion-title>Record</ion-title>
         <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
             <button ion-button small (click)="webAudioRecord.resetPeaks()">
