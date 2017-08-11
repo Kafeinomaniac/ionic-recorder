@@ -24,7 +24,7 @@ anything written here, unless you wrote it.
   then delete the new ones you've just created and report the error.
 * when you click the 'N selected' badge on the top right, it pops up
   an alert (not full size window, with a backdrop) that has a scrolling
-  list of all files and folders (items) that are selected
+  list of all files and folders (items) that are selected. 
 * do some e2e tests - destroy db from settings page,
   then reload browser page and go to
   library tab. or just destroy db 
