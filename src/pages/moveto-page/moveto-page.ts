@@ -86,7 +86,7 @@ export class MoveToPage {
                 }
             },
             {
-                text: 'Move items here!',
+                text: 'Move items here',
                 leftIcon: 'checkmark-circle',
                 clickCB: () => {
                     console.log('moving them here');

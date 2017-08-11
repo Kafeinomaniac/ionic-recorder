@@ -3,7 +3,7 @@
 <ion-header>
     <ion-navbar>
         <ion-title>
-            Move items
+            Move selected
         </ion-title>
         <ion-buttons end *ngIf="nSelectedNodes()">
             <button ion-button small>
@@ -15,7 +15,7 @@
     </ion-navbar>
     <ion-toolbar no-border-top>
         <p *ngIf="folderNode" text-center>
-            Move to: {{getPath()}}
+            To folder: {{getPath()}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>
