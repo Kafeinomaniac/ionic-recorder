@@ -79,16 +79,15 @@ export class MoveToPage {
         this.footerButtons = [
             {
                 text: 'Cancel',
-                leftIcon: 'close',
+                leftIcon: 'close-circle',
                 clickCB: () => {
                     console.log('clicked cancel');
                     this.dismiss();
                 }
             },
             {
-                text: 'Move items here',
-                leftIcon: 'share-alt',
-                rightIcon: 'folder',
+                text: 'Move items here!',
+                leftIcon: 'checkmark-circle',
                 clickCB: () => {
                     console.log('moving them here');
                 }
