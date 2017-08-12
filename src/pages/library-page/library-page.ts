@@ -12,7 +12,8 @@ import {
     TreeNode,
     KeyDict,
     DB_KEY_PATH,
-    ParentChild
+    ParentChild,
+    ROOT_FOLDER_KEY
 } from '../../models/idb/idb-fs';
 import {
     IdbAppFS,
@@ -86,10 +87,10 @@ export class LibraryPage {
                 }
             },
             {
-                text: 'Home',
+                text: 'To /',
                 leftIcon: 'home',
                 clickCB: () => {
-                    this.onClickSelectButton();
+                    this.onClickHomeButton();
                 }
             },
             {
@@ -559,6 +560,38 @@ export class LibraryPage {
     }
 
     /**
+     * UI calls this when the goHome button is clicked
+     * @returns {void}
+     */
+    public onClickHomeButton(): void {
+        console.log('onClickHomeButton()');
+        if (this.folderNode) {
+            this.switchFolder(ROOT_FOLDER_KEY, true);
+        }
+    }
+
+    /**
+     * Initiates select button action when that button is clicked
+     * @returns {void}
+     */
+    public onClickSelectButton(): void {
+        console.log('onClickSelectButton()');
+        alertAndDo(
+            this.alertController,
+            'Select which, in<br>' + this.folderNode.name,
+            'All',
+            () => {
+                console.log('action1 doing it now');
+                this.selectAllInFolder();
+            },
+            'None',
+            () => {
+                console.log('action2 doing it now');
+                this.selectNoneInFolder();
+            });
+    }
+
+    /**
      * UI calls this when the goToParent button is clicked
      * @returns {void}
      */
@@ -731,26 +764,5 @@ export class LibraryPage {
      */
     private selectNoneInFolder(): void {
         this.selectAllOrNoneInFolder(false);
-    }
-
-    /**
-     * Initiates select button action when that button is clicked
-     * @returns {void}
-     */
-    public onClickSelectButton(): void {
-        console.log('onClickSelectButton()');
-        alertAndDo(
-            this.alertController,
-            'Select which, in<br>' + this.folderNode.name,
-            'All',
-            () => {
-                console.log('action1 doing it now');
-                this.selectAllInFolder();
-            },
-            'None',
-            () => {
-                console.log('action2 doing it now');
-                this.selectNoneInFolder();
-            });
     }
 }
