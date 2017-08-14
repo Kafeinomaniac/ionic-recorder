@@ -67,14 +67,16 @@ export class WebAudioRecord {
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
     private nRecordedSamples: number;
-    private startedAt: number;
-    private pausedAt: number;
+    // private startedAt: number;
+    // private pausedAt: number;
 
     protected valueCB: (pcm: number) => any;
 
     public status: RecordStatus;
     public sampleRate: number;
+    // isInactive means not recording and not paused
     public isInactive: boolean;
+    // isRecording means actively recording and not paused
     public isRecording: boolean;
     public currentVolume: number;
     public currentTime: string;
@@ -301,6 +303,8 @@ export class WebAudioRecord {
      * @returns {void}
      */
     public startMonitoring(): void {
+        console.log('startMonitoring()');
+        this.stopMonitoring();
         this.masterClock.addFunction(
             RECORDER_CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
@@ -331,6 +335,7 @@ export class WebAudioRecord {
      * @returns {void}
      */
     public stopMonitoring(): void {
+        console.log('stopMonitoring()');
         this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
     }
 
@@ -369,8 +374,8 @@ export class WebAudioRecord {
         this.nRecordedSamples = 0;
         this.isRecording = true;
         this.isInactive = false;
-        this.startedAt = AUDIO_CONTEXT.currentTime;
-        this.pausedAt = 0;
+        // this.startedAt = AUDIO_CONTEXT.currentTime;
+        // this.pausedAt = 0;
     }
 
     /**
@@ -379,7 +384,7 @@ export class WebAudioRecord {
      */
     public pause(): void {
         this.isRecording = false;
-        this.pausedAt = AUDIO_CONTEXT.currentTime - this.startedAt;
+        // this.pausedAt = AUDIO_CONTEXT.currentTime - this.startedAt;
     }
 
     /**
@@ -397,11 +402,12 @@ export class WebAudioRecord {
     private reset(): void {
         this.isRecording = false;
         this.isInactive = true;
-        this.startedAt = 0;
-        this.pausedAt = 0;
+        // this.startedAt = 0;
+        // this.pausedAt = 0;
     }
 
     private getTime(): number {
+        /*
         if (this.pausedAt) {
             return this.pausedAt;
         }
@@ -409,6 +415,8 @@ export class WebAudioRecord {
             return AUDIO_CONTEXT.currentTime - this.startedAt;
         }
         return 0;
+        */
+        return this.isInactive ? 0 : this.nRecordedSamples / this.sampleRate;
     }
 
     /**
