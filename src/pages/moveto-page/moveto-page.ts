@@ -12,7 +12,7 @@ import {
 from 'ionic-angular';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { AppState } from '../../services/app-state/app-state';
-import { TreeNode, KeyDict, DB_KEY_PATH } from '../../models/idb/idb-fs';
+import { TreeNode, KeyDict, ROOT_FOLDER_KEY, DB_KEY_PATH } from '../../models/idb/idb-fs';
 import { getFolderPath } from '../library-page/library-page'
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
@@ -53,7 +53,7 @@ export class MoveToPage {
         this.viewController = viewController;
         this.selectedNodes = {};
         this.headerButtons = [{
-                text: 'Home',
+                text: 'To /',
                 leftIcon: 'home',
                 clickCB: () => {
                     this.onClickHomeButton();
@@ -105,14 +105,15 @@ export class MoveToPage {
             this.switchFolder(this.folderNode.parentKey);
         }
     }
+
     /**
-     * UI calls this when the goToParent button is clicked
+     * UI calls this when the goHome button is clicked
      * @returns {void}
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
         if (this.folderNode) {
-            this.switchFolder(this.folderNode.parentKey);
+            this.switchFolder(ROOT_FOLDER_KEY);
         }
     }
 
@@ -177,7 +178,7 @@ export class MoveToPage {
         // const nodeKey: number = node[DB_KEY_PATH];
         if (IdbAppFS.isFolderNode(node)) {
             // it's a folder! switch to it
-            // this.switchFolder(node[DB_KEY_PATH], true);
+            this.switchFolder(node[DB_KEY_PATH]);
         }
     }
 
