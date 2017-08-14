@@ -7,19 +7,22 @@ import {
     ModalController,
     Platform,
     Content
-} from 'ionic-angular';
+}
+from 'ionic-angular';
 import {
     TreeNode,
     KeyDict,
     DB_KEY_PATH,
     ParentChild,
     ROOT_FOLDER_KEY
-} from '../../models/idb/idb-fs';
+}
+from '../../models/idb/idb-fs';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-} from '../../services/idb-app-fs/idb-app-fs';
-import { isPositiveWholeNumber } from '../../models/utils/utils';
+}
+from '../../services/idb-app-fs/idb-app-fs';
+import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 import { alertAndDo } from '../../models/utils/alerts';
 import { AppState } from '../../services/app-state/app-state';
 import { TrackPage } from '../track-page/track-page';
@@ -76,8 +79,7 @@ export class LibraryPage {
         this.folderNode = null;
         this.folderItems = {};
         this.selectedNodes = {};
-        this.headerButtons = [
-            {
+        this.headerButtons = [{
                 text: 'Selection',
                 leftIcon: platform.is('ios') ?
                     'radio-button-off' : 'square-outline',
@@ -111,8 +113,7 @@ export class LibraryPage {
             }
         ];
 
-        this.footerButtons = [
-            {
+        this.footerButtons = [{
                 text: 'Info',
                 leftIcon: 'information-circle',
                 clickCB: () => {
@@ -463,7 +464,8 @@ export class LibraryPage {
                         this.folderItems = newFolderItems;
                         // resize content, because a change in this.folderNode
                         // can affect the header's visibility
-                        this.content.resize();
+                        // this.content.resize();
+                        this.resize();
                     },
                     (error: any) => {
                         alert('in readChildNodes: ' + error);
@@ -486,8 +488,8 @@ export class LibraryPage {
      * @param {TreeNode} node about which we ask if it's selected
      * @returns {TreeNode} if 'node' is selected, undefined otherwise.
      */
-    public isSelected(node: TreeNode): TreeNode {
-        return this.selectedNodes[node[DB_KEY_PATH]];
+    public isSelected(node: TreeNode): boolean {
+        return !isUndefined(this.selectedNodes[node[DB_KEY_PATH]]);
     }
 
     private resize(): void {
@@ -613,14 +615,11 @@ export class LibraryPage {
         let alert = this.alertController.create({
             title: 'New Folder',
             // message: 'Enter the folder name',
-            inputs: [
-                {
-                    name: 'folderName',
-                    placeholder: 'Folder name ...'
-                }
-            ],
-            buttons: [
-                {
+            inputs: [{
+                name: 'folderName',
+                placeholder: 'Folder name ...'
+            }],
+            buttons: [{
                     text: 'Cancel',
                     handler: (data: any) => {
                         console.log('Cancel clicked in add-folder alert');
@@ -714,17 +713,22 @@ export class LibraryPage {
         // for each one, ask if it's in selectedNodes
         // for this to work, we need to make selectedNodes a dictionary
         let changed: boolean = false,
+            folderItemsKeys: string[] = Object.keys(this.folderItems),
             i: number,
             key: string,
-            folderItemsKeys: string[] = Object.keys(this.folderItems),
             itemNode: TreeNode,
             itemKey: number;
+        // loop over folderItems (the current showing folder's items)
+        // because that's where select-all or select-none will apply, i.e.
+        // when we choose select-all, 'all' refers to all items here, not
+        // all items everywhere
         for (i = 0; i < folderItemsKeys.length; i++) {
             key = folderItemsKeys[i];
             itemNode = this.folderItems[key];
             itemKey = itemNode[DB_KEY_PATH];
 
             let selectedNode: TreeNode = this.selectedNodes[itemKey];
+            console.log('i: ' + i + ', selected node: ' + selectedNode);
             if (selectAll && !selectedNode) {
                 // not selected, check it
                 changed = true;
