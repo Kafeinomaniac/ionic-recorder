@@ -93,6 +93,9 @@ export class LibraryPage {
                 leftIcon: 'home',
                 clickCB: () => {
                     this.onClickHomeButton();
+                },
+                disabledCB: () => {
+                    return this.homeButtonDisabled();
                 }
             },
             {
@@ -101,6 +104,9 @@ export class LibraryPage {
                 rightIcon: 'folder',
                 clickCB: () => {
                     this.onClickParentButton();
+                },
+                disabledCB: () => {
+                    return this.homeButtonDisabled();
                 }
             },
             {
@@ -179,14 +185,6 @@ export class LibraryPage {
      */
     public getPath(): string {
         return getFolderPath(this.folderNode);
-    }
-
-    /**
-     * Tells UI if the go to parent button should be disabled
-     * @returns {boolean} whether goToParent button should be disabled
-     */
-    public parentButtonDisabled(): boolean {
-        return !this.folderNode || this.folderNode.path === '';
     }
 
     /**
@@ -395,6 +393,18 @@ export class LibraryPage {
      */
     public onClickSharebutton(): void {
         console.log('onClickSharebutton');
+    }
+
+    /**
+     * Determine whether the home button should be disabled in the UI
+     * @returns {boolean}
+     */
+    public homeButtonDisabled(): boolean {
+        if (this.folderNode &&
+            this.folderNode[DB_KEY_PATH] === ROOT_FOLDER_KEY) {
+            return true;
+        }
+        return false;
     }
 
     /**
