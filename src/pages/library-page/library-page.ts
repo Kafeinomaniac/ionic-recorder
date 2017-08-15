@@ -193,7 +193,8 @@ export class LibraryPage {
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
-        this.modalController.create(MoveToPage).present();
+        // this.modalController.create(MoveToPage).present();
+        this.navController.push(MoveToPage);
     }
 
     /**
