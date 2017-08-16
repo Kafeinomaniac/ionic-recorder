@@ -30,10 +30,10 @@
             </ion-label>
             <ion-checkbox item-left [ngModel]="isSelected(selectedNodes[key])" (click)="onClickCheckbox(selectedNodes[key])"></ion-checkbox>
         </ion-item>
-        <ion-item class="library-empty-folder-message" *ngIf="keys(selectedNodes).length == 0">
+        <!--ion-item class="library-empty-folder-message" *ngIf="keys(selectedNodes).length == 0">
             <h2>
                 None selected
             </h2>
-        </ion-item>
+        </ion-item-->
     </ion-list>
 </ion-content>

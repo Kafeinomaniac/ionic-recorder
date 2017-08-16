@@ -16,6 +16,7 @@ import { TreeNode, KeyDict, ROOT_FOLDER_KEY, DB_KEY_PATH } from '../../models/id
 import { getFolderPath } from '../library-page/library-page'
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
+import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 
 /**
  * @name MoveToPage
@@ -37,17 +38,20 @@ export class MoveToPage {
     public folderNode: TreeNode;
     public headerButtons: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
+    private navController: NavController;
 
     /**
      * MoveToPage modal constructor
      */
     constructor(
+        navController: NavController,
         idbAppFS: IdbAppFS,
         appState: AppState,
         viewController: ViewController,
         platform: Platform
     ) {
         console.log('constructor():MoveToPage');
+        this.navController = navController;
         this.idbAppFS = idbAppFS;
         this.appState = appState;
         this.viewController = viewController;
@@ -119,6 +123,15 @@ export class MoveToPage {
         if (this.folderNode) {
             this.switchFolder(this.folderNode.parentKey);
         }
+    }
+
+    /**
+     * Initiates select button action when that button is clicked
+     * @returns {void}
+     */
+    public onClickSelectedBadge(): void {
+        console.log('onClickSelectedBadge()');
+        this.navController.push(EditSelectionPage);
     }
 
     /**
