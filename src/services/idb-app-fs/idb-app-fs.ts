@@ -17,6 +17,7 @@ export const UNFILED_FOLDER_KEY: number = 2;
 
 @Injectable()
 export class IdbAppFS extends IdbFS {
+    public unfiledFolderNode: TreeNode;
     constructor() {
         super(DB_NAME, DB_VERSION);
         console.log('constructor():IdbAppFS');
@@ -32,6 +33,7 @@ export class IdbAppFS extends IdbFS {
                                 ' key mismatch: ' + UNFILED_FOLDER_KEY +
                                 ' vs. ' + treeNode[DB_KEY_PATH]);
                         }
+                        this.unfiledFolderNode = treeNode;
                     });
             },
             (error) => {

@@ -38,6 +38,8 @@ export interface KeysDict {
 
 export class IdbFS extends Idb {
 
+    public rootFolderNode: TreeNode;
+
     constructor(dbName: string, dbVersion: number) {
         super({
             name: dbName,
@@ -90,6 +92,7 @@ export class IdbFS extends Idb {
                                                     ROOT_FOLDER_KEY);
                                             }
                                             else {
+                                                this.rootFolderNode = newNode;
                                                 observer.next();
                                                 observer.complete();
                                             }
@@ -117,6 +120,8 @@ export class IdbFS extends Idb {
                                         });
                             }
                             else {
+                                // not if (isUndefined(rootNode)) {
+                                this.rootFolderNode = rootNode;
                                 observer.next();
                                 observer.complete();
                             }

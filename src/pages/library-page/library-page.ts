@@ -27,7 +27,7 @@ import { alertAndDo } from '../../models/utils/alerts';
 import { AppState } from '../../services/app-state/app-state';
 import { TrackPage } from '../track-page/track-page';
 import { MoveToPage } from '../moveto-page/moveto-page';
-import { ShowSelectedPage } from '../show-selected-page/show-selected-page';
+import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 
 export function getFolderPath(folderNode: TreeNode): string {
@@ -81,7 +81,7 @@ export class LibraryPage {
         this.folderItems = {};
         this.selectedNodes = {};
         this.headerButtons = [{
-                text: 'Selection',
+                text: 'Select',
                 leftIcon: platform.is('ios') ?
                     'radio-button-off' : 'square-outline',
                 rightIcon: 'md-arrow-dropdown',
@@ -474,9 +474,6 @@ export class LibraryPage {
                         } // for
                         this.folderNode = folderNode;
                         this.folderItems = newFolderItems;
-                        // resize content, because a change in this.folderNode
-                        // can affect the header's visibility
-                        // this.content.resize();
                         this.resize();
                     },
                     (error: any) => {
@@ -590,7 +587,7 @@ export class LibraryPage {
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
-        this.navController.push(ShowSelectedPage);
+        this.navController.push(EditSelectionPage);
     }
 
     /**
@@ -601,7 +598,7 @@ export class LibraryPage {
         console.log('onClickSelectButton()');
         alertAndDo(
             this.alertController,
-            'Select which, in<br>' + this.folderNode.name,
+            'Select which, in ' + this.getPath(),
             'All',
             () => {
                 console.log('action1 doing it now');
@@ -671,49 +668,6 @@ export class LibraryPage {
             ]
         });
         alert.present();
-        // note we consider the current folder (this.folderNode) the parent
-        // let addFolderModal: Modal =
-        //     this.modalController.create(AddFolderPage, {
-        //         parentPath: this.getPath(),
-        //         parentItems: this.folderItems
-        //     });
-
-
-        // this.navController.push(AddFolderPage);
-
-        // this.nav.present(addFolderModal);
-        // addFolderModal.present(addFolderModal);
-
-        // addFolderModal.onDismiss((folderName: string) => {
-        //     if (folderName) {
-        //         // data is new folder's name returned from addFolderModal
-        //         console.log('got folderName back: ' + folderName);
-        //         // create a node for added folder childNode
-        //         this.idbAppFS.createNode(
-        //             folderName,
-        //             this.folderNode[DB_KEY_PATH]
-        //         ).subscribe(
-        //             (parentChild: ParentChild) => {
-        //                 let childNode: TreeNode = parentChild.child,
-        //                     parentNode: TreeNode = parentChild.parent,
-        //                     childNodeKey: number = childNode[DB_KEY_PATH];
-        //                 console.log('childNode: ' + childNode +
-        //                     ', parentNode: ' + parentNode);
-        //                 // update folder items dictionary of this page
-        //                 this.folderItems[childNodeKey] = childNode;
-        //                 this.folderNode = parentNode;
-        //             },
-        //             (error: any) => {
-        //                 alert('in createFolderNode: ' + error);
-        //             }
-        //             ); // createFolderNode().subscribe(
-        //     }
-        //     else {
-        //         console.log('you canceled the add-folder');
-        //         // assume cancel
-        //         return;
-        //     }
-        // });
     }
 
     /**

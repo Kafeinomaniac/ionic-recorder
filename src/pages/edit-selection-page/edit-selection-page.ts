@@ -15,19 +15,19 @@ import { AppState } from '../../services/app-state/app-state';
 import { TreeNode, KeyDict, ROOT_FOLDER_KEY, DB_KEY_PATH } from '../../models/idb/idb-fs';
 import { getFolderPath } from '../library-page/library-page'
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { isPositiveWholeNumber } from '../../models/utils/utils';
+import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 
 /**
- * @name ShowSelectedPage
+ * @name EditSelectionPage
  * @description
- * A modal ShowSelected page that displays a selection / browser of files
+ * A modal EditSelection page that displays a selection / browser of files
  * and folders to move items into - you must select a folder here.
  */
 @Component({
-    selector: 'show-selected-page',
-    templateUrl: 'show-selected-page.html'
+    selector: 'edit-selection-page',
+    templateUrl: 'edit-selection-page.html'
 })
-export class ShowSelectedPage {
+export class EditSelectionPage {
     @ViewChild(Content) public content: Content;
     private idbAppFS: IdbAppFS;
     private appState: AppState;
@@ -39,7 +39,7 @@ export class ShowSelectedPage {
     public footerButtons: ButtonbarButton[];
 
     /**
-     * ShowSelectedPage modal constructor
+     * EditSelectionPage modal constructor
      */
     constructor(
         idbAppFS: IdbAppFS,
@@ -47,7 +47,7 @@ export class ShowSelectedPage {
         viewController: ViewController,
         platform: Platform
     ) {
-        console.log('constructor():ShowSelectedPage');
+        console.log('constructor():EditSelectionPage');
         this.idbAppFS = idbAppFS;
         this.appState = appState;
         this.viewController = viewController;
@@ -77,15 +77,13 @@ export class ShowSelectedPage {
             }
 
         ];
-        this.footerButtons = [
-            {
-                text: 'Move selected  items here',
-                leftIcon: 'checkmark-circle',
-                clickCB: () => {
-                    console.log('move cb clicked');
-                }
+        this.footerButtons = [{
+            text: 'Move selected  items here',
+            leftIcon: 'checkmark-circle',
+            clickCB: () => {
+                console.log('move cb clicked');
             }
-        ];
+        }];
     }
 
     /**
@@ -175,7 +173,7 @@ export class ShowSelectedPage {
      * @returns {void}
      */
     public onClickListItem(node: TreeNode): void {
-        console.log('ShowSelectedPage:onClickListItem()');
+        console.log('EditSelectionPage:onClickListItem()');
         // const nodeKey: number = node[DB_KEY_PATH];
         if (IdbAppFS.isFolderNode(node)) {
             // it's a folder! switch to it
@@ -231,4 +229,41 @@ export class ShowSelectedPage {
             }
         );
     }
+
+    /**
+     * Used by UI to determine whether 'node' is selected
+     * @param {TreeNode} node about which we ask if it's selected
+     * @returns {TreeNode} if 'node' is selected, undefined otherwise.
+     */
+    public isSelected(node: TreeNode): boolean {
+        return !isUndefined(this.selectedNodes[node[DB_KEY_PATH]]);
+    }
+
+    /**
+     * UI calls this when a UI item gets checked
+     * @param {TreeNode} node corresponding to UI item that just got checked
+     * @returns {void}
+     */
+    public onClickCheckbox(node: TreeNode): void {
+        console.log('onClickCheckbox');
+
+        const nodeKey: number = node[DB_KEY_PATH],
+            nSelected: number = Object.keys(this.selectedNodes).length,
+            selectedNode: TreeNode = this.selectedNodes[nodeKey];
+
+        if (selectedNode) {
+            // the node is selected, meaning it is checked, uncheck it
+            delete this.selectedNodes[nodeKey];
+        }
+        else {
+            // not selected, check it
+            this.selectedNodes[nodeKey] = node;
+
+        }
+
+        // update state with new list of selected nodes
+        this.appState.updateProperty('selectedNodes', this.selectedNodes)
+            .then();
+    }
+
 }

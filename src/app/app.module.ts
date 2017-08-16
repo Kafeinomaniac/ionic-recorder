@@ -11,8 +11,8 @@ import { IonicRecorderApp } from './app.component';
 import { AboutPage } from '../pages/about-page/about-page';
 import { LibraryPage } from '../pages/library-page/library-page';
 import { MoveToPage } from '../pages/moveto-page/moveto-page';
-import { ShowSelectedPage }
-from '../pages/show-selected-page/show-selected-page';
+import { EditSelectionPage }
+from '../pages/edit-selection-page/edit-selection-page';
 import { LoadingPage } from '../pages/loading-page/loading-page';
 import { RecordPage } from '../pages/record-page/record-page';
 import { SettingsPage } from '../pages/settings-page/settings-page';
@@ -32,7 +32,7 @@ import { MasterClock } from '../services/master-clock/master-clock';
         AboutPage,
         LibraryPage,
         MoveToPage,
-        ShowSelectedPage,
+        EditSelectionPage,
         LoadingPage,
         RecordPage,
         SettingsPage,
@@ -53,7 +53,7 @@ import { MasterClock } from '../services/master-clock/master-clock';
         AboutPage,
         LibraryPage,
         MoveToPage,
-        ShowSelectedPage,
+        EditSelectionPage,
         LoadingPage,
         RecordPage,
         SettingsPage,
