@@ -108,7 +108,7 @@ export class EditSelectionPage {
                 this.selectedNodes = selectedNodes;
                 Object.keys(this.selectedNodes).forEach((key: string) => {
                     this.origSelectedNodes[key] = this.selectedNodes[key];
-                })                
+                })
                 this.isReady = true;
             }
         );
