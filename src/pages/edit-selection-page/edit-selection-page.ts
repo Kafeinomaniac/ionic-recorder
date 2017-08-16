@@ -38,7 +38,7 @@ export class EditSelectionPage {
     public folderNode: TreeNode;
     public headerButtons: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
-    public listReady: boolean;
+    public isReady: boolean;
 
     /**
      * EditSelectionPage modal constructor
@@ -55,7 +55,7 @@ export class EditSelectionPage {
         this.viewController = viewController;
         this.selectedNodes = {};
         this.origSelectedNodes = {};
-        this.listReady = false;
+        this.isReady = false;
     }
 
     /**
@@ -76,16 +76,25 @@ export class EditSelectionPage {
 
     public isFolderKey(key: string): boolean {
         console.log('isFolderKey(' + key + ')');
-        return IdbFS.isFolderNode(this.selectedNodes[key]);
+        if (isUndefined(this.origSelectedNodes[key])) {
+            alert('undefd');
+        }
+        return IdbFS.isFolderNode(this.origSelectedNodes[key]);
     }
 
     public isDataKey(key: string): boolean {
         console.log('isDataKey(' + key + ')');
-        return IdbFS.isDataNode(this.selectedNodes[key]);
+        if (isUndefined(this.origSelectedNodes[key])) {
+            console.log(key);
+            console.dir(this.origSelectedNodes);
+
+            alert('undefd');
+        }
+        return IdbFS.isDataNode(this.origSelectedNodes[key]);
     }
 
     public getName(key: string): string {
-        return this.selectedNodes[key].name;
+        return this.origSelectedNodes[key].name;
     }
 
     /**
@@ -97,12 +106,10 @@ export class EditSelectionPage {
         this.appState.getProperty('selectedNodes').then(
             (selectedNodes: any) => {
                 this.selectedNodes = selectedNodes;
-                for (let key in this.keys(selectedNodes)) {
-                    // make a copy
+                Object.keys(this.selectedNodes).forEach((key: string) => {
                     this.origSelectedNodes[key] = this.selectedNodes[key];
-                    console.log('copying key ' + key);
-                }
-                this.listReady = true;
+                })                
+                this.isReady = true;
             }
         );
     }

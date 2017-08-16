@@ -5,7 +5,7 @@
         <ion-title>
             Edit Selection
         </ion-title>
-        <ion-buttons end *ngIf="listReady">
+        <ion-buttons end *ngIf="isReady">
             <button ion-button small>
                 <ion-badge item-right>
                     {{nSelectedNodes()}} selected
@@ -16,7 +16,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-list *ngIf="listReady">
+    <ion-list *ngIf="isReady">
         <ion-item clear *ngFor="let key of keys(origSelectedNodes)" class="library-item">
             <ion-label ion-button clear>
                 <span *ngIf="isDataKey(key)">
