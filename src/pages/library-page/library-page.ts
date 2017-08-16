@@ -27,6 +27,7 @@ import { alertAndDo } from '../../models/utils/alerts';
 import { AppState } from '../../services/app-state/app-state';
 import { TrackPage } from '../track-page/track-page';
 import { MoveToPage } from '../moveto-page/moveto-page';
+import { ShowSelectedPage } from '../show-selected-page/show-selected-page';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 
 export function getFolderPath(folderNode: TreeNode): string {
@@ -581,6 +582,15 @@ export class LibraryPage {
         if (this.folderNode) {
             this.switchFolder(ROOT_FOLDER_KEY, true);
         }
+    }
+
+    /**
+     * Initiates select button action when that button is clicked
+     * @returns {void}
+     */
+    public onClickSelectedBadge(): void {
+        console.log('onClickSelectedBadge()');
+        this.navController.push(ShowSelectedPage);
     }
 
     /**

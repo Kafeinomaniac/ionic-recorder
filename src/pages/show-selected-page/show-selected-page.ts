@@ -18,16 +18,16 @@ import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 
 /**
- * @name MoveToPage
+ * @name ShowSelectedPage
  * @description
- * A modal MoveTo page that displays a selection / browser of files
+ * A modal ShowSelected page that displays a selection / browser of files
  * and folders to move items into - you must select a folder here.
  */
 @Component({
-    selector: 'moveto-page',
-    templateUrl: 'moveto-page.html'
+    selector: 'show-selected-page',
+    templateUrl: 'show-selected-page.html'
 })
-export class MoveToPage {
+export class ShowSelectedPage {
     @ViewChild(Content) public content: Content;
     private idbAppFS: IdbAppFS;
     private appState: AppState;
@@ -39,7 +39,7 @@ export class MoveToPage {
     public footerButtons: ButtonbarButton[];
 
     /**
-     * MoveToPage modal constructor
+     * ShowSelectedPage modal constructor
      */
     constructor(
         idbAppFS: IdbAppFS,
@@ -47,7 +47,7 @@ export class MoveToPage {
         viewController: ViewController,
         platform: Platform
     ) {
-        console.log('constructor():MoveToPage');
+        console.log('constructor():ShowSelectedPage');
         this.idbAppFS = idbAppFS;
         this.appState = appState;
         this.viewController = viewController;
@@ -86,6 +86,14 @@ export class MoveToPage {
                 }
             }
         ];
+    }
+
+    /**
+     * Template loop function that enumerates keys of an object
+     * @returns {Array<String>} array of keys in 'obj'
+     */
+    private keys(obj: Object) {
+        return Object.keys(obj);
     }
 
     /**
@@ -167,7 +175,7 @@ export class MoveToPage {
      * @returns {void}
      */
     public onClickListItem(node: TreeNode): void {
-        console.log('MoveToPage:onClickListItem()');
+        console.log('ShowSelectedPage:onClickListItem()');
         // const nodeKey: number = node[DB_KEY_PATH];
         if (IdbAppFS.isFolderNode(node)) {
             // it's a folder! switch to it

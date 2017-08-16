@@ -3,7 +3,7 @@
 <ion-header>
     <ion-navbar>
         <ion-title>
-            Move items
+            Selected items
         </ion-title>
         <ion-buttons end *ngIf="nSelectedNodes()">
             <button ion-button small>
@@ -13,33 +13,21 @@
             </button>
         </ion-buttons>
     </ion-navbar>
-    <ion-toolbar>
-        <p *ngIf="folderNode" text-center>
-            {{getPath()}}
-        </p>
-        <button-bar [buttons]="headerButtons">
-        </button-bar>
-    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-list *ngIf="folderNode">
-        <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
-            <ion-label ion-button clear (click)="onClickListItem(folderItems[i])">
-                <span *ngIf="folderItems[i].data">
+    <ion-list *ngIf="selectedNodes">
+        <ion-item clear *ngFor="let key of keys(selectedNodes)" class="library-item">
+            <ion-label ion-button clear (click)="onClickListItem(selectedNodes[key])">
+                <span *ngIf="selectedNodes[key].data">
                     <ion-icon name="play">
                     </ion-icon>
                     &nbsp;
                 </span>
-                <ion-icon *ngIf="!folderItems[i].data" name="folder">
+                <ion-icon *ngIf="!selectedNodes[key].data" name="folder">
                 </ion-icon>
-                &nbsp; {{folderItems[i].name}}
+                &nbsp; {{selectedNodes[key].name}}
             </ion-label>
-        </ion-item>
-        <ion-item class="library-empty-folder-message" *ngIf="!folderNode.childOrder.length">
-            <h2>
-                Empty folder
-            </h2>
         </ion-item>
     </ion-list>
 </ion-content>

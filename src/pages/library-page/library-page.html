@@ -9,7 +9,7 @@
             Library
         </ion-title>
         <ion-buttons end *ngIf="nSelectedNodes()">
-            <button ion-button small>
+            <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
                     {{nSelectedNodes()}} selected
                 </ion-badge>
@@ -18,7 +18,7 @@
     </ion-navbar>
     <ion-toolbar>
         <p *ngIf="folderNode" text-center>
-            Folder: {{getPath()}}
+            {{getPath()}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>
