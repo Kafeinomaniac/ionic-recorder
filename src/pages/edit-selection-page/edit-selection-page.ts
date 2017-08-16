@@ -12,7 +12,7 @@ import {
 from 'ionic-angular';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { AppState } from '../../services/app-state/app-state';
-import { TreeNode, KeyDict, ROOT_FOLDER_KEY, DB_KEY_PATH } from '../../models/idb/idb-fs';
+import { TreeNode, KeyDict, ROOT_FOLDER_KEY, DB_KEY_PATH, IdbFS } from '../../models/idb/idb-fs';
 import { getFolderPath } from '../library-page/library-page'
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
@@ -33,10 +33,12 @@ export class EditSelectionPage {
     private appState: AppState;
     private viewController: ViewController;
     private selectedNodes: KeyDict;
+    private origSelectedNodes: KeyDict;
     private folderItems: KeyDict;
     public folderNode: TreeNode;
     public headerButtons: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
+    public listReady: boolean;
 
     /**
      * EditSelectionPage modal constructor
@@ -52,38 +54,8 @@ export class EditSelectionPage {
         this.appState = appState;
         this.viewController = viewController;
         this.selectedNodes = {};
-        this.headerButtons = [{
-                text: 'To /',
-                leftIcon: 'home',
-                clickCB: () => {
-                    this.onClickHomeButton();
-                }
-            },
-            {
-                text: 'To parent',
-                leftIcon: 'arrow-up',
-                rightIcon: 'folder',
-                clickCB: () => {
-                    this.onClickParentButton();
-                }
-            },
-            {
-                text: 'New folder',
-                leftIcon: 'add',
-                rightIcon: 'folder',
-                clickCB: () => {
-                    this.onClickAddButton();
-                }
-            }
-
-        ];
-        this.footerButtons = [{
-            text: 'Move selected  items here',
-            leftIcon: 'checkmark-circle',
-            clickCB: () => {
-                console.log('move cb clicked');
-            }
-        }];
+        this.origSelectedNodes = {};
+        this.listReady = false;
     }
 
     /**
@@ -95,39 +67,6 @@ export class EditSelectionPage {
     }
 
     /**
-     * UI calls this when the goToParent button is clicked
-     * @returns {void}
-     */
-    public onClickAddButton(): void {
-        console.log('onClickHomeButton()');
-        if (this.folderNode) {
-            this.switchFolder(this.folderNode.parentKey);
-        }
-    }
-
-    /**
-     * UI calls this when the goHome button is clicked
-     * @returns {void}
-     */
-    public onClickHomeButton(): void {
-        console.log('onClickHomeButton()');
-        if (this.folderNode) {
-            this.switchFolder(ROOT_FOLDER_KEY);
-        }
-    }
-
-    /**
-     * UI calls this when the goToParent button is clicked
-     * @returns {void}
-     */
-    public onClickParentButton(): void {
-        console.log('onClickParentButton()');
-        if (this.folderNode) {
-            this.switchFolder(this.folderNode.parentKey);
-        }
-    }
-
-    /**
      * Computes a string representation of folder path (tree node path)
      * @returns {string} folder path, represented as a string
      */
@@ -135,8 +74,18 @@ export class EditSelectionPage {
         return getFolderPath(this.folderNode);
     }
 
-    dismiss() {
-        this.viewController.dismiss();
+    public isFolderKey(key: string): boolean {
+        console.log('isFolderKey(' + key + ')');
+        return IdbFS.isFolderNode(this.selectedNodes[key]);
+    }
+
+    public isDataKey(key: string): boolean {
+        console.log('isDataKey(' + key + ')');
+        return IdbFS.isDataNode(this.selectedNodes[key]);
+    }
+
+    public getName(key: string): string {
+        return this.selectedNodes[key].name;
     }
 
     /**
@@ -144,19 +93,16 @@ export class EditSelectionPage {
      * @returns {void}
      */
     public ionViewWillEnter(): void {
+        console.log('EditSelectionPage:ionViewWillEnter()');
         this.appState.getProperty('selectedNodes').then(
             (selectedNodes: any) => {
                 this.selectedNodes = selectedNodes;
-                this.appState.getProperty('lastViewedFolderKey')
-                    .then(
-                        (lastViewedFolderKey: any) => {
-                            // swich folders, according to AppState
-                            this.switchFolder(lastViewedFolderKey);
-                            console.log(
-                                'LibraryPage:ionViewWillEnter(): ' +
-                                'lastViewedFolderKey=' +
-                                lastViewedFolderKey);
-                        });
+                for (let key in this.keys(selectedNodes)) {
+                    // make a copy
+                    this.origSelectedNodes[key] = this.selectedNodes[key];
+                    console.log('copying key ' + key);
+                }
+                this.listReady = true;
             }
         );
     }
@@ -169,74 +115,12 @@ export class EditSelectionPage {
     }
 
     /**
-     * UI calls this when a list item (name) is clicked
-     * @returns {void}
-     */
-    public onClickListItem(node: TreeNode): void {
-        console.log('EditSelectionPage:onClickListItem()');
-        // const nodeKey: number = node[DB_KEY_PATH];
-        if (IdbAppFS.isFolderNode(node)) {
-            // it's a folder! switch to it
-            this.switchFolder(node[DB_KEY_PATH]);
-        }
-    }
-
-    // switch to folder whose key is 'key'
-    // if updateState is true, update the app state
-    // property 'lastViewedFolderKey'
-    private switchFolder(key: number): void {
-        if (!isPositiveWholeNumber(key)) {
-            alert('switchFolder -- invalid key! key=' + key);
-            return;
-        }
-
-        // console.log('switchFolder(' + key + ', ' + updateState + ')');
-
-        // for non-root folders, we set this.folderNode here
-        this.idbAppFS.readNode(key).subscribe(
-            (folderNode: TreeNode) => {
-                if (folderNode[DB_KEY_PATH] !== key) {
-                    alert('in readNode: key mismatch');
-                }
-                // we read all child nodes of the folder we're
-                // switching to in order to fill up this.folderItems
-                let newFolderItems: {
-                    [id: string]: TreeNode
-                } = {};
-                this.idbAppFS.readChildNodes(folderNode).subscribe(
-                    (childNodes: TreeNode[]) => {
-                        this.folderItems = {};
-                        // we found all children of the node we're
-                        // traversing to (key)
-                        for (let i in childNodes) {
-                            let childNode: TreeNode = childNodes[i],
-                                childKey: number = childNode[DB_KEY_PATH];
-                            newFolderItems[childKey] = childNode;
-                        } // for
-                        this.folderNode = folderNode;
-                        this.folderItems = newFolderItems;
-                        // resize content, because a change in this.folderNode
-                        // can affect the header's visibility
-                        this.content.resize();
-                    },
-                    (error: any) => {
-                        alert('in readChildNodes: ' + error);
-                    }
-                ); // readChildNodes().subscribe(
-            },
-            (error: any) => {
-                alert('in readNode: ' + error);
-            }
-        );
-    }
-
-    /**
      * Used by UI to determine whether 'node' is selected
      * @param {TreeNode} node about which we ask if it's selected
      * @returns {TreeNode} if 'node' is selected, undefined otherwise.
      */
-    public isSelected(node: TreeNode): boolean {
-        return !isUndefined(this.selectedNodes[node[DB_KEY_PATH]]);
+    public isSelected(key: string): boolean {
+        return !isUndefined(this.selectedNodes[key]);
     }
 
     /**
@@ -244,21 +128,14 @@ export class EditSelectionPage {
      * @param {TreeNode} node corresponding to UI item that just got checked
      * @returns {void}
      */
-    public onClickCheckbox(node: TreeNode): void {
+    public onClickCheckbox(key: string): void {
         console.log('onClickCheckbox');
 
-        const nodeKey: number = node[DB_KEY_PATH],
-            nSelected: number = Object.keys(this.selectedNodes).length,
-            selectedNode: TreeNode = this.selectedNodes[nodeKey];
-
-        if (selectedNode) {
-            // the node is selected, meaning it is checked, uncheck it
-            delete this.selectedNodes[nodeKey];
+        if (this.isSelected(key)) {
+            delete this.selectedNodes[key];
         }
         else {
-            // not selected, check it
-            this.selectedNodes[nodeKey] = node;
-
+            this.selectedNodes[key] = this.origSelectedNodes[key];
         }
 
         // update state with new list of selected nodes

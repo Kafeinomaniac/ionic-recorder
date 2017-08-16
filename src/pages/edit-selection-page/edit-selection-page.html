@@ -5,7 +5,7 @@
         <ion-title>
             Edit Selection
         </ion-title>
-        <ion-buttons end *ngIf="nSelectedNodes()">
+        <ion-buttons end *ngIf="listReady">
             <button ion-button small>
                 <ion-badge item-right>
                     {{nSelectedNodes()}} selected
@@ -16,24 +16,19 @@
 </ion-header>
 
 <ion-content>
-    <ion-list *ngIf="selectedNodes">
-        <ion-item clear *ngFor="let key of keys(selectedNodes)" class="library-item">
-            <ion-label ion-button clear (click)="onClickListItem(selectedNodes[key])">
-                <span *ngIf="selectedNodes[key].data">
+    <ion-list *ngIf="listReady">
+        <ion-item clear *ngFor="let key of keys(origSelectedNodes)" class="library-item">
+            <ion-label ion-button clear>
+                <span *ngIf="isDataKey(key)">
                     <ion-icon name="play">
                     </ion-icon>
                     &nbsp;
                 </span>
-                <ion-icon *ngIf="!selectedNodes[key].data" name="folder">
+                <ion-icon *ngIf="isFolderKey(key)" name="folder">
                 </ion-icon>
-                &nbsp; {{selectedNodes[key].name}}
+                &nbsp; {{getName(key)}}
             </ion-label>
-            <ion-checkbox item-left [ngModel]="isSelected(selectedNodes[key])" (click)="onClickCheckbox(selectedNodes[key])"></ion-checkbox>
+            <ion-checkbox item-left [ngModel]="isSelected(key)" (click)="onClickCheckbox(key)"></ion-checkbox>
         </ion-item>
-        <!--ion-item class="library-empty-folder-message" *ngIf="keys(selectedNodes).length == 0">
-            <h2>
-                None selected
-            </h2>
-        </ion-item-->
     </ion-list>
 </ion-content>
