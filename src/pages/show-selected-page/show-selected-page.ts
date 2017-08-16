@@ -75,7 +75,7 @@ export class ShowSelectedPage {
                     this.onClickAddButton();
                 }
             }
-            
+
         ];
         this.footerButtons = [
             {

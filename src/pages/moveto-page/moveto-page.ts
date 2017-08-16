@@ -75,7 +75,7 @@ export class MoveToPage {
                     this.onClickAddButton();
                 }
             }
-            
+
         ];
         this.footerButtons = [
             {
