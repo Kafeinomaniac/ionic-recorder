@@ -104,7 +104,7 @@ export class MoveToPage {
     /**
      * UI calls this when the goToParent button is clicked
      * @returns {void}
-    
+
     public onClickAddButton(): void {
         console.log('onClickHomeButton()');
         if (this.folderNode) {
