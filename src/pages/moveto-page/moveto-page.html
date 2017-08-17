@@ -6,10 +6,9 @@
             Move to
         </ion-title>
         <ion-buttons end *ngIf="nSelectedNodes()">
-            <!--button ion-button small-->
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{nSelectedNodes()}} selected
+                    {{nSelectedNodes()}} selected &nbsp; <ion-icon name="create"></ion-icon>
                 </ion-badge>
             </button>
         </ion-buttons>
