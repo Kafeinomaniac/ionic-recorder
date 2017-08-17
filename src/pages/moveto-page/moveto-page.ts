@@ -12,7 +12,7 @@ import {
 from 'ionic-angular';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { AppState } from '../../services/app-state/app-state';
-import { TreeNode, KeyDict, ROOT_FOLDER_KEY, DB_KEY_PATH } from '../../models/idb/idb-fs';
+import { TreeNode, KeyDict, ParentChild, ROOT_FOLDER_KEY, DB_KEY_PATH } from '../../models/idb/idb-fs';
 import { getFolderPath } from '../library-page/library-page'
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
@@ -33,6 +33,7 @@ export class MoveToPage {
     private idbAppFS: IdbAppFS;
     private appState: AppState;
     private viewController: ViewController;
+    private alertController: AlertController;
     private selectedNodes: KeyDict;
     private folderItems: KeyDict;
     public folderNode: TreeNode;
@@ -48,6 +49,7 @@ export class MoveToPage {
         idbAppFS: IdbAppFS,
         appState: AppState,
         viewController: ViewController,
+        alertController: AlertController,
         platform: Platform
     ) {
         console.log('constructor():MoveToPage');
@@ -55,6 +57,7 @@ export class MoveToPage {
         this.idbAppFS = idbAppFS;
         this.appState = appState;
         this.viewController = viewController;
+        this.alertController = alertController;
         this.selectedNodes = {};
 
         const atHome: () => boolean = () => {
@@ -101,12 +104,61 @@ export class MoveToPage {
     /**
      * UI calls this when the goToParent button is clicked
      * @returns {void}
-     */
+    
     public onClickAddButton(): void {
         console.log('onClickHomeButton()');
         if (this.folderNode) {
             this.switchFolder(this.folderNode.parentKey);
         }
+    }
+    */
+
+    /**
+     * UI calls this when the new folder button is clicked
+     * @returns {void}
+     */
+    public onClickAddButton(): void {
+        console.log('onClickAddButton() - navController: ' +
+            this.navController);
+
+        let alert = this.alertController.create({
+            title: 'New Folder',
+            // message: 'Enter the folder name',
+            inputs: [{
+                name: 'folderName',
+                placeholder: 'Folder name ...'
+            }],
+            buttons: [{
+                    text: 'Cancel',
+                    handler: (data: any) => {
+                        console.log('Cancel clicked in add-folder alert');
+                    }
+                },
+                {
+                    text: 'Done',
+                    handler: (data: any) => {
+                        console.log('Done clicked in add-folder alert');
+                        this.idbAppFS.createNode(
+                            data.folderName,
+                            this.folderNode[DB_KEY_PATH]
+                        ).subscribe(
+                            (parentChild: ParentChild) => {
+                                let childNode: TreeNode = parentChild.child,
+                                    parentNode: TreeNode = parentChild.parent,
+                                    childNodeKey: number = childNode[DB_KEY_PATH];
+                                console.log('childNode: ' + childNode.name +
+                                    ', parentNode: ' + parentNode.name);
+                                console.dir(childNode);
+                                // update folder items dictionary of this page
+                                this.folderItems[childNodeKey] = childNode;
+                                this.folderNode = parentNode;
+                            }
+                        ); // createFolderNode().subscribe(
+                    }
+                }
+            ]
+        });
+        alert.present();
     }
 
     /**
