@@ -17,7 +17,7 @@
 
 <ion-content>
     <ion-list *ngIf="isReady">
-        <ion-item clear *ngFor="let key of keys(origSelectedNodes)" class="library-item">
+        <ion-item clear *ngFor="let key of keys(origSelectedNodes)" class="library-item" (click)="onClickCheckbox(key)">
             <ion-label ion-button clear>
                 <span *ngIf="isDataKey(key)">
                     <ion-icon name="play">

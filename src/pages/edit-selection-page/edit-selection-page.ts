@@ -75,7 +75,7 @@ export class EditSelectionPage {
     }
 
     public isFolderKey(key: string): boolean {
-        console.log('isFolderKey(' + key + ')');
+        // console.log('isFolderKey(' + key + ')');
         if (isUndefined(this.origSelectedNodes[key])) {
             alert('undefd');
         }
@@ -83,7 +83,7 @@ export class EditSelectionPage {
     }
 
     public isDataKey(key: string): boolean {
-        console.log('isDataKey(' + key + ')');
+        // console.log('isDataKey(' + key + ')');
         if (isUndefined(this.origSelectedNodes[key])) {
             console.log(key);
             console.dir(this.origSelectedNodes);

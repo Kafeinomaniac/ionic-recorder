@@ -80,6 +80,12 @@ export class LibraryPage {
         this.folderNode = null;
         this.folderItems = {};
         this.selectedNodes = {};
+
+        const atHome: () => boolean = () => {
+            return this.folderNode &&
+                this.folderNode[DB_KEY_PATH] === ROOT_FOLDER_KEY;
+        };
+
         this.headerButtons = [{
                 text: 'Select',
                 leftIcon: platform.is('ios') ?
@@ -95,9 +101,7 @@ export class LibraryPage {
                 clickCB: () => {
                     this.onClickHomeButton();
                 },
-                disabledCB: () => {
-                    return this.homeButtonDisabled();
-                }
+                disabledCB: atHome
             },
             {
                 text: 'To parent',
@@ -106,9 +110,7 @@ export class LibraryPage {
                 clickCB: () => {
                     this.onClickParentButton();
                 },
-                disabledCB: () => {
-                    return this.homeButtonDisabled();
-                }
+                disabledCB: atHome
             },
             {
                 text: 'New folder',
@@ -395,18 +397,6 @@ export class LibraryPage {
      */
     public onClickSharebutton(): void {
         console.log('onClickSharebutton');
-    }
-
-    /**
-     * Determine whether the home button should be disabled in the UI
-     * @returns {boolean}
-     */
-    public homeButtonDisabled(): boolean {
-        if (this.folderNode &&
-            this.folderNode[DB_KEY_PATH] === ROOT_FOLDER_KEY) {
-            return true;
-        }
-        return false;
     }
 
     /**

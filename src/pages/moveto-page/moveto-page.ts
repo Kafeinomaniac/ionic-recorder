@@ -56,12 +56,19 @@ export class MoveToPage {
         this.appState = appState;
         this.viewController = viewController;
         this.selectedNodes = {};
+
+        const atHome: () => boolean = () => {
+            return this.folderNode &&
+                this.folderNode[DB_KEY_PATH] === ROOT_FOLDER_KEY;
+        };
+
         this.headerButtons = [{
                 text: 'To /',
                 leftIcon: 'home',
                 clickCB: () => {
                     this.onClickHomeButton();
-                }
+                },
+                disabledCB: atHome
             },
             {
                 text: 'To parent',
@@ -69,7 +76,8 @@ export class MoveToPage {
                 rightIcon: 'folder',
                 clickCB: () => {
                     this.onClickParentButton();
-                }
+                },
+                disabledCB: atHome
             },
             {
                 text: 'New folder',
@@ -81,15 +89,13 @@ export class MoveToPage {
             }
 
         ];
-        this.footerButtons = [
-            {
-                text: 'Move selected  items here',
-                leftIcon: 'checkmark-circle',
-                clickCB: () => {
-                    console.log('move cb clicked');
-                }
+        this.footerButtons = [{
+            text: 'Move selected  items here',
+            leftIcon: 'checkmark-circle',
+            clickCB: () => {
+                console.log('move cb clicked');
             }
-        ];
+        }];
     }
 
     /**
@@ -140,10 +146,6 @@ export class MoveToPage {
      */
     public getPath(): string {
         return getFolderPath(this.folderNode);
-    }
-
-    dismiss() {
-        this.viewController.dismiss();
     }
 
     /**
