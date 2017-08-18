@@ -104,7 +104,7 @@ export class RecordPage {
         console.log('updateLastRecordingInfo: ' + recordingInfo);
         this.lastRecordingFilename =
             formatLocalTime(recordingInfo.dateCreated);
-        const durationSeconds: number = 
+        const durationSeconds: number =
             recordingInfo.nSamples / recordingInfo.sampleRate;
         this.lastRecordingDuration = formatTime(durationSeconds, durationSeconds);
     }
