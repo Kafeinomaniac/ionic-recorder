@@ -29,7 +29,7 @@
             padding-bottom: 0.4em;
             color: color($colors, light);
         }
-        div.record-upload-buttons {
+        div.recording-controls {
             // center-justify the two buttons in the page
             text-align: center;
             button:first-child {
@@ -39,6 +39,14 @@
                 font-size: 1.3em;
                 width: 5.8em;
                 height: 5.8em;
+            }
+        }
+        div.last-recording {
+            margin-top: 1.4em;
+            text-align: center;
+            p, a {
+                margin: 0.5em;
+                color: color($colors, button-on-dark-bg, contrast);
             }
         }
     }

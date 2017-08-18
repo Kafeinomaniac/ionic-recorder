@@ -61,7 +61,11 @@ export class LibraryPage {
 
     /**
      * @constructor
-     * @param {NavController} nav
+     * @param {NavController}
+     * @param {AlertController}
+     * @param {ModalController}
+     * @param {IdbAppFS}
+     * @param {Platform}
      */
     constructor(
         navController: NavController,

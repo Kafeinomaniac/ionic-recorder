@@ -1,7 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Component, ViewChild } from '@angular/core';
-import { formatLocalTime } from '../../models/utils/utils';
+import { formatLocalTime, formatTime } from '../../models/utils/utils';
 import { Content } from 'ionic-angular';
 import {
     AppState,
@@ -43,6 +43,8 @@ export class RecordPage {
     public maxGainFactor: number;
     public gainFactor: number;
     public decibels: string;
+    public lastRecordingFilename: string;
+    public lastRecordingDuration: string;
 
     // gainRangeSliderValue referenced by template
     public gainRangeSliderValue: number;
@@ -91,10 +93,25 @@ export class RecordPage {
                 );
             }
         );
+        this.appState.getProperty('lastRecordingInfo').then(
+            (recordingInfo: RecordingInfo) => {
+                this.updateLastRecordingInfo(recordingInfo);
+            }
+        );
+    }
+
+    private updateLastRecordingInfo(recordingInfo: RecordingInfo): void {
+        console.log('updateLastRecordingInfo: ' + recordingInfo);
+        this.lastRecordingFilename =
+            formatLocalTime(recordingInfo.dateCreated);
+        const durationSeconds: number = 
+            recordingInfo.nSamples / recordingInfo.sampleRate;
+        this.lastRecordingDuration = formatTime(durationSeconds, durationSeconds);
     }
 
     /**
-     * Returns whether this.ebAudioRecord is fully initialized
+     * Used in template
+     * Returns whether this.webAudioRecord is fully initialized
      * @returns {boolean}
      */
     public recorderIsReady(): boolean {
@@ -182,10 +199,24 @@ export class RecordPage {
         this.recordButtonIcon = START_RESUME_ICON;
         this.webAudioRecord.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
-                const fileName: string =
-                    formatLocalTime(recordingInfo.dateCreated);
+                // remember last recording's information
+                this.appState.updateProperty(
+                    'lastRecordingInfo',
+                    recordingInfo
+                ).then(
+                    () => {
+                        console.log('UPDATED LAST RECORDING INFO:');
+                        console.dir(recordingInfo);
+                        this.updateLastRecordingInfo(recordingInfo);
+                    },
+                    (error: any) => {
+                        const msg: string = 'AppState:updateProperty(): ' + error;
+                        alert(msg);
+                        throw Error(msg);
+                    });
+                // create a new filesystem file with the recording's audio data
                 this.idbAppFS.createNode(
-                    fileName,
+                    this.lastRecordingFilename,
                     UNFILED_FOLDER_KEY,
                     recordingInfo
                 ).subscribe();
