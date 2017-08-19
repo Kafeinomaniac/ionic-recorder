@@ -15,7 +15,8 @@ cd "${0%/*}/.."
 echo "SRC: `hostname -s`:`pwd`"
 echo "DEST: $RSYNC_DEST"
 
-npm run build
+# npm run build
+ionic cordova build browser --prod
 
 # TODO: commit here
 

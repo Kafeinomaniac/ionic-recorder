@@ -76,3 +76,7 @@ git push
 git tag -a "v$NEWVERSION" -m "See CHANGELOG.md for major version tag changes"
 # push tags to cloud
 git push --tags
+
+# now deploy committed version
+echo "DEPLOYING!!!!!!!!!!!!!!!!"
+./scripts/deploy.sh

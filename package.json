@@ -8,7 +8,7 @@
     },
     "scripts": {
         "clean": "ionic-app-scripts clean",
-        "build": "ionic-app-scripts build && cordova build",
+        "build": "ionic-app-scripts build",
         "lint": "tslint './src/**/*.ts'",
         "ionic:build": "ionic-app-scripts build",
         "ionic:serve": "ionic-app-scripts serve",
@@ -17,7 +17,8 @@
         "start": "ionic serve",
         "test": "ng test",
         "test-coverage": "ng test --code-coverage",
-        "test-ci": "ng test --watch=false --code-coverage"
+        "test-ci": "ng test --watch=false --code-coverage",
+        "deploy": "./scripts/deploy.sh"
     },
     "version": "2.19.0",
     "dependencies": {

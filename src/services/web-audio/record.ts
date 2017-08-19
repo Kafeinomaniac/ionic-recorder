@@ -282,7 +282,8 @@ export class WebAudioRecord {
         this.audioGainNode.connect(this.scriptProcessorNode);
 
         // scriptProcessorNode -> destination
-        this.scriptProcessorNode.connect(dest);
+        // this.scriptProcessorNode.connect(dest);
+        this.scriptProcessorNode.connect(AUDIO_CONTEXT.destination);
 
         // finally, start monitoring audio volume levels, but
         // before we do that we reset things
