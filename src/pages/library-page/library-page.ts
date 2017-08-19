@@ -651,7 +651,7 @@ export class LibraryPage {
                                     childNodeKey: number = childNode[DB_KEY_PATH];
                                 console.log('childNode: ' + childNode.name +
                                     ', parentNode: ' + parentNode.name);
-                                console.dir(childNode);
+                                // console.dir(childNode);
                                 // update folder items dictionary of this page
                                 this.folderItems[childNodeKey] = childNode;
                                 this.folderNode = parentNode;

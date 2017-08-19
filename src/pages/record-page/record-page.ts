@@ -205,7 +205,7 @@ export class RecordPage {
                 ).then(
                     () => {
                         console.log('UPDATED LAST RECORDING INFO:');
-                        console.dir(recordingInfo);
+                        // console.dir(recordingInfo);
                         this.updateLastRecordingInfo(recordingInfo);
                     },
                     (error: any) => {
