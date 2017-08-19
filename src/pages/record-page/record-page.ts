@@ -82,13 +82,10 @@ export class RecordPage {
                 this.gainRangeSliderValue =
                     MAX_GAIN_SLIDER_VALUE * gain.factor / gain.maxFactor;
 
-                console.log(webAudioRecord['status']);
-
                 webAudioRecord.waitForWAA().subscribe(
                     () => {
                         this.onGainChange(this.gainRangeSliderValue, false);
                         webAudioRecord.resetPeaks();
-                        console.log(webAudioRecord['status']);
                     }
                 );
             }
@@ -102,11 +99,13 @@ export class RecordPage {
 
     private updateLastRecordingInfo(recordingInfo: RecordingInfo): void {
         console.log('updateLastRecordingInfo: ' + recordingInfo);
-        this.lastRecordingFilename =
-            formatLocalTime(recordingInfo.dateCreated);
-        const durationSeconds: number =
-            recordingInfo.nSamples / recordingInfo.sampleRate;
-        this.lastRecordingDuration = formatTime(durationSeconds, durationSeconds);
+        if (recordingInfo) {
+            this.lastRecordingFilename =
+                formatLocalTime(recordingInfo.dateCreated);
+            const durationSeconds: number =
+                recordingInfo.nSamples / recordingInfo.sampleRate;
+            this.lastRecordingDuration = formatTime(durationSeconds, durationSeconds);
+        }
     }
 
     /**

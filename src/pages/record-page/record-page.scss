@@ -41,13 +41,25 @@
                 height: 5.8em;
             }
         }
-        div.last-recording {
-            margin-top: 1.4em;
+        ion-card {
+            margin-top: 2em;
             text-align: center;
-            p, a {
-                margin: 0.5em;
-                color: color($colors, button-on-dark-bg, contrast);
+            background-color: transparent;
+            p,
+            button {
+                margin: 0;
             }
+            p {
+                //color: color($colors, button-on-dark-bg, contrast);
+                color: color($colors, light-gray);
+            }
+            button {
+                color: color($colors, light-gray);
+                font-size: 120%;
+            }
+        }
+        ion-card {
+            text-align: center;
         }
     }
 }

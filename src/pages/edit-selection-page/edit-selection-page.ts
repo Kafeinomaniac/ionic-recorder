@@ -85,10 +85,7 @@ export class EditSelectionPage {
     public isDataKey(key: string): boolean {
         // console.log('isDataKey(' + key + ')');
         if (isUndefined(this.origSelectedNodes[key])) {
-            console.log(key);
-            console.dir(this.origSelectedNodes);
-
-            alert('undefd');
+            alert('undefined problem in edit selection page');
         }
         return IdbFS.isDataNode(this.origSelectedNodes[key]);
     }
