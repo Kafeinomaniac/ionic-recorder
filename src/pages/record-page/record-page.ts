@@ -104,7 +104,8 @@ export class RecordPage {
                 formatLocalTime(recordingInfo.dateCreated);
             const durationSeconds: number =
                 recordingInfo.nSamples / recordingInfo.sampleRate;
-            this.lastRecordingDuration = formatTime(durationSeconds, durationSeconds);
+            this.lastRecordingDuration =
+                formatTime(durationSeconds, durationSeconds);
         }
     }
 
@@ -209,7 +210,8 @@ export class RecordPage {
                         this.updateLastRecordingInfo(recordingInfo);
                     },
                     (error: any) => {
-                        const msg: string = 'AppState:updateProperty(): ' + error;
+                        const msg: string =
+                            'AppState:updateProperty(): ' + error;
                         alert(msg);
                         throw Error(msg);
                     });

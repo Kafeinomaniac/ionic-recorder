@@ -3,6 +3,7 @@
 import { Component, ViewChild } from '@angular/core';
 import {
     AlertController,
+    Alert,
     NavController,
     ModalController,
     ViewController,
@@ -12,8 +13,9 @@ import {
 from 'ionic-angular';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { AppState } from '../../services/app-state/app-state';
-import { TreeNode, KeyDict, ParentChild, ROOT_FOLDER_KEY, DB_KEY_PATH } from '../../models/idb/idb-fs';
-import { getFolderPath } from '../library-page/library-page'
+import { TreeNode, KeyDict, ParentChild, ROOT_FOLDER_KEY, DB_KEY_PATH }
+from '../../models/idb/idb-fs';
+import { getFolderPath } from '../library-page/library-page';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
@@ -102,18 +104,6 @@ export class MoveToPage {
     }
 
     /**
-     * UI calls this when the goToParent button is clicked
-     * @returns {void}
-
-    public onClickAddButton(): void {
-        console.log('onClickHomeButton()');
-        if (this.folderNode) {
-            this.switchFolder(this.folderNode.parentKey);
-        }
-    }
-    */
-
-    /**
      * UI calls this when the new folder button is clicked
      * @returns {void}
      */
@@ -121,7 +111,7 @@ export class MoveToPage {
         console.log('onClickAddButton() - navController: ' +
             this.navController);
 
-        let alert = this.alertController.create({
+        let alert: Alert = this.alertController.create({
             title: 'New Folder',
             // message: 'Enter the folder name',
             inputs: [{
@@ -143,9 +133,10 @@ export class MoveToPage {
                             this.folderNode[DB_KEY_PATH]
                         ).subscribe(
                             (parentChild: ParentChild) => {
-                                let childNode: TreeNode = parentChild.child,
+                                const childNode: TreeNode = parentChild.child,
                                     parentNode: TreeNode = parentChild.parent,
-                                    childNodeKey: number = childNode[DB_KEY_PATH];
+                                    childNodeKey: number =
+                                        childNode[DB_KEY_PATH];
                                 console.log('childNode: ' + childNode.name +
                                     ', parentNode: ' + parentNode.name);
                                 // console.dir(childNode);

@@ -29,7 +29,7 @@ describe('IonicRecorderApp', () => {
             <any>PlatformMock.instance(),
             <any>MenuMock.instance(),
             <any>StatusBarMock.instance(),
-            <any>AppStateMock)
+            <any>AppStateMock);
     });
 
     it('initialises with four possible pages', () => {

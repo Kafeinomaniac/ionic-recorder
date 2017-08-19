@@ -2,7 +2,8 @@
 
 import { Idb } from './idb';
 import { Observable } from 'rxjs/Rx';
-import { isPositiveWholeNumber, isUndefined, prependArray } from '../../models/utils/utils';
+import { isPositiveWholeNumber, isUndefined, prependArray }
+from '../../models/utils/utils';
 
 const NODE_STORE: string = 'storeIdbFS';
 const KEY_ERROR: string = 'Key already exists';
@@ -107,7 +108,8 @@ export class IdbFS extends Idb {
                                             // we don't consider that an error,
                                             // we just let this create() call
                                             // do nothing and continue...
-                                            if (err.indexOf(KEY_ERROR) != -1) {
+                                            if (err.indexOf(KEY_ERROR) !==
+                                                -1) {
                                                 observer.next();
                                                 observer.complete();
                                             }
@@ -171,7 +173,7 @@ export class IdbFS extends Idb {
             treeNode.childOrder = [];
         }
         return treeNode;
-    };
+    }
 
     // just check localdb for the api
 
@@ -220,7 +222,8 @@ export class IdbFS extends Idb {
         return source;
     }
 
-    // returns Observable<TreeNode>// public readNode(key: number): Observable<TreeNode> {
+    // returns Observable<TreeNode>
+    // public readNode(key: number): Observable<TreeNode> {
     //     return this.read<TreeNode>(NODE_STORE, key);
     // }
     /**
@@ -670,8 +673,9 @@ export class IdbFS extends Idb {
      */
     private getSubtreeNodes(node: TreeNode): Observable<TreeNode> {
         return this.lsNode(node)
-            .expand<TreeNode>((childNode: TreeNode) =>                this.isLeaf(childNode) ?
-<Observable<TreeNode>>Observable.empty() :
+            .expand<TreeNode>((childNode: TreeNode) =>
+                this.isLeaf(childNode) ?
+                <Observable<TreeNode>> Observable.empty() :
                 this.lsNode(childNode));
     }
 
@@ -810,7 +814,7 @@ export class IdbFS extends Idb {
      * time one of the nodes with keys in 'nodeKeys'
      */
     private ls(nodeKeys: number[]): Observable<TreeNode> {
-        return<Observable<TreeNode>>Observable.from(nodeKeys)
+        return <Observable<TreeNode>> Observable.from(nodeKeys)
             .flatMap((key: number) => this.readNode(key));
     }
 

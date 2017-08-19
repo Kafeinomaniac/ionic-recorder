@@ -3,6 +3,7 @@
 import { Component, ViewChild } from '@angular/core';
 import {
     AlertController,
+    Alert,
     NavController,
     ModalController,
     Platform,
@@ -624,7 +625,7 @@ export class LibraryPage {
         console.log('onClickAddButton() - navController: ' +
             this.navController);
 
-        let alert = this.alertController.create({
+        let alert: Alert = this.alertController.create({
             title: 'New Folder',
             // message: 'Enter the folder name',
             inputs: [{
@@ -646,9 +647,10 @@ export class LibraryPage {
                             this.folderNode[DB_KEY_PATH]
                         ).subscribe(
                             (parentChild: ParentChild) => {
-                                let childNode: TreeNode = parentChild.child,
+                                const childNode: TreeNode = parentChild.child,
                                     parentNode: TreeNode = parentChild.parent,
-                                    childNodeKey: number = childNode[DB_KEY_PATH];
+                                    childNodeKey: number =
+                                        childNode[DB_KEY_PATH];
                                 console.log('childNode: ' + childNode.name +
                                     ', parentNode: ' + parentNode.name);
                                 // console.dir(childNode);

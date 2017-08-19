@@ -118,7 +118,7 @@ export class WebAudioRecord {
         let source: Observable<void> = Observable.create((observer) => {
             let repeat: () => void = () => {
                 console.log('WAIT FOR WAA - REPEAT');
-                if (this.status != RecordStatus.UNINITIALIZED_STATE) {
+                if (this.status !== RecordStatus.UNINITIALIZED_STATE) {
                     observer.next();
                     observer.complete();
                 }

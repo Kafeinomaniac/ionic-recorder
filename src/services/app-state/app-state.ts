@@ -13,7 +13,7 @@ export interface GainState {
 interface State {
     lastTabIndex: number;
     lastViewedFolderKey: number;
-    lastRecordingInfo: RecordingInfo,
+    lastRecordingInfo: RecordingInfo;
     selectedNodes: KeyDict;
     gain: GainState;
 }

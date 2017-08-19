@@ -12,8 +12,9 @@ import {
 from 'ionic-angular';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { AppState } from '../../services/app-state/app-state';
-import { TreeNode, KeyDict, ROOT_FOLDER_KEY, DB_KEY_PATH, IdbFS } from '../../models/idb/idb-fs';
-import { getFolderPath } from '../library-page/library-page'
+import { TreeNode, KeyDict, ROOT_FOLDER_KEY, DB_KEY_PATH, IdbFS }
+from '../../models/idb/idb-fs';
+import { getFolderPath } from '../library-page/library-page';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 
@@ -60,9 +61,9 @@ export class EditSelectionPage {
 
     /**
      * Template loop function that enumerates keys of an object
-     * @returns {Array<String>} array of keys in 'obj'
+     * @returns {string[]} array of keys in 'obj'
      */
-    private keys(obj: Object) {
+    private keys(obj: Object): string[] {
         return Object.keys(obj);
     }
 
@@ -105,7 +106,7 @@ export class EditSelectionPage {
                 this.selectedNodes = selectedNodes;
                 Object.keys(this.selectedNodes).forEach((key: string) => {
                     this.origSelectedNodes[key] = this.selectedNodes[key];
-                })
+                });
                 this.isReady = true;
             }
         );

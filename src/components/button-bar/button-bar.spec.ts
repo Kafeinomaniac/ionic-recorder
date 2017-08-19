@@ -62,7 +62,8 @@ describe('ButtonBar', () => {
 
     it('has correct text on all buttons', () => {
         FIXTURE.detectChanges();
-        const nodes: NodeList = FIXTURE.nativeElement.querySelectorAll('button');
+        const nodes: NodeList =
+            FIXTURE.nativeElement.querySelectorAll('button');
 
         expect(nodes.item(0).textContent.trim()).toEqual('Info');
         expect(nodes.item(1).textContent.trim()).toEqual('Move');
@@ -72,18 +73,19 @@ describe('ButtonBar', () => {
 
     it('can click each button to call some function', () => {
         FIXTURE.detectChanges();
-        const nodes: NodeList = FIXTURE.nativeElement.querySelectorAll('button');
+        const nodes: NodeList =
+            FIXTURE.nativeElement.querySelectorAll('button');
 
         TestUtils.eventFire(nodes[0], 'click');
-        expect(ACTION).toEqual('info')
+        expect(ACTION).toEqual('info');
 
         TestUtils.eventFire(nodes[1], 'click');
-        expect(ACTION).toEqual('move')
+        expect(ACTION).toEqual('move');
 
         TestUtils.eventFire(nodes[2], 'click');
-        expect(ACTION).toEqual('delete')
+        expect(ACTION).toEqual('delete');
 
         TestUtils.eventFire(nodes[3], 'click');
-        expect(ACTION).toEqual('share')
+        expect(ACTION).toEqual('share');
     });
 });
