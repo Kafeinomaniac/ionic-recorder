@@ -1,16 +1,14 @@
 // Copyright (c) 2017 Tracktunes Inc
 track-page {
-    ion-toolbar p {
-        margin-top: 0.1em;
-        margin-bottom: 0.5em;
-        color: color($colors, primary, base);
-    }
-    ion-footer {
-        ion-toolbar .toolbar-background {
-            background: color($colors, dark);
+    ion-toolbar {
+        p {
+            margin-top: 0.1em;
+            margin-bottom: 0.5em;
+            color: color($colors, primary, base);
         }
-        audio-player button span {
-            color: white;
+        audio-player progress-slider #progress-slider-container div.track div.track-inner-full div.handle {
+            background-color: green;
+            border: 6px solid green;
         }
     }
 }

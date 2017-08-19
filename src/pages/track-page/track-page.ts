@@ -26,7 +26,7 @@ export class TrackPage {
     public dateCreated: string;
     public recordingInfo: RecordingInfo;
     public displayDuration: string;
-    public headerButtons: ButtonbarButton[];
+    public footerButtons: ButtonbarButton[];
     private duration: number;
 
     /**
@@ -53,7 +53,7 @@ export class TrackPage {
             this.recordingInfo.nSamples / this.recordingInfo.sampleRate;
         this.displayDuration = formatTime(this.duration, this.duration);
 
-        this.headerButtons = [{
+        this.footerButtons = [{
                 text: 'Move',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
