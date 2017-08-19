@@ -24,6 +24,13 @@ This apps runs only in browsers that implement
 a late version of IndexedDB that supports the `onupgradeended` event,
 plus a recent version of the Web Audio Api.
 
+Currently it should work on recent Chrome and Firefox desktop versions.
+On Andfoid/iOS, some features are still only partially supported, specifically,
+the recording may come out at low quality due to buggy implementation of 
+`getUserMedia()` - [check this link](http://caniuse.com/#feat=stream) to 
+see when this function is fully supported in mobile browsers - probably some
+time in 2018.
+
 The only browsers on which we successfully tested the above link are:
 * Latest Chrome or latest Chromium browser
 * Latest Firefox
