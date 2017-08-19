@@ -29,11 +29,13 @@ The only browsers on which we successfully tested the above link are:
 * Latest Firefox
 
 ## Live Demo
-Unoptimized version at 
+Visit this URL
 [https://tracktunes.org/ionic-recorder](https://tracktunes.org/ionic-recorder)
 
-**NOTE:** Until the official beta release, expect lots of bugs and 
+**NOTE:** Until the beta release, expect bugs and 
 unimplemented features.
+
+**NOTE** Web Audio API capture via getMediaDevices is still buggy in Android Chrome and does not work at all in iOS.
 
 **NOTE:** The About page shows the version number that's running there, it 
 should be the same as in the [VERSION]
