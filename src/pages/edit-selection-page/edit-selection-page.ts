@@ -1,21 +1,25 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Component, ViewChild } from '@angular/core';
 import {
     AlertController,
-    NavController,
+    Content,
     ModalController,
-    ViewController,
+    NavController,
     Platform,
-    Content
-}
-from 'ionic-angular';
-import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
+    ViewController
+} from 'ionic-angular';
 import { AppState } from '../../services/app-state/app-state';
-import { TreeNode, KeyDict, ROOT_FOLDER_KEY, DB_KEY_PATH, IdbFS }
-from '../../models/idb/idb-fs';
-import { getFolderPath } from '../library-page/library-page';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
+import { Component, ViewChild } from '@angular/core';
+import {
+    DB_KEY_PATH,
+    IdbFS,
+    KeyDict,
+    ROOT_FOLDER_KEY,
+    TreeNode
+} from '../../models/idb/idb-fs';
+import { getFolderPath } from '../library-page/library-page';
+import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 
 /**

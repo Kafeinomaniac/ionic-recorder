@@ -1,24 +1,28 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+import {
+    Alert,
+    AlertController,
+    Content,
+    ModalController,
+    NavController,
+    Platform,
+    ViewController
+    } from 'ionic-angular';
+import { AppState } from '../../services/app-state/app-state';
+import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { Component, ViewChild } from '@angular/core';
 import {
-    AlertController,
-    Alert,
-    NavController,
-    ModalController,
-    ViewController,
-    Platform,
-    Content
-}
-from 'ionic-angular';
-import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
-import { AppState } from '../../services/app-state/app-state';
-import { TreeNode, KeyDict, ParentChild, ROOT_FOLDER_KEY, DB_KEY_PATH }
-from '../../models/idb/idb-fs';
-import { getFolderPath } from '../library-page/library-page';
-import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { isPositiveWholeNumber } from '../../models/utils/utils';
+    DB_KEY_PATH,
+    KeyDict,
+    ParentChild,
+    ROOT_FOLDER_KEY,
+    TreeNode
+    } from '../../models/idb/idb-fs';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
+import { getFolderPath } from '../library-page/library-page';
+import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
+import { isPositiveWholeNumber } from '../../models/utils/utils';
 
 /**
  * @name MoveToPage

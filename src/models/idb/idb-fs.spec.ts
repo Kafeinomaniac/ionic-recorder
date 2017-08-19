@@ -1,6 +1,12 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { IdbFS, TreeNode, KeyDict, DB_KEY_PATH, ParentChild } from './idb-fs';
+import {
+    DB_KEY_PATH,
+    IdbFS,
+    KeyDict,
+    ParentChild,
+    TreeNode
+} from './idb-fs';
 
 const DB_NAME: string = 'testIdbFS';
 const DB_VERSION: number = 1;

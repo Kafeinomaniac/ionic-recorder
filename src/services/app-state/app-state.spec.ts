@@ -1,29 +1,14 @@
 // Copyright (c) 2017 Tracktunes Inc
-/*
-import {
-    AppState
-}
-from './app-state';
 
-import {
-    isPositiveWholeNumber
-}
-from '../../models/utils/utils';
+import { AppState } from './app-state';
+import { isPositiveWholeNumber } from '../../models/utils/utils';
+import { Storage } from '@ionic/storage';
 
 const WAIT_MSEC: number = 60;
 
-let appState: AppState = new AppState(),
+let storage: Storage = new Storage({}),
+    appState: AppState = new AppState(storage),
     savedTabIndex: number;
-
-beforeEach((done: Function) => {
-    appState.waitForDB().subscribe(
-        (database: IDBDatabase) => {
-            done();
-        },
-        (error) => {
-            fail(error);
-        });
-});
 
 describe('When appState initialized', () => {
     it('appState is not falsy', (done) => {
@@ -38,7 +23,7 @@ describe('When appState initialized', () => {
     it('can read lastTabIndex', (done) => {
         setTimeout(
             () => {
-                appState.getProperty('lastTabIndex').subscribe(
+                appState.getProperty('lastTabIndex').then(
                     (idx: number) => {
                         savedTabIndex = idx;
                         expect(isPositiveWholeNumber(idx)).toBe(true);
@@ -52,10 +37,10 @@ describe('When appState initialized', () => {
     it('can update lastTabIndex and read it', (done) => {
         setTimeout(
             () => {
-                appState.updateProperty('lastTabIndex', 9999).subscribe(
+                appState.updateProperty('lastTabIndex', 9999).then(
                     (bUpdated: boolean) => {
-                        expect(bUpdated).toBe(true);
-                        appState.getProperty('lastTabIndex').subscribe(
+                        expect(bUpdated).toBe(9999);
+                        appState.getProperty('lastTabIndex').then(
                             (prop: any) => {
                                 expect(prop).toBe(9999);
                                 done();
@@ -69,10 +54,10 @@ describe('When appState initialized', () => {
         setTimeout(
             () => {
                 appState.updateProperty('lastTabIndex', savedTabIndex)
-                    .subscribe(
+                    .then(
                         (bUpdated: boolean) => {
-                            expect(bUpdated).toBe(true);
-                            appState.getProperty('lastTabIndex').subscribe(
+                            expect(bUpdated).toBe(savedTabIndex);
+                            appState.getProperty('lastTabIndex').then(
                                 (prop: any) => {
                                     expect(prop).toBe(savedTabIndex);
                                     done();
@@ -82,4 +67,3 @@ describe('When appState initialized', () => {
             WAIT_MSEC);
     });
 });
-*/

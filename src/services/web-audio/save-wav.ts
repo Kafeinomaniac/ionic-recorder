@@ -1,11 +1,11 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Injectable } from '@angular/core';
-import { WAV_MIME_TYPE, RecordingInfo } from './common';
 import { DB_CHUNK_LENGTH } from './record-wav';
-import { IdbAppData } from '../idb-app-data/idb-app-data';
-import { makeWavBlobHeaderView } from '../../models/utils/wav';
 import { downloadBlob } from '../../models/utils/utils';
+import { IdbAppData } from '../idb-app-data/idb-app-data';
+import { Injectable } from '@angular/core';
+import { makeWavBlobHeaderView } from '../../models/utils/wav';
+import { RecordingInfo, WAV_MIME_TYPE } from './common';
 
 @Injectable()
 export class WebAudioSaveWav {

@@ -11,8 +11,7 @@ import {
     isFunction,
     isUndefined,
     isString
-}
-from './utils';
+} from './utils';
 
 describe('utils/utils:isPositiveWholeNumber()', () => {
     it('isX() functions work as expected', () => {

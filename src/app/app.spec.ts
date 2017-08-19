@@ -1,25 +1,10 @@
-import {
-    IonicRecorderApp
-}
-from './app.component';
-import {
-    MenuMock,
-    PlatformMock,
-    StatusBarMock
-}
-from 'ionic-mocks';
-import {
-    AppStateMock
-}
-from '../services/app-state/app-state.mock';
-import {
-    LibraryPage
-}
-from '../pages/library-page/library-page';
-import {
-    LoadingPage
-}
-from '../pages/loading-page/loading-page';
+// Copyright (c) 2017 Tracktunes Inc
+
+import { AppStateMock } from '../services/app-state/app-state.mock';
+import { IonicRecorderApp } from './app.component';
+import { LibraryPage } from '../pages/library-page/library-page';
+import { LoadingPage } from '../pages/loading-page/loading-page';
+import { MenuMock, PlatformMock, StatusBarMock } from 'ionic-mocks';
 
 let instance: IonicRecorderApp = null;
 

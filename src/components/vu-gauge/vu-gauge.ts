@@ -1,6 +1,11 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Component, Input, OnChanges, SimpleChange } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    SimpleChange
+} from '@angular/core';
 
 /**
  * @name VuGauge

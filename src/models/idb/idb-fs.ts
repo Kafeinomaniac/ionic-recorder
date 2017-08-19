@@ -1,9 +1,12 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Idb } from './idb';
+import {
+    isPositiveWholeNumber,
+    isUndefined,
+    prependArray
+} from '../../models/utils/utils';
 import { Observable } from 'rxjs/Rx';
-import { isPositiveWholeNumber, isUndefined, prependArray }
-from '../../models/utils/utils';
 
 const NODE_STORE: string = 'storeIdbFS';
 const KEY_ERROR: string = 'Key already exists';
@@ -222,10 +225,6 @@ export class IdbFS extends Idb {
         return source;
     }
 
-    // returns Observable<TreeNode>
-    // public readNode(key: number): Observable<TreeNode> {
-    //     return this.read<TreeNode>(NODE_STORE, key);
-    // }
     /**
      * Reads a node into memory from db, by key
      * @param {number} key - the key of the node to read from db

@@ -1,20 +1,13 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Component } from '@angular/core';
-import { Idb } from '../../models/idb/idb';
 import {
     DB_NAME as APP_DATA_DB_NAME
-}
-from '../../services/idb-app-data/idb-app-data';
+} from '../../services/idb-app-data/idb-app-data';
 import {
     DB_NAME as APP_FS_DB_NAME
-}
-from '../../services/idb-app-fs/idb-app-fs';
-// import {
-//     AppState,
-//     DB_NAME as APP_STATE_DB_NAME
-// }
-// from '../../services/app-state/app-state';
+} from '../../services/idb-app-fs/idb-app-fs';
+import { Idb } from '../../models/idb/idb';
 
 /**
  * @name SettingsPage

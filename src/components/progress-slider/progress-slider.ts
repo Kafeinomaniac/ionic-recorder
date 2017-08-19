@@ -1,7 +1,13 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Component, Input, Output, ElementRef, Renderer,
-         EventEmitter } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    Output,
+    Renderer
+} from '@angular/core';
 
 /**
  * @name ProgressSlider

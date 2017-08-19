@@ -1,35 +1,32 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+import {
+    Alert,
+    AlertController,
+    Content,
+    ModalController,
+    NavController,
+    Platform
+} from 'ionic-angular';
+import { alertAndDo } from '../../models/utils/alerts';
+import { AppState } from '../../services/app-state/app-state';
+import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { Component, ViewChild } from '@angular/core';
 import {
-    AlertController,
-    Alert,
-    NavController,
-    ModalController,
-    Platform,
-    Content
-}
-from 'ionic-angular';
-import {
-    TreeNode,
-    KeyDict,
     DB_KEY_PATH,
+    KeyDict,
     ParentChild,
-    ROOT_FOLDER_KEY
-}
-from '../../models/idb/idb-fs';
+    ROOT_FOLDER_KEY,
+    TreeNode
+} from '../../models/idb/idb-fs';
+import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-}
-from '../../services/idb-app-fs/idb-app-fs';
+} from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
-import { alertAndDo } from '../../models/utils/alerts';
-import { AppState } from '../../services/app-state/app-state';
-import { TrackPage } from '../track-page/track-page';
 import { MoveToPage } from '../moveto-page/moveto-page';
-import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
-import { ButtonbarButton } from '../../components/button-bar/button-bar';
+import { TrackPage } from '../track-page/track-page';
 
 export function getFolderPath(folderNode: TreeNode): string {
     'use strict';

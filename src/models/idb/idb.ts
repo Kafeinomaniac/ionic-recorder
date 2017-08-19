@@ -1,7 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Observable } from 'rxjs/Rx';
 import { isPositiveWholeNumber } from '../utils/utils';
+import { Observable } from 'rxjs/Rx';
 
 // wait-time between checks that the db is initialized
 const WAIT_MSEC: number = 60;

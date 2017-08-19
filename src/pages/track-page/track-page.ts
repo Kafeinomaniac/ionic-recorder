@@ -1,11 +1,11 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Component } from '@angular/core';
-import { NavParams, ActionSheetController } from 'ionic-angular';
-import { formatTime } from '../../models/utils/utils';
+import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { RecordingInfo } from '../../services/web-audio/common';
+import { Component } from '@angular/core';
 import { formatLocalTime } from '../../models/utils/utils';
+import { formatTime } from '../../models/utils/utils';
+import { RecordingInfo } from '../../services/web-audio/common';
 import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
 
 /**

@@ -1,14 +1,19 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Component, ViewChild } from '@angular/core';
-import { Tabs, Tab, Platform, MenuController } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { AppState } from '../services/app-state/app-state';
-import { LoadingPage } from '../pages/loading-page/loading-page';
-import { RecordPage } from '../pages/record-page/record-page';
-import { LibraryPage } from '../pages/library-page/library-page';
-import { SettingsPage } from '../pages/settings-page/settings-page';
 import { AboutPage } from '../pages/about-page/about-page';
+import { AppState } from '../services/app-state/app-state';
+import { Component, ViewChild } from '@angular/core';
+import { LibraryPage } from '../pages/library-page/library-page';
+import { LoadingPage } from '../pages/loading-page/loading-page';
+import {
+    MenuController,
+    Platform,
+    Tab,
+    Tabs
+} from 'ionic-angular';
+import { RecordPage } from '../pages/record-page/record-page';
+import { SettingsPage } from '../pages/settings-page/settings-page';
+import { StatusBar } from '@ionic-native/status-bar';
 
 export interface TabPage {
     tabIndex: number;

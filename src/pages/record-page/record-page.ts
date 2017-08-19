@@ -1,21 +1,16 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+import { AppState, GainState } from '../../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
-import { formatLocalTime, formatTime } from '../../models/utils/utils';
 import { Content } from 'ionic-angular';
-import {
-    AppState,
-    GainState
-}
-from '../../services/app-state/app-state';
-import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
-import { RecordStatus } from '../../services/web-audio/record';
-import { RecordingInfo } from '../../services/web-audio/common';
+import { formatLocalTime, formatTime } from '../../models/utils/utils';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-}
-from '../../services/idb-app-fs/idb-app-fs';
+} from '../../services/idb-app-fs/idb-app-fs';
+import { RecordingInfo } from '../../services/web-audio/common';
+import { RecordStatus } from '../../services/web-audio/record';
+import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
