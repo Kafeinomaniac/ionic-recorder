@@ -8,7 +8,7 @@ const WAIT_MSEC: number = 60;
 
 let storage: Storage = new Storage({}),
     appState: AppState = new AppState(storage),
-    savedTabIndex: number;
+    savedTabIndex: number = -1;
 
 describe('When appState initialized', () => {
     it('appState is not falsy', (done) => {
