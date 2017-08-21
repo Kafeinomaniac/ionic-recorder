@@ -25,3 +25,6 @@ ssh "$DEST_HOST" "/bin/rm -fr $DEST_DIR/*"
 
 # copy destination dir to remote
 rsync -avz "${SRC_DIR}/" "$RSYNC_DEST"
+
+# fix link to logo
+ssh "$DEST_HOST" "ln -s ${DEST_DIR}/assets/img ${DEST_DIR}"
