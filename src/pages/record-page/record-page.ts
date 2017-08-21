@@ -7,7 +7,8 @@ import { formatLocalTime, formatTime } from '../../models/utils/utils';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-} from '../../services/idb-app-fs/idb-app-fs';
+}
+from '../../services/idb-app-fs/idb-app-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { RecordStatus } from '../../services/web-audio/record';
 import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
@@ -203,6 +204,15 @@ export class RecordPage {
                         console.log('UPDATED LAST RECORDING INFO:');
                         // console.dir(recordingInfo);
                         this.updateLastRecordingInfo(recordingInfo);
+                        // create a new filesystem file with the
+                        // recording's audio data, but only after
+                        // we have updated this.lastRecordingFilename,
+                        // via above call to updateLastRecordingInfo
+                        this.idbAppFS.createNode(
+                            this.lastRecordingFilename,
+                            UNFILED_FOLDER_KEY,
+                            recordingInfo
+                        ).subscribe();
                     },
                     (error: any) => {
                         const msg: string =
@@ -210,12 +220,6 @@ export class RecordPage {
                         alert(msg);
                         throw Error(msg);
                     });
-                // create a new filesystem file with the recording's audio data
-                this.idbAppFS.createNode(
-                    this.lastRecordingFilename,
-                    UNFILED_FOLDER_KEY,
-                    recordingInfo
-                ).subscribe();
             });
     }
 
