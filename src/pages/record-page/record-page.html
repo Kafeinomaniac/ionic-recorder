@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
-
+cli
 <ion-header>
     <ion-navbar color="dark">
         <button ion-button menuToggle>
@@ -40,11 +40,12 @@
             </ion-icon>
         </button>
     </div>
+
     <ion-card *ngIf="lastRecordingFilename">
         <p>
             Last recording ({{lastRecordingDuration}}s)
         </p>
-        <button ion-button clear icon-left>
+        <button ion-button clear icon-left (click)="onPlayLastRecording()">
             <ion-icon name="play"></ion-icon> &nbsp; {{lastRecordingFilename}}
         </button>
     </ion-card>

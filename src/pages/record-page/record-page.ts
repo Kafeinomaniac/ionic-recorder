@@ -226,6 +226,9 @@ export class RecordPage {
     public onRangeTouchEnd(): void {
         console.log('onRangeTouchEnd');
     }
+    public onPlayLastRecording(): void {
+        console.log('onPlayLastRecording()');
+    }
 
     public ionViewDidEnter(): void {
         console.log('RecordPage:ionViewDidEnter()');
