@@ -1,9 +1,63 @@
 ## Misc
 
+11111111112222222222333333333344444444445555555555666666666677777777778888888888
+
 **Caveat:** This file is cryptical.  It's just used as a scrapbook for 
 adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
+
+* We will now remember the specific track page we were on, if we 
+  were on one when we quit the app.  NOTE: this can either be
+  implemented via deep link routing, which is useful for later
+  sharing - but the kind of sharing that requires the app to 
+  be installed.
+  - method 1 = save treenode of track page
+  - method 2 = save url of deeplink
+  for now we'll use method 1, just because it does not require deep
+  links. we'll use deep links later if we see that method 1 is no good
+  or lacking in some way.
+  
+  one idea:
+  ---------
+  track page is still part of the library, so if we jump back to it we 
+  need to (a) jump back to its parent folder, the storage property
+  'lastViewedFolder' will continue to serve as always and in ionViewWillEnter()
+  we'll still switch to that folder. but we will also check if the
+  (new) storage property 'lastTrack'
+
+[
+  so essentially we use storage to pass around information - not great
+
+  it's better to use links and do it in a RESTful way
+
+  no but it's good to go through storage. let's just continue for a bit to
+  think this through before criticizing.
+]
+  so in ionViewWillEnter, after you've called switchFolder, you do another
+  getProperty('playingTrack') - if it is not null and looks like a TreeNode,
+  then you .
+
+  NOTE: for this, we will need to make switchFolder return an observable
+  first, because we want to sequentially run after it because in order
+  to push the track page, we have to first have this.folderNode, which
+  is only computed at the end of switchFolder.
+
+  ----
+  For RecordPage, when you click on last recording, it will ...
+
+  The other idea is to make track page only take a node as a single parameter.
+  Not depend on this.folderNode - it can figure out the parent name from
+  its own node, maybe we'll even store it.
+
+  For RecordPage, when you click on stop button and it saves a recording,
+  it will also set in storage 'playingTrack' to the node of what you are
+  saving.  If track page only depends on the node, your'e done.
+
+  RecordPage:clickPlay-> just do a nav.push(TrackPage, lastRecordingNode)
+  THis way, when you click back button on this track page, it will not
+  return to the library, it will return to where you were, the record
+  page! This is better.
 
 * We're going to implement 'move selected items'
   1) UI/UX - use a full-page modal that looks just like
