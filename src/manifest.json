@@ -1,6 +1,6 @@
 {
-  "name": "Ionic",
-  "short_name": "Ionic",
+  "name": "ionic-recorder",
+  "short_name": "ionic-recorder",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{
