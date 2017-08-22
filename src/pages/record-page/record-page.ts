@@ -7,8 +7,8 @@ import { formatLocalTime, formatTime } from '../../models/utils/utils';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-}
-from '../../services/idb-app-fs/idb-app-fs';
+} from '../../services/idb-app-fs/idb-app-fs';
+import { TreeNode, ParentChild, DB_KEY_PATH } from '../../models/idb/idb-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { RecordStatus } from '../../services/web-audio/record';
 import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
@@ -212,20 +212,24 @@ export class RecordPage {
                             this.lastRecordingFilename,
                             UNFILED_FOLDER_KEY,
                             recordingInfo
-                        ).subscribe();
+                        ).subscribe(
+                            (parentChild: ParentChild) => {
+                                // here's where we get the key
+                                const key: string = 
+                                    parentChild.child[DB_KEY_PATH];
+                                    alert('and the key was: ' + key);
+                            },
+                            (err1: any) => {
+                                throw Error(err1);
+                            }
+                        );
                     },
-                    (error: any) => {
-                        const msg: string =
-                            'AppState:updateProperty(): ' + error;
-                        alert(msg);
-                        throw Error(msg);
+                    (err2: any) => {
+                        throw Error(err2);
                     });
             });
     }
 
-    public onRangeTouchEnd(): void {
-        console.log('onRangeTouchEnd');
-    }
     public onPlayLastRecording(): void {
         console.log('onPlayLastRecording()');
     }

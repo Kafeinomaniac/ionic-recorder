@@ -7,6 +7,12 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* For last recording, store only the key of the recorded node.
+  * Also: make track page start with only the key info, and have it deduce
+    all other values (e.g. parent name, parent key) by doing DB reads.
+  * Then we'll need to spawn the track page properly from the library page
+  * We'll also need to spawn the track page properly from the record page
+  DONE.
 * We will now remember the specific track page we were on, if we 
   were on one when we quit the app.  NOTE: this can either be
   implemented via deep link routing, which is useful for later
