@@ -19,14 +19,14 @@ import {
     ROOT_FOLDER_KEY,
     TreeNode
 } from '../../models/idb/idb-fs';
-import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
+import { EditSelectionPage } from '../edit-selection/edit-selection';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
 } from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
-import { MoveToPage } from '../moveto-page/moveto-page';
-import { TrackPage } from '../track-page/track-page';
+import { MoveToPage } from '../moveto/moveto';
+import { TrackPage } from '../track/track';
 
 export function getFolderPath(folderNode: TreeNode): string {
     'use strict';
@@ -41,8 +41,8 @@ export function getFolderPath(folderNode: TreeNode): string {
  * music organizer.
  */
 @Component({
-    selector: 'library-page',
-    templateUrl: 'library-page.html'
+    selector: 'library',
+    templateUrl: 'library.html'
 })
 export class LibraryPage {
     @ViewChild(Content) public content: Content;

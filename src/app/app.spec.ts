@@ -2,8 +2,8 @@
 
 import { AppStateMock } from '../services/app-state/app-state.mock';
 import { IonicRecorderApp } from './app.component';
-import { LibraryPage } from '../pages/library-page/library-page';
-import { LoadingPage } from '../pages/loading-page/loading-page';
+import { LibraryPage } from '../pages/library/library';
+import { LoadingPage } from '../pages/loading/loading';
 import { MenuMock, PlatformMock, StatusBarMock } from 'ionic-mocks';
 
 let instance: IonicRecorderApp = null;

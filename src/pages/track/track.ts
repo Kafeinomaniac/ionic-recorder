@@ -13,9 +13,9 @@ import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
  * @description
  */
 @Component({
-    selector: 'track-page',
+    selector: 'track',
     providers: [WebAudioSaveWav],
-    templateUrl: 'track-page.html'
+    templateUrl: 'track.html'
 })
 export class TrackPage {
     private webAudioSaveWav: WebAudioSaveWav;

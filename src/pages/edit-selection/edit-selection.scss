@@ -1,8 +1,8 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 $content-text-color: color($colors, almost-dark);
-// library-page {
-#tabpanel-t0-2 {
+
+edit-selection {
     ion-toolbar p {
         margin-top: 0.1em;
         margin-bottom: 0.5em;
@@ -38,5 +38,18 @@ $content-text-color: color($colors, almost-dark);
             text-align: center;
             color: map-get($colors, logo-orange);
         }
+    }
+}
+// Copyright (c) 2017 Tracktunes Inc
+
+// edit-selection {
+#tabpanel-t0-4 {
+    b {
+        font-weight: 500;
+    }
+    p {
+        padding: 0 40px;
+        font-size: 14px;
+        line-height: 1.5;
     }
 }

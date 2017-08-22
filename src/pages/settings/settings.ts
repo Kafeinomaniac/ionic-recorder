@@ -15,8 +15,8 @@ import { Idb } from '../../models/idb/idb';
  * Change app settings.
  */
 @Component({
-    selector: 'settings-page',
-    templateUrl: 'settings-page.html'
+    selector: 'settings',
+    templateUrl: 'settings.html'
 })
 export class SettingsPage {
     // private appState: AppState;

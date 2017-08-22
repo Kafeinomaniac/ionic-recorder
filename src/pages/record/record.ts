@@ -23,9 +23,9 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
  * The page from which we record audio and monitor microphone sound volume.
  */
 @Component({
-    selector: 'record-page',
+    selector: 'record',
     providers: [WebAudioRecordWav],
-    templateUrl: 'record-page.html'
+    templateUrl: 'record.html'
 })
 export class RecordPage {
     @ViewChild(Content) public content: Content;
@@ -193,13 +193,13 @@ export class RecordPage {
      */
     public onClickStopButton(): void {
         this.recordButtonIcon = START_RESUME_ICON;
-        
+
         // ***TODO***
-        // new nesting: 
+        // new nesting:
         // webAudioRecord.stop().subscribe(recordingInfo) =>
         //     idbAppFS.createNode().subscribe(parentChild) =>
         //         appState.updateProperty('lastRecordedID', childUId)
-        
+
         this.webAudioRecord.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
                 // remember last recording's information
@@ -222,7 +222,7 @@ export class RecordPage {
                         ).subscribe(
                             (parentChild: ParentChild) => {
                                 // here's where we get the key
-                                const key: string = 
+                                const key: string =
                                     parentChild.child[DB_KEY_PATH];
                                     alert('and the key was: ' + key);
                             },
