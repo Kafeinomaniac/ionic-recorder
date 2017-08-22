@@ -553,6 +553,10 @@ export class LibraryPage {
             this.switchFolder(node[DB_KEY_PATH], true);
         }
         else {
+
+            // ***TODO*** only send id here, deduce every other piece
+            // of info in the track page code
+
             // console.dir(node);
             this.navController.push(TrackPage, {
                 folderPath: this.folderNode.name,

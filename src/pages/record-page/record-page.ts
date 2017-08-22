@@ -193,6 +193,13 @@ export class RecordPage {
      */
     public onClickStopButton(): void {
         this.recordButtonIcon = START_RESUME_ICON;
+        
+        // ***TODO***
+        // new nesting: 
+        // webAudioRecord.stop().subscribe(recordingInfo) =>
+        //     idbAppFS.createNode().subscribe(parentChild) =>
+        //         appState.updateProperty('lastRecordedID', childUId)
+        
         this.webAudioRecord.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
                 // remember last recording's information
