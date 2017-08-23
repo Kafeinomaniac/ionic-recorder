@@ -2,8 +2,7 @@
 
 import { AppState, GainState } from '../../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
-import { Content } from 'ionic-angular';
-// import { formatLocalTime, formatTime } from '../../models/utils/utils';
+import { Content, NavController } from 'ionic-angular';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
@@ -15,6 +14,7 @@ import { RecordStatus } from '../../services/web-audio/record';
 import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
 import { formatLocalTime, formatTime } from '../../models/utils/utils';
 import { getFolderPath } from '../library/library';
+import { TrackPage } from '../track/track';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
@@ -50,16 +50,19 @@ export class RecordPage {
     public maxGainSliderValue: number;
     // private gainSliderLeftIcon: string;
 
+    private navController: NavController;
+
     /**
      * @constructor
      */
     constructor(
+        navController: NavController,
         appState: AppState,
         idbAppFS: IdbAppFS,
         webAudioRecord: WebAudioRecordWav
     ) {
         console.log('constructor():RecordPage');
-
+        this.navController = navController;
         this.appState = appState;
         this.idbAppFS = idbAppFS;
         this.webAudioRecord = webAudioRecord;
@@ -243,7 +246,7 @@ export class RecordPage {
     public onPlayLastRecording(): void {
         console.log('onPlayLastRecording()');
         // ***TODO***
-        // this.navController.push(TrackPage, key);
+        this.navController.push(TrackPage, this.recordingInfo.dbKey);
     }
 
     public ionViewDidEnter(): void {
