@@ -1,5 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
-#tabpanel-t0-1 {
+
+#tabpanel-t0-1 record-page {
     ion-header ion-navbar ion-buttons ion-badge {
         background-color: color($colors, button-on-dark-bg, base);
         color: color($colors, button-on-dark-bg, contrast);
@@ -22,14 +23,14 @@
                 width: 100%;
             }
         }
-        div.recording-time {
+        div.record-pageing-time {
             text-align: center;
             font-size: 2.3em;
             font-family: "Courier New", Courier, monospace;
             padding-bottom: 0.4em;
             color: color($colors, light);
         }
-        div.recording-controls {
+        div.record-pageing-controls {
             // center-justify the two buttons in the page
             text-align: center;
             button:first-child {

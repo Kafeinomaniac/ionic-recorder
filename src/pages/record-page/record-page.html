@@ -27,10 +27,10 @@
         <ion-range color="light" [(ngModel)]="gainRangeSliderValue" (ionChange)="onGainChange($event.value)" debounce="50" [max]="maxGainSliderValue">
         </ion-range>
     </p>
-    <div class="recording-time" *ngIf="recorderIsReady()">
+    <div class="record-pageing-time" *ngIf="recorderIsReady()">
         {{webAudioRecord.currentTime}}
     </div>
-    <div class="recording-controls">
+    <div class="record-pageing-controls">
         <button ion-button color="logo-red" [disabled]="!recorderIsReady()" (click)="onClickStartPauseButton()">
             <ion-icon [name]="recordButtonIcon">
             </ion-icon>
@@ -43,7 +43,7 @@
 
     <ion-card *ngIf="recordingInfo">
         <p>
-            Last recording ({{recordingInfo.displayDuration}}s)
+            Last record-pageing ({{recordingInfo.displayDuration}}s)
         </p>
         <button ion-button clear icon-left (click)="onPlayLastRecording()">
             <ion-icon name="play"></ion-icon> &nbsp; {{recordingInfo.fileName}}

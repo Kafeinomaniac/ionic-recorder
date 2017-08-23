@@ -12,11 +12,11 @@ import { Idb } from '../../models/idb/idb';
 /**
  * @name SettingsPage
  * @description
- * Change app settings.
+ * Change app settings-page.
  */
 @Component({
-    selector: 'settings',
-    templateUrl: 'settings.html'
+    selector: 'settings-page',
+    templateUrl: 'settings-page.html'
 })
 export class SettingsPage {
     // private appState: AppState;

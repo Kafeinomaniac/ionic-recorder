@@ -2,11 +2,8 @@
 
 <ion-header>
     <ion-navbar>
-        <button ion-button menuToggle>
-            <ion-icon name="menu"></ion-icon>
-        </button>
-        <ion-title *ngIf="folderNode">
-            Library
+        <ion-title>
+            Move to
         </ion-title>
         <ion-buttons end *ngIf="nSelectedNodes()">
             <button ion-button small (click)="onClickSelectedBadge()">
@@ -27,7 +24,7 @@
 
 <ion-content>
     <ion-list *ngIf="folderNode">
-        <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-item">
+        <ion-item clear *ngFor="let i of folderNode.childOrder" class="library-page-item">
             <ion-label ion-button clear (click)="onClickListItem(folderItems[i])">
                 <span *ngIf="folderItems[i].data">
                     <ion-icon name="play">
@@ -38,9 +35,8 @@
                 </ion-icon>
                 &nbsp; {{folderItems[i].name}}
             </ion-label>
-            <ion-checkbox item-left [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])"></ion-checkbox>
         </ion-item>
-        <ion-item class="library-empty-folder-message" *ngIf="!folderNode.childOrder.length">
+        <ion-item class="library-page-empty-folder-message" *ngIf="!folderNode.childOrder.length">
             <h2>
                 Empty folder
             </h2>
@@ -48,7 +44,7 @@
     </ion-list>
 </ion-content>
 
-<ion-footer [hidden]="nSelectedNodes() === 0">
+<ion-footer>
     <ion-toolbar>
         <button-bar [buttons]="footerButtons">
         </button-bar>

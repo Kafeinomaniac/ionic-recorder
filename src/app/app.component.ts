@@ -1,18 +1,18 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AboutPage } from '../pages/about/about';
+import { AboutPage } from '../pages/about-page/about-page';
 import { AppState } from '../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
-import { LibraryPage } from '../pages/library/library';
-import { LoadingPage } from '../pages/loading/loading';
+import { LibraryPage } from '../pages/library-page/library-page';
+import { LoadingPage } from '../pages/loading-page/loading-page';
 import {
     MenuController,
     Platform,
     Tab,
     Tabs
 } from 'ionic-angular';
-import { RecordPage } from '../pages/record/record';
-import { SettingsPage } from '../pages/settings/settings';
+import { RecordPage } from '../pages/record-page/record-page';
+import { SettingsPage } from '../pages/settings-page/settings-page';
 import { StatusBar } from '@ionic-native/status-bar';
 
 export interface TabPage {

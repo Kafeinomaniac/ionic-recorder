@@ -18,7 +18,7 @@ import {
     ROOT_FOLDER_KEY,
     TreeNode
 } from '../../models/idb/idb-fs';
-import { getFolderPath } from '../library/library';
+import { getFolderPath } from '../library-page/library-page';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 
@@ -29,8 +29,8 @@ import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
  * and folders to move items into - you must select a folder here.
  */
 @Component({
-    selector: 'edit-selection',
-    templateUrl: 'edit-selection.html'
+    selector: 'edit-selection-page',
+    templateUrl: 'edit-selection-page.html'
 })
 export class EditSelectionPage {
     @ViewChild(Content) public content: Content;

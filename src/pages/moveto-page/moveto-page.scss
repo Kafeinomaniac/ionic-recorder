@@ -2,7 +2,7 @@
 
 $content-text-color: color($colors, almost-dark);
 
-moveto {
+moveto-page {
     ion-toolbar p {
         margin-top: 0.1em;
         margin-bottom: 0.5em;
@@ -10,7 +10,7 @@ moveto {
     }
     // control appearance of the text that says a folder is empty
     ion-content ion-list {
-        ion-item.library-item {
+        ion-item.library-page-item {
             ion-checkbox {
                 // margin-right was too large by default, creating
                 // too much of a space between checkbox and item text
@@ -34,7 +34,7 @@ moveto {
             }
         }
         // control appearance of the text that says a folder is empty
-        ion-item.library-empty-folder-message {
+        ion-item.library-page-empty-folder-message {
             text-align: center;
             color: map-get($colors, logo-orange);
         }
@@ -42,7 +42,7 @@ moveto {
 }
 // Copyright (c) 2017 Tracktunes Inc
 
-// moveto {
+// moveto-page {
 #tabpanel-t0-4 {
     b {
         font-weight: 500;

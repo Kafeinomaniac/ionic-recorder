@@ -9,8 +9,8 @@ import { Component } from '@angular/core';
  * to initialize.
  */
 @Component({
-    selector: 'loading',
-    templateUrl: 'loading.html'
+    selector: 'loading-page',
+    templateUrl: 'loading-page.html'
 })
 export class LoadingPage {
     /**

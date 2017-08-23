@@ -13,8 +13,8 @@ import { RecordingInfo } from '../../services/web-audio/common';
 import { RecordStatus } from '../../services/web-audio/record';
 import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
 import { formatLocalTime, formatTime } from '../../models/utils/utils';
-import { getFolderPath } from '../library/library';
-import { TrackPage } from '../track/track';
+import { getFolderPath } from '../library-page/library-page';
+import { TrackPage } from '../track-page/track-page';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
@@ -23,12 +23,12 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
 /**
  * @name RecordPage
  * @description
- * The page from which we record audio and monitor microphone sound volume.
+ * The page from which we record-page audio and monitor microphone sound volume.
  */
 @Component({
-    selector: 'record',
+    selector: 'record-page',
     providers: [WebAudioRecordWav],
-    templateUrl: 'record.html'
+    templateUrl: 'record-page.html'
 })
 export class RecordPage {
     @ViewChild(Content) public content: Content;
@@ -162,18 +162,18 @@ export class RecordPage {
     }
 
     /**
-     * Start/pause recording - template button click callback
+     * Start/pause record-pageing - template button click callback
      * @returns {void}
      */
     public onClickStartPauseButton(): void {
         // this.currentVolume += Math.abs(Math.random() * 10);
         if (this.webAudioRecord.isRecording) {
-            // we're recording (when clicked, so pause recording)
+            // we're record-pageing (when clicked, so pause recording)
             this.webAudioRecord.pause();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
-            // we're not recording (when clicked, so start/resume recording)
+            // we're not record-pageing (when clicked, so start/resume recording)
             if (this.webAudioRecord.isInactive) {
                 // inactive, we're stopped (rather than paused) so start
                 this.webAudioRecord.start();
@@ -195,7 +195,7 @@ export class RecordPage {
 
         this.webAudioRecord.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
-                // update other aspects of the track that are
+                // update other aspects of the track-page that are
                 // useful to store in db
                 recordingInfo.fileName =
                     formatLocalTime(recordingInfo.dateCreated);
@@ -210,7 +210,7 @@ export class RecordPage {
                 recordingInfo.size = recordingInfo.nSamples * 2;
                 recordingInfo.fileSize = recordingInfo.size + 44;
                 recordingInfo.fileName = recordingInfo.displayDateCreated;
-                // new recordings always go into '/Unfiled':
+                // new record-pageings always go into '/Unfiled':
                 recordingInfo.folderPath = '/Unfiiled';
                 // next line is for HTML template refs
                 this.recordingInfo = recordingInfo;
@@ -223,7 +223,7 @@ export class RecordPage {
                     (parentChild: ParentChild) => {
                         // here's where we get the key
                         recordingInfo.dbKey = parentChild.child[DB_KEY_PATH];
-                        // remember last recording's information
+                        // remember last record-pageing's information
                         this.appState.updateProperty(
                             'lastRecordingInfo',
                             recordingInfo
@@ -245,7 +245,6 @@ export class RecordPage {
 
     public onPlayLastRecording(): void {
         console.log('onPlayLastRecording()');
-        // ***TODO***
         this.navController.push(TrackPage, this.recordingInfo.dbKey);
     }
 

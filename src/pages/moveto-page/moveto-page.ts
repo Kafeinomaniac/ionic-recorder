@@ -19,8 +19,8 @@ import {
     ROOT_FOLDER_KEY,
     TreeNode
     } from '../../models/idb/idb-fs';
-import { EditSelectionPage } from '../edit-selection/edit-selection';
-import { getFolderPath } from '../library/library';
+import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
+import { getFolderPath } from '../library-page/library-page';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 
@@ -31,8 +31,8 @@ import { isPositiveWholeNumber } from '../../models/utils/utils';
  * and folders to move items into - you must select a folder here.
  */
 @Component({
-    selector: 'moveto',
-    templateUrl: 'moveto.html'
+    selector: 'moveto-page',
+    templateUrl: 'moveto-page.html'
 })
 export class MoveToPage {
     @ViewChild(Content) public content: Content;
