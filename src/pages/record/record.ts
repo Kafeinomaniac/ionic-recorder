@@ -86,23 +86,17 @@ export class RecordPage {
                 );
             }
         );
-        this.appState.getProperty('lastRecordingInfo').then(
-            (recordingInfo: RecordingInfo) => {
-                this.updateLastRecordingInfo(recordingInfo);
-            }
-        );
-    }
 
-    private updateLastRecordingInfo(recordingInfo: RecordingInfo): void {
-        console.log('updateLastRecordingInfo: ' + recordingInfo);
-        if (recordingInfo) {
-            this.lastRecordingFilename =
-                formatLocalTime(recordingInfo.dateCreated);
-            const durationSeconds: number =
-                recordingInfo.nSamples / recordingInfo.sampleRate;
-            this.lastRecordingDuration =
-                formatTime(durationSeconds, durationSeconds);
-        }
+        // ***TODO***
+        // this.appState.getProperty('lastRecordingKey').then(
+        //     (lastRecordingKey: number) => {
+        //         console.log('Got lastRecordingKey = ' + lastRecordingKey);
+        //         this.idbAppFS.readNode(lastRecordingKey).subscribe(
+        //             (node: TreeNode) => {
+        //             }
+        //         );
+        //     });
+        // );
     }
 
     /**
@@ -133,7 +127,7 @@ export class RecordPage {
         const position: number = sliderValue / MAX_GAIN_SLIDER_VALUE;
 
         console.log('onGainChange(' + position.toFixed(2) + '): ' +
-            this.gainFactor + ', ' + this.maxGainFactor);
+                    this.gainFactor + ', ' + this.maxGainFactor);
 
         this.gainFactor = position * this.maxGainFactor;
 
@@ -194,47 +188,44 @@ export class RecordPage {
     public onClickStopButton(): void {
         this.recordButtonIcon = START_RESUME_ICON;
 
-        // ***TODO***
-        // new nesting:
-        // webAudioRecord.stop().subscribe(recordingInfo) =>
-        //     idbAppFS.createNode().subscribe(parentChild) =>
-        //         appState.updateProperty('lastRecordedID', childUId)
-
         this.webAudioRecord.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
-                // remember last recording's information
-                this.appState.updateProperty(
-                    'lastRecordingInfo',
+                // update display variables based on new recording info
+                this.lastRecordingFilename =
+                    formatLocalTime(recordingInfo.dateCreated);
+                const durationSeconds: number =
+                      recordingInfo.nSamples / recordingInfo.sampleRate;
+                this.lastRecordingDuration =
+                    formatTime(durationSeconds, durationSeconds);
+                // create a new filesystem file with the
+                // recording's audio data, but only after
+                // we have updated this.lastRecordingFilename,
+                // via above call to updateLastRecordingInfo
+                this.idbAppFS.createNode(
+                    this.lastRecordingFilename,
+                    UNFILED_FOLDER_KEY,
                     recordingInfo
-                ).then(
-                    () => {
-                        console.log('UPDATED LAST RECORDING INFO:');
-                        // console.dir(recordingInfo);
-                        this.updateLastRecordingInfo(recordingInfo);
-                        // create a new filesystem file with the
-                        // recording's audio data, but only after
-                        // we have updated this.lastRecordingFilename,
-                        // via above call to updateLastRecordingInfo
-                        this.idbAppFS.createNode(
-                            this.lastRecordingFilename,
-                            UNFILED_FOLDER_KEY,
-                            recordingInfo
-                        ).subscribe(
-                            (parentChild: ParentChild) => {
-                                // here's where we get the key
-                                const key: string =
-                                    parentChild.child[DB_KEY_PATH];
-                                    alert('and the key was: ' + key);
-                            },
-                            (err1: any) => {
-                                throw Error(err1);
-                            }
-                        );
+                ).subscribe(
+                    (parentChild: ParentChild) => {
+                        // here's where we get the key
+                        const key: string = parentChild.child[DB_KEY_PATH];
+
+                        // remember last recording's information
+                        this.appState.updateProperty('lastRecordingKey', key)
+                            .then(
+                                () => {
+                                    console.log('new last rec key: ' + key);
+                                });
                     },
-                    (err2: any) => {
-                        throw Error(err2);
-                    });
-            });
+                    (err1: any) => {
+                        throw new Error(err1);
+                    }
+                );
+            },
+            (err2: any) => {
+                throw new Error(err2);
+            }
+        );
     }
 
     public onPlayLastRecording(): void {

@@ -7,6 +7,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* merge TrackInfo and RecordingInfo into one, just extend RecordingInfo
+  in the code, giving it the other properties every time it gets
+  created, then call it TrackInfo
+* 
+
 * when you enter track page, start player
 * when you exit track page, stop player
 

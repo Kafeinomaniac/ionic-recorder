@@ -21,43 +21,43 @@
         <ion-item text-wrap>
             <p>
                 <span style="float: left;">Path:</span>
-                <span style="float:right;"> {{folderPath}}</span>
+                <span style="float:right;"> {{trackInfo.folderPath}}</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Created on:</span>
-                <span style="float:right;"> {{dateCreated}}</span>
+                <span style="float:right;"> {{trackInfo.dateCreated}}</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Encoding:</span>
-                <span style="float:right;"> {{recordingInfo.encoding}}</span>
+                <span style="float:right;"> {{trackInfo.encoding}}</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Duration:</span>
-                <span style="float:right;"> {{displayDuration}}</span>
+                <span style="float:right;"> {{trackInfo.displayDuration}}</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">File size:</span>
-                <span style="float:right;"> {{recordingInfo.size + 44}} bytes</span>
+                <span style="float:right;"> {{trackInfo.size + 44}} bytes</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Sample rate:</span>
-                <span style="float:right;"> {{recordingInfo.sampleRate}} Hz</span>
+                <span style="float:right;"> {{trackInfo.sampleRate}} Hz</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;"># of samples:</span>
-                <span style="float:right;"> {{recordingInfo.nSamples}}</span>
+                <span style="float:right;"> {{trackInfo.nSamples}}</span>
             </p>
         </ion-item>
 

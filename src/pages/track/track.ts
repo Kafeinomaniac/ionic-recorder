@@ -1,5 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+import { Observable } from 'rxjs/Rx';
 import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { Component } from '@angular/core';
@@ -17,6 +18,18 @@ import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
 
+export interface TrackInfo {
+    fileName: string;
+    folderPath: string;
+    dateCreated: string;
+    duration: number;
+    displayDuration: string;
+    encoding: string;
+    fileSize: number;
+    sampleRate: number;
+    nSamples: number;
+}
+
 /**
  * @name TrackPage
  * @description
@@ -29,14 +42,9 @@ import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
 export class TrackPage {
     private webAudioSaveWav: WebAudioSaveWav;
     private actionSheetController: ActionSheetController;
-    // used in template
-    public fileName: string;
-    public folderPath: string;
-    public dateCreated: string;
-    public recordingInfo: RecordingInfo;
-    public displayDuration: string;
     public footerButtons: ButtonbarButton[];
-    private duration: number;
+    public trackInfo: TrackInfo;
+    private idbAppFS: IdbAppFS;
 
     /**
      * @constructor
@@ -53,41 +61,20 @@ export class TrackPage {
     ) {
         console.log('constructor():TrackPage');
 
+        this.webAudioSaveWav = webAudioSaveWav;
+        this.idbAppFS = idbAppFS;
         this.actionSheetController = actionSheetController;
+
         const key: number = navParams.data;
-        idbAppFS.readNode(key).subscribe(
-            (node: TreeNode) => {
-                this.fileName = node.name;
-                this.recordingInfo = node.data;
-                this.duration = this.recordingInfo.nSamples /
-                    this.recordingInfo.sampleRate;
-                this.displayDuration =
-                    formatTime(this.duration, this.duration);
-                this.dateCreated =
-                    formatLocalTime(this.recordingInfo.dateCreated)
-                const parentKey: number = node.parentKey;
-                idbAppFS.readNode(parentKey).subscribe(
-                    (parentNode: TreeNode) => {
-                        this.folderPath = getFolderPath(parentNode);
-                    },
-                    (err1: any) => {
-                        throw new Error(err1);
-                    }
-                );
-            },
-            (err2: any) => {
-                throw new Error(err2);
+
+        this.getTrackInfo(key, true).subscribe(
+            (trackInfo: TrackInfo) => {
+                this.trackInfo = trackInfo;
             }
         );
 
-        this.webAudioSaveWav = webAudioSaveWav;
-
-        // this.fileName = navData.fileName;
-        // this.folderPath = navData.folderPath;
-        // this.recordingInfo = navData.recordingInfo;
-        // this.dateCreated = formatLocalTime(this.recordingInfo.dateCreated);
-
-        this.footerButtons = [{
+        this.footerButtons = [
+            {
                 text: 'Move',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
@@ -113,6 +100,56 @@ export class TrackPage {
     }
 
     /**
+     * @returns {Observable<TrackInfo>}
+     */
+    public getTrackInfo(
+        key: number, 
+        getPath: boolean = false
+    ): Observable<TrackInfo> {
+        let source: Observable<TrackInfo> = Observable.create((observer) => {
+            this.idbAppFS.readNode(key).subscribe(
+                (node: TreeNode) => {
+                    const recInfo: RecordingInfo = node.data,
+                          duration = recInfo.nSamples / recInfo.sampleRate,
+                          parentKey = node.parentKey;
+                    let trackInfo: TrackInfo = {
+                        fileName: node.name,
+                        duration: duration,
+                        displayDuration: formatTime(duration, duration),
+                        dateCreated: formatLocalTime(recInfo.dateCreated),
+                        encoding: recInfo.encoding,
+                        fileSize: recInfo.size+44,
+                        sampleRate: recInfo.sampleRate,
+                        nSamples: recInfo.nSamples,
+                        folderPath: null
+                    };
+                    if (getPath) {
+                        this.idbAppFS.readNode(parentKey).subscribe(
+                            (parentNode: TreeNode) => {
+                                trackInfo.folderPath = 
+                                    getFolderPath(parentNode);
+                                observer.next(trackInfo);
+                                observer.complete();
+                            },
+                            (err1: any) => {
+                                observer.error(err1);
+                            }
+                        );
+                    }
+                    else {
+                        observer.next(trackInfo);
+                        observer.complete();
+                    }
+                },
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            );
+        });
+        return source;
+    }
+    
+    /**
      * UI callback handling 'move' button click
      * @returns {void}
      */
@@ -134,22 +171,26 @@ export class TrackPage {
     private presentActionSheet(): void {
         this.actionSheetController.create({
             title: 'Share as',
-            buttons: [{
-                text: 'Local file on device',
-                handler: () => {
-                    console.log('Share as local file clicked, fname: ' +
-                        this.fileName + '.wav');
-                    // console.dir(this.recordingInfo);
-                    this.webAudioSaveWav.save(
-                        this.recordingInfo, this.fileName + '.wav');
+            buttons: [
+                {
+                    text: 'Local file on device',
+                    handler: () => {
+                        console.log('Share as local file clicked, fname: ' +
+                                    this.trackInfo.fileName + '.wav');
+                        // console.dir(this.recordingInfo);
+                        // ***TODO*** no longer have recording info?
+                        // this.webAudioSaveWav.save(
+                        //     this.recordingInfo, this.fileName + '.wav');
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        console.log('Cancel clicked');
+                    }
                 }
-            }, {
-                text: 'Cancel',
-                role: 'cancel',
-                handler: () => {
-                    console.log('Cancel clicked');
-                }
-            }]
+            ]
         }).present();
     }
 
