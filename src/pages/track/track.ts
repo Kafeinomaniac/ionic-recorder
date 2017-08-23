@@ -59,7 +59,7 @@ export class TrackPage {
             (node: TreeNode) => {
                 this.fileName = node.name;
                 this.recordingInfo = node.data;
-                this.duration = this.recordingInfo.nSamples / 
+                this.duration = this.recordingInfo.nSamples /
                     this.recordingInfo.sampleRate;
                 this.displayDuration =
                     formatTime(this.duration, this.duration);
