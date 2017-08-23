@@ -15,7 +15,7 @@ track {
     ion-content {
         // we need to redefine ion-content to inherit from whatever is
         // the parent element on the tab page. if we don't do this, then
-        // if we come to this page after visiting the record page, we 
+        // if we come to this page after visiting the record page, we
         // would have the record page background-color continue to show
         // up here
         background-color: inherit !important;

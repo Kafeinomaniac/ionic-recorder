@@ -8,7 +8,7 @@ export interface RecordingInfo {
     dateCreated: number;
     sampleRate: number;
     nSamples: number;
-    // the properties 'encoding', 'dbStartKey' and 'size' 
+    // the properties 'encoding', 'dbStartKey' and 'size'
     // get added in record-wav.ts
     encoding?: string;
     dbStartKey?: number;
