@@ -7,42 +7,7 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
-* merge TrackInfo and RecordingInfo into one, just extend RecordingInfo
-  in the code, giving it the other properties every time it gets
-  created, then call it TrackInfo
-* 
-
-* when you enter track page, start player
-* when you exit track page, stop player
-
-  - lastTabIndex - record or library pagge
-  - lastViewedFolder - inside library
-
-  kill app in midst of track page and lastTabIndex is always
-  library. what we need to do in the library page initialization
-  process, is to check if we were in the midst of a track page
-
-  similarly, we do that in the record page...
-
-  if we were in the midst of a track page, whether off of record
-  or off of library, we need to jump to it as soon as we enter either
-  the record page or the library page - whichever page launched it
-  before it was interrupted. so we add the code to init of both pages
-  that jumps - that's just a state-saving mechanism.
-
-  * another thing record page needs to do when entering is try to
-  read the last recording key - we need error control because it is
-  possible that you record something, then go to library and delete
-  it, when you return to record page, it will get an error for 
-  that key. in that case, we need to not show the last recording.
-  but as long as the key is there and that it is the last recording,
-  we store it as the key (until there's an error and we fail).
-
-- we have a lastViewedFolder key, now it will be lastViewedNode.
-  - handle it correctly everywhere
-
-
-* change filenames to be record, not record-page, etc.
+* change filenames to be record, not record-page, etc. 
 * For last recording, store only the key of the recorded node.
   * Also: make track page start with only the key info, and have it deduce
     all other values (e.g. parent name, parent key) by doing DB reads.

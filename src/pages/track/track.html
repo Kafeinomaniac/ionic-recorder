@@ -6,9 +6,9 @@
             Track
         </ion-title>
     </ion-navbar>
-    <ion-toolbar>
+    <ion-toolbar *ngIf="recordingInfo">
         <p text-center>
-            {{fileName}}
+            {{recordingInfo.fileName}}
         </p>
         <audio-player [recordingInfo]="recordingInfo">
         </audio-player>
@@ -21,43 +21,43 @@
         <ion-item text-wrap>
             <p>
                 <span style="float: left;">Path:</span>
-                <span style="float:right;"> {{trackInfo.folderPath}}</span>
+                <span style="float:right;"> {{recordingInfo.folderPath}}</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Created on:</span>
-                <span style="float:right;"> {{trackInfo.dateCreated}}</span>
+                <span style="float:right;"> {{recordingInfo.displayDateCreated}}</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Encoding:</span>
-                <span style="float:right;"> {{trackInfo.encoding}}</span>
+                <span style="float:right;"> {{recordingInfo.encoding}}</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Duration:</span>
-                <span style="float:right;"> {{trackInfo.displayDuration}}</span>
+                <span style="float:right;"> {{recordingInfo.displayDuration}}</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">File size:</span>
-                <span style="float:right;"> {{trackInfo.size + 44}} bytes</span>
+                <span style="float:right;"> {{recordingInfo.size + 44}} bytes</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;">Sample rate:</span>
-                <span style="float:right;"> {{trackInfo.sampleRate}} Hz</span>
+                <span style="float:right;"> {{recordingInfo.sampleRate}} Hz</span>
             </p>
         </ion-item>
         <ion-item>
             <p>
                 <span style="float: left;"># of samples:</span>
-                <span style="float:right;"> {{trackInfo.nSamples}}</span>
+                <span style="float:right;"> {{recordingInfo.nSamples}}</span>
             </p>
         </ion-item>
 

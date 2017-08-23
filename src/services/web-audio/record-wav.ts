@@ -58,7 +58,7 @@ export class WebAudioRecordWav extends WebAudioRecord {
     /**
      * Stop recording
      * Precondition: called start() already
-     * @returns {void}
+     * @returns {<ObservableRecordingInfo>}
      */
     public stop(): Observable<RecordingInfo> {
         console.log('WebAudioRecordWav:stop()');
@@ -75,7 +75,6 @@ export class WebAudioRecordWav extends WebAudioRecord {
                             // update some essential components of data
                             // stored in db
                             recordingInfo.encoding = WAV_MIME_TYPE;
-                            recordingInfo.size = recordingInfo.nSamples * 2;
                             recordingInfo.dbStartKey = this.dbKeys[0];
                             // reset db-keys, for the next recording
                             this.dbKeys = [];

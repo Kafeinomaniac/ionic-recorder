@@ -41,12 +41,12 @@
         </button>
     </div>
 
-    <ion-card *ngIf="lastRecordingFilename">
+    <ion-card *ngIf="recordingInfo">
         <p>
-            Last recording ({{lastRecordingDuration}}s)
+            Last recording ({{recordingInfo.displayDuration}}s)
         </p>
         <button ion-button clear icon-left (click)="onPlayLastRecording()">
-            <ion-icon name="play"></ion-icon> &nbsp; {{lastRecordingFilename}}
+            <ion-icon name="play"></ion-icon> &nbsp; {{recordingInfo.fileName}}
         </button>
     </ion-card>
 </ion-content>

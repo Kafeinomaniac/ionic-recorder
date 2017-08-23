@@ -3,15 +3,18 @@
 import { AppState, GainState } from '../../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
 import { Content } from 'ionic-angular';
-import { formatLocalTime, formatTime } from '../../models/utils/utils';
+// import { formatLocalTime, formatTime } from '../../models/utils/utils';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-} from '../../services/idb-app-fs/idb-app-fs';
+}
+from '../../services/idb-app-fs/idb-app-fs';
 import { TreeNode, ParentChild, DB_KEY_PATH } from '../../models/idb/idb-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { RecordStatus } from '../../services/web-audio/record';
 import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
+import { formatLocalTime, formatTime } from '../../models/utils/utils';
+import { getFolderPath } from '../library/library';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';
@@ -39,8 +42,7 @@ export class RecordPage {
     public maxGainFactor: number;
     public gainFactor: number;
     public decibels: string;
-    public lastRecordingFilename: string;
-    public lastRecordingDuration: string;
+    public recordingInfo: RecordingInfo;
 
     // gainRangeSliderValue referenced by template
     public gainRangeSliderValue: number;
@@ -61,7 +63,7 @@ export class RecordPage {
         this.appState = appState;
         this.idbAppFS = idbAppFS;
         this.webAudioRecord = webAudioRecord;
-
+        this.recordingInfo = null;
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
 
         // initialize with "remembered" gain values
@@ -127,7 +129,7 @@ export class RecordPage {
         const position: number = sliderValue / MAX_GAIN_SLIDER_VALUE;
 
         console.log('onGainChange(' + position.toFixed(2) + '): ' +
-                    this.gainFactor + ', ' + this.maxGainFactor);
+            this.gainFactor + ', ' + this.maxGainFactor);
 
         this.gainFactor = position * this.maxGainFactor;
 
@@ -190,32 +192,42 @@ export class RecordPage {
 
         this.webAudioRecord.stop().subscribe(
             (recordingInfo: RecordingInfo) => {
-                // update display variables based on new recording info
-                this.lastRecordingFilename =
+                // update other aspects of the track that are
+                // useful to store in db
+                recordingInfo.fileName =
                     formatLocalTime(recordingInfo.dateCreated);
-                const durationSeconds: number =
-                      recordingInfo.nSamples / recordingInfo.sampleRate;
-                this.lastRecordingDuration =
-                    formatTime(durationSeconds, durationSeconds);
-                // create a new filesystem file with the
-                // recording's audio data, but only after
-                // we have updated this.lastRecordingFilename,
-                // via above call to updateLastRecordingInfo
+                recordingInfo.duration = recordingInfo.nSamples /
+                    recordingInfo.sampleRate;
+                recordingInfo.displayDuration = formatTime(
+                    recordingInfo.duration,
+                    recordingInfo.duration
+                );
+                recordingInfo.displayDateCreated =
+                    formatLocalTime(recordingInfo.dateCreated);
+                recordingInfo.size = recordingInfo.nSamples * 2;
+                recordingInfo.fileSize = recordingInfo.size + 44;
+                recordingInfo.fileName = recordingInfo.displayDateCreated;
+                // new recordings always go into '/Unfiled':
+                recordingInfo.folderPath = '/Unfiiled';
+                // next line is for HTML template refs
+                this.recordingInfo = recordingInfo;
+                // create a new filesystem file with recordingInfo as data
                 this.idbAppFS.createNode(
-                    this.lastRecordingFilename,
+                    recordingInfo.fileName,
                     UNFILED_FOLDER_KEY,
                     recordingInfo
                 ).subscribe(
                     (parentChild: ParentChild) => {
                         // here's where we get the key
-                        const key: string = parentChild.child[DB_KEY_PATH];
-
+                        recordingInfo.dbKey = parentChild.child[DB_KEY_PATH];
                         // remember last recording's information
-                        this.appState.updateProperty('lastRecordingKey', key)
-                            .then(
-                                () => {
-                                    console.log('new last rec key: ' + key);
-                                });
+                        this.appState.updateProperty(
+                            'lastRecordingInfo',
+                            recordingInfo
+                        ).then(
+                            () => {
+                                console.log('rec key: ' + recordingInfo.dbKey);
+                            });
                     },
                     (err1: any) => {
                         throw new Error(err1);

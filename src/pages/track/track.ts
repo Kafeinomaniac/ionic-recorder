@@ -10,25 +10,13 @@ import {
     ParentChild,
     ROOT_FOLDER_KEY,
     TreeNode
-} from '../../models/idb/idb-fs';
+}
+from '../../models/idb/idb-fs';
 import { formatLocalTime } from '../../models/utils/utils';
 import { formatTime } from '../../models/utils/utils';
-import { getFolderPath } from '../library/library';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
-
-export interface TrackInfo {
-    fileName: string;
-    folderPath: string;
-    dateCreated: string;
-    duration: number;
-    displayDuration: string;
-    encoding: string;
-    fileSize: number;
-    sampleRate: number;
-    nSamples: number;
-}
 
 /**
  * @name TrackPage
@@ -43,7 +31,7 @@ export class TrackPage {
     private webAudioSaveWav: WebAudioSaveWav;
     private actionSheetController: ActionSheetController;
     public footerButtons: ButtonbarButton[];
-    public trackInfo: TrackInfo;
+    public recordingInfo: RecordingInfo;
     private idbAppFS: IdbAppFS;
 
     /**
@@ -68,13 +56,12 @@ export class TrackPage {
         const key: number = navParams.data;
 
         this.getTrackInfo(key, true).subscribe(
-            (trackInfo: TrackInfo) => {
-                this.trackInfo = trackInfo;
+            (trackInfo: RecordingInfo) => {
+                this.recordingInfo = trackInfo;
             }
         );
 
-        this.footerButtons = [
-            {
+        this.footerButtons = [{
                 text: 'Move',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
@@ -103,52 +90,23 @@ export class TrackPage {
      * @returns {Observable<TrackInfo>}
      */
     public getTrackInfo(
-        key: number, 
+        key: number,
         getPath: boolean = false
-    ): Observable<TrackInfo> {
-        let source: Observable<TrackInfo> = Observable.create((observer) => {
+    ): Observable < RecordingInfo > {
+        let source: Observable < RecordingInfo > = Observable.create((observer) => {
             this.idbAppFS.readNode(key).subscribe(
                 (node: TreeNode) => {
-                    const recInfo: RecordingInfo = node.data,
-                          duration = recInfo.nSamples / recInfo.sampleRate,
-                          parentKey = node.parentKey;
-                    let trackInfo: TrackInfo = {
-                        fileName: node.name,
-                        duration: duration,
-                        displayDuration: formatTime(duration, duration),
-                        dateCreated: formatLocalTime(recInfo.dateCreated),
-                        encoding: recInfo.encoding,
-                        fileSize: recInfo.size+44,
-                        sampleRate: recInfo.sampleRate,
-                        nSamples: recInfo.nSamples,
-                        folderPath: null
-                    };
-                    if (getPath) {
-                        this.idbAppFS.readNode(parentKey).subscribe(
-                            (parentNode: TreeNode) => {
-                                trackInfo.folderPath = 
-                                    getFolderPath(parentNode);
-                                observer.next(trackInfo);
-                                observer.complete();
-                            },
-                            (err1: any) => {
-                                observer.error(err1);
-                            }
-                        );
-                    }
-                    else {
-                        observer.next(trackInfo);
-                        observer.complete();
-                    }
+                    observer.next(node.data);
+                    observer.complete();
                 },
-                (err2: any) => {
-                    observer.error(err2);
+                (err: any) => {
+                    observer.error(err);
                 }
             );
         });
         return source;
     }
-    
+
     /**
      * UI callback handling 'move' button click
      * @returns {void}
@@ -171,12 +129,11 @@ export class TrackPage {
     private presentActionSheet(): void {
         this.actionSheetController.create({
             title: 'Share as',
-            buttons: [
-                {
+            buttons: [{
                     text: 'Local file on device',
                     handler: () => {
                         console.log('Share as local file clicked, fname: ' +
-                                    this.trackInfo.fileName + '.wav');
+                            this.recordingInfo.fileName + '.wav');
                         // console.dir(this.recordingInfo);
                         // ***TODO*** no longer have recording info?
                         // this.webAudioSaveWav.save(
