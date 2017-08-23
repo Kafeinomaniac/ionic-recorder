@@ -239,6 +239,8 @@ export class RecordPage {
 
     public onPlayLastRecording(): void {
         console.log('onPlayLastRecording()');
+        // ***TODO***
+        // this.navController.push(TrackPage, key);
     }
 
     public ionViewDidEnter(): void {

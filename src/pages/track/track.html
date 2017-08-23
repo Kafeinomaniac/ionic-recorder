@@ -17,10 +17,10 @@
 
 <ion-content padding>
 
-    <ion-list>
+    <ion-list *ngIf="recordingInfo">
         <ion-item text-wrap>
             <p>
-                <span style="float: left;">Parent folder:</span>
+                <span style="float: left;">Path:</span>
                 <span style="float:right;"> {{folderPath}}</span>
             </p>
         </ion-item>

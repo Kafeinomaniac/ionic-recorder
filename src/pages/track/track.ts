@@ -3,8 +3,17 @@
 import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { Component } from '@angular/core';
+import {
+    DB_KEY_PATH,
+    KeyDict,
+    ParentChild,
+    ROOT_FOLDER_KEY,
+    TreeNode
+} from '../../models/idb/idb-fs';
 import { formatLocalTime } from '../../models/utils/utils';
 import { formatTime } from '../../models/utils/utils';
+import { getFolderPath } from '../library/library';
+import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
 
@@ -30,28 +39,53 @@ export class TrackPage {
     private duration: number;
 
     /**
-     * TrackPage constructor
+     * @constructor
+     * @param {WebAudioSaveWav}
+     * @param {IdbAppFS}
+     * @param {NavParams}
+     * @param {ActionSheetController}
      */
     constructor(
         webAudioSaveWav: WebAudioSaveWav,
+        idbAppFS: IdbAppFS,
         navParams: NavParams,
         actionSheetController: ActionSheetController
     ) {
         console.log('constructor():TrackPage');
 
         this.actionSheetController = actionSheetController;
-        const navData: any = navParams.data;
+        const key: number = navParams.data;
+        idbAppFS.readNode(key).subscribe(
+            (node: TreeNode) => {
+                this.fileName = node.name;
+                this.recordingInfo = node.data;
+                this.duration = this.recordingInfo.nSamples / 
+                    this.recordingInfo.sampleRate;
+                this.displayDuration =
+                    formatTime(this.duration, this.duration);
+                this.dateCreated =
+                    formatLocalTime(this.recordingInfo.dateCreated)
+                const parentKey: number = node.parentKey;
+                idbAppFS.readNode(parentKey).subscribe(
+                    (parentNode: TreeNode) => {
+                        this.folderPath = getFolderPath(parentNode);
+                    },
+                    (err1: any) => {
+                        throw new Error(err1);
+                    }
+                );
+            },
+            (err2: any) => {
+                throw new Error(err2);
+            }
+        );
 
         this.webAudioSaveWav = webAudioSaveWav;
 
-        this.fileName = navData.fileName;
-        this.folderPath = navData.folderPath;
-        this.recordingInfo = navData.recordingInfo;
-        this.dateCreated = formatLocalTime(this.recordingInfo.dateCreated);
-
-        this.duration =
-            this.recordingInfo.nSamples / this.recordingInfo.sampleRate;
-        this.displayDuration = formatTime(this.duration, this.duration);
+        // this.fileName = navData.fileName;
+        // this.folderPath = navData.folderPath;
+        // this.recordingInfo = navData.recordingInfo;
+        // this.dateCreated = formatLocalTime(this.recordingInfo.dateCreated);
 
         this.footerButtons = [{
                 text: 'Move',

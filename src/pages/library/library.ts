@@ -63,6 +63,7 @@ export class LibraryPage {
      * @param {AlertController}
      * @param {ModalController}
      * @param {IdbAppFS}
+     * @param {AppState}
      * @param {Platform}
      */
     constructor(
@@ -547,10 +548,11 @@ export class LibraryPage {
      */
     public onClickListItem(node: TreeNode): void {
         console.log('onClickListItem');
+        const key: number = node[DB_KEY_PATH];
         // const nodeKey: number = node[DB_KEY_PATH];
         if (IdbAppFS.isFolderNode(node)) {
             // it's a folder! switch to it
-            this.switchFolder(node[DB_KEY_PATH], true);
+            this.switchFolder(key, true);
         }
         else {
 
@@ -558,11 +560,7 @@ export class LibraryPage {
             // of info in the track page code
 
             // console.dir(node);
-            this.navController.push(TrackPage, {
-                folderPath: this.folderNode.name,
-                fileName: node.name,
-                recordingInfo: node.data
-            });
+            this.navController.push(TrackPage, key);
         } // if (IdbAppFS.isFolderNode(node)) { .. else { ..
     }
 
