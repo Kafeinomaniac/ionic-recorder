@@ -10,8 +10,7 @@ import {
     ParentChild,
     ROOT_FOLDER_KEY,
     TreeNode
-}
-from '../../models/idb/idb-fs';
+} from '../../models/idb/idb-fs';
 import { formatLocalTime } from '../../models/utils/utils';
 import { formatTime } from '../../models/utils/utils';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';

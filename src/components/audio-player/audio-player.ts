@@ -59,10 +59,12 @@ export class AudioPlay implements OnChanges {
         // not work due to race conditions (perhaps add a setTimeout()
         // to delay the stop monitoring command?)
         // this.player.startMonitoring();
+        this.player.togglePlayPause();
     }
 
     public ngOnDestroy(): void {
         console.log('AudioPlay:ngOnDestroy()');
-        this.player.stopMonitoring();
+        this.player.stop(true);
+        // this.player.stopMonitoring();
     }
 }
