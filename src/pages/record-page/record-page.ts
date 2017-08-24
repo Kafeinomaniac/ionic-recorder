@@ -162,18 +162,18 @@ export class RecordPage {
     }
 
     /**
-     * Start/pause record-pageing - template button click callback
+     * Start/pause recording - template button click callback
      * @returns {void}
      */
     public onClickStartPauseButton(): void {
         // this.currentVolume += Math.abs(Math.random() * 10);
         if (this.webAudioRecord.isRecording) {
-            // we're record-pageing (when clicked, so pause recording)
+            // we're recording (when clicked, so pause recording)
             this.webAudioRecord.pause();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
-            // we're not record-pageing (when clicked, so start/resume recording)
+            // we're not recording (when clicked, so start/resume recording)
             if (this.webAudioRecord.isInactive) {
                 // inactive, we're stopped (rather than paused) so start
                 this.webAudioRecord.start();
@@ -210,7 +210,7 @@ export class RecordPage {
                 recordingInfo.size = recordingInfo.nSamples * 2;
                 recordingInfo.fileSize = recordingInfo.size + 44;
                 recordingInfo.fileName = recordingInfo.displayDateCreated;
-                // new record-pageings always go into '/Unfiled':
+                // new recordings always go into '/Unfiled':
                 recordingInfo.folderPath = '/Unfiiled';
                 // next line is for HTML template refs
                 this.recordingInfo = recordingInfo;
@@ -223,7 +223,7 @@ export class RecordPage {
                     (parentChild: ParentChild) => {
                         // here's where we get the key
                         recordingInfo.dbKey = parentChild.child[DB_KEY_PATH];
-                        // remember last record-pageing's information
+                        // remember last recording's information
                         this.appState.updateProperty(
                             'lastRecordingInfo',
                             recordingInfo

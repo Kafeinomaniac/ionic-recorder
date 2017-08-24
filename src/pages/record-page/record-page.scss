@@ -23,14 +23,14 @@
                 width: 100%;
             }
         }
-        div.record-pageing-time {
+        div.recording-time {
             text-align: center;
             font-size: 2.3em;
             font-family: "Courier New", Courier, monospace;
             padding-bottom: 0.4em;
             color: color($colors, light);
         }
-        div.record-pageing-controls {
+        div.recording-controls {
             // center-justify the two buttons in the page
             text-align: center;
             button:first-child {

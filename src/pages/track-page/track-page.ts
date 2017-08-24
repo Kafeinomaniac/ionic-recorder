@@ -1,9 +1,9 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Observable } from 'rxjs/Rx';
-import { ActionSheetController, NavParams } from 'ionic-angular';
+import { ActionSheetController, NavParams, Content } from 'ionic-angular';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
     DB_KEY_PATH,
     KeyDict,
@@ -28,6 +28,7 @@ import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
     templateUrl: 'track-page.html'
 })
 export class TrackPage {
+    @ViewChild(Content) public content: Content;
     private webAudioSaveWav: WebAudioSaveWav;
     private actionSheetController: ActionSheetController;
     public footerButtons: ButtonbarButton[];
@@ -58,6 +59,7 @@ export class TrackPage {
         this.getTrackInfo(key, true).subscribe(
             (trackInfo: RecordingInfo) => {
                 this.recordingInfo = trackInfo;
+                this.resize();
             }
         );
 
@@ -149,6 +151,14 @@ export class TrackPage {
                 }
             ]
         }).present();
+    }
+
+    private resize(): void {
+        setTimeout(
+            () => {
+                this.content.resize();
+            },
+            20);
     }
 
     /**
