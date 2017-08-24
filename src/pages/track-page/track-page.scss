@@ -1,15 +1,10 @@
 // Copyright (c) 2017 Tracktunes Inc
-
-#tabpanel-t0-2 track-page {
+track-page {
     ion-toolbar {
         p {
             margin-top: 0.1em;
             margin-bottom: 0.5em;
             color: color($colors, primary, base);
-        }
-        audio-player progress-slider #progress-slider-container div.track-page div.track-page-inner-full div.handle {
-            background-color: green;
-            border: 6px solid green;
         }
     }
     ion-content {
@@ -20,4 +15,13 @@
         // up here
         background-color: inherit !important;
     }
+}
+
+// note: we somehow need this, it's a hack. this fixes the issue
+// of: when padding is on track page's ion-content, the outer border
+// (the padded part) shows up black, becuase somehow a background: #fff
+// is remembered.  putting this here fixes that and doesn't seem to have
+// detrimental effects anywhere else
+.ios .ion-page.show-page~.nav-decor {
+    background: transparent;
 }

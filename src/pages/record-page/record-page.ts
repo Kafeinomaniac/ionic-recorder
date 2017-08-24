@@ -92,16 +92,16 @@ export class RecordPage {
             }
         );
 
-        // ***TODO***
-        // this.appState.getProperty('lastRecordingKey').then(
-        //     (lastRecordingKey: number) => {
-        //         console.log('Got lastRecordingKey = ' + lastRecordingKey);
-        //         this.idbAppFS.readNode(lastRecordingKey).subscribe(
-        //             (node: TreeNode) => {
-        //             }
-        //         );
-        //     });
-        // );
+        this.appState.getProperty('lastRecordingInfo').then(
+            (recordingInfo: RecordingInfo) => {
+                console.log('RecordPage:lastRecordingInfo = ' + recordingInfo);
+                if (recordingInfo) {
+                    // we got a recordingInfo for last recording, but it is
+                    // possible that we have deleted the recording, so make
+                    // sure it is there *** TODO *** finish this ...
+                }
+            }
+        );
     }
 
     /**
