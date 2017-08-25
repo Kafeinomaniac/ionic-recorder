@@ -46,8 +46,8 @@ export class IonicRecorderApp {
     ) {
         console.log('constructor(): IonicRecordApp');
 
-        window.addEventListener('filePluginIsReady', function(){ console.log('File plugin is ready');}, false);
-        file.checkDir(file.dataDirectory, 'mydir').then(_ => console.log('*** Directory exists')).catch(err => console.log('*** Directory doesnt exist'));
+        window.addEventListener('filePluginIsReady', function(){ alert('File plugin is ready');}, false);
+        file.checkDir(file.dataDirectory, 'mydir').then(_ => alert('*** Directory exists')).catch(err => alert('*** Directory doesnt exist'));
         this.platform = platform;
         this.menu = menu;
         this.appState = appState;
