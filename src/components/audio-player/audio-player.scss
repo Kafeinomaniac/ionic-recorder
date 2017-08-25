@@ -8,8 +8,8 @@ audio-player {
         padding-left: $audio-player-padding;
         padding-right: $audio-player-padding;
         div.track div.track-inner-full div.handle {
-            background-color: green;
-            border: 6px solid green;
+            background-color: $color-lightest-gray;
+            border: 6px solid $color-lightest-gray;
         }
     }
     button {
