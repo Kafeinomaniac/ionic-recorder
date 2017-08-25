@@ -63,12 +63,12 @@ import { File } from '@ionic-native/file';
     providers: [
         StatusBar,
         SplashScreen,
+        File,
         { provide: ErrorHandler, useClass: IonicErrorHandler },
         IdbAppData,
         IdbAppFS,
         AppState,
-        MasterClock,
-        File
+        MasterClock
     ]
 })
 export class AppModule {}
