@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicframework.ionic-recorder" version="0.2.0-alpha.12" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ionicframework.ionic-recorder" version="0.2.0-alpha.13" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>ionic-recorder</name>
     <description>An awesome audio recording hybrid app.</description>
     <author email="doron@tracktunes.org" href="https://tracktunes.org">Doron Tal</author>
@@ -31,4 +31,5 @@
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <plugin name="cordova-plugin-file" spec="^4.3.3" />
 </widget>
