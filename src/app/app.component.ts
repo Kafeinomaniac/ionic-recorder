@@ -48,9 +48,15 @@ export class IonicRecorderApp {
 
         window.addEventListener('filePluginIsReady', function(){
             console.log('File plugin is ready');
+
             file.checkDir(file.dataDirectory, 'mydir').then(
                 _ => console.log('*** Directory exists')
             ).catch(err => console.log('*** Directory doesnt exist'));
+
+            file.createDir(file.applicationDirectory, 'woohoo', true).then(
+                _ => console.log('*** Directory created!!!!')
+            ).catch(err => console.log('*** cannot create directory'));
+
         }, false);
         this.platform = platform;
         this.menu = menu;
