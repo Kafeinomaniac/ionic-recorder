@@ -78,5 +78,5 @@ git tag -a "v$NEWVERSION" -m "See CHANGELOG.md for major version tag changes"
 git push --tags
 
 # now deploy committed version
-# echo "DEPLOYING!!!!!!!!!!!!!!!!"
-# ./scripts/deploy.sh
+echo "DEPLOYING!!!!!!!!!!!!!!!!"
+./scripts/deploy.sh
