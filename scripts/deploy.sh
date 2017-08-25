@@ -12,8 +12,7 @@ echo "SRC: `hostname -s`:`pwd`"
 echo "DEST: $RSYNC_DEST"
 
 # npm run build
-# ionic cordova build browser --prod
-ionic cordova build browser
+ionic cordova build browser --prod
 
 # TODO: commit here
 
