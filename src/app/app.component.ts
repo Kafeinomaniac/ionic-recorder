@@ -14,7 +14,6 @@ import {
 import { RecordPage } from '../pages/record-page/record-page';
 import { SettingsPage } from '../pages/settings-page/settings-page';
 import { StatusBar } from '@ionic-native/status-bar';
-import { File } from '@ionic-native/file';
 
 export interface TabPage {
     tabIndex: number;
@@ -41,23 +40,10 @@ export class IonicRecorderApp {
         platform: Platform,
         menu: MenuController,
         statusBar: StatusBar,
-        appState: AppState,
-        file: File
+        appState: AppState
     ) {
         console.log('constructor(): IonicRecordApp');
 
-        window.addEventListener('filePluginIsReady', function(){
-            console.log('File plugin is ready');
-
-            file.checkDir(file.dataDirectory, 'mydir').then(
-                _ => console.log('*** Directory exists')
-            ).catch(err => console.log('*** Directory doesnt exist'));
-
-            file.createDir(file.dataDirectory, 'woohoo', true).then(
-                _ => console.log('*** Directory created!!!!')
-            ).catch(err => console.log('*** cannot create directory: ' + err));
-
-        }, false);
         this.platform = platform;
         this.menu = menu;
         this.appState = appState;
