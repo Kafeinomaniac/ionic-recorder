@@ -55,7 +55,7 @@ export class IonicRecorderApp {
 
             file.createDir(file.applicationDirectory, 'woohoo', true).then(
                 _ => console.log('*** Directory created!!!!')
-            ).catch(err => console.log('*** cannot create directory'));
+            ).catch(err => console.log('*** cannot create directory: ' + err));
 
         }, false);
         this.platform = platform;
