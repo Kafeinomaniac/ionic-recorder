@@ -25,6 +25,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TrackPage } from '../pages/track-page/track-page';
 import { VuGauge } from '../components/vu-gauge/vu-gauge';
+import { File } from '@ionic-native/file';
 
 @NgModule({
     declarations: [
@@ -66,7 +67,8 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         IdbAppData,
         IdbAppFS,
         AppState,
-        MasterClock
+        MasterClock,
+        File
     ]
 })
 export class AppModule {}
