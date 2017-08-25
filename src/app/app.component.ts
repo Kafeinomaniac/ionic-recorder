@@ -18,7 +18,7 @@ import { File } from '@ionic-native/file';
 
 export interface TabPage {
     tabIndex: number;
-    title: string;``
+    title: string;
     component: Component;
 }
 
