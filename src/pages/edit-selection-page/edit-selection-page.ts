@@ -1,26 +1,26 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import {
-    AlertController,
-    Content,
-    ModalController,
-    NavController,
-    Platform,
-    ViewController
-} from 'ionic-angular';
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { Component, ViewChild } from '@angular/core';
-import {
-    DB_KEY_PATH,
-    IdbFS,
-    KeyDict,
-    ROOT_FOLDER_KEY,
-    TreeNode
-} from '../../models/idb/idb-fs';
 import { getFolderPath } from '../library-page/library-page';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
-import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
+import { isUndefined } from '../../models/utils/utils';
+import {
+    // AlertController,
+    Content,
+    // ModalController,
+    // NavController,
+    Platform,
+    ViewController
+} from 'ionic-angular';
+import {
+    // DB_KEY_PATH,
+    IdbFS,
+    KeyDict,
+    // ROOT_FOLDER_KEY,
+    TreeNode
+} from '../../models/idb/idb-fs';
 
 /**
  * @name EditSelectionPage
@@ -39,7 +39,7 @@ export class EditSelectionPage {
     private viewController: ViewController;
     private selectedNodes: KeyDict;
     private origSelectedNodes: KeyDict;
-    private folderItems: KeyDict;
+    // private folderItems: KeyDict;
     public folderNode: TreeNode;
     public headerButtons: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
@@ -67,9 +67,9 @@ export class EditSelectionPage {
      * Template loop function that enumerates keys of an object
      * @returns {string[]} array of keys in 'obj'
      */
-    private keys(obj: Object): string[] {
-        return Object.keys(obj);
-    }
+    // private keys(obj: Object): string[] {
+    //     return Object.keys(obj);
+    // }
 
     /**
      * Computes a string representation of folder path (tree node path)

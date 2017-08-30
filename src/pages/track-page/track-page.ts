@@ -5,14 +5,14 @@ import { ActionSheetController, NavParams, Content } from 'ionic-angular';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { Component, ViewChild } from '@angular/core';
 import {
-    DB_KEY_PATH,
-    KeyDict,
-    ParentChild,
-    ROOT_FOLDER_KEY,
+    // DB_KEY_PATH,
+    // KeyDict,
+    // ParentChild,
+    // ROOT_FOLDER_KEY,
     TreeNode
 } from '../../models/idb/idb-fs';
-import { formatLocalTime } from '../../models/utils/utils';
-import { formatTime } from '../../models/utils/utils';
+// import { formatLocalTime } from '../../models/utils/utils';
+// import { formatTime } from '../../models/utils/utils';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
@@ -94,17 +94,18 @@ export class TrackPage {
         key: number,
         getPath: boolean = false
     ): Observable<RecordingInfo> {
-        let source: Observable<RecordingInfo> = Observable.create((observer) => {
-            this.idbAppFS.readNode(key).subscribe(
-                (node: TreeNode) => {
-                    observer.next(node.data);
-                    observer.complete();
-                },
-                (err: any) => {
-                    observer.error(err);
-                }
-            );
-        });
+        let source: Observable<RecordingInfo> =
+            Observable.create((observer) => {
+                this.idbAppFS.readNode(key).subscribe(
+                    (node: TreeNode) => {
+                        observer.next(node.data);
+                        observer.complete();
+                    },
+                    (err: any) => {
+                        observer.error(err);
+                    }
+                );
+            });
         return source;
     }
 

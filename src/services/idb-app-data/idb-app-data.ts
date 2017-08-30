@@ -1,12 +1,11 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Observable } from 'rxjs/Rx';
-import { Injectable } from '@angular/core';
 import { Idb, IdbConfig } from '../../models/idb/idb';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 
 export const DB_NAME: string = 'IdbAppData';
 export const DATA_STORE: string = 'RecordedChunks';
-
 
 const DB_VERSION: number = 1;
 

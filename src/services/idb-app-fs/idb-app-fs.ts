@@ -7,11 +7,13 @@ import {
     KeyDict,
     DB_KEY_PATH,
     ROOT_FOLDER_KEY
-} from '../../models/idb/idb-fs';
+}
+from '../../models/idb/idb-fs';
 import {
     DATA_STORE,
     IdbAppData
-} from '../idb-app-data/idb-app-data';
+}
+from '../idb-app-data/idb-app-data';
 import { Observable } from 'rxjs/Rx';
 import { RecordingInfo } from '../web-audio/common';
 import { DB_CHUNK_LENGTH } from '../web-audio/record-wav';
@@ -37,15 +39,15 @@ export class IdbAppFS extends IdbFS {
                     UNFILED_FOLDER_KEY,
                     UNFILED_FOLDER_NAME,
                     ROOT_FOLDER_KEY).subscribe(
-                        (treeNode: TreeNode) => {
-                            if (treeNode[DB_KEY_PATH] !== UNFILED_FOLDER_KEY) {
-                                throw Error(UNFILED_FOLDER_NAME +
-                                            ' key mismatch: ' +
-                                            UNFILED_FOLDER_KEY +
-                                            ' vs. ' + treeNode[DB_KEY_PATH]);
-                            }
-                            this.unfiledFolderNode = treeNode;
-                        });
+                    (treeNode: TreeNode) => {
+                        if (treeNode[DB_KEY_PATH] !== UNFILED_FOLDER_KEY) {
+                            throw Error(UNFILED_FOLDER_NAME +
+                                ' key mismatch: ' +
+                                UNFILED_FOLDER_KEY +
+                                ' vs. ' + treeNode[DB_KEY_PATH]);
+                        }
+                        this.unfiledFolderNode = treeNode;
+                    });
             },
             (error) => {
                 throw Error('in IdbAppFS:constructor(): ' + error);
@@ -59,8 +61,8 @@ export class IdbAppFS extends IdbFS {
      * @returns {Observable<void>} - observable that emits after deletion has
      * completed successfully
      */
-    public deleteNodes(keyDict: KeyDict): Observable<void> {
-        let source: Observable<void> = Observable.create((observer) => {
+    public deleteNodes(keyDict: KeyDict): Observable < void > {
+        let source: Observable < void > = Observable.create((observer) => {
             super.deleteNodes(keyDict).subscribe(
                 () => {
                     for (let key in keyDict) {
@@ -75,7 +77,7 @@ export class IdbAppFS extends IdbFS {
                             dataEndKey: number = dataStartKey +
                             Math.floor(nSamples / DB_CHUNK_LENGTH),
                             dataKey: number = dataStartKey,
-                            nDataNodes = dataEndKey-dataStartKey+1,
+                            nDataNodes: number = dataEndKey - dataStartKey + 1,
                             nDeleted: number = 0;
                         for (
                             dataKey = dataStartKey;
@@ -94,13 +96,13 @@ export class IdbAppFS extends IdbFS {
                                     }
                                 },
                                 (err1: any) => {
-                                    observer.error(err1``);
+                                    observer.error(err1 ``);
                                 }); // delete().subscribe( ...
                         } // for (dataKey ...
                     } // for (let key in keyDict) { ...
                 },
                 (err2: any) => {
-                    observer.error(err2)
+                    observer.error(err2);
                 }
             );
         });

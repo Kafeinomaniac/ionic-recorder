@@ -37,13 +37,13 @@ export enum RecordStatus {
 // Add some web audio missing type definitions: See http://stackoverflow.com/..
 // ..questions/32797833/typescript-web-audio-api-missing-definitions
 
-interface MediaStreamAudioDestinationNode extends AudioNode {
-    stream: MediaStream;
-}
+// interface MediaStreamAudioDestinationNode extends AudioNode {
+//     stream: MediaStream;
+// }
 
-interface AudioContext {
-    createMediaStreamDestination: () => any;
-}
+// interface AudioContext {
+//     createMediaStreamDestination: () => any;
+// }
 
 interface Gain {
     value: number;
@@ -272,8 +272,8 @@ export class WebAudioRecord {
 
         // create a destination node (need something to connect the
         // scriptProcessorNode with or else it won't process audio)
-        let dest: MediaStreamAudioDestinationNode =
-            AUDIO_CONTEXT.createMediaStreamDestination();
+        // let dest: MediaStreamAudioDestinationNode =
+        //     AUDIO_CONTEXT.createMediaStreamDestination();
 
         // sourceNode (microphone) -> gainNode
         this.sourceNode.connect(this.audioGainNode);

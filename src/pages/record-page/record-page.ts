@@ -8,12 +8,11 @@ import {
     UNFILED_FOLDER_KEY
 }
 from '../../services/idb-app-fs/idb-app-fs';
-import { TreeNode, ParentChild, DB_KEY_PATH } from '../../models/idb/idb-fs';
+import { ParentChild, DB_KEY_PATH } from '../../models/idb/idb-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { RecordStatus } from '../../services/web-audio/record';
 import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
 import { formatLocalTime, formatTime } from '../../models/utils/utils';
-import { getFolderPath } from '../library-page/library-page';
 import { TrackPage } from '../track-page/track-page';
 
 const START_RESUME_ICON: string = 'mic';

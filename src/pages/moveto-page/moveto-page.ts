@@ -4,7 +4,7 @@ import {
     Alert,
     AlertController,
     Content,
-    ModalController,
+    // ModalController,
     NavController,
     Platform,
     ViewController
