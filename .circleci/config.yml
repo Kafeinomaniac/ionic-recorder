@@ -5,37 +5,22 @@ version: 2.0
 jobs:
   build:
     docker:
-      - image: lathonez/ionic-selenium:latest
+      - image: lathonez/clicker:latest
 
-    working_directory: ~/repo
+    working_directory: /root/clicker
 
     steps:
+      # deps already installed in image
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run:
-          name: install deps
-          command: npm install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      # dump env for debug
       - run:
           name: debug environment
           command: ionic info
 
-      - run:
-         name: lint
-         command: npm run lint
+      # https://github.com/ionic-team/ionic-app-scripts/issues/1074
+      # - run:
+      #   name: lint
+      #   command: npm run lint
 
       - run:
           name: unit test
@@ -66,4 +51,5 @@ jobs:
 
       - run:
           name: Build
-          command: ionic cordova build browser
+          # shell js shouldn't be necessary, but it is. yay ionic
+          command: npm install shelljs && ionic cordova build browser
