@@ -4,6 +4,7 @@ import {
     Alert,
     AlertController,
     Content,
+    ItemSliding,
     ModalController,
     NavController,
     Platform
@@ -119,7 +120,7 @@ export class LibraryPage {
                 leftIcon: 'add',
                 rightIcon: 'folder',
                 clickCB: () => {
-                    this.onClickAddButton();
+                    this.onClickNewFolder();
                 }
             }
         ];
@@ -468,8 +469,8 @@ export class LibraryPage {
                         this.folderItems = newFolderItems;
                         this.resize();
                     },
-                    (error: any) => {
-                        alert('in readChildNodes: ' + error);
+                    (err: any) => {
+                        alert('in readChildNodes: ' + err);
                     }
                 ); // readChildNodes().subscribe(
             },
@@ -619,8 +620,56 @@ export class LibraryPage {
      * UI calls this when the new folder button is clicked
      * @returns {void}
      */
-    public onClickAddButton(): void {
-        console.log('onClickAddButton() - navController: ' +
+    public onClickRename(node: TreeNode, item: ItemSliding): void {
+        console.log('onClickNewFolder() - navController: ' +
+            this.navController);
+        const displayType: string =
+            IdbAppFS.isFolderNode(node) ? 'folder' : 'track';
+        let alert: Alert = this.alertController.create({
+            title: 'Rename ' + displayType + ':' ,
+            // message: 'Enter the folder name',
+            inputs: [{
+                name: 'name',
+                placeholder: node.name
+            }],
+            buttons: [
+                {
+                    text: 'Cancel',
+                    handler: (data: any) => {
+                        console.log('Cancel clicked in rename alert');
+                        item.close();
+                    }
+                },
+                {
+                    text: 'Done',
+                    handler: (data: any) => {
+                        console.log('Done clicked in rename alert');
+                        console.log('New name entered: ' + data.name);
+                        node.name = data.name;
+                        this.idbAppFS.updateNode(
+                            node[DB_KEY_PATH],
+                            node
+                        ).subscribe(
+                            () => {
+                                item.close();
+                            },
+                            (err: any) => {
+                                throw Error(err);
+                            }
+                        );
+                    }
+                }
+            ]
+        });
+        alert.present();
+    }
+
+    /**
+     * UI calls this when the new folder button is clicked
+     * @returns {void}
+     */
+    public onClickNewFolder(): void {
+        console.log('onClickNewFolder() - navController: ' +
             this.navController);
 
         let alert: Alert = this.alertController.create({
@@ -633,13 +682,17 @@ export class LibraryPage {
             buttons: [{
                     text: 'Cancel',
                     handler: (data: any) => {
-                        console.log('Cancel clicked in add-folder alert');
+                        console.log('Cancel clicked in new-folder alert');
+                        this.idbAppFS.createNode(
+                            data.folderName,
+                            this.folderNode[DB_KEY_PATH]
+                        )
                     }
                 },
                 {
                     text: 'Done',
                     handler: (data: any) => {
-                        console.log('Done clicked in add-folder alert');
+                        console.log('Done clicked in new-folder alert');
                         this.idbAppFS.createNode(
                             data.folderName,
                             this.folderNode[DB_KEY_PATH]

@@ -42,7 +42,7 @@
                 <ion-checkbox item-left [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])"></ion-checkbox>
             </ion-item>
             <ion-item-options>
-                <button ion-button (click)="rename(folderItems[i], item)">
+                <button ion-button (click)="onClickRename(folderItems[i], item)">
                     <ion-icon name="md-create"></ion-icon>
                     Rename
                 </button>
