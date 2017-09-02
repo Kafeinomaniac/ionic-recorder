@@ -25,8 +25,7 @@ import {
     UNFILED_FOLDER_KEY
 } from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
-import { MoveToPage } from '../moveto-page/moveto-page';
-import { TrackPage } from '../track-page/track-page';
+import { MoveToPage, TrackPage } from '../';
 
 export function getFolderPath(folderNode: TreeNode): string {
     'use strict';

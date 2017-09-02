@@ -1,25 +1,27 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AboutPage } from '../pages/about-page/about-page';
+import {
+    AboutPage,
+    LibraryPage,
+    LoadingPage,
+    RecordPage,
+    SettingsPage
+} from '../pages';
 import { AppState } from '../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
-import { LibraryPage } from '../pages/library-page/library-page';
-import { LoadingPage } from '../pages/loading-page/loading-page';
 import {
     MenuController,
-    NavController,
     Platform,
     Tab,
     Tabs
 } from 'ionic-angular';
-import { RecordPage } from '../pages/record-page/record-page';
-import { SettingsPage } from '../pages/settings-page/settings-page';
 import { StatusBar } from '@ionic-native/status-bar';
 
 export interface TabPage {
     tabIndex: number;
     title: string;
-    component: Component;
+    // component: Component;
+    component: any;
 }
 
 @Component({
@@ -30,18 +32,17 @@ export class IonicRecorderApp {
     // @ViewChild(Tabs) private tabs: Tabs;
     @ViewChild('navTabs') public tabs: Tabs;
 
-    public rootPage: Component;
+    // public rootPage: Component;
+    public rootPage: any;
     public pages: TabPage[];
 
     private platform: Platform;
     private menu: MenuController;
-    private nav: NavController;
     private appState: AppState;
 
     constructor(
         platform: Platform,
         menu: MenuController,
-        nav: NavController,
         statusBar: StatusBar,
         appState: AppState
     ) {
@@ -49,7 +50,6 @@ export class IonicRecorderApp {
 
         this.platform = platform;
         this.menu = menu;
-        this.nav = nav;
         this.appState = appState;
 
         // set root of the hidden (first, default) tab
@@ -81,13 +81,6 @@ export class IonicRecorderApp {
                         lastTabIndex);
                     this.tabs.select(lastTabIndex);
                 });
-        });
-
-        this.platform.registerBackButtonAction((fun: Function, priority: number) =>{
-            priority = 100;
-            if (this.nav.canGoBack()) {
-                this.nav.pop();
-            }
         });
     }
 
