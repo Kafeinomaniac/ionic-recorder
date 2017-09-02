@@ -7,6 +7,7 @@ import { LibraryPage } from '../pages/library-page/library-page';
 import { LoadingPage } from '../pages/loading-page/loading-page';
 import {
     MenuController,
+    NavController,
     Platform,
     Tab,
     Tabs
@@ -34,11 +35,13 @@ export class IonicRecorderApp {
 
     private platform: Platform;
     private menu: MenuController;
+    private nav: NavController;
     private appState: AppState;
 
     constructor(
         platform: Platform,
         menu: MenuController,
+        nav: NavController,
         statusBar: StatusBar,
         appState: AppState
     ) {
@@ -46,6 +49,7 @@ export class IonicRecorderApp {
 
         this.platform = platform;
         this.menu = menu;
+        this.nav = nav;
         this.appState = appState;
 
         // set root of the hidden (first, default) tab
@@ -77,6 +81,13 @@ export class IonicRecorderApp {
                         lastTabIndex);
                     this.tabs.select(lastTabIndex);
                 });
+        });
+
+        this.platform.registerBackButtonAction((fun: Function, priority: number) =>{
+            priority = 100;
+            if (this.nav.canGoBack()) {
+                this.nav.pop();
+            }
         });
     }
 
