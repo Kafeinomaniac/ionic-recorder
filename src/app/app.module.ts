@@ -15,7 +15,7 @@ import { AudioPlay } from '../components/audio-player/audio-player';
 import { BrowserModule } from '@angular/platform-browser';
 import { ButtonBar } from '../components/button-bar/button-bar';
 import { ErrorHandler, NgModule } from '@angular/core';
-// import { File } from '@ionic-native/file';
+import { File } from '@ionic-native/file';
 import { IdbAppData } from '../services/idb-app-data/idb-app-data';
 import { IdbAppFS } from '../services/idb-app-fs/idb-app-fs';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -61,7 +61,7 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         TrackPage
     ],
     providers: [
-        // File,
+        File,
         StatusBar,
         SplashScreen,
         { provide: ErrorHandler, useClass: IonicErrorHandler },

@@ -9,7 +9,7 @@ import {
     } from '../pages';
 import { AppState } from '../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
-// import { File } from '@ionic-native/file';
+import { File } from '@ionic-native/file';
 import {
     MenuController,
     Platform,
@@ -48,14 +48,14 @@ export class IonicRecorderApp {
     private platform: Platform;
     private menu: MenuController;
     private appState: AppState;
-    // private file: File;
+    private file: File;
 
     constructor(
         platform: Platform,
         menu: MenuController,
         statusBar: StatusBar,
-        appState: AppState // ,
-        // file: File
+        appState: AppState,
+        file: File
     ) {
         console.log('constructor(): IonicRecordApp');
 
@@ -78,22 +78,21 @@ export class IonicRecorderApp {
         ];
 
         platform.ready().then(() => {
-            /*
             window.addEventListener('filePluginIsReady', function() {
-                console.log('file plugin is ready <--------');
-
-                // window['requestFileSystem']  = window['requestFileSystem'] || window['webkitRequestFileSystem'];
-                // console.log('req fil sys: ' + window['requestFileSystem']);
-                // window['requestFileSystem'](window['PERSISTENT'], 5*1024*1024, onInitFs, errorHandler);
-
-                // file.createDir(file.dataDirectory, 'woohoo', true).then(
-                // file.createDir('filesystem:file:///localhost/persistent/', 'woohoo', true).then(
-                // file.createDir('cdvfile://localhost/persistent/', 'woohoo', true).then(
-                // file.createDir('file://localhost/persistent/', 'woohoo', true).then(
-                // _ => console.log('We did it!!!')
-                // ).catch(err => console.log('ERROR IN file.createDir(): ' + err));
+                console.log('<-------><-------><-------><-------><-------><------->');
+                console.log('dataDirectory: '+file.dataDirectory);
+                // console.log(file.resolveLocalFilesystemUrl(file.dataDirectory));
+                console.log('cacheDirectory: '+file.cacheDirectory);
+                // console.log(file.resolveLocalFilesystemUrl(file.cacheDirectory));
+                console.log('applicationDirectory: '+file.applicationDirectory);
+                // console.log(file.resolveLocalFilesystemUrl(file.applicationDirectory));
+                console.log('<-------><-------><-------><-------><-------><------->');
+                /* this next line causes a security error that needs to stop one day
+                file.createDir('file:///persistent/', 'woohoo', true).then(
+                _ => console.log('We did it!!!')
+                ).catch(err => console.log('ERROR IN file.createDir(): ' + err));
+                */
             }, false);
-            */
 
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.

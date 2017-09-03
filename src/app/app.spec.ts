@@ -7,13 +7,18 @@ import { MenuMock, PlatformMock, StatusBarMock } from 'ionic-mocks';
 
 let instance: IonicRecorderApp = null;
 
+class FileMock {
+
+}
+
 describe('IonicRecorderApp', () => {
     beforeEach(() => {
         instance = new IonicRecorderApp(
             <any>PlatformMock.instance(),
             <any>MenuMock.instance(),
             <any>StatusBarMock.instance(),
-            <any>AppStateMock);
+            <any>AppStateMock,
+            <any>FileMock)
     });
 
     it('initialises with four possible pages', () => {
