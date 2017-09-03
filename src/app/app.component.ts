@@ -6,15 +6,16 @@ import {
     LoadingPage,
     RecordPage,
     SettingsPage
-} from '../pages';
+    } from '../pages';
 import { AppState } from '../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
+// import { File } from '@ionic-native/file';
 import {
     MenuController,
     Platform,
     Tab,
     Tabs
-} from 'ionic-angular';
+    } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 
 export interface TabPage {
@@ -23,6 +24,14 @@ export interface TabPage {
     // component: Component;
     component: any;
 }
+
+// function onInitFs(fs) {
+//     console.log('Opened file system: ' + fs.name);
+// }
+
+// function errorHandler(e) {
+//     console.log('errorHandler: ' + e);
+// }
 
 @Component({
     templateUrl: 'app.html'
@@ -39,18 +48,21 @@ export class IonicRecorderApp {
     private platform: Platform;
     private menu: MenuController;
     private appState: AppState;
+    // private file: File;
 
     constructor(
         platform: Platform,
         menu: MenuController,
         statusBar: StatusBar,
-        appState: AppState
+        appState: AppState // ,
+        // file: File
     ) {
         console.log('constructor(): IonicRecordApp');
 
         this.platform = platform;
         this.menu = menu;
         this.appState = appState;
+        // this.file = file;
 
         // set root of the hidden (first, default) tab
         this.rootPage = LoadingPage;
@@ -66,6 +78,23 @@ export class IonicRecorderApp {
         ];
 
         platform.ready().then(() => {
+            /*
+            window.addEventListener('filePluginIsReady', function() {
+                console.log('file plugin is ready <--------');
+
+                // window['requestFileSystem']  = window['requestFileSystem'] || window['webkitRequestFileSystem'];
+                // console.log('req fil sys: ' + window['requestFileSystem']);
+                // window['requestFileSystem'](window['PERSISTENT'], 5*1024*1024, onInitFs, errorHandler);
+
+                // file.createDir(file.dataDirectory, 'woohoo', true).then(
+                // file.createDir('filesystem:file:///localhost/persistent/', 'woohoo', true).then(
+                // file.createDir('cdvfile://localhost/persistent/', 'woohoo', true).then(
+                // file.createDir('file://localhost/persistent/', 'woohoo', true).then(
+                // _ => console.log('We did it!!!')
+                // ).catch(err => console.log('ERROR IN file.createDir(): ' + err));
+            }, false);
+            */
+
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
