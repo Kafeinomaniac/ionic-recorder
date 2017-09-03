@@ -1,4 +1,8 @@
-## 0.2.0-alpha	
+## 0.2.1-alpha
+* Resources for splash and icon regenerated correctly
+* Rename button in sliding item in library view works
+
+## 0.2.0-alpha
 * Jumping to TrackPage from RecordPage after a recording, if desired
 
 # 0.1.0-alpha
