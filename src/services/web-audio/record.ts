@@ -14,7 +14,7 @@ export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 const PROCESSING_BUFFER_LENGTH: number = 2048;
 
 // wait-time between checks that WAA is initialized
-const WAIT_MSEC: number = 10;
+const WAIT_MSEC: number = 50;
 
 // statuses
 export enum RecordStatus {
