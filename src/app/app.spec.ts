@@ -17,7 +17,7 @@ describe('IonicRecorderApp', () => {
     });
 
     it('initialises with four possible pages', () => {
-        expect(instance['pages'].length).toEqual(4);
+        expect(instance['pages'].length).toEqual(5);
     });
 
     it('has LoadingPage as its root page', () => {

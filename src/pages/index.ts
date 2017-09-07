@@ -5,6 +5,7 @@ export * from './edit-selection-page/edit-selection-page';
 export * from './library-page/library-page';
 export * from './loading-page/loading-page';
 export * from './moveto-page/moveto-page';
+export * from './organizer-page/organizer-page';
 export * from './record-page/record-page';
 export * from './settings-page/settings-page';
 export * from './track-page/track-page';

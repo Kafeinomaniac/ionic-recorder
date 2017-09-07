@@ -4,6 +4,7 @@ import {
     AboutPage,
     LibraryPage,
     LoadingPage,
+    OrganizerPage,
     RecordPage,
     SettingsPage
 } from '../pages';
@@ -61,6 +62,7 @@ export class IonicRecorderApp {
         this.pages = [
             { tabIndex: 1, title: 'Record', component: RecordPage },
             { tabIndex: 2, title: 'Library', component: LibraryPage },
+            { tabIndex: 2, title: 'Organizer', component: OrganizerPage },
             { tabIndex: 3, title: 'Settings', component: SettingsPage },
             { tabIndex: 4, title: 'About', component: AboutPage }
         ];

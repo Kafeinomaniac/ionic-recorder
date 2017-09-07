@@ -1,0 +1,64 @@
+<!-- Copyright (c) 2017 Tracktunes Inc -->
+
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title *ngIf="folderNode">
+            Organizer
+        </ion-title>
+        <ion-buttons end *ngIf="nSelectedNodes()">
+            <button ion-button small (click)="onClickSelectedBadge()">
+                <ion-badge item-right>
+                    {{nSelectedNodes()}} selected &nbsp; <ion-icon name="create"></ion-icon>
+                </ion-badge>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+    <ion-toolbar>
+        <p *ngIf="folderNode" text-center>
+            {{getPath()}}
+        </p>
+        <button-bar [buttons]="headerButtons">
+        </button-bar>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list *ngIf="folderNode">
+        <ion-item-sliding *ngFor="let i of folderNode.childOrder" #item>
+            <ion-item clear class="organizer-page-item">
+                <ion-label ion-button clear (click)="onClickListItem(folderItems[i])">
+                    <span *ngIf="folderItems[i].data">
+                    <ion-icon name="play">
+                    </ion-icon>
+                    &nbsp;
+                </span>
+                    <ion-icon *ngIf="!folderItems[i].data" name="folder">
+                    </ion-icon>
+                    &nbsp; {{folderItems[i].name}}
+                </ion-label>
+                <ion-checkbox item-left [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])"></ion-checkbox>
+            </ion-item>
+            <ion-item-options>
+                <button ion-button (click)="onClickRename(folderItems[i], item)">
+                    <ion-icon name="md-create"></ion-icon>
+                    Rename
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
+        <ion-item class="organizer-page-empty-folder-message" *ngIf="!folderNode.childOrder.length">
+            <h2>
+                Empty folder
+            </h2>
+        </ion-item>
+    </ion-list>
+</ion-content>
+
+<ion-footer [hidden]="nSelectedNodes() === 0">
+    <ion-toolbar>
+        <button-bar [buttons]="footerButtons">
+        </button-bar>
+    </ion-toolbar>
+</ion-footer>
