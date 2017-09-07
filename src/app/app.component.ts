@@ -6,16 +6,15 @@ import {
     LoadingPage,
     RecordPage,
     SettingsPage
-    } from '../pages';
+} from '../pages';
 import { AppState } from '../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
-import { File } from '@ionic-native/file';
 import {
     MenuController,
     Platform,
     Tab,
     Tabs
-    } from 'ionic-angular';
+} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 
 export interface TabPage {
@@ -24,14 +23,6 @@ export interface TabPage {
     // component: Component;
     component: any;
 }
-
-// function onInitFs(fs) {
-//     console.log('Opened file system: ' + fs.name);
-// }
-
-// function errorHandler(e) {
-//     console.log('errorHandler: ' + e);
-// }
 
 @Component({
     templateUrl: 'app.html'
@@ -48,21 +39,18 @@ export class IonicRecorderApp {
     private platform: Platform;
     private menu: MenuController;
     private appState: AppState;
-    private file: File;
 
     constructor(
         platform: Platform,
         menu: MenuController,
         statusBar: StatusBar,
-        appState: AppState,
-        file: File
+        appState: AppState
     ) {
         console.log('constructor(): IonicRecordApp');
 
         this.platform = platform;
         this.menu = menu;
         this.appState = appState;
-        // this.file = file;
 
         // set root of the hidden (first, default) tab
         this.rootPage = LoadingPage;
@@ -78,28 +66,11 @@ export class IonicRecorderApp {
         ];
 
         platform.ready().then(() => {
-            window.addEventListener('filePluginIsReady', function() {
-                console.log('<-------><-------><-------><-------><-------><------->');
-                console.log('dataDirectory: '+file.dataDirectory);
-                // console.log(file.resolveLocalFilesystemUrl(file.dataDirectory));
-                console.log('cacheDirectory: '+file.cacheDirectory);
-                // console.log(file.resolveLocalFilesystemUrl(file.cacheDirectory));
-                console.log('applicationDirectory: '+file.applicationDirectory);
-                // console.log(file.resolveLocalFilesystemUrl(file.applicationDirectory));
-                console.log('<-------><-------><-------><-------><-------><------->');
-                /* this next line causes a security error that needs to stop one day
-                file.createDir('file:///persistent/', 'woohoo', true).then(
-                _ => console.log('We did it!!!')
-                ).catch(err => console.log('ERROR IN file.createDir(): ' + err));
-                */
-            }, false);
-
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
             statusBar.styleDefault();
             statusBar.backgroundColorByHexString('#000000');
-            // statusBar.hide();
 
             // NOTE: uncomment next line to start with a specific page
             // this.goToPage(this.pages[1]);

@@ -61,8 +61,8 @@ export class IdbAppFS extends IdbFS {
      * @returns {Observable<void>} - observable that emits after deletion has
      * completed successfully
      */
-    public deleteNodes(keyDict: KeyDict): Observable < void > {
-        let source: Observable < void > = Observable.create((observer) => {
+    public deleteNodes(keyDict: KeyDict): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
             super.deleteNodes(keyDict).subscribe(
                 () => {
                     for (let key in keyDict) {

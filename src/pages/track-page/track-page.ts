@@ -94,7 +94,7 @@ export class TrackPage {
         key: number,
         getPath: boolean = false
     ): Observable<RecordingInfo> {
-        let source: Observable<RecordingInfo> =
+        let source: Observable<RecordingInfo>=
             Observable.create((observer) => {
                 this.idbAppFS.readNode(key).subscribe(
                     (node: TreeNode) => {

@@ -516,7 +516,7 @@ export class Idb {
         storeName: string,
         mode: IDBTransactionMode
     ): Observable<IDBObjectStore> {
-        let source: Observable<IDBObjectStore> =
+        let source: Observable<IDBObjectStore>=
             Observable.create((observer) => {
                 this.waitForDB().subscribe(
                     (db: IDBDatabase) => {
