@@ -1,29 +1,47 @@
 import {
     Observable
-} from 'rxjs/Rx';
+}
+from 'rxjs/Rx';
 
-const REQUEST_SIZE: number = 1024 * 1024;
+const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 
 export class FS {
 
     public static getFileSystem(
         bPersistent: boolean = true
-    ): Observable<FileSystem> {
-        let src: Observable<FileSystem> = Observable.create((observer) => {
-            (window.requestFileSystem || window['webkitRequestFileSystem'])(
-                bPersistent ? window.PERSISTENT : window.TEMPORARY,
+    ): Observable < FileSystem > {
+        const fsType: number = (
+            bPersistent ?
+            window.PERSISTENT :
+            window.TEMPORARY
+        );
+        let src: Observable < FileSystem > = Observable.create((observer) => {
+            window['webkitStorageInfo'].requestQuota(
+                fsType,
                 REQUEST_SIZE,
-                (fs: FileSystem) => {
-                    console.log('onInitFs():fs.name: ' + fs.name);
-                    console.log('onInitFs():fs.root.toURL(): ' +
+                (grantedBytes: number) => {
+                    (
+                        window.requestFileSystem ||
+                        window['webkitRequestFileSystem']
+                    )(
+                        fsType,
+                        grantedBytes,
+                        (fs: FileSystem) => {
+                            console.log('grantedBytes: ' + grantedBytes);
+                            console.log('onInitFs():fs.name: ' + fs.name);
+                            console.log('onInitFs():fs.root.toURL(): ' +
                                 fs.root.toURL());
-                    observer.next(fs);
-                    observer.complete();
-
+                            observer.next(fs);
+                            observer.complete();
+                        },
+                        (err: any) => {
+                            console.log('onFsError():err.code: ' + err.code);
+                            console.dir(err);
+                            observer.error(err);
+                        }
+                    );
                 },
                 (err: any) => {
-                    console.log('onFsError():err.code: ' + err.code);
-                    console.dir(err);
                     observer.error(err);
                 }
             );
@@ -35,8 +53,8 @@ export class FS {
         fs: FileSystem,
         name: string,
         blob: Blob
-    ): Observable<void> {
-        let src: Observable<void> = Observable.create((observer) => {
+    ): Observable < void > {
+        let src: Observable < void > = Observable.create((observer) => {
             fs.root.getFile(
                 name, { create: true },
                 (fileEntry: FileEntry) => {
@@ -70,8 +88,8 @@ export class FS {
         return src;
     }
 
-    public static readFile(fs: FileSystem, name: string): Observable<any> {
-        let src: Observable<any> = Observable.create((observer) => {
+    public static readFile(fs: FileSystem, name: string): Observable < any > {
+        let src: Observable < any > = Observable.create((observer) => {
             fs.root.getFile(
                 name, {},
                 (fileEntry: FileEntry) => {
@@ -109,8 +127,8 @@ export class FS {
     public static createDirectory(
         parentDirectoryEntry: DirectoryEntry,
         name: string
-    ): Observable<DirectoryEntry> {
-        let src: Observable<DirectoryEntry> = Observable.create((observer) => {
+    ): Observable < DirectoryEntry > {
+        let src: Observable < DirectoryEntry > = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
                 name, { create: true },
                 (directoryEntry: DirectoryEntry) => {
@@ -127,8 +145,8 @@ export class FS {
 
     public static readDirectory(
         directoryEntry: DirectoryEntry
-    ): Observable<Entry[]> {
-        let src: Observable<Entry[]> = Observable.create((observer) => {
+    ): Observable < Entry[] > {
+        let src: Observable < Entry[] > = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],
                 readEntries: () => void = () => {
