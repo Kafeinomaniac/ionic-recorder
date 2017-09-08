@@ -62,9 +62,9 @@ export class IonicRecorderApp {
         this.pages = [
             { tabIndex: 1, title: 'Record', component: RecordPage },
             { tabIndex: 2, title: 'Library', component: LibraryPage },
-            { tabIndex: 2, title: 'Organizer', component: OrganizerPage },
-            { tabIndex: 3, title: 'Settings', component: SettingsPage },
-            { tabIndex: 4, title: 'About', component: AboutPage }
+            { tabIndex: 3, title: 'Organizer', component: OrganizerPage },
+            { tabIndex: 4, title: 'Settings', component: SettingsPage },
+            { tabIndex: 5, title: 'About', component: AboutPage }
         ];
 
         platform.ready().then(() => {

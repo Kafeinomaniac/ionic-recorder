@@ -26,29 +26,16 @@
 </ion-header>
 
 <ion-content>
-    <ion-list *ngIf="folderNode">
-        <ion-item-sliding *ngFor="let i of folderNode.childOrder" #item>
-            <ion-item clear class="organizer-page-item">
-                <ion-label ion-button clear (click)="onClickListItem(folderItems[i])">
-                    <span *ngIf="folderItems[i].data">
-                    <ion-icon name="play">
-                    </ion-icon>
-                    &nbsp;
-                </span>
-                    <ion-icon *ngIf="!folderItems[i].data" name="folder">
-                    </ion-icon>
-                    &nbsp; {{folderItems[i].name}}
-                </ion-label>
-                <ion-checkbox item-left [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])"></ion-checkbox>
-            </ion-item>
-            <ion-item-options>
-                <button ion-button (click)="onClickRename(folderItems[i], item)">
-                    <ion-icon name="md-create"></ion-icon>
-                    Rename
-                </button>
-            </ion-item-options>
-        </ion-item-sliding>
-        <ion-item class="organizer-page-empty-folder-message" *ngIf="!folderNode.childOrder.length">
+    <ion-list>
+        <ion-item clear *ngFor="let entry of entries" class="organizer-page-item">
+            <ion-label ion-button clear (click)="onClickEntry(entry)">
+                <ion-icon [name]="itemIconName(entry)"></ion-icon>
+                &nbsp;
+                {{entry.name}}
+            </ion-label>
+            <ion-checkbox item-left [ngModel]="entry.isChecked" (click)="onCheckEntry(entry)"></ion-checkbox>
+        </ion-item>
+        <ion-item *ngIf="!entries.length">
             <h2>
                 Empty folder
             </h2>
