@@ -54,7 +54,6 @@ export class OrganizerPage {
     private fileSystem: FileSystem;
     public entries: Entry[];
     public directoryEntry: DirectoryEntry;
-    public nChecked: number;
     public headerButtons: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
     private navController: NavController;
@@ -65,6 +64,7 @@ export class OrganizerPage {
     private appState: AppState;
     private platform: Platform;
     private changeDetectorRef: ChangeDetectorRef;
+    private checkedEntries: {[id:string] : boolean};
 
     /**
      * @constructor
@@ -92,7 +92,7 @@ export class OrganizerPage {
         this.entries = [];
         this.directoryEntry = null;
         this.platform = platform;
-        this.nChecked = 0;
+        this.checkedEntries = {};
         this.actionSheetController = actionSheetController;
 
         // get the filesystem
@@ -151,8 +151,8 @@ export class OrganizerPage {
             {
                 text: 'Go to parent',
                 leftIcon: 'arrow-up',
-                // rightIcon: 'folder',
-                rightIcon: 'ios-folder-outline',
+                rightIcon: 'folder',
+                // rightIcon: 'ios-folder-outline',
                 clickCB: () => {
                     this.onClickParentButton();
                 },
@@ -204,6 +204,11 @@ export class OrganizerPage {
             }
         ];
     }
+
+    public nCheckedEntries(): number {
+        return Object.keys(this.checkedEntries).length;
+    }
+
     /**
      * Switch to a new folder
      * @param {number} key of treenode corresponding to folder to switch to
@@ -415,15 +420,22 @@ export class OrganizerPage {
     }
 
     public onCheckEntry(entry: Entry): void {
-        console.log('onCheckEntry(' + entry + ')');
-        if (entry[CHECKED_KEY]) {
-            entry[CHECKED_KEY] = false;
-            this.nChecked--;
+        console.log('onCheckEntry()');
+        const fullPath: string = entry.fullPath;
+        if (fullPath in this.checkedEntries) {
+            delete this.checkedEntries[fullPath];
         }
         else {
-            entry[CHECKED_KEY] = true;
-            this.nChecked++;
+            this.checkedEntries[fullPath] = true;
         }
+        this.detectChanges();
+    }
+
+    public isChecked(entry: Entry): boolean {
+        // console.log('isChecked() entry: ' + entry.fullPath +
+        //     ((entry.fullPath in this.checkedEntries) ? ' is' : ' is not') +
+        //     ' checked.');
+        return entry.fullPath in this.checkedEntries;
     }
 
     public onRenameEntry(entry: Entry): void {
