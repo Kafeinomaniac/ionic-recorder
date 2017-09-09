@@ -95,14 +95,23 @@ export class OrganizerPage {
                         FS.getPathEntry(fileSystem, path, false).subscribe(
                             (directoryEntry: DirectoryEntry) => {
                                 this.directoryEntry = directoryEntry;
+                                if (!directoryEntry) {
+                                    alert('!directoryEntry!');
+                                }
                                 FS.readDirectory(directoryEntry).subscribe(
                                     (entries: Entry[]) => {
                                         console.log('entries: ' + entries);
                                         console.dir(entries);
                                         this.entries = entries;
                                         this.resize();
+                                    },
+                                    (err1: any) => {
+                                        alert('err1: ' + err1);
                                     }
                                 ); // FS.readDirectory(..).susbscribe(..
+                            },
+                            (err2: any) => {
+                                alert('err2: ' + err2);
                             }
                         ); // FS.getPathEntry(..).subscribe(..
                     }
