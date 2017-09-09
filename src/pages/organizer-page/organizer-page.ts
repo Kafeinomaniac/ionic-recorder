@@ -11,10 +11,14 @@ import {
     NavController,
     Platform
 } from 'ionic-angular';
+import {
+    ChangeDetectorRef,
+    Component,
+    ViewChild
+} from '@angular/core';
 import { alertAndDo } from '../../models/utils/alerts';
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { Component, ViewChild } from '@angular/core';
 import {
     DB_KEY_PATH,
     KeyDict,
@@ -60,6 +64,7 @@ export class OrganizerPage {
     private idbAppFS: IdbAppFS;
     private appState: AppState;
     private platform: Platform;
+    private changeDetectorRef: ChangeDetectorRef;
 
     /**
      * @constructor
@@ -75,12 +80,14 @@ export class OrganizerPage {
         alertController: AlertController,
         actionSheetController: ActionSheetController,
         modalController: ModalController,
+        changeDetectorRef: ChangeDetectorRef,
         idbAppFS: IdbAppFS,
         appState: AppState,
         platform: Platform
     ) {
         console.log('constructor():OrganizerPage');
         this.appState = appState;
+        this.changeDetectorRef = changeDetectorRef;
         this.fileSystem = null;
         this.entries = [];
         this.directoryEntry = null;
@@ -88,44 +95,26 @@ export class OrganizerPage {
         this.nChecked = 0;
         this.actionSheetController = actionSheetController;
 
+        // get the filesystem
         FS.getFileSystem(true, REQUEST_SIZE).subscribe(
             (fileSystem: FileSystem) => {
+                // remember the filesystem you got
                 this.fileSystem = fileSystem;
                 // create the /Unfiled/ folder if not already there
                 FS.getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
                     (directoryEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/');
+                        // get last viewed folder to switch to it
+                        this.appState.getProperty('lastViewedFolderPath').then(
+                            (path: string) => {
+                                this.switchFolder(path, false);
+                            }
+                        ); // State.getProperty('lastViewedFolderPath').then(..
                     },
-                    (err: any) => {
-                        alert('err: ' + err);
+                    (err3: any) => {
+                        alert('err3: ' + err3);
                     }
                 ); // FS.getPathEntry(..).subscribe(..
-                this.appState.getProperty('lastViewedFolderPath').then(
-                    (path: string) => {
-                        FS.getPathEntry(fileSystem, path, false).subscribe(
-                            (directoryEntry: DirectoryEntry) => {
-                                this.directoryEntry = directoryEntry;
-                                if (!directoryEntry) {
-                                    alert('!directoryEntry!');
-                                }
-                                FS.readDirectory(directoryEntry).subscribe(
-                                    (entries: Entry[]) => {
-                                        console.log('entries: ' + entries);
-                                        console.dir(entries);
-                                        this.entries = entries;
-                                        this.resize();
-                                    },
-                                    (err1: any) => {
-                                        alert('err1: ' + err1);
-                                    }
-                                ); // FS.readDirectory(..).susbscribe(..
-                            },
-                            (err2: any) => {
-                                alert('err2: ' + err2);
-                            }
-                        ); // FS.getPathEntry(..).subscribe(..
-                    }
-                ); // this.appState.getProperty('lastViewedFolderPath').then(..
             }
         ); // FS.getFileSystem(true).subscribe(..
 
@@ -146,10 +135,13 @@ export class OrganizerPage {
                 rightIcon: 'md-arrow-dropdown',
                 clickCB: () => {
                     this.onClickSelectButton();
+                },
+                disabledCB: () => {
+                    return !this.entries.length;
                 }
             },
             {
-                text: 'To /',
+                text: 'Go home',
                 leftIcon: 'home',
                 clickCB: () => {
                     this.onClickHomeButton();
@@ -157,9 +149,10 @@ export class OrganizerPage {
                 disabledCB: atHome
             },
             {
-                text: 'To parent',
+                text: 'Go to parent',
                 leftIcon: 'arrow-up',
-                rightIcon: 'folder',
+                // rightIcon: 'folder',
+                rightIcon: 'ios-folder-outline',
                 clickCB: () => {
                     this.onClickParentButton();
                 },
@@ -169,13 +162,12 @@ export class OrganizerPage {
                 text: 'Add...',
                 leftIcon: 'add',
                 clickCB: () => {
-                    this.onClickAdd();
+                    this.onClickAddButton();
                 }
             }
         ];
 
-        this.footerButtons = [
-            {
+        this.footerButtons = [{
                 text: 'Info',
                 leftIcon: 'information-circle',
                 clickCB: () => {
@@ -212,6 +204,49 @@ export class OrganizerPage {
             }
         ];
     }
+    /**
+     * Switch to a new folder
+     * @param {number} key of treenode corresponding to folder to switch to
+     * @param {boolean} whether to update app state 'lastFolderViewed' property
+     * @returns {void}
+     */
+    private switchFolder(path: string, bUpdateAppState: boolean = true) {
+        console.log('OrganizerPage.switchFolder(' + path + ', ' + bUpdateAppState + ')');
+        FS.getPathEntry(
+            this.fileSystem,
+            path,
+            false
+        ).subscribe(
+            (directoryEntry: DirectoryEntry) => {
+                this.directoryEntry = directoryEntry;
+                if (!directoryEntry) {
+                    alert('!directoryEntry!');
+                }
+                FS.readDirectory(
+                    directoryEntry
+                ).subscribe(
+                    (entries: Entry[]) => {
+                        console.log('entries: ' + entries);
+                        console.dir(entries);
+                        this.entries = entries;
+                        this.detectChanges();
+                        if (bUpdateAppState) {
+                            this.appState.updateProperty(
+                                'lastViewedFolderPath',
+                                path
+                            ).then();
+                        }
+                    },
+                    (err1: any) => {
+                        alert('err1: ' + err1);
+                    }
+                ); // FS.readDirectory().susbscribe(..
+            },
+            (err2: any) => {
+                alert('err2: ' + err2);
+            }
+        ); // FS.getPathEntry(..).subscribe(..
+    }
 
     public entryIcon(entry: Entry): string {
         return entry.isDirectory ? 'folder' : 'play';
@@ -221,9 +256,9 @@ export class OrganizerPage {
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
      * @returns {void}
      */
-    public ionViewWillEnter(): void {
-        console.log('OrganizerPage.ionViewWillEnter()');
-    }
+    // public ionViewWillEnter(): void {
+    //     console.log('OrganizerPage.ionViewWillEnter()');
+    // }
 
     /**
      * Moves items in DB and in UI when move button is clicked
@@ -291,23 +326,24 @@ export class OrganizerPage {
         return false;
     }
 
-    /**
-     * Switch to a new folder
-     * @param {number} key of treenode corresponding to folder to switch to
-     * @param {boolean} whether to update app state 'lastFolderViewed' property
-     * @returns {void}
-     */
-
-    private resize(): void {
+    private detectChanges(): void {
+        console.log('OrganizerPage.detectChanges()');
         setTimeout(
             () => {
+                this.changeDetectorRef.detectChanges();
                 this.content.resize();
             },
-            20);
+            0);
+    }
+
+    public ionViewWillEnter(): void {
+        console.log('OrganizerPage.ionViewWillEnter()');
+        this.detectChanges();
     }
 
     public ionViewDidEnter(): void {
-        this.resize();
+        console.log('OrganizerPage.ionViewDidEnter()');
+        this.detectChanges();
     }
 
     /**
@@ -320,7 +356,7 @@ export class OrganizerPage {
 
     /**
      * Initiates select button action when that button is clicked
-     * @returns {void}
+     * @returns {void}212 660 1st 38th gnd flr 263 6246
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
@@ -333,19 +369,24 @@ export class OrganizerPage {
      */
     public onClickSelectButton(): void {
         console.log('onClickSelectButton()');
-        alertAndDo(
-            this.alertController,
-            'Select which, in ' + this.directoryEntry.fullPath,
-            'All',
-            () => {
-                console.log('action1 doing it now');
+
+        let alert: Alert = this.alertController.create();
+        alert.setTitle('Select which, in ' + this.directoryEntry.fullPath);
+        alert.addButton({
+            text: 'All',
+            handler: () => {
                 this.selectAllInFolder();
-            },
-            'None',
-            () => {
-                console.log('action2 doing it now');
+            }
+        });
+        alert.addButton({
+            text: 'None',
+            handler: () => {
                 this.selectNoneInFolder();
-            });
+            }
+        });
+
+        alert.addButton('Cancel');
+        alert.present();
     }
 
     /**
@@ -393,12 +434,11 @@ export class OrganizerPage {
      * UI calls this when the new folder button is clicked
      * @returns {void}
      */
-    public onClickAdd(): void {
-        console.log('onClickAdd()');
+    public onClickAddButton(): void {
+        console.log('onClickAddButton()');
         let actionSheet: ActionSheet = this.actionSheetController.create({
-            title: 'Create new...',
-            buttons: [
-                {
+            title: 'Create new ... in ' + this.directoryEntry.fullPath,
+            buttons: [{
                     text: 'Folder',
                     icon: 'folder',
                     handler: () => {
@@ -431,11 +471,9 @@ export class OrganizerPage {
      * @returns {void}
      */
     public onClickNewFolder(): void {
-        console.log('onClickNewFolder() - navController: ' +
-            this.navController);
-
-        let alert: Alert = this.alertController.create({
-            title: 'Create New Folder',
+        let parentPath: string =this.directoryEntry.fullPath+'/',
+            alert: Alert = this.alertController.create({
+            title: 'Create a new folder in ' + this.directoryEntry.fullPath,
             // message: 'Enter the folder name',
             inputs: [{
                 name: 'folderName',
@@ -451,24 +489,25 @@ export class OrganizerPage {
                 {
                     text: 'Done',
                     handler: (data: any) => {
-                        console.log('Done clicked in new-folder alert');
-                        // this.idbAppFS.createNode(
-                        //     data.folderName,
-                        //     this.folderNode[DB_KEY_PATH]
-                        // ).subscribe(
-                        //     (parentChild: ParentChild) => {
-                        //         const childNode: TreeNode = parentChild.child,
-                        //             parentNode: TreeNode = parentChild.parent,
-                        //             childNodeKey: number =
-                        //             childNode[DB_KEY_PATH];
-                        //         console.log('childNode: ' + childNode.name +
-                        //             ', parentNode: ' + parentNode.name);
-                        //         // console.dir(childNode);
-                        //         // update folder items dictionary of this page
-                        //         this.folderItems[childNodeKey] = childNode;
-                        //         this.folderNode = parentNode;
-                        //     }
-                        // ); // createFolderNode().subscribe(
+                        let folderName: string = data.folderName;
+                        if (!folderName.length) {
+                            return;
+                        }
+                        if (folderName[folderName.length-1] !== '/') {
+                            folderName += '/';
+                        }
+                        // create the folder via getPathEntry()
+                        FS.getPathEntry(
+                            this.fileSystem,
+                            parentPath + folderName,
+                            true
+                        ).subscribe(
+                            (directoryEntry: DirectoryEntry) => {
+                                // re-read parent
+                                // to load in new info
+                                this.switchFolder(parentPath, false);
+                            }
+                        );
                     }
                 }
             ]
@@ -521,8 +560,12 @@ export class OrganizerPage {
         this.selectAllOrNoneInFolder(false);
     }
 
+    public reorderingEntries(): boolean {
+        return this.entries.length > 1;
+    }
+
     public reorderEntries(indexes: any): void {
-        console.log('reorderEntries('+indexes+')');
+        console.log('reorderEntries(' + indexes + ')');
         console.log(typeof(indexes));
         console.dir(indexes);
         let entry: Entry = this.entries[indexes.from];

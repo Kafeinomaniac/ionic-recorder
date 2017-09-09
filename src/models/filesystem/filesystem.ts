@@ -25,7 +25,7 @@ export class FS {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log('getPathEntry error: ' + err);
+                        console.log('getPathEntry error1: ' + err);
                         observer.error(err);
                     }
                 );
@@ -40,7 +40,7 @@ export class FS {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log('getPathEntry error: ' + err);
+                        console.log('getPathEntry error2: ' + err);
                         observer.error(err);
                     }
                 );
@@ -173,7 +173,8 @@ export class FS {
     ): Observable<DirectoryEntry> {
         let src: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
-                name, { create: true },
+                name,
+                { create: true },
                 (directoryEntry: DirectoryEntry) => {
                     observer.next(directoryEntry);
                     observer.complete();

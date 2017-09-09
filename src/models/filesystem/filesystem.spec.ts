@@ -1,11 +1,12 @@
 import { FS } from './filesystem';
 
 const WAIT_MSEC: number = 60;
+const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 
 let FILE_SYSTEM: FileSystem = null;
 
 beforeEach((done: Function) => {
-    FS.getFileSystem(true).subscribe(
+    FS.getFileSystem(true, REQUEST_SIZE).subscribe(
         (fileSystem: FileSystem) => {
             FILE_SYSTEM = fileSystem;
             done();
