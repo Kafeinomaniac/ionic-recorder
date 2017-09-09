@@ -3,8 +3,6 @@ import {
 }
 from 'rxjs/Rx';
 
-const REQUEST_SIZE: number = 1024 * 1024 * 1024;
-
 export class FS {
 
     public static getPathEntry(
@@ -52,7 +50,8 @@ export class FS {
     }
 
     public static getFileSystem(
-        bPersistent: boolean = true
+        bPersistent: boolean = true,
+        requestSize: number
     ): Observable<FileSystem> {
         const fsType: number = (
             bPersistent ?
@@ -62,7 +61,7 @@ export class FS {
         let src: Observable<FileSystem> = Observable.create((observer) => {
             window['webkitStorageInfo'].requestQuota(
                 fsType,
-                REQUEST_SIZE,
+                requestSize,
                 (grantedBytes: number) => {
                     (
                         window.requestFileSystem ||

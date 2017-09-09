@@ -33,6 +33,8 @@ import { MoveToPage, TrackPage } from '../';
 
 const CHECKED_KEY: string = 'isChecked';
 
+const REQUEST_SIZE: number = 1024 * 1024 * 1024;
+
 /**
  * @name OrganizerPage
  * @description
@@ -51,7 +53,6 @@ export class OrganizerPage {
     public nChecked: number;
     public headerButtons: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
-
     private navController: NavController;
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
@@ -87,9 +88,18 @@ export class OrganizerPage {
         this.nChecked = 0;
         this.actionSheetController = actionSheetController;
 
-        FS.getFileSystem(true).subscribe(
+        FS.getFileSystem(true, REQUEST_SIZE).subscribe(
             (fileSystem: FileSystem) => {
                 this.fileSystem = fileSystem;
+                // create the /Unfiled/ folder if not already there
+                FS.getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
+                    (directoryEntry: DirectoryEntry) => {
+                        console.log('Created /Unfiled/');
+                    },
+                    (err: any) => {
+                        alert('err: ' + err);
+                    }
+                ); // FS.getPathEntry(..).subscribe(..
                 this.appState.getProperty('lastViewedFolderPath').then(
                     (path: string) => {
                         FS.getPathEntry(fileSystem, path, false).subscribe(
