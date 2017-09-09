@@ -8,10 +8,10 @@
         <ion-title *ngIf="folderNode">
             Organizer
         </ion-title>
-        <ion-buttons end *ngIf="nSelectedNodes()">
+        <ion-buttons end *ngIf="nChecked">
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{nSelectedNodes()}} selected &nbsp; <ion-icon name="create"></ion-icon>
+                    {{nChecked}} selected &nbsp; <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
             </button>
         </ion-buttons>
@@ -26,16 +26,16 @@
 </ion-header>
 
 <ion-content>
-    <ion-list>
+    <ion-list reorder="true" (ionItemReorder)="reorderEntries($event)">
         <ion-item clear *ngFor="let entry of entries" class="organizer-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
-                <ion-icon [name]="itemIconName(entry)"></ion-icon>
+                <ion-icon [name]="entryIcon(entry)"></ion-icon>
                 &nbsp;
                 {{entry.name}}
             </ion-label>
-            <ion-checkbox item-left [ngModel]="entry.isChecked" (click)="onCheckEntry(entry)"></ion-checkbox>
+            <ion-checkbox [ngModel]="entry.isChecked" (click)="onCheckEntry(entry)"></ion-checkbox>
         </ion-item>
-        <ion-item *ngIf="!entries.length">
+        <ion-item *ngIf="!entries.length" class="organizer-page-empty-folder-message">
             <h2>
                 Empty folder
             </h2>
@@ -43,7 +43,7 @@
     </ion-list>
 </ion-content>
 
-<ion-footer [hidden]="nSelectedNodes() === 0">
+<ion-footer [hidden]="!nChecked">
     <ion-toolbar>
         <button-bar [buttons]="footerButtons">
         </button-bar>

@@ -8,7 +8,8 @@ import {
     ModalController,
     NavController,
     Platform
-} from 'ionic-angular';
+}
+from 'ionic-angular';
 import { alertAndDo } from '../../models/utils/alerts';
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
@@ -19,16 +20,20 @@ import {
     ParentChild,
     ROOT_FOLDER_KEY,
     TreeNode
-} from '../../models/idb/idb-fs';
+}
+from '../../models/idb/idb-fs';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-} from '../../services/idb-app-fs/idb-app-fs';
+}
+from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 import { MoveToPage, TrackPage } from '../';
 
 import { FS } from '../../models/filesystem/filesystem';
+
+const CHECKED_KEY: string = 'isChecked';
 
 export function getPath(folderNode: TreeNode): string {
     'use strict';
@@ -50,10 +55,12 @@ export class OrganizerPage {
     @ViewChild(Content) public content: Content;
     private fileSystem: FileSystem;
     public entries: Entry[];
+    public nChecked: number;
+    public headerButtons: ButtonbarButton[];
+    public footerButtonsTop: ButtonbarButton[];
+    public footerButtons: ButtonbarButton[];
 
     public folderNode: TreeNode;
-    public headerButtons: ButtonbarButton[];
-    public footerButtons: ButtonbarButton[];
     private navController: NavController;
     private alertController: AlertController;
     private modalController: ModalController;
@@ -84,6 +91,7 @@ export class OrganizerPage {
         this.fileSystem = null;
         this.entries = [];
         this.platform = platform;
+        this.nChecked = 0;
 
         FS.getFileSystem(true).subscribe(
             (fileSystem: FileSystem) => {
@@ -97,7 +105,7 @@ export class OrganizerPage {
                         console.log('got entries: ' +
                             entries);
                         console.dir(entries);
-        		        this.entries = entries;
+                        this.entries = entries;
                     }
                 );
             }
@@ -119,7 +127,8 @@ export class OrganizerPage {
 
         this.headerButtons = [{
                 text: 'Select...',
-                leftIcon: this.getUncheckedIconName(),
+                leftIcon: this.platform.is('ios') ?
+                    'radio-button-off' : 'square-outline',
                 rightIcon: 'md-arrow-dropdown',
                 clickCB: () => {
                     this.onClickSelectButton();
@@ -151,7 +160,8 @@ export class OrganizerPage {
             }
         ];
 
-        this.footerButtons = [{
+        this.footerButtons = [
+            {
                 text: 'Info',
                 leftIcon: 'information-circle',
                 clickCB: () => {
@@ -189,21 +199,7 @@ export class OrganizerPage {
         ];
     }
 
-    private getCheckedIconName(): string {
-        return this.platform.is('ios') ? 'ios-checkmark-circle' : 'md-checkbox';
-    }
-
-    private getUncheckedIconName(): string {
-        return this.platform.is('ios') ? 'radio-button-off' : 'square-outline';
-    }
-
-    public checkboxIconName(entry: Entry): string {
-        return entry['isChecked'] ?
-            this.getCheckedIconName() :
-            this.getUncheckedIconName();
-    }
-
-    public itemIconName(entry: Entry): string {
+    public entryIcon(entry: Entry): string {
         return entry.isDirectory ? 'folder' : 'play';
     }
 
@@ -212,6 +208,7 @@ export class OrganizerPage {
      * @returns {void}
      */
     public ionViewWillEnter(): void {
+        console.log('OrganizerPage.ionViewWillEnter()');
     }
 
     /**
@@ -238,14 +235,6 @@ export class OrganizerPage {
      */
     public onClickMoreButton(): void {
         console.log('onClickMoreButton');
-    }
-
-    /**
-     * Used to tell UI the number of currently selected nodes
-     * @returns {number} number of currently selected nodes
-     */
-    public nSelectedNodes(): number {
-        return Object.keys(this.selectedNodes).length;
     }
 
     /**
@@ -380,11 +369,13 @@ export class OrganizerPage {
 
     public onCheckEntry(entry: Entry): void {
         console.log('onCheckEntry(' + entry + ')');
-        if (entry['isChecked']) {
-            entry['isChecked'] = false;
+        if (entry[CHECKED_KEY]) {
+            entry[CHECKED_KEY] = false;
+            this.nChecked--;
         }
         else {
-            entry['isChecked'] = true;
+            entry[CHECKED_KEY] = true;
+            this.nChecked++;
         }
     }
 
@@ -429,7 +420,7 @@ export class OrganizerPage {
                                 const childNode: TreeNode = parentChild.child,
                                     parentNode: TreeNode = parentChild.parent,
                                     childNodeKey: number =
-                                        childNode[DB_KEY_PATH];
+                                    childNode[DB_KEY_PATH];
                                 console.log('childNode: ' + childNode.name +
                                     ', parentNode: ' + parentNode.name);
                                 // console.dir(childNode);
@@ -458,49 +449,19 @@ export class OrganizerPage {
      * @params {boolean} if true, select all, if false, select none
      * @returns {void}
      */
-    private selectAllOrNoneInFolder(selectAll: boolean): void {
-        // go through all folderItems
-        // for each one, ask if it's in selectedNodes
-        // for this to work, we need to make selectedNodes a dictionary
-        let changed: boolean = false,
-            folderItemsKeys: string[] = Object.keys(this.folderItems),
-            i: number,
-            key: string,
-            itemNode: TreeNode,
-            itemKey: number;
-        // loop over folderItems (the current showing folder's items)
-        // because that's where select-all or select-none will apply, i.e.
-        // when we choose select-all, 'all' refers to all items here, not
-        // all items everywhere
-        for (i = 0; i < folderItemsKeys.length; i++) {
-            key = folderItemsKeys[i];
-            itemNode = this.folderItems[key];
-            itemKey = itemNode[DB_KEY_PATH];
-
-            let selectedNode: TreeNode = this.selectedNodes[itemKey];
-            console.log('i: ' + i + ', selected node: ' + selectedNode);
-            if (selectAll && !selectedNode) {
-                // not selected, check it
-                changed = true;
-                this.selectedNodes[itemKey] = itemNode;
-            }
-            else if (!selectAll && selectedNode) {
-                // selected, uncheck it
-                changed = true;
-                delete this.selectedNodes[itemKey];
+    private selectAllOrNoneInFolder(bCheck: boolean): void {
+        let bChanged: boolean = false;
+        for (let i: number = 0; i < this.entries.length; i++) {
+            let entry: Entry = this.entries[i];
+            if ((bCheck && !entry[CHECKED_KEY]) ||
+                (!bCheck && entry[CHECKED_KEY])) {
+                // must change node status
+                this.onCheckEntry(entry);
+                bChanged = true;
             }
         }
-        if (changed) {
-            console.log('CHANGED!!!!!!!!!!!!!!!!!!!!! ' +
-                Object.keys(this.selectedNodes).length);
-            // update state with new list of selected nodes
-            // TODO: handle errors here
-            this.appState.updateProperty(
-                'selectedNodes',
-                this.selectedNodes).then();
-
-            // resize if anything changed
-            this.resize();
+        if (bChanged) {
+            console.log('Something changed: updating app-state');
         }
     }
 
@@ -518,5 +479,14 @@ export class OrganizerPage {
      */
     private selectNoneInFolder(): void {
         this.selectAllOrNoneInFolder(false);
+    }
+
+    public reorderEntries(indexes: any): void {
+        console.log('reorderEntries('+indexes+')');
+        console.log(typeof(indexes));
+        console.dir(indexes);
+        let entry: Entry = this.entries[indexes.from];
+        this.entries.splice(indexes.from, 1);
+        this.entries.splice(indexes.to, 0, entry);
     }
 }

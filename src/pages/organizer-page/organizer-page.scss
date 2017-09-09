@@ -21,10 +21,11 @@ $content-text-color: color($colors, almost-dark);
                 // text-transform: : none; is needed to remove uppercase transform
                 text-transform: none;
                 // justify-content: unset is needed for label
-                // text to not be centered and go to the left
+                // text to not be centered; now it is left justified
                 justify-content: unset;
                 ion-icon {
-                    font-size: 1.4em;
+                    font-size: 2em;
+                    min-width: .9em;
                 }
             }
         }
