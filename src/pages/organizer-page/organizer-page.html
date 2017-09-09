@@ -17,8 +17,8 @@
         </ion-buttons>
     </ion-navbar>
     <ion-toolbar>
-        <p *ngIf="folderNode" text-center>
-            {{getPath()}}
+        <p *ngIf="directoryEntry" text-center>
+            {{directoryEntry.fullPath}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>
@@ -26,16 +26,29 @@
 </ion-header>
 
 <ion-content>
-    <ion-list reorder="true" (ionItemReorder)="reorderEntries($event)">
+    <ion-list reorder="true" (ionItemReorder)="reorderEntries($event)" *ngIf="entries.length > 1">
+        <!-- multiple items - use list that allows reordering of items via drag -->
         <ion-item clear *ngFor="let entry of entries" class="organizer-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
                 <ion-icon [name]="entryIcon(entry)"></ion-icon>
-                &nbsp;
-                {{entry.name}}
+                &nbsp; {{entry.name}}
             </ion-label>
             <ion-checkbox [ngModel]="entry.isChecked" (click)="onCheckEntry(entry)"></ion-checkbox>
         </ion-item>
-        <ion-item *ngIf="!entries.length" class="organizer-page-empty-folder-message">
+    </ion-list>
+    <ion-list *ngIf="entries.length === 1">
+        <!-- only 1 item - use list with no reordering -->
+        <ion-item clear *ngFor="let entry of entries" class="organizer-page-item">
+            <ion-label ion-button clear (click)="onClickEntry(entry)">
+                <ion-icon [name]="entryIcon(entry)"></ion-icon>
+                &nbsp; {{entry.name}}
+            </ion-label>
+            <ion-checkbox [ngModel]="entry.isChecked" (click)="onCheckEntry(entry)"></ion-checkbox>
+        </ion-item>
+    </ion-list>
+    <ion-list *ngIf="entries.length === 0">
+        <!-- zero items - no reordering and use special item to denote empty folder -->
+        <ion-item class="organizer-page-empty-folder-message">
             <h2>
                 Empty folder
             </h2>

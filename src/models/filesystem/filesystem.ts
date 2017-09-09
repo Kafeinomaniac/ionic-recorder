@@ -7,15 +7,59 @@ const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 
 export class FS {
 
+    public static getPathEntry(
+        fileSystem: FileSystem,
+        path: string,
+        bCreate: boolean = false
+    ): Observable<Entry> {
+        let source: Observable<Entry> = Observable.create((observer) => {
+            if (path === '/') {
+                observer.next(fileSystem.root);
+                observer.complete();
+            }
+            else if (path[path.length - 1] === '/') {
+                // it's a directory
+                fileSystem.root.getDirectory(
+                    path,
+                    { create: bCreate },
+                    (directoryEntry: DirectoryEntry) => {
+                        observer.next(directoryEntry);
+                        observer.complete();
+                    },
+                    (err: any) => {
+                        console.log('getPathEntry error: ' + err);
+                        observer.error(err);
+                    }
+                );
+            } // if (path[path.length - 1] === '/') {
+            else {
+                // it's a file
+                fileSystem.root.getFile(
+                    path,
+                    { create: bCreate },
+                    (fileEntry: FileEntry) => {
+                        observer.next(fileEntry);
+                        observer.complete();
+                    },
+                    (err: any) => {
+                        console.log('getPathEntry error: ' + err);
+                        observer.error(err);
+                    }
+                );
+            } // if (path[path.length - 1] === '/') { .. else { ..}
+        });
+        return source;
+    }
+
     public static getFileSystem(
         bPersistent: boolean = true
-    ): Observable < FileSystem > {
+    ): Observable<FileSystem> {
         const fsType: number = (
             bPersistent ?
             window.PERSISTENT :
             window.TEMPORARY
         );
-        let src: Observable < FileSystem > = Observable.create((observer) => {
+        let src: Observable<FileSystem> = Observable.create((observer) => {
             window['webkitStorageInfo'].requestQuota(
                 fsType,
                 REQUEST_SIZE,
@@ -53,8 +97,8 @@ export class FS {
         fs: FileSystem,
         name: string,
         blob: Blob
-    ): Observable < void > {
-        let src: Observable < void > = Observable.create((observer) => {
+    ): Observable<void> {
+        let src: Observable<void> = Observable.create((observer) => {
             fs.root.getFile(
                 name, { create: true },
                 (fileEntry: FileEntry) => {
@@ -67,7 +111,7 @@ export class FS {
                                 observer.complete();
                             };
 
-                            fileWriter.onerror = (err1: any) => {
+                                fileWriter.onerror = (err1: any) => {
                                 console.log('Write failed err1: ' + err1);
                                 observer.error(err1);
                             };
@@ -88,8 +132,8 @@ export class FS {
         return src;
     }
 
-    public static readFile(fs: FileSystem, name: string): Observable < any > {
-        let src: Observable < any > = Observable.create((observer) => {
+    public static readFile(fs: FileSystem, name: string): Observable<any> {
+        let src: Observable<any> = Observable.create((observer) => {
             fs.root.getFile(
                 name, {},
                 (fileEntry: FileEntry) => {
@@ -127,8 +171,8 @@ export class FS {
     public static createDirectory(
         parentDirectoryEntry: DirectoryEntry,
         name: string
-    ): Observable < DirectoryEntry > {
-        let src: Observable < DirectoryEntry > = Observable.create((observer) => {
+    ): Observable<DirectoryEntry> {
+        let src: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
                 name, { create: true },
                 (directoryEntry: DirectoryEntry) => {

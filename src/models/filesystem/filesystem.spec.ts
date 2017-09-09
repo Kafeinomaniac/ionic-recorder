@@ -26,6 +26,54 @@ describe('services/filesystem', () => {
             WAIT_MSEC);
     });
 
+    it('can get the root dir entry', (done) => {
+        FS.getPathEntry(FILE_SYSTEM, '/').subscribe(
+            (entry: Entry) => {
+                expect(entry.name).toEqual('');
+                expect(entry.fullPath).toEqual('/');
+                expect(entry.isFile).toBeFalsy();
+                expect(entry.isDirectory).toBeTruthy();
+                done();
+            }
+        );
+    });
+
+    it('can create directory /Unfiled', (done) => {
+        FS.getPathEntry(FILE_SYSTEM, '/Unfiled/', true).subscribe(
+            (entry: Entry) => {
+                expect(entry.name).toEqual('Unfiled');
+                expect(entry.fullPath).toEqual('/Unfiled');
+                expect(entry.isFile).toBeFalsy();
+                expect(entry.isDirectory).toBeTruthy();
+                done();
+            }
+        );
+    });
+
+    it('can create directory /Unfiled/tstsubdir', (done) => {
+        FS.getPathEntry(FILE_SYSTEM, '/Unfiled/tstsubdir/', true).subscribe(
+            (entry: Entry) => {
+                expect(entry.name).toEqual('tstsubdir');
+                expect(entry.fullPath).toEqual('/Unfiled/tstsubdir');
+                expect(entry.isFile).toBeFalsy();
+                expect(entry.isDirectory).toBeTruthy();
+                done();
+            }
+        );
+    });
+
+    it('can create Recent directory', (done) => {
+        FS.getPathEntry(FILE_SYSTEM, '/Recent/', true).subscribe(
+            (entry: Entry) => {
+                expect(entry.name).toEqual('Recent');
+                expect(entry.fullPath).toEqual('/Recent');
+                expect(entry.isFile).toBeFalsy();
+                expect(entry.isDirectory).toBeTruthy();
+                done();
+            }
+        );
+    });
+
     it('can read the root directory', (done) => {
         FS.readDirectory(FILE_SYSTEM.root).subscribe(
             (entries: Entry[]) => {

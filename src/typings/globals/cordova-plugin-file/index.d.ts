@@ -104,7 +104,7 @@ interface Entry {
         successCallback?: (entry: Entry) => void,
         errorCallback?: (error: FileError) => void): void;
     /**
-     * Returns a URL that can be used as the src attribute of a <video> or <audio> tag.
+     * Returns a URL that can be used as the src attribute of a<video>or<audio>tag.
      * If that is not possible, construct a cdvfile:// URL.
      * @return string URL
      */

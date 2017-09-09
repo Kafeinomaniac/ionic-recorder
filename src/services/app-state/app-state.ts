@@ -16,6 +16,7 @@ interface State {
     lastRecordingInfo: RecordingInfo;
     selectedNodes: KeyDict;
     gain: GainState;
+    lastViewedFolderPath: string;
 }
 
 const DEFAULT_STATE: State = {
@@ -23,7 +24,8 @@ const DEFAULT_STATE: State = {
     lastViewedFolderKey: 2,
     lastRecordingInfo: null,
     selectedNodes: {},
-    gain: { factor: 1.0, maxFactor: 2.0 }
+    gain: { factor: 1.0, maxFactor: 2.0 },
+    lastViewedFolderPath: '/Unfiled/'
 };
 
 /**

@@ -3,13 +3,14 @@
 import {
     Alert,
     AlertController,
+    ActionSheet,
+    ActionSheetController,
     Content,
     ItemSliding,
     ModalController,
     NavController,
     Platform
-}
-from 'ionic-angular';
+} from 'ionic-angular';
 import { alertAndDo } from '../../models/utils/alerts';
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
@@ -20,26 +21,17 @@ import {
     ParentChild,
     ROOT_FOLDER_KEY,
     TreeNode
-}
-from '../../models/idb/idb-fs';
+} from '../../models/idb/idb-fs';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
+import { FS } from '../../models/filesystem/filesystem';
 import {
     IdbAppFS,
     UNFILED_FOLDER_KEY
-}
-from '../../services/idb-app-fs/idb-app-fs';
+} from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 import { MoveToPage, TrackPage } from '../';
 
-import { FS } from '../../models/filesystem/filesystem';
-
 const CHECKED_KEY: string = 'isChecked';
-
-export function getPath(folderNode: TreeNode): string {
-    'use strict';
-    const path: string = folderNode.path + '/' + folderNode.name;
-    return (path === '/') ? path : path.slice(1);
-}
 
 /**
  * @name OrganizerPage
@@ -55,20 +47,18 @@ export class OrganizerPage {
     @ViewChild(Content) public content: Content;
     private fileSystem: FileSystem;
     public entries: Entry[];
+    public directoryEntry: DirectoryEntry;
     public nChecked: number;
     public headerButtons: ButtonbarButton[];
-    public footerButtonsTop: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
 
-    public folderNode: TreeNode;
     private navController: NavController;
+    private actionSheetController: ActionSheetController;
     private alertController: AlertController;
     private modalController: ModalController;
     private idbAppFS: IdbAppFS;
     private appState: AppState;
     private platform: Platform;
-    private folderItems: KeyDict;
-    private selectedNodes: KeyDict;
 
     /**
      * @constructor
@@ -82,47 +72,52 @@ export class OrganizerPage {
     constructor(
         navController: NavController,
         alertController: AlertController,
+        actionSheetController: ActionSheetController,
         modalController: ModalController,
         idbAppFS: IdbAppFS,
         appState: AppState,
         platform: Platform
     ) {
         console.log('constructor():OrganizerPage');
+        this.appState = appState;
         this.fileSystem = null;
         this.entries = [];
+        this.directoryEntry = null;
         this.platform = platform;
         this.nChecked = 0;
+        this.actionSheetController = actionSheetController;
 
         FS.getFileSystem(true).subscribe(
             (fileSystem: FileSystem) => {
                 this.fileSystem = fileSystem;
-                // TODO: get the directory to
-                // start with from storage as
-                // the last one you were at. for
-                // now we start with root
-                FS.readDirectory(this.fileSystem.root).subscribe(
-                    (entries: Entry[]) => {
-                        console.log('got entries: ' +
-                            entries);
-                        console.dir(entries);
-                        this.entries = entries;
+                this.appState.getProperty('lastViewedFolderPath').then(
+                    (path: string) => {
+                        FS.getPathEntry(fileSystem, path, false).subscribe(
+                            (directoryEntry: DirectoryEntry) => {
+                                this.directoryEntry = directoryEntry;
+                                FS.readDirectory(directoryEntry).subscribe(
+                                    (entries: Entry[]) => {
+                                        console.log('entries: ' + entries);
+                                        console.dir(entries);
+                                        this.entries = entries;
+                                        this.resize();
+                                    }
+                                ); // FS.readDirectory(..).susbscribe(..
+                            }
+                        ); // FS.getPathEntry(..).subscribe(..
                     }
-                );
+                ); // this.appState.getProperty('lastViewedFolderPath').then(..
             }
-        );
+        ); // FS.getFileSystem(true).subscribe(..
 
         this.navController = navController;
         this.alertController = alertController;
         this.modalController = modalController;
-        this.idbAppFS = idbAppFS;
-        this.appState = appState;
-        this.folderNode = null;
-        this.folderItems = {};
-        this.selectedNodes = {};
 
         const atHome: () => boolean = () => {
-            return this.folderNode &&
-                this.folderNode[DB_KEY_PATH] === ROOT_FOLDER_KEY;
+            return this.directoryEntry &&
+                this.directoryEntry.name === '' &&
+                this.directoryEntry.fullPath === '/';
         };
 
         this.headerButtons = [{
@@ -155,7 +150,7 @@ export class OrganizerPage {
                 text: 'Add...',
                 leftIcon: 'add',
                 clickCB: () => {
-                    this.onClickNewFolder();
+                    this.onClickAdd();
                 }
             }
         ];
@@ -209,14 +204,6 @@ export class OrganizerPage {
      */
     public ionViewWillEnter(): void {
         console.log('OrganizerPage.ionViewWillEnter()');
-    }
-
-    /**
-     * Computes a string representation of folder path (tree node path)
-     * @returns {string} folder path, represented as a string
-     */
-    public getPath(): string {
-        return getPath(this.folderNode);
     }
 
     /**
@@ -329,7 +316,7 @@ export class OrganizerPage {
         console.log('onClickSelectButton()');
         alertAndDo(
             this.alertController,
-            'Select which, in ' + this.getPath(),
+            'Select which, in ' + this.directoryEntry.fullPath,
             'All',
             () => {
                 console.log('action1 doing it now');
@@ -387,12 +374,49 @@ export class OrganizerPage {
      * UI calls this when the new folder button is clicked
      * @returns {void}
      */
+    public onClickAdd(): void {
+        console.log('onClickAdd()');
+        let actionSheet: ActionSheet = this.actionSheetController.create({
+            title: 'Create new...',
+            buttons: [
+                {
+                    text: 'Folder',
+                    icon: 'folder',
+                    handler: () => {
+                        console.log('Add folder clicked.');
+                        this.onClickNewFolder();
+                    }
+                },
+                {
+                    text: 'URL',
+                    icon: 'link',
+                    handler: () => {
+                        console.log('Add URL clicked.');
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    // icon: 'close',
+                    handler: () => {
+                        console.log('Cancel clicked.');
+                    }
+                }
+            ]
+        });
+        actionSheet.present();
+    }
+
+    /**
+     * UI calls this when the new folder button is clicked
+     * @returns {void}
+     */
     public onClickNewFolder(): void {
         console.log('onClickNewFolder() - navController: ' +
             this.navController);
 
         let alert: Alert = this.alertController.create({
-            title: 'New Folder',
+            title: 'Create New Folder',
             // message: 'Enter the folder name',
             inputs: [{
                 name: 'folderName',
@@ -400,35 +424,32 @@ export class OrganizerPage {
             }],
             buttons: [{
                     text: 'Cancel',
-                    handler: (data: any) => {
+                    role: 'cancel',
+                    handler: () => {
                         console.log('Cancel clicked in new-folder alert');
-                        this.idbAppFS.createNode(
-                            data.folderName,
-                            this.folderNode[DB_KEY_PATH]
-                        )
                     }
                 },
                 {
                     text: 'Done',
                     handler: (data: any) => {
                         console.log('Done clicked in new-folder alert');
-                        this.idbAppFS.createNode(
-                            data.folderName,
-                            this.folderNode[DB_KEY_PATH]
-                        ).subscribe(
-                            (parentChild: ParentChild) => {
-                                const childNode: TreeNode = parentChild.child,
-                                    parentNode: TreeNode = parentChild.parent,
-                                    childNodeKey: number =
-                                    childNode[DB_KEY_PATH];
-                                console.log('childNode: ' + childNode.name +
-                                    ', parentNode: ' + parentNode.name);
-                                // console.dir(childNode);
-                                // update folder items dictionary of this page
-                                this.folderItems[childNodeKey] = childNode;
-                                this.folderNode = parentNode;
-                            }
-                        ); // createFolderNode().subscribe(
+                        // this.idbAppFS.createNode(
+                        //     data.folderName,
+                        //     this.folderNode[DB_KEY_PATH]
+                        // ).subscribe(
+                        //     (parentChild: ParentChild) => {
+                        //         const childNode: TreeNode = parentChild.child,
+                        //             parentNode: TreeNode = parentChild.parent,
+                        //             childNodeKey: number =
+                        //             childNode[DB_KEY_PATH];
+                        //         console.log('childNode: ' + childNode.name +
+                        //             ', parentNode: ' + parentNode.name);
+                        //         // console.dir(childNode);
+                        //         // update folder items dictionary of this page
+                        //         this.folderItems[childNodeKey] = childNode;
+                        //         this.folderNode = parentNode;
+                        //     }
+                        // ); // createFolderNode().subscribe(
                     }
                 }
             ]
