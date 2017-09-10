@@ -51,8 +51,11 @@ export class OrganizerPage {
     @ViewChild(Content) public content: Content;
     private fileSystem: FileSystem;
     public entries: Entry[];
+    // UI uses directoryEntry
     public directoryEntry: DirectoryEntry;
+    // UI uses headerButtons
     public headerButtons: ButtonbarButton[];
+    // UI uses footerButtons
     public footerButtons: ButtonbarButton[];
     private navController: NavController;
     private actionSheetController: ActionSheetController;
@@ -61,6 +64,7 @@ export class OrganizerPage {
     private idbAppFS: IdbAppFS;
     private appState: AppState;
     private changeDetectorRef: ChangeDetectorRef;
+    // UI uses selectedEntries
     private selectedEntries: Set<string>;
 
     /**
@@ -125,6 +129,7 @@ export class OrganizerPage {
         this.alertController = alertController;
         this.modalController = modalController;
 
+        // helper function used in disabledCB below
         const atHome: () => boolean = () => {
             return this.directoryEntry &&
                 this.directoryEntry.name === '' &&
@@ -361,6 +366,15 @@ export class OrganizerPage {
     }
 
     /**
+     * UI calls this when selected badge on top right is clicked
+     * @returns {void}
+     */
+    public onClickSelectedBadge(): void {
+        console.log('onClickSelectedBadge()');
+        // this.navController.push(EditSelectionPage);
+    }
+
+    /**
      * UI calls this to determine the icon for an entry.
      * @param {Entry} entry
      */
@@ -430,15 +444,6 @@ export class OrganizerPage {
     public ionViewDidEnter(): void {
         console.log('OrganizerPage.ionViewDidEnter()');
         this.detectChanges();
-    }
-
-    /**
-     * Initiates select button action when that button is clicked
-     * @returns {void}212 660 1st 38th gnd flr 263 6246
-     */
-    public onClickSelectedBadge(): void {
-        console.log('onClickSelectedBadge()');
-        // this.navController.push(EditSelectionPage);
     }
 
     /**
