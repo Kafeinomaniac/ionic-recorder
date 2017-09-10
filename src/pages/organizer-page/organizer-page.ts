@@ -60,7 +60,6 @@ export class OrganizerPage {
     private modalController: ModalController;
     private idbAppFS: IdbAppFS;
     private appState: AppState;
-    private platform: Platform;
     private changeDetectorRef: ChangeDetectorRef;
     private selectedEntries: Set<string>;
 
@@ -89,7 +88,6 @@ export class OrganizerPage {
         this.fileSystem = null;
         this.entries = [];
         this.directoryEntry = null;
-        this.platform = platform;
         this.selectedEntries = new Set<string>();
         this.actionSheetController = actionSheetController;
 
@@ -136,7 +134,7 @@ export class OrganizerPage {
         this.headerButtons = [
             {
                 text: 'Select...',
-                leftIcon: this.platform.is('ios') ?
+                leftIcon: platform.is('ios') ?
                     'radio-button-off' : 'square-outline',
                 rightIcon: 'md-arrow-dropdown',
                 clickCB: () => {
