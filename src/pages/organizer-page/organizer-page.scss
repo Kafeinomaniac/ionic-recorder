@@ -3,6 +3,11 @@
 $content-text-color: color($colors, almost-dark);
 
 #tabpanel-t0-3 organizer-page {
+    ion-toolbar p {
+        margin-top: 0.1em;
+        margin-bottom: 0.5em;
+        // color: color($colors, primary, base);
+    }
     // control appearance of the text that says a folder is empty
     ion-content ion-list {
         ion-item.organizer-page-item {

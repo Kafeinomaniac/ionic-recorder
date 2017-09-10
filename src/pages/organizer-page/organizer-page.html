@@ -5,7 +5,7 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title *ngIf="folderNode">
+        <ion-title *ngIf="directoryEntry">
             Organizer
         </ion-title>
         <ion-buttons end *ngIf="selectedEntries.size">
@@ -26,7 +26,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-list [reorder]="reorderingEntries()" (ionItemReorder)="reorderEntries($event)">
+    <ion-list [reorder]="entries.length > 1" (ionItemReorder)="reorderEntries($event)">
         <ion-item clear *ngFor="let entry of entries" class="organizer-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
                 <ion-icon [name]="entryIcon(entry)"></ion-icon>

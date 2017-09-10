@@ -171,7 +171,8 @@ export class OrganizerPage {
             }
         ];
 
-        this.footerButtons = [{
+        this.footerButtons = [
+            {
                 text: 'Info',
                 leftIcon: 'information-circle',
                 clickCB: () => {
@@ -207,6 +208,164 @@ export class OrganizerPage {
                 }
             }
         ];
+    }
+
+    /**
+     * UI calls this when the 'Select...' button is clicked.
+     * @returns {void}
+     */
+    public onClickSelectButton(): void {
+        console.log('onClickSelectButton()');
+
+        let selectAlert: Alert = this.alertController.create();
+        selectAlert.setTitle('Select which, in ' + this.directoryEntry.fullPath);
+        selectAlert.addButton({
+            text: 'All',
+            handler: () => {
+                this.selectAllInFolder();
+            }
+        });
+        selectAlert.addButton({
+            text: 'None',
+            handler: () => {
+                this.selectNoneInFolder();
+            }
+        });
+
+        selectAlert.addButton('Cancel');
+        selectAlert.present();
+    }
+
+    /**
+     * UI calls this when the 'Go home' button is clicked.
+     * @returns {void}
+     */
+    public onClickHomeButton(): void {
+        console.log('onClickHomeButton()');
+        this.switchFolder('/');
+    }
+
+    /**
+     * UI calls this when the 'Go to parent' button is clicked.
+     * @returns {void}
+     */
+    public onClickParentButton(): void {
+        console.log('onClickParentButton()');
+        const pathParts: string[] = this.directoryEntry.fullPath.split('/')
+            .filter((str: string) => { return str !== '' });
+        const parentPath = '/' +
+            pathParts.splice(0, pathParts.length - 1).join('/') +
+            '/';
+        this.switchFolder(parentPath);
+    }
+
+    /**
+     * UI calls this when the 'Add...' button is clicked.
+     * @returns {void}
+     */
+    public onClickAddButton(): void {
+        console.log('onClickAddButton()');
+        let actionSheet: ActionSheet = this.actionSheetController.create({
+            title: 'Create new ... in ' + this.directoryEntry.fullPath,
+            buttons: [{
+                    text: 'Folder',
+                    icon: 'folder',
+                    handler: () => {
+                        console.log('Add folder clicked.');
+                        this.onClickNewFolder();
+                    }
+                },
+                {
+                    text: 'URL',
+                    icon: 'link',
+                    handler: () => {
+                        console.log('Add URL clicked.');
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    // icon: 'close',
+                    handler: () => {
+                        console.log('Cancel clicked.');
+                    }
+                }
+            ]
+        });
+        actionSheet.present();
+    }
+
+    /**
+     * UI calls this when the info button is clicked.
+     * Shows cumulative info on all selected items.
+     * @returns {void}
+     */
+    public onClickInfoButton(): void {
+        console.log('onClickInfoButton');
+    }
+
+    /**
+     * UI calls this when move button is clicked.
+     * Moves selected items into a folder.
+     * @returns {void}
+     */
+    public onClickMoveButton(): void {
+        console.log('onClickMoveButton');
+        // this.modalController.create(MoveToPage).present();
+        this.navController.push(MoveToPage);
+    }
+
+    /**
+     * UI calls this to determine whether to disable move button.
+     * @returns {boolean}
+     */
+    public moveButtonDisabled(): boolean {
+        // if the only thing selected is the unfiled folder
+        // disable delete and move
+        if (this.selectedEntries.size === 1 &&
+            this.selectedEntries.has('/Unfiled')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * UI calls this when delete button is clicked.
+     * @returns {void}
+     */
+    public onClickDeleteButton(): void {
+        console.log('onClickDeleteButton()');
+        console.dir(this.selectedEntries);
+    }
+
+    /**
+     * UI calls this to determine whether disable the delete button
+     * @returns {boolean}
+     */
+    public deleteButtonDisabled(): boolean {
+        // if the only thing selected is the unfiled folder
+        // disable delete and move
+        if (this.selectedEntries.size === 1 &&
+            this.selectedEntries.has('/Unfiled')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * UI calls this when social sharing button is clicked
+     * @returns {void}
+     */
+    public onClickShareButton(): void {
+        console.log('onClickShareButton()');
+    }
+
+    /**
+     * UI calls this to determine the icon for an entry.
+     * @param {Entry} entry
+     */
+    public entryIcon(entry: Entry): string {
+        return entry.isDirectory ? 'folder' : 'play';
     }
 
     /**
@@ -253,96 +412,6 @@ export class OrganizerPage {
         ); // FS.getPathEntry(..).subscribe(..
     }
 
-    public entryIcon(entry: Entry): string {
-        return entry.isDirectory ? 'folder' : 'play';
-    }
-
-    /**
-     * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
-     * @returns {void}
-     */
-    // public ionViewWillEnter(): void {
-    //     console.log('OrganizerPage.ionViewWillEnter()');
-    // }
-
-    /**
-     * Moves items in DB and in UI when move button is clicked
-     * @returns {void}
-     */
-    public onClickMoveButton(): void {
-        console.log('onClickMoveButton');
-        // this.modalController.create(MoveToPage).present();
-        this.navController.push(MoveToPage);
-    }
-
-    /**
-     * Moves items in DB and in UI when more button is clicked
-     * @returns {void}
-     */
-    public onClickMoreButton(): void {
-        console.log('onClickMoreButton');
-    }
-
-    /**
-     * Deletes selected nodes when delete button gets clicked
-     * @returns {void}
-     */
-    public onClickDeleteButton(): void {
-        console.log('onClickDeleteButton()');
-        console.dir(this.selectedEntries);
-    }
-
-    /**
-     * @returns {void}
-     */
-    public onClickShareButton(): void {
-        console.log('onClickShareButton()');
-    }
-
-    /**
-     * Initiates sharing selected items when share button gets clicked
-     * @returns {boolean}
-     */
-    public moreButtonDisabled(): boolean {
-        return false;
-    }
-
-    /**
-     * UI callback for sharing the selected items when share button is clicked
-     * @returns{void}
-     */
-    public onClickSharebutton(): void {
-        console.log('onClickSharebutton');
-    }
-
-    /**
-     * Determine whether the move button should be disabled in the UI
-     * @returns {boolean}
-     */
-    public moveButtonDisabled(): boolean {
-        // if the only thing selected is the unfiled folder
-        // disable delete and move
-        if (this.selectedEntries.size === 1 &&
-            this.selectedEntries.has('/Unfiled')) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Determine whether the delete button should be disabled in the UI
-     * @returns {boolean}
-     */
-    public deleteButtonDisabled(): boolean {
-        // if the only thing selected is the unfiled folder
-        // disable delete and move
-        if (this.selectedEntries.size === 1 &&
-            this.selectedEntries.has('/Unfiled')) {
-            return true;
-        }
-        return false;
-    }
-
     private detectChanges(): void {
         console.log('OrganizerPage.detectChanges()');
         setTimeout(
@@ -364,61 +433,12 @@ export class OrganizerPage {
     }
 
     /**
-     * UI calls this when the goHome button is clicked
-     * @returns {void}
-     */
-    public onClickHomeButton(): void {
-        console.log('onClickHomeButton()');
-        this.switchFolder('/');
-    }
-
-    /**
      * Initiates select button action when that button is clicked
      * @returns {void}212 660 1st 38th gnd flr 263 6246
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
         // this.navController.push(EditSelectionPage);
-    }
-
-    /**
-     * Initiates select button action when that button is clicked
-     * @returns {void}
-     */
-    public onClickSelectButton(): void {
-        console.log('onClickSelectButton()');
-
-        let alert: Alert = this.alertController.create();
-        alert.setTitle('Select which, in ' + this.directoryEntry.fullPath);
-        alert.addButton({
-            text: 'All',
-            handler: () => {
-                this.selectAllInFolder();
-            }
-        });
-        alert.addButton({
-            text: 'None',
-            handler: () => {
-                this.selectNoneInFolder();
-            }
-        });
-
-        alert.addButton('Cancel');
-        alert.present();
-    }
-
-    /**
-     * UI calls this when the goToParent button is clicked
-     * @returns {void}
-     */
-    public onClickParentButton(): void {
-        console.log('onClickParentButton()');
-        const pathParts: string[] = this.directoryEntry.fullPath.split('/')
-            .filter((str: string) => { return str !== '' });
-        const parentPath = '/' +
-            pathParts.splice(0, pathParts.length - 1).join('/') +
-            '/';
-        this.switchFolder(parentPath);
     }
 
     /**
@@ -471,45 +491,9 @@ export class OrganizerPage {
      * UI calls this when the new folder button is clicked
      * @returns {void}
      */
-    public onClickAddButton(): void {
-        console.log('onClickAddButton()');
-        let actionSheet: ActionSheet = this.actionSheetController.create({
-            title: 'Create new ... in ' + this.directoryEntry.fullPath,
-            buttons: [{
-                    text: 'Folder',
-                    icon: 'folder',
-                    handler: () => {
-                        console.log('Add folder clicked.');
-                        this.onClickNewFolder();
-                    }
-                },
-                {
-                    text: 'URL',
-                    icon: 'link',
-                    handler: () => {
-                        console.log('Add URL clicked.');
-                    }
-                },
-                {
-                    text: 'Cancel',
-                    role: 'cancel',
-                    // icon: 'close',
-                    handler: () => {
-                        console.log('Cancel clicked.');
-                    }
-                }
-            ]
-        });
-        actionSheet.present();
-    }
-
-    /**
-     * UI calls this when the new folder button is clicked
-     * @returns {void}
-     */
     public onClickNewFolder(): void {
         let parentPath: string =this.directoryEntry.fullPath+'/',
-            alert: Alert = this.alertController.create({
+            newFolderAlert: Alert = this.alertController.create({
             title: 'Create a new folder in ' + this.directoryEntry.fullPath,
             // message: 'Enter the folder name',
             inputs: [{
@@ -528,9 +512,12 @@ export class OrganizerPage {
                     handler: (data: any) => {
                         let folderName: string = data.folderName;
                         if (!folderName.length) {
+                            // this code should never be reached
+                            alert('how did we reach this code?');
                             return;
                         }
                         if (folderName[folderName.length-1] !== '/') {
+                            // last char isn't a slash, add a slash at the end
                             folderName += '/';
                         }
                         // create the folder via getPathEntry()
@@ -549,15 +536,7 @@ export class OrganizerPage {
                 }
             ]
         });
-        alert.present();
-    }
-
-    /**
-     * UI calls this when the info button (of selected items) clicked
-     * @returns {void}
-     */
-    public onClickInfoButton(): void {
-        console.log('onClickInfoButton');
+        newFolderAlert.present();
     }
 
     /**
@@ -578,7 +557,7 @@ export class OrganizerPage {
 
     /**
      * Select all or no items in current folder, depending on 'all; argument
-     * @params {boolean} if true, select all, if false, select none
+     * @param {boolean} if true, select all, if false, select none
      * @returns {void}
      */
     private selectAllOrNoneInFolder(bSelecting: boolean): void {
@@ -594,9 +573,9 @@ export class OrganizerPage {
         this.detectChanges();
     }
 
-    public reorderingEntries(): boolean {
-        return this.entries.length > 1;
-    }
+    // public reorderingEntries(): boolean {
+    //     return this.entries.length > 1;
+    // }
 
     public reorderEntries(indexes: any): void {
         console.log('reorderEntries(' + indexes + ')');
