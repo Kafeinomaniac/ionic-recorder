@@ -14,7 +14,7 @@ interface State {
     lastTabIndex: number;
     lastViewedFolderKey: number;
     lastRecordingInfo: RecordingInfo;
-    selectedNodes: KeyDict;
+    selectedEntries: Set<string>;
     gain: GainState;
     lastViewedFolderPath: string;
 }
@@ -23,7 +23,7 @@ const DEFAULT_STATE: State = {
     lastTabIndex: 1,
     lastViewedFolderKey: 2,
     lastRecordingInfo: null,
-    selectedNodes: {},
+    selectedEntries: new Set<string>(),
     gain: { factor: 1.0, maxFactor: 2.0 },
     lastViewedFolderPath: '/Unfiled/'
 };

@@ -62,7 +62,6 @@ export class OrganizerPage {
     private appState: AppState;
     private platform: Platform;
     private changeDetectorRef: ChangeDetectorRef;
-    // private selectedEntries: {[id:string] : boolean};
     private selectedEntries: Set<string>;
 
     /**
@@ -91,9 +90,15 @@ export class OrganizerPage {
         this.entries = [];
         this.directoryEntry = null;
         this.platform = platform;
-        // this.selectedEntries = {};
         this.selectedEntries = new Set<string>();
         this.actionSheetController = actionSheetController;
+
+        appState.getProperty('selectedEntries').then(
+            (selectedEntries: Set<string>) => {
+                this.selectedEntries = selectedEntries;
+                this.detectChanges();
+            }
+        );
 
         // get the filesystem
         FS.getFileSystem(true, REQUEST_SIZE).subscribe(
@@ -105,7 +110,7 @@ export class OrganizerPage {
                     (directoryEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/');
                         // get last viewed folder to switch to it
-                        this.appState.getProperty('lastViewedFolderPath').then(
+                        appState.getProperty('lastViewedFolderPath').then(
                             (path: string) => {
                                 this.switchFolder(path, false);
                             }
@@ -128,7 +133,8 @@ export class OrganizerPage {
                 this.directoryEntry.fullPath === '/';
         };
 
-        this.headerButtons = [{
+        this.headerButtons = [
+            {
                 text: 'Select...',
                 leftIcon: this.platform.is('ios') ?
                     'radio-button-off' : 'square-outline',
@@ -137,7 +143,7 @@ export class OrganizerPage {
                     this.onClickSelectButton();
                 },
                 disabledCB: () => {
-                    return !this.entries.length;
+                    return this.entries.length <= 1;
                 }
             },
             {
@@ -316,6 +322,12 @@ export class OrganizerPage {
      * @returns {boolean}
      */
     public moveButtonDisabled(): boolean {
+        // if the only thing selected is the unfiled folder
+        // disable delete and move
+        if (this.selectedEntries.size === 1 &&
+            this.selectedEntries.has('/Unfiled')) {
+            return true;
+        }
         return false;
     }
 
@@ -324,7 +336,12 @@ export class OrganizerPage {
      * @returns {boolean}
      */
     public deleteButtonDisabled(): boolean {
-        // return this.selectedNodes[UNFILED_FOLDER_KEY];
+        // if the only thing selected is the unfiled folder
+        // disable delete and move
+        if (this.selectedEntries.size === 1 &&
+            this.selectedEntries.has('/Unfiled')) {
+            return true;
+        }
         return false;
     }
 
@@ -354,6 +371,7 @@ export class OrganizerPage {
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
+        this.switchFolder('/');
     }
 
     /**
@@ -437,6 +455,8 @@ export class OrganizerPage {
         else {
             this.selectedEntries.add(fullPath);
         }
+        this.appState.updateProperty('selectedEntries', this.selectedEntries)
+            .then();
         this.detectChanges();
     }
 
@@ -564,7 +584,6 @@ export class OrganizerPage {
      * @returns {void}
      */
     private selectAllOrNoneInFolder(bSelecting: boolean): void {
-        let bChanged: boolean = false;
         for (let i: number = 0; i < this.entries.length; i++) {
             const entry: Entry = this.entries[i],
                 isSelected: boolean = this.isSelected(entry);
@@ -572,13 +591,9 @@ export class OrganizerPage {
                 // reverse (toggle) node selection status
                 this.toggleSelect(entry);
                 // remember that something, at least one, has changed
-                bChanged = true;
             }
         }
-        if (bChanged) {
-            console.log('Something changed: updating app-state');
-            this.detectChanges();
-        }
+        this.detectChanges();
     }
 
     public reorderingEntries(): boolean {
