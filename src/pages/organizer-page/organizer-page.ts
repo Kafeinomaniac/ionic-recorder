@@ -35,8 +35,6 @@ import {
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 import { MoveToPage, TrackPage } from '../';
 
-const CHECKED_KEY: string = 'isChecked';
-
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 
 /**
@@ -64,7 +62,8 @@ export class OrganizerPage {
     private appState: AppState;
     private platform: Platform;
     private changeDetectorRef: ChangeDetectorRef;
-    private checkedEntries: {[id:string] : boolean};
+    // private selectedEntries: {[id:string] : boolean};
+    private selectedEntries: Set<string>;
 
     /**
      * @constructor
@@ -92,7 +91,8 @@ export class OrganizerPage {
         this.entries = [];
         this.directoryEntry = null;
         this.platform = platform;
-        this.checkedEntries = {};
+        // this.selectedEntries = {};
+        this.selectedEntries = new Set<string>();
         this.actionSheetController = actionSheetController;
 
         // get the filesystem
@@ -205,10 +205,6 @@ export class OrganizerPage {
         ];
     }
 
-    public nCheckedEntries(): number {
-        return Object.keys(this.checkedEntries).length;
-    }
-
     /**
      * Switch to a new folder
      * @param {number} key of treenode corresponding to folder to switch to
@@ -289,6 +285,7 @@ export class OrganizerPage {
      */
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
+        console.dir(this.selectedEntries);
     }
 
     /**
@@ -400,6 +397,12 @@ export class OrganizerPage {
      */
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
+        const pathParts: string[] = this.directoryEntry.fullPath.split('/')
+            .filter((str: string) => { return str !== '' });
+        const parentPath = '/' +
+            pathParts.splice(0, pathParts.length - 1).join('/') +
+            '/';
+        this.switchFolder(parentPath);
     }
 
     /**
@@ -415,27 +418,31 @@ export class OrganizerPage {
      * @returns {void}
      */
     public onClickEntry(entry: Entry): void {
-        console.log('onClickEntry(' + entry + ')');
-        console.dir(entry);
+        console.log('onClickEntry()');
+        const dirPath: string = [
+            this.directoryEntry.fullPath,
+            '/',
+            entry.name,
+            '/'
+        ].join('');
+        this.switchFolder(dirPath);
     }
 
-    public onCheckEntry(entry: Entry): void {
-        console.log('onCheckEntry()');
+    public toggleSelect(entry: Entry): void {
+        console.log('toggleSelect()');
         const fullPath: string = entry.fullPath;
-        if (fullPath in this.checkedEntries) {
-            delete this.checkedEntries[fullPath];
+        if (this.selectedEntries.has(fullPath)) {
+            this.selectedEntries.delete(fullPath);
         }
         else {
-            this.checkedEntries[fullPath] = true;
+            this.selectedEntries.add(fullPath);
         }
         this.detectChanges();
     }
 
-    public isChecked(entry: Entry): boolean {
-        // console.log('isChecked() entry: ' + entry.fullPath +
-        //     ((entry.fullPath in this.checkedEntries) ? ' is' : ' is not') +
-        //     ' checked.');
-        return entry.fullPath in this.checkedEntries;
+    public isSelected(entry: Entry): boolean {
+        // return entry.fullPath in this.selectedEntries;
+        return this.selectedEntries.has(entry.fullPath);
     }
 
     public onRenameEntry(entry: Entry): void {
@@ -536,27 +543,6 @@ export class OrganizerPage {
     }
 
     /**
-     * Select all or no items in current folder, depending on 'all; argument
-     * @params {boolean} if true, select all, if false, select none
-     * @returns {void}
-     */
-    private selectAllOrNoneInFolder(bCheck: boolean): void {
-        let bChanged: boolean = false;
-        for (let i: number = 0; i < this.entries.length; i++) {
-            let entry: Entry = this.entries[i];
-            if ((bCheck && !entry[CHECKED_KEY]) ||
-                (!bCheck && entry[CHECKED_KEY])) {
-                // must change node status
-                this.onCheckEntry(entry);
-                bChanged = true;
-            }
-        }
-        if (bChanged) {
-            console.log('Something changed: updating app-state');
-        }
-    }
-
-    /**
      * Select all items in current folder
      * @returns {void}
      */
@@ -570,6 +556,29 @@ export class OrganizerPage {
      */
     private selectNoneInFolder(): void {
         this.selectAllOrNoneInFolder(false);
+    }
+
+    /**
+     * Select all or no items in current folder, depending on 'all; argument
+     * @params {boolean} if true, select all, if false, select none
+     * @returns {void}
+     */
+    private selectAllOrNoneInFolder(bSelecting: boolean): void {
+        let bChanged: boolean = false;
+        for (let i: number = 0; i < this.entries.length; i++) {
+            const entry: Entry = this.entries[i],
+                isSelected: boolean = this.isSelected(entry);
+            if ((bSelecting && !isSelected) || (!bSelecting && isSelected)) {
+                // reverse (toggle) node selection status
+                this.toggleSelect(entry);
+                // remember that something, at least one, has changed
+                bChanged = true;
+            }
+        }
+        if (bChanged) {
+            console.log('Something changed: updating app-state');
+            this.detectChanges();
+        }
     }
 
     public reorderingEntries(): boolean {

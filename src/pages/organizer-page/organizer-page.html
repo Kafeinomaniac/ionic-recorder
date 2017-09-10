@@ -8,10 +8,10 @@
         <ion-title *ngIf="folderNode">
             Organizer
         </ion-title>
-        <ion-buttons end *ngIf="nCheckedEntries()">
+        <ion-buttons end *ngIf="selectedEntries.size">
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{nCheckedEntries()}} selected &nbsp; <ion-icon name="md-create"></ion-icon>
+                    {{selectedEntries.size}} selected &nbsp; <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
             </button>
         </ion-buttons>
@@ -32,7 +32,7 @@
                 <ion-icon [name]="entryIcon(entry)"></ion-icon>
                 &nbsp; {{entry.name}}
             </ion-label>
-            <ion-checkbox [ngModel]="isChecked(entry)" (click)="onCheckEntry(entry)"></ion-checkbox>
+            <ion-checkbox [ngModel]="isSelected(entry)" (click)="toggleSelect(entry)"></ion-checkbox>
         </ion-item>
         <ion-item class="organizer-page-empty-folder-message" *ngIf="!entries.length">
             <h2>
@@ -42,7 +42,7 @@
     </ion-list>
 </ion-content>
 
-<ion-footer [hidden]="!nCheckedEntries()">
+<ion-footer [hidden]="!selectedEntries.size">
     <ion-toolbar>
         <button-bar [buttons]="footerButtons">
         </button-bar>

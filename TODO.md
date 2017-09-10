@@ -7,6 +7,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Organizer: remember orderings per entry per restart
+* remember selectedNodes per restart
+* delete a set or an array of paths
+* go into a folder (switch folder, didn't we write that already?)
+
 * change filenames to be record, not record-page, etc. 
 * For last recording, store only the key of the recorded node.
   * Also: make track page start with only the key info, and have it deduce
