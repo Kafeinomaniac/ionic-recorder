@@ -34,7 +34,8 @@
                 {{entry.name}}
             </ion-label>
             <!--ion-checkbox [ngModel]="isSelected(entry)" (ionChange)="toggleSelect(entry)"></ion-checkbox-->
-            <ion-checkbox [checked]="isSelected(entry)" (ionChange)="toggleSelect(entry)"></ion-checkbox>
+            <!-- NB: (click)="detectChanges()" needed below - it is a hack! fix it better later - it is needed because without it a checkbox would not refresh when clicked: we force change detection to happen here by adding this-->
+            <ion-checkbox [checked]="isSelected(entry)" (ionChange)="toggleSelect(entry)" (click)="detectChanges()"></ion-checkbox>
         </ion-item>
         <ion-item class="organizer-page-empty-folder-message" *ngIf="!entries.length">
             <h2>

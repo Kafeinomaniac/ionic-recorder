@@ -331,7 +331,16 @@ export class OrganizerPage {
         console.log('onClickDeleteButton()');
         console.dir(this.selectedEntries);
         FS.removeEntries(this.fileSystem, Array.from(this.selectedEntries))
-            .subscribe(() => { this.detectChanges(); });
+            .subscribe(() => {
+                this.selectedEntries.clear();
+                this.appState.updateProperty(
+                    'selectedEntries',
+                    this.selectedEntries
+                ).then(
+                    () => {
+                    this.switchFolder(getFullPath(this.directoryEntry), false);
+                });
+            });
     }
 
     /**
@@ -450,7 +459,7 @@ export class OrganizerPage {
     }
 
     public toggleSelect(entry: Entry): void {
-        console.log('toggleSelect()');
+        console.log('toggleSelect(' + entry.name + ')');
         const fullPath: string = getFullPath(entry);
         if (fullPath === '/') {
             alert('fullPath === \'/\'');
@@ -464,7 +473,7 @@ export class OrganizerPage {
         }
         this.appState.updateProperty('selectedEntries', this.selectedEntries)
             .then();
-        this.detectChanges();
+        // this.detectChanges();
     }
 
     public isSelected(entry: Entry): boolean {

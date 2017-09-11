@@ -7,6 +7,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* when deleting an entry you must check (in organizer page) whether
+  that entry is in the selected - actually it is in the selected
+  nodes, right now the only way to delete something is to select it
+  first. but we may later want to have a track page where we allow
+  deleting right away.
 * Organizer: remember orderings per entry per restart
 * remember selectedNodes per restart
 * delete a set or an array of paths
