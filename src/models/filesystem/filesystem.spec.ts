@@ -28,7 +28,7 @@ describe('services/filesystem', () => {
     });
 
     it('can get the root dir entry', (done) => {
-        FS.getPathEntry(FILE_SYSTEM, '/').subscribe(
+        FS.getPathEntry(FILE_SYSTEM, '/', false).subscribe(
             (entry: Entry) => {
                 expect(entry.name).toEqual('');
                 expect(entry.fullPath).toEqual('/');
@@ -38,7 +38,19 @@ describe('services/filesystem', () => {
             }
         );
     });
-
+    /*
+    it('cannot read directory /Unfiled', (done) => {
+        FS.getPathEntry(FILE_SYSTEM, '/Unfiled/', false).subscribe(
+            (entry: Entry) => {
+                console.log('not supposed to get here: ' + entry.name);
+            },
+            (err: any) => {
+                console.log('EXPECTED ERROR: ' + err);
+                done();
+            }
+        );
+    });
+    */
     it('can create directory /Unfiled', (done) => {
         FS.getPathEntry(FILE_SYSTEM, '/Unfiled/', true).subscribe(
             (entry: Entry) => {
@@ -58,6 +70,14 @@ describe('services/filesystem', () => {
                 expect(entry.fullPath).toEqual('/Unfiled/tstsubdir');
                 expect(entry.isFile).toBeFalsy();
                 expect(entry.isDirectory).toBeTruthy();
+                done();
+            }
+        );
+    });
+
+    it('can delete /Unfiled recursively', (done) => {
+        FS.removeEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+            () => {
                 done();
             }
         );

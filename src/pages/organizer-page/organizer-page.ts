@@ -28,10 +28,6 @@ import {
 } from '../../models/idb/idb-fs';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import { FS } from '../../models/filesystem/filesystem';
-import {
-    IdbAppFS,
-    UNFILED_FOLDER_KEY
-} from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 import { MoveToPage, TrackPage } from '../';
 
@@ -58,12 +54,12 @@ export class OrganizerPage {
     // UI uses footerButtons
     public footerButtons: ButtonbarButton[];
     private navController: NavController;
+    // actionSheetController is used by add button
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
     private modalController: ModalController;
-    private idbAppFS: IdbAppFS;
-    private appState: AppState;
     private changeDetectorRef: ChangeDetectorRef;
+    private appState: AppState;
     // UI uses selectedEntries
     private selectedEntries: Set<string>;
 
@@ -72,7 +68,6 @@ export class OrganizerPage {
      * @param {NavController}
      * @param {AlertController}
      * @param {ModalController}
-     * @param {IdbAppFS}
      * @param {AppState}
      * @param {Platform}
      */
@@ -82,7 +77,6 @@ export class OrganizerPage {
         actionSheetController: ActionSheetController,
         modalController: ModalController,
         changeDetectorRef: ChangeDetectorRef,
-        idbAppFS: IdbAppFS,
         appState: AppState,
         platform: Platform
     ) {
@@ -371,7 +365,7 @@ export class OrganizerPage {
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
-        // this.navController.push(EditSelectionPage);
+        this.navController.push(EditSelectionPage);
     }
 
     /**

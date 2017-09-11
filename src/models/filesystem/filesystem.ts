@@ -5,6 +5,66 @@ from 'rxjs/Rx';
 
 export class FS {
 
+    public static removeEntries(
+        fileSystem: FileSystem,
+        paths: string[]
+    ): Observable<void> {
+        let nDeleted: number = 0,
+            nPaths: number = paths.length,
+            source: Observable<void> = Observable.create((observer) => {
+                for (let path of paths) {
+                    FS.getPathEntry(fileSystem, path, false).subscribe(
+                        (entry: Entry) => {
+                            FS.removeEntry(entry).subscribe(
+                                () => {
+                                    nDeleted++;
+                                    if (nDeleted === nPaths) {
+                                        observer.next();
+                                        observer.complete();
+                                    }
+                                },
+                                (err2: any) => {
+                                    observer.error(err2);
+                                }
+                            );
+                        },
+                        (err1: any) => {
+                            observer.error(err1);
+                        }
+                    );
+                }
+        });
+        return source;
+    }
+
+    public static removeEntry(entry: Entry): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
+            if (entry.isFile) {
+                entry.remove(
+                    () => {
+                        console.log('Removed file entry ' + entry.fullPath);
+                    },
+                    (err: FileError) => {
+                        console.log('remove file error: ' + err);
+                        observer.error(err);
+                    }
+                );
+            }
+            else if (entry.isDirectory) {
+                (<DirectoryEntry>entry).removeRecursively(
+                    () => {
+                        console.log('Removed directory entry ' + entry.fullPath);
+                    },
+                    (err: FileError) => {
+                        console.log('remove dir error: ' + err);
+                        observer.error(err);
+                    }
+                );
+            }
+        });
+        return source;
+    }
+
     public static getPathEntry(
         fileSystem: FileSystem,
         path: string,
