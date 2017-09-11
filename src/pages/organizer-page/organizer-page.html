@@ -5,7 +5,7 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title *ngIf="directoryEntry">
+        <ion-title>
             Organizer
         </ion-title>
         <ion-buttons end *ngIf="selectedEntries.size">
@@ -30,9 +30,11 @@
         <ion-item clear *ngFor="let entry of entries" class="organizer-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
                 <ion-icon [name]="entryIcon(entry)"></ion-icon>
-                &nbsp; {{entry.name}}
+                &nbsp;
+                {{entry.name}}
             </ion-label>
-            <ion-checkbox [ngModel]="isSelected(entry)" (click)="toggleSelect(entry)"></ion-checkbox>
+            <!--ion-checkbox [ngModel]="isSelected(entry)" (ionChange)="toggleSelect(entry)"></ion-checkbox-->
+            <ion-checkbox [checked]="isSelected(entry)" (ionChange)="toggleSelect(entry)"></ion-checkbox>
         </ion-item>
         <ion-item class="organizer-page-empty-folder-message" *ngIf="!entries.length">
             <h2>

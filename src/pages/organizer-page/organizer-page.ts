@@ -16,22 +16,18 @@ import {
     Component,
     ViewChild
 } from '@angular/core';
-import { alertAndDo } from '../../models/utils/alerts';
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import {
-    DB_KEY_PATH,
-    KeyDict,
-    ParentChild,
-    ROOT_FOLDER_KEY,
-    TreeNode
-} from '../../models/idb/idb-fs';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import { FS } from '../../models/filesystem/filesystem';
-import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
 import { MoveToPage, TrackPage } from '../';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
+
+function getFullPath(entry: Entry): string {
+    'use strict';
+    return entry.isDirectory ? entry.fullPath + '/' : entry.fullPath;
+}
 
 /**
  * @name OrganizerPage
@@ -89,13 +85,6 @@ export class OrganizerPage {
         this.selectedEntries = new Set<string>();
         this.actionSheetController = actionSheetController;
 
-        appState.getProperty('selectedEntries').then(
-            (selectedEntries: Set<string>) => {
-                this.selectedEntries = selectedEntries;
-                this.detectChanges();
-            }
-        );
-
         // get the filesystem
         FS.getFileSystem(true, REQUEST_SIZE).subscribe(
             (fileSystem: FileSystem) => {
@@ -108,8 +97,12 @@ export class OrganizerPage {
                         // get last viewed folder to switch to it
                         appState.getProperty('lastViewedFolderPath').then(
                             (path: string) => {
-                                this.switchFolder(path, false);
-                            }
+                                appState.getProperty('selectedEntries').then(
+                                    (selectedEntries: Set<string>) => {
+                                    this.selectedEntries = selectedEntries;
+                                    this.switchFolder(path, false);
+                                });
+                            } // (path: string) => {..
                         ); // State.getProperty('lastViewedFolderPath').then(..
                     },
                     (err3: any) => {
@@ -207,6 +200,7 @@ export class OrganizerPage {
                 }
             }
         ];
+
     }
 
     /**
@@ -217,7 +211,8 @@ export class OrganizerPage {
         console.log('onClickSelectButton()');
 
         let selectAlert: Alert = this.alertController.create();
-        selectAlert.setTitle('Select which, in ' + this.directoryEntry.fullPath);
+        selectAlert.setTitle('Select which, in ' +
+                             this.directoryEntry.fullPath);
         selectAlert.addButton({
             text: 'All',
             handler: () => {
@@ -251,10 +246,10 @@ export class OrganizerPage {
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
         const pathParts: string[] = this.directoryEntry.fullPath.split('/')
-            .filter((str: string) => { return str !== '' });
+              .filter((str: string) => { return str !== '' });
         const parentPath = '/' +
-            pathParts.splice(0, pathParts.length - 1).join('/') +
-            '/';
+              pathParts.splice(0, pathParts.length - 1).join('/') +
+              '/';
         this.switchFolder(parentPath);
     }
 
@@ -267,29 +262,29 @@ export class OrganizerPage {
         let actionSheet: ActionSheet = this.actionSheetController.create({
             title: 'Create new ... in ' + this.directoryEntry.fullPath,
             buttons: [{
-                    text: 'Folder',
-                    icon: 'folder',
-                    handler: () => {
-                        console.log('Add folder clicked.');
-                        this.addFolder();
-                    }
-                },
-                {
-                    text: 'URL',
-                    icon: 'link',
-                    handler: () => {
-                        console.log('Add URL clicked.');
-                    }
-                },
-                {
-                    text: 'Cancel',
-                    role: 'cancel',
-                    // icon: 'close',
-                    handler: () => {
-                        console.log('Cancel clicked.');
-                    }
+                text: 'Folder',
+                icon: 'folder',
+                handler: () => {
+                    console.log('Add folder clicked.');
+                    this.addFolder();
                 }
-            ]
+            },
+                      {
+                          text: 'URL',
+                          icon: 'link',
+                          handler: () => {
+                              console.log('Add URL clicked.');
+                          }
+                      },
+                      {
+                          text: 'Cancel',
+                          role: 'cancel',
+                          // icon: 'close',
+                          handler: () => {
+                              console.log('Cancel clicked.');
+                          }
+                      }
+                     ]
         });
         actionSheet.present();
     }
@@ -384,24 +379,21 @@ export class OrganizerPage {
      * @param {boolean} whether to update app state 'lastFolderViewed' property
      * @returns {void}
      */
-    private switchFolder(path: string, bUpdateAppState: boolean = true) {
-        console.log('OrganizerPage.switchFolder(' + path + ', ' + bUpdateAppState + ')');
-        FS.getPathEntry(
-            this.fileSystem,
-            path,
-            false
-        ).subscribe(
+    private switchFolder(path: string, bUpdateAppState: boolean = true): void {
+        console.log('OrganizerPage.switchFolder(' + path + ', ' +
+                    bUpdateAppState + ')');
+        FS.getPathEntry(this.fileSystem, path, false).subscribe(
             (directoryEntry: DirectoryEntry) => {
                 this.directoryEntry = directoryEntry;
                 if (!directoryEntry) {
                     alert('!directoryEntry!');
                 }
-                FS.readDirectory(
-                    directoryEntry
-                ).subscribe(
+                FS.readDirectory(directoryEntry).subscribe(
                     (entries: Entry[]) => {
-                        console.log('entries: ' + entries);
+                        console.log('OrganizerPage.switchFolder() entries: ' +
+                                    entries);
                         console.dir(entries);
+                        console.log(this.selectedEntries);
                         this.entries = entries;
                         this.detectChanges();
                         if (bUpdateAppState) {
@@ -432,23 +424,15 @@ export class OrganizerPage {
             0);
     }
 
-    public ionViewWillEnter(): void {
-        console.log('OrganizerPage.ionViewWillEnter()');
-        this.detectChanges();
-    }
+    // public ionViewWillEnter(): void {
+    //     console.log('OrganizerPage.ionViewWillEnter()');
+    //     this.detectChanges();
+    // }
 
-    public ionViewDidEnter(): void {
-        console.log('OrganizerPage.ionViewDidEnter()');
-        this.detectChanges();
-    }
-
-    /**
-     * UI calls this when the new folder button is clicked
-     * @returns {void}
-     */
-    public onClickRename(node: TreeNode, item: ItemSliding): void {
-        console.log('onClickRename()');
-    }
+    // public ionViewDidEnter(): void {
+    //     console.log('OrganizerPage.ionViewDidEnter()');
+    //     this.detectChanges();
+    // }
 
     /**
      * UI calls this when the new folder button is clicked
@@ -467,8 +451,7 @@ export class OrganizerPage {
 
     public toggleSelect(entry: Entry): void {
         console.log('toggleSelect()');
-        const fullPath: string = entry.fullPath +
-            (entry.isDirectory ? '/' : '');
+        const fullPath: string = getFullPath(entry);
         if (fullPath === '/') {
             alert('fullPath === \'/\'');
             debugger;
@@ -485,12 +468,9 @@ export class OrganizerPage {
     }
 
     public isSelected(entry: Entry): boolean {
-        // return entry.fullPath in this.selectedEntries;
-        return this.selectedEntries.has(entry.fullPath);
-    }
-
-    public onRenameEntry(entry: Entry): void {
-        console.log('onRenameEntry(' + entry + '');
+        // console.log('isSelected(' + entry.name  + '): ' +
+        //      this.selectedEntries.has(getFullPath(entry)));
+        return this.selectedEntries.has(getFullPath(entry));
     }
 
     /**
@@ -500,49 +480,50 @@ export class OrganizerPage {
     public addFolder(): void {
         let parentPath: string =this.directoryEntry.fullPath+'/',
             newFolderAlert: Alert = this.alertController.create({
-            title: 'Create a new folder in ' + this.directoryEntry.fullPath,
-            // message: 'Enter the folder name',
-            inputs: [{
-                name: 'folderName',
-                placeholder: 'Enter folder name...'
-            }],
-            buttons: [
-                {
-                    text: 'Cancel',
-                    role: 'cancel',
-                    handler: () => {
-                        console.log('Cancel clicked in new-folder alert');
-                    }
-                },
-                {
-                    text: 'Done',
-                    handler: (data: any) => {
-                        let folderName: string = data.folderName;
-                        if (!folderName.length) {
-                            // this code should never be reached
-                            alert('how did we reach this code?');
-                            return;
+                title: 'Create a new folder in ' + this.directoryEntry.fullPath,
+                // message: 'Enter the folder name',
+                inputs: [{
+                    name: 'folderName',
+                    placeholder: 'Enter folder name...'
+                }],
+                buttons: [
+                    {
+                        text: 'Cancel',
+                        role: 'cancel',
+                        handler: () => {
+                            console.log('Cancel clicked in new-folder alert');
                         }
-                        if (folderName[folderName.length-1] !== '/') {
-                            // last char isn't a slash, add a slash at the end
-                            folderName += '/';
-                        }
-                        // create the folder via getPathEntry()
-                        FS.getPathEntry(
-                            this.fileSystem,
-                            parentPath + folderName,
-                            true
-                        ).subscribe(
-                            (directoryEntry: DirectoryEntry) => {
-                                // re-read parent
-                                // to load in new info
-                                this.switchFolder(parentPath, false);
+                    },
+                    {
+                        text: 'Done',
+                        handler: (data: any) => {
+                            let folderName: string = data.folderName;
+                            if (!folderName.length) {
+                                // this code should never be reached
+                                alert('how did we reach this code?');
+                                return;
                             }
-                        );
+                            if (folderName[folderName.length-1] !== '/') {
+                                // last char isn't a slash, add a
+                                // slash at the end
+                                folderName += '/';
+                            }
+                            // create the folder via getPathEntry()
+                            FS.getPathEntry(
+                                this.fileSystem,
+                                parentPath + folderName,
+                                true
+                            ).subscribe(
+                                (directoryEntry: DirectoryEntry) => {
+                                    // re-read parent
+                                    // to load in new info
+                                    this.switchFolder(parentPath, false);
+                                }
+                            );
+                        }
                     }
-                }
-            ]
-        });
+                ]
+            });
         newFolderAlert.present();
     }
 
@@ -570,7 +551,7 @@ export class OrganizerPage {
     private selectAllOrNoneInFolder(bSelecting: boolean): void {
         for (let i: number = 0; i < this.entries.length; i++) {
             const entry: Entry = this.entries[i],
-                isSelected: boolean = this.isSelected(entry);
+                  isSelected: boolean = this.isSelected(entry);
             if ((bSelecting && !isSelected) || (!bSelecting && isSelected)) {
                 // reverse (toggle) node selection status
                 this.toggleSelect(entry);
