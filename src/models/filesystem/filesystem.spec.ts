@@ -38,11 +38,22 @@ describe('services/filesystem', () => {
             }
         );
     });
-    /*
+
+    // there is an /Unfiled directory in the filesystem because,
+    // even though this test deletes it, the initialization of the
+    // app recreates it, so we can delete it here with no error
+    it('can delete /Unfiled recursively', (done) => {
+        FS.removeEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+            () => {
+                done();
+            }
+        );
+    });
+
     it('cannot read directory /Unfiled', (done) => {
         FS.getPathEntry(FILE_SYSTEM, '/Unfiled/', false).subscribe(
             (entry: Entry) => {
-                console.log('not supposed to get here: ' + entry.name);
+                console.log('NOT SUPPOSED TO GET HERE: ' + entry.name);
             },
             (err: any) => {
                 console.log('EXPECTED ERROR: ' + err);
@@ -50,7 +61,9 @@ describe('services/filesystem', () => {
             }
         );
     });
-    */
+
+    // system should allow us to create a directory that's already
+    // been created, without error
     it('can create directory /Unfiled', (done) => {
         FS.getPathEntry(FILE_SYSTEM, '/Unfiled/', true).subscribe(
             (entry: Entry) => {

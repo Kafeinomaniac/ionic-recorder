@@ -271,7 +271,7 @@ export class OrganizerPage {
                     icon: 'folder',
                     handler: () => {
                         console.log('Add folder clicked.');
-                        this.onClickNewFolder();
+                        this.addFolder();
                     }
                 },
                 {
@@ -335,6 +335,8 @@ export class OrganizerPage {
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
         console.dir(this.selectedEntries);
+        FS.removeEntries(this.fileSystem, Array.from(this.selectedEntries))
+            .subscribe(() => { this.detectChanges(); });
     }
 
     /**
@@ -465,7 +467,12 @@ export class OrganizerPage {
 
     public toggleSelect(entry: Entry): void {
         console.log('toggleSelect()');
-        const fullPath: string = entry.fullPath;
+        const fullPath: string = entry.fullPath +
+            (entry.isDirectory ? '/' : '');
+        if (fullPath === '/') {
+            alert('fullPath === \'/\'');
+            debugger;
+        }
         if (this.selectedEntries.has(fullPath)) {
             this.selectedEntries.delete(fullPath);
         }
@@ -490,7 +497,7 @@ export class OrganizerPage {
      * UI calls this when the new folder button is clicked
      * @returns {void}
      */
-    public onClickNewFolder(): void {
+    public addFolder(): void {
         let parentPath: string =this.directoryEntry.fullPath+'/',
             newFolderAlert: Alert = this.alertController.create({
             title: 'Create a new folder in ' + this.directoryEntry.fullPath,
@@ -499,7 +506,8 @@ export class OrganizerPage {
                 name: 'folderName',
                 placeholder: 'Enter folder name...'
             }],
-            buttons: [{
+            buttons: [
+                {
                     text: 'Cancel',
                     role: 'cancel',
                     handler: () => {
@@ -571,10 +579,6 @@ export class OrganizerPage {
         }
         this.detectChanges();
     }
-
-    // public reorderingEntries(): boolean {
-    //     return this.entries.length > 1;
-    // }
 
     public reorderEntries(indexes: any): void {
         console.log('reorderEntries(' + indexes + ')');

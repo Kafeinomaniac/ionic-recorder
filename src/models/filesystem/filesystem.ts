@@ -9,40 +9,43 @@ export class FS {
         fileSystem: FileSystem,
         paths: string[]
     ): Observable<void> {
-        let nDeleted: number = 0,
-            nPaths: number = paths.length,
-            source: Observable<void> = Observable.create((observer) => {
-                for (let path of paths) {
-                    FS.getPathEntry(fileSystem, path, false).subscribe(
-                        (entry: Entry) => {
-                            FS.removeEntry(entry).subscribe(
-                                () => {
-                                    nDeleted++;
-                                    if (nDeleted === nPaths) {
-                                        observer.next();
-                                        observer.complete();
-                                    }
-                                },
-                                (err2: any) => {
-                                    observer.error(err2);
+        let source: Observable<void> = Observable.create((observer) => {
+            const nPaths: number = paths.length;
+            let nDeleted: number = 0;
+            for (let path of paths) {
+                FS.getPathEntry(fileSystem, path, false).subscribe(
+                    (entry: Entry) => {
+                        FS.removeEntry(entry).subscribe(
+                            () => {
+                                nDeleted++;
+                                if (nDeleted === nPaths) {
+                                    observer.next();
+                                    observer.complete();
                                 }
-                            );
-                        },
-                        (err1: any) => {
-                            observer.error(err1);
-                        }
-                    );
-                }
+                            },
+                            (err1: any) => {
+                                observer.error(err1);
+                            }
+                        );
+                    },
+                    (err2: any) => {
+                        observer.error(err2);
+                    }
+                );
+            }
         });
         return source;
     }
 
     public static removeEntry(entry: Entry): Observable<void> {
+        console.log('removeEntry(' + entry.fullPath + ')');
         let source: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
                 entry.remove(
                     () => {
                         console.log('Removed file entry ' + entry.fullPath);
+                        observer.next();
+                        observer.complete();
                     },
                     (err: FileError) => {
                         console.log('remove file error: ' + err);
@@ -54,6 +57,8 @@ export class FS {
                 (<DirectoryEntry>entry).removeRecursively(
                     () => {
                         console.log('Removed directory entry ' + entry.fullPath);
+                        observer.next();
+                        observer.complete();
                     },
                     (err: FileError) => {
                         console.log('remove dir error: ' + err);
@@ -100,7 +105,8 @@ export class FS {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log('getPathEntry error2: ' + err);
+                        console.log('getPathEntry error2: ' + err +
+                            ' - it things path:' + path + ' is a file!');
                         observer.error(err);
                     }
                 );
