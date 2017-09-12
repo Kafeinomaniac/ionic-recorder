@@ -20,6 +20,7 @@ import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import { FS } from '../../models/filesystem/filesystem';
+import { alertAndDo } from '../../models/utils/alerts';
 import { MoveToPage, TrackPage } from '../';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
@@ -46,6 +47,7 @@ export class OrganizerPage {
     public entries: Entry[];
     // UI uses directoryEntry
     public directoryEntry: DirectoryEntry;
+    public unfiledDirectory: DirectoryEntry;
     // UI uses headerButtons
     public headerButtons: ButtonbarButton[];
     // UI uses footerButtons
@@ -83,6 +85,7 @@ export class OrganizerPage {
         this.fileSystem = null;
         this.entries = [];
         this.directoryEntry = null;
+        this.unfiledDirectory = null;
         this.selectedEntries = new Set<string>();
         this.actionSheetController = actionSheetController;
 
@@ -95,6 +98,7 @@ export class OrganizerPage {
                 FS.getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
                     (directoryEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/');
+                        this.unfiledDirectory = directoryEntry;
                         // get last viewed folder to switch to it
                         appState.getProperty('lastViewedFolderPath').then(
                             (path: string) => {
@@ -326,23 +330,55 @@ export class OrganizerPage {
     }
 
     /**
+     * @returns {void}
+     */
+    private confirmAndDeleteSelected(): void {
+        const nSelectedEntries: number = this.selectedEntries.size,
+            itemsStr: string = nSelectedEntries + ' item' +
+                (nSelectedEntries === 1 ? '' : '?');
+        alertAndDo(
+            this.alertController,
+            'Are you sure you want to delete ' + itemsStr + '?',
+            'Yes',
+            () => {
+                FS.removeEntries(this.fileSystem, Array.from(this.selectedEntries))
+                    .subscribe(() => {
+                    this.selectedEntries.clear();
+                    this.appState.updateProperty(
+                        'selectedEntries',
+                        this.selectedEntries
+                    ).then(
+                        () => {
+                        this.switchFolder(getFullPath(this.directoryEntry), false);
+                    });
+                });
+            }
+        );
+    }
+
+    /**
      * UI calls this when delete button is clicked.
      * @returns {void}
      */
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
-        console.dir(this.selectedEntries);
-        FS.removeEntries(this.fileSystem, Array.from(this.selectedEntries))
-            .subscribe(() => {
-                this.selectedEntries.clear();
-                this.appState.updateProperty(
-                    'selectedEntries',
-                    this.selectedEntries
-                ).then(
-                    () => {
-                    this.switchFolder(getFullPath(this.directoryEntry), false);
-                });
-            });
+        if (this.selectedEntries.has('/Unfiled/')) {
+            alertAndDo(
+                this.alertController, [
+                    '/Unfiled folder cannot be deleted. But it\'s selected. ',
+                    'Automatically unselect it?'
+                ].join(''),
+                'Yes',
+                () => {
+                    this.selectedEntries.delete('/Unfiled/');
+                    this.unfiledDirectory[CHECKED_KEY] = false;
+                    this.confirmAndDeleteSelected();
+                }
+            );
+        }
+        else {
+            this.confirmAndDeleteSelected();
+        }
     }
 
     /**
