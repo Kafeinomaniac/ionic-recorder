@@ -7,7 +7,8 @@ export class FS {
 
     public static removeEntries(
         fileSystem: FileSystem,
-        paths: string[]
+        paths: string[],
+        bIgnoreErrors: boolean = true
     ): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
             const nPaths: number = paths.length;
@@ -24,7 +25,16 @@ export class FS {
                                 }
                             },
                             (err1: any) => {
-                                observer.error(err1);
+                                if (bIgnoreErrors) {
+                                    nDeleted++;
+                                    if (nDeleted === nPaths) {
+                                        observer.next();
+                                        observer.complete();
+                                    }
+                                }
+                                else {
+                                    observer.error(err1);
+                                }
                             }
                         );
                     },
@@ -37,7 +47,10 @@ export class FS {
         return source;
     }
 
-    public static removeEntry(entry: Entry): Observable<void> {
+    public static removeEntry(
+        entry: Entry,
+        bIgnoreErrors: boolean = true
+    ): Observable<void> {
         console.log('removeEntry(' + entry.fullPath + ')');
         let source: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
@@ -49,7 +62,14 @@ export class FS {
                     },
                     (err: FileError) => {
                         console.log('remove file error: ' + err);
-                        observer.error(err);
+                        if (bIgnoreErrors) {
+                            console.log('ignoring: ' + entry.fullPath);
+                            observer.next();
+                            observer.complete();
+                        }
+                        else {
+                            observer.error(err);
+                        }
                     }
                 );
             }
@@ -62,7 +82,14 @@ export class FS {
                     },
                     (err: FileError) => {
                         console.log('remove dir error: ' + err);
-                        observer.error(err);
+                        if (bIgnoreErrors) {
+                            console.log('ignoring: ' + entry.fullPath);
+                            observer.next();
+                            observer.complete();
+                        }
+                        else {
+                            observer.error(err);
+                        }
                     }
                 );
             }

@@ -22,6 +22,7 @@ import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import { FS } from '../../models/filesystem/filesystem';
 import { alertAndDo } from '../../models/utils/alerts';
 import { MoveToPage, TrackPage } from '../';
+import { Keyboard } from '@ionic-native/keyboard';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const CHECKED_KEY: string = 'isChecked';
@@ -43,6 +44,7 @@ function getFullPath(entry: Entry): string {
 })
 export class OrganizerPage {
     @ViewChild(Content) public content: Content;
+    private keyboard: Keyboard;
     private fileSystem: FileSystem;
     public entries: Entry[];
     // UI uses directoryEntry
@@ -73,6 +75,7 @@ export class OrganizerPage {
      * @param {Platform}
      */
     constructor(
+        keyboard: Keyboard,
         navController: NavController,
         alertController: AlertController,
         actionSheetController: ActionSheetController,
@@ -82,6 +85,7 @@ export class OrganizerPage {
         platform: Platform
     ) {
         console.log('constructor():OrganizerPage');
+        this.keyboard = keyboard;
         this.appState = appState;
         this.changeDetectorRef = changeDetectorRef;
         this.fileSystem = null;
@@ -336,7 +340,25 @@ export class OrganizerPage {
      */
     private confirmAndDeleteSelected(): void {
         const nSelectedEntries: number = this.selectedEntries.size,
-              itemsStr: string = nSelectedEntries + ' item';
+            itemsStr: string = nSelectedEntries.toString() + ' item' +
+                (nSelectedEntries > 1) ? 's' : '',
+            entries: string[] = Array.from(this.selectedEntries),
+            sortFun: (a: string, b: string) => number =
+                (a: string, b: string) => {
+                    const lenA = a.split('/').length,
+                        lenB = b.split('/').length;
+                    if (lenA < lenB) {
+                        return -1;
+                    }
+                    else if (lenA === lenB) {
+                        return 0;
+                    }
+                    else {
+                        return 1;
+                    }
+                };
+        entries.sort(sortFun);
+
         alertAndDo(
             this.alertController, [
                 'Are you sure you want to delete ' + itemsStr + '?',
@@ -345,7 +367,7 @@ export class OrganizerPage {
                 () => {
                     FS.removeEntries(
                         this.fileSystem,
-                        Array.from(this.selectedEntries)
+                        entries
                     ).subscribe(() => {
                         this.selectedEntries.clear();
                         this.appState.updateProperty(
@@ -537,6 +559,7 @@ export class OrganizerPage {
                         role: 'cancel',
                         handler: () => {
                             console.log('Cancel clicked in new-folder alert');
+                            this.keyboard.close();
                         }
                     },
                     {
@@ -563,6 +586,7 @@ export class OrganizerPage {
                                     // re-read parent
                                     // to load in new info
                                     this.switchFolder(parentPath, false);
+                                    this.keyboard.close();
                                 }
                             );
                         }
@@ -570,6 +594,7 @@ export class OrganizerPage {
                 ]
             });
         newFolderAlert.present();
+        this.keyboard.show();
     }
 
     /**
