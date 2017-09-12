@@ -365,9 +365,10 @@ export class OrganizerPage {
             deleteAlert: Alert = this.alertController.create();
 
         entries.sort(sortFun);
-
+        console.log(entries);
         deleteAlert.setTitle('Are you sure you want to delete ' +
                              itemsStr + '?');
+        deleteAlert.addButton('Cancel');
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
@@ -386,7 +387,6 @@ export class OrganizerPage {
                 });
             }
         });
-        deleteAlert.addButton('Cancel');
 
         deleteAlert.present();
     }
@@ -402,6 +402,7 @@ export class OrganizerPage {
 
             deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
                                  '\'s selected. Automatically unselect it?');
+            deleteAlert.addButton('Cancel');
             deleteAlert.addButton({
                 text: 'Yes',
                 handler: () => {
@@ -410,7 +411,6 @@ export class OrganizerPage {
                     this.confirmAndDeleteSelected();
                 }
             });
-            deleteAlert.addButton('Cancel');
             deleteAlert.present();
         }
         else {

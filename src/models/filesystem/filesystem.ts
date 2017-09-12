@@ -1,7 +1,4 @@
-import {
-    Observable
-}
-from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 
 export class FS {
 
@@ -10,6 +7,7 @@ export class FS {
         paths: string[],
         bIgnoreErrors: boolean = true
     ): Observable<void> {
+        /* -- the old, not in-order buggy code
         let source: Observable<void> = Observable.create((observer) => {
             const nPaths: number = paths.length;
             let nDeleted: number = 0;
@@ -43,6 +41,24 @@ export class FS {
                     }
                 );
             }
+        */
+        let entryObservableArray: Observable<Entry>[] =
+                paths.map((path: string) => {
+                    return FS.getPathEntry(fileSystem, path, false);
+                }),
+            source: Observable<void> = Observable.create((observer) => {
+            Observable.from(entryObservableArray).concatAll().subscribe(
+                (entry: Entry) => {
+                    FS.removeEntry(entry, bIgnoreErrors).subscribe();
+                },
+                (err: any) => {
+                    observer.error(err);
+                },
+                () => {
+                    observer.next();
+                    observer.complete();
+                }
+            );
         });
         return source;
     }
