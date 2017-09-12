@@ -30,16 +30,16 @@ const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const CHECKED_KEY: string = 'isChecked';
 
 /**
- * @name OrganizerPage
+ * @name SelectionPage
  * @description
  * Page of file/folder interface to all recorded files. AddFolderPage
- * music organizer.
+ * music selection.
  */
 @Component({
-    selector: 'organizer-page',
-    templateUrl: 'organizer-page.html'
+    selector: 'selection-page',
+    templateUrl: 'selection-page.html'
 })
-export class OrganizerPage {
+export class SelectionPage {
     @ViewChild(Content) public content: Content;
     // private keyboard: Keyboard;
     private fileSystem: FileSystem;
@@ -81,7 +81,7 @@ export class OrganizerPage {
         appState: AppState,
         platform: Platform
     ) {
-        console.log('constructor():OrganizerPage');
+        console.log('constructor():SelectionPage');
         // this.keyboard = keyboard;
         this.appState = appState;
         this.changeDetectorRef = changeDetectorRef;
@@ -467,7 +467,7 @@ export class OrganizerPage {
         path: string,
         bUpdateAppState: boolean = true
     ): void {
-        console.log('OrganizerPage.switchFolder(' + path + ', ' +
+        console.log('SelectionPage.switchFolder(' + path + ', ' +
                     bUpdateAppState + ')');
         FS.getPathEntry(this.fileSystem, path, false).subscribe(
             (directoryEntry: DirectoryEntry) => {
@@ -477,7 +477,7 @@ export class OrganizerPage {
                 }
                 FS.readDirectory(directoryEntry).subscribe(
                     (entries: Entry[]) => {
-                        console.log('OrganizerPage.switchFolder() entries: ' +
+                        console.log('SelectionPage.switchFolder() entries: ' +
                                     entries);
                         console.log(this.selectedEntries);
                         entries.forEach((entry: Entry) => {
@@ -507,7 +507,7 @@ export class OrganizerPage {
     }
 
     private detectChanges(): void {
-        console.log('OrganizerPage.detectChanges()');
+        console.log('SelectionPage.detectChanges()');
         setTimeout(
             () => {
                 this.changeDetectorRef.detectChanges();

@@ -105,7 +105,7 @@ export class EditSelectionPage {
      */
     public ionViewWillEnter(): void {
         console.log('EditSelectionPage:ionViewWillEnter()');
-        this.appState.getProperty('selectedNodes').then(
+        this.appState.get('selectedNodes').then(
             (selectedNodes: any) => {
                 this.selectedNodes = selectedNodes;
                 Object.keys(this.selectedNodes).forEach((key: string) => {

@@ -37,11 +37,11 @@ export class SettingsPage {
             Idb.deleteDb(APP_DATA_DB_NAME).subscribe(
                 () => {
                     console.log('deleteDb(): DONE: ' +
-                        APP_DATA_DB_NAME);
+                                APP_DATA_DB_NAME);
                     Idb.deleteDb(APP_FS_DB_NAME).subscribe(
                         () => {
                             console.log('deleteDb(): DONE: ' +
-                                APP_FS_DB_NAME);
+                                        APP_FS_DB_NAME);
                             // Idb.deleteDb(APP_STATE_DB_NAME).subscribe(
                             //     () => {
                             //         console.log('deleteDb(): DONE: ' +

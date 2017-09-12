@@ -8,7 +8,7 @@ import {
     NavController,
     Platform,
     ViewController
-    } from 'ionic-angular';
+} from 'ionic-angular';
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { Component, ViewChild } from '@angular/core';
@@ -18,7 +18,7 @@ import {
     ParentChild,
     ROOT_FOLDER_KEY,
     TreeNode
-    } from '../../models/idb/idb-fs';
+} from '../../models/idb/idb-fs';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import { getFolderPath } from '../library-page/library-page';
 import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
@@ -72,32 +72,32 @@ export class MoveToPage {
         };
 
         this.headerButtons = [{
-                text: 'To /',
-                leftIcon: 'home',
-                clickCB: () => {
-                    this.onClickHomeButton();
-                },
-                disabledCB: atHome
+            text: 'To /',
+            leftIcon: 'home',
+            clickCB: () => {
+                this.onClickHomeButton();
             },
-            {
-                text: 'To parent',
-                leftIcon: 'arrow-up',
-                rightIcon: 'folder',
-                clickCB: () => {
-                    this.onClickParentButton();
-                },
-                disabledCB: atHome
-            },
-            {
-                text: 'New folder',
-                leftIcon: 'add',
-                rightIcon: 'folder',
-                clickCB: () => {
-                    this.onClickAddButton();
-                }
-            }
+            disabledCB: atHome
+        },
+                              {
+                                  text: 'To parent',
+                                  leftIcon: 'arrow-up',
+                                  rightIcon: 'folder',
+                                  clickCB: () => {
+                                      this.onClickParentButton();
+                                  },
+                                  disabledCB: atHome
+                              },
+                              {
+                                  text: 'New folder',
+                                  leftIcon: 'add',
+                                  rightIcon: 'folder',
+                                  clickCB: () => {
+                                      this.onClickAddButton();
+                                  }
+                              }
 
-        ];
+                             ];
         this.footerButtons = [{
             text: 'Move selected  items here',
             leftIcon: 'checkmark-circle',
@@ -113,7 +113,7 @@ export class MoveToPage {
      */
     public onClickAddButton(): void {
         console.log('onClickAddButton() - navController: ' +
-            this.navController);
+                    this.navController);
 
         let alert: Alert = this.alertController.create({
             title: 'New Folder',
@@ -123,35 +123,35 @@ export class MoveToPage {
                 placeholder: 'Folder name ...'
             }],
             buttons: [{
-                    text: 'Cancel',
-                    handler: (data: any) => {
-                        console.log('Cancel clicked in add-folder alert');
-                    }
-                },
-                {
-                    text: 'Done',
-                    handler: (data: any) => {
-                        console.log('Done clicked in add-folder alert');
-                        this.idbAppFS.createNode(
-                            data.folderName,
-                            this.folderNode[DB_KEY_PATH]
-                        ).subscribe(
-                            (parentChild: ParentChild) => {
-                                const childNode: TreeNode = parentChild.child,
-                                    parentNode: TreeNode = parentChild.parent,
-                                    childNodeKey: number =
-                                        childNode[DB_KEY_PATH];
-                                console.log('childNode: ' + childNode.name +
-                                    ', parentNode: ' + parentNode.name);
-                                // console.dir(childNode);
-                                // update folder items dictionary of this page
-                                this.folderItems[childNodeKey] = childNode;
-                                this.folderNode = parentNode;
-                            }
-                        ); // createFolderNode().subscribe(
-                    }
+                text: 'Cancel',
+                handler: (data: any) => {
+                    console.log('Cancel clicked in add-folder alert');
                 }
-            ]
+            },
+                      {
+                          text: 'Done',
+                          handler: (data: any) => {
+                              console.log('Done clicked in add-folder alert');
+                              this.idbAppFS.createNode(
+                                  data.folderName,
+                                  this.folderNode[DB_KEY_PATH]
+                              ).subscribe(
+                                  (parentChild: ParentChild) => {
+                                      const childNode: TreeNode = parentChild.child,
+                                            parentNode: TreeNode = parentChild.parent,
+                                            childNodeKey: number =
+                                            childNode[DB_KEY_PATH];
+                                      console.log('childNode: ' + childNode.name +
+                                                  ', parentNode: ' + parentNode.name);
+                                      // console.dir(childNode);
+                                      // update folder items dictionary of this page
+                                      this.folderItems[childNodeKey] = childNode;
+                                      this.folderNode = parentNode;
+                                  }
+                              ); // createFolderNode().subscribe(
+                          }
+                      }
+                     ]
         });
         alert.present();
     }
@@ -200,18 +200,18 @@ export class MoveToPage {
      * @returns {void}
      */
     public ionViewWillEnter(): void {
-        this.appState.getProperty('selectedNodes').then(
+        this.appState.get('selectedNodes').then(
             (selectedNodes: any) => {
                 this.selectedNodes = selectedNodes;
-                this.appState.getProperty('lastViewedFolderKey')
+                this.appState.get('lastViewedFolderKey')
                     .then(
                         (lastViewedFolderKey: any) => {
                             // swich folders, according to AppState
                             this.switchFolder(lastViewedFolderKey);
                             console.log(
                                 'LibraryPage:ionViewWillEnter(): ' +
-                                'lastViewedFolderKey=' +
-                                lastViewedFolderKey);
+                                    'lastViewedFolderKey=' +
+                                    lastViewedFolderKey);
                         });
             }
         );

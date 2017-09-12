@@ -50,7 +50,7 @@ export class AppState {
      * Gets a state property (from DB if necessary)
      * @returns {Observable<any>} Observable of value of property obtained
      */
-    public getProperty(key: string): Promise<any> {
+    public get(key: string): Promise<any> {
         return new Promise((resolve, reject) => {
             if (key in DEFAULT_STATE) {
                 // TODO: if key is not stored yet then we want to store
@@ -61,13 +61,13 @@ export class AppState {
                         value = DEFAULT_STATE[key];
                         this.updateProperty(key, value).then(() => {
                             console.log('UPDATED STORAGE: key=' + key +
-                                ', value=' + value);
+                                        ', value=' + value);
                             resolve(value);
                         });
                     }
                     else {
                         console.log('VALUE IN STORAGE: key=' + key +
-                                ', value=' + value);
+                                    ', value=' + value);
                         resolve(value);
                     }
                 });
@@ -84,11 +84,11 @@ export class AppState {
     public updateProperty(key: string, value: any): Promise<any> {
         if (key in DEFAULT_STATE) {
             console.log('=====> APP STATE UPDATE <======= key:' +
-                key + ', value:' + value);
+                        key + ', value:' + value);
             return this.storage.set(key, value);
         }
         else {
-            throw Error('Wrong key used in setProperty()');
+            throw Error('Wrong key used in set()');
         }
     }
 }

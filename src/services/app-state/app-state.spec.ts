@@ -23,7 +23,7 @@ describe('When appState initialized', () => {
     it('can read lastTabIndex', (done) => {
         setTimeout(
             () => {
-                appState.getProperty('lastTabIndex').then(
+                appState.get('lastTabIndex').then(
                     (idx: number) => {
                         savedTabIndex = idx;
                         expect(isPositiveWholeNumber(idx)).toBe(true);
@@ -40,7 +40,7 @@ describe('When appState initialized', () => {
                 appState.updateProperty('lastTabIndex', 9999).then(
                     (bUpdated: number) => {
                         expect(bUpdated).toBe(9999);
-                        appState.getProperty('lastTabIndex').then(
+                        appState.get('lastTabIndex').then(
                             (prop: any) => {
                                 expect(prop).toBe(9999);
                                 done();
@@ -57,7 +57,7 @@ describe('When appState initialized', () => {
                     .then(
                         (bUpdated: number) => {
                             expect(bUpdated).toBe(savedTabIndex);
-                            appState.getProperty('lastTabIndex').then(
+                            appState.get('lastTabIndex').then(
                                 (prop: any) => {
                                     expect(prop).toBe(savedTabIndex);
                                     done();

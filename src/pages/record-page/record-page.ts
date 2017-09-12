@@ -69,7 +69,7 @@ export class RecordPage {
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
 
         // initialize with "remembered" gain values
-        this.appState.getProperty('gain').then(
+        this.appState.get('gain').then(
             (gain: GainState) => {
                 this.gainFactor = gain.factor;
                 this.maxGainFactor = gain.maxFactor;
@@ -91,7 +91,7 @@ export class RecordPage {
             }
         );
 
-        this.appState.getProperty('lastRecordingInfo').then(
+        this.appState.get('lastRecordingInfo').then(
             (recordingInfo: RecordingInfo) => {
                 console.log('RecordPage:lastRecordingInfo = ' + recordingInfo);
                 if (recordingInfo) {
@@ -131,7 +131,7 @@ export class RecordPage {
         const position: number = sliderValue / MAX_GAIN_SLIDER_VALUE;
 
         console.log('onGainChange(' + position.toFixed(2) + '): ' +
-            this.gainFactor + ', ' + this.maxGainFactor);
+                    this.gainFactor + ', ' + this.maxGainFactor);
 
         this.gainFactor = position * this.maxGainFactor;
 

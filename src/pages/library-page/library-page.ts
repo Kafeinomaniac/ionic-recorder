@@ -90,77 +90,77 @@ export class LibraryPage {
         };
 
         this.headerButtons = [{
-                text: 'Select',
-                leftIcon: platform.is('ios') ?
-                    'radio-button-off' : 'square-outline',
-                rightIcon: 'md-arrow-dropdown',
-                clickCB: () => {
-                    this.onClickSelectButton();
-                }
-            },
-            {
-                text: 'To /',
-                leftIcon: 'home',
-                clickCB: () => {
-                    this.onClickHomeButton();
-                },
-                disabledCB: atHome
-            },
-            {
-                text: 'To parent',
-                leftIcon: 'arrow-up',
-                rightIcon: 'folder',
-                clickCB: () => {
-                    this.onClickParentButton();
-                },
-                disabledCB: atHome
-            },
-            {
-                text: 'New folder',
-                leftIcon: 'add',
-                rightIcon: 'folder',
-                clickCB: () => {
-                    this.onClickNewFolder();
-                }
+            text: 'Select',
+            leftIcon: platform.is('ios') ?
+                'radio-button-off' : 'square-outline',
+            rightIcon: 'md-arrow-dropdown',
+            clickCB: () => {
+                this.onClickSelectButton();
             }
-        ];
+        },
+                              {
+                                  text: 'To /',
+                                  leftIcon: 'home',
+                                  clickCB: () => {
+                                      this.onClickHomeButton();
+                                  },
+                                  disabledCB: atHome
+                              },
+                              {
+                                  text: 'To parent',
+                                  leftIcon: 'arrow-up',
+                                  rightIcon: 'folder',
+                                  clickCB: () => {
+                                      this.onClickParentButton();
+                                  },
+                                  disabledCB: atHome
+                              },
+                              {
+                                  text: 'New folder',
+                                  leftIcon: 'add',
+                                  rightIcon: 'folder',
+                                  clickCB: () => {
+                                      this.onClickNewFolder();
+                                  }
+                              }
+                             ];
 
         this.footerButtons = [{
-                text: 'Info',
-                leftIcon: 'information-circle',
-                clickCB: () => {
-                    this.onClickInfoButton();
-                }
-            },
-            {
-                text: 'Move',
-                leftIcon: 'share-alt',
-                rightIcon: 'folder',
-                clickCB: () => {
-                    this.onClickMoveButton();
-                },
-                disabledCB: () => {
-                    return this.moveButtonDisabled();
-                }
-            },
-            {
-                text: 'Delete',
-                leftIcon: 'trash',
-                clickCB: () => {
-                    this.onClickDeleteButton();
-                },
-                disabledCB: () => {
-                    return this.deleteButtonDisabled();
-                }
-            },
-            {
-                text: 'Share',
-                leftIcon: 'md-share',
-                clickCB: () => {
-                    this.onClickShareButton();
-                }
+            text: 'Info',
+            leftIcon: 'information-circle',
+            clickCB: () => {
+                this.onClickInfoButton();
             }
-        ];
+        },
+                              {
+                                  text: 'Move',
+                                  leftIcon: 'share-alt',
+                                  rightIcon: 'folder',
+                                  clickCB: () => {
+                                      this.onClickMoveButton();
+                                  },
+                                  disabledCB: () => {
+                                      return this.moveButtonDisabled();
+                                  }
+                              },
+                              {
+                                  text: 'Delete',
+                                  leftIcon: 'trash',
+                                  clickCB: () => {
+                                      this.onClickDeleteButton();
+                                  },
+                                  disabledCB: () => {
+                                      return this.deleteButtonDisabled();
+                                  }
+                              },
+                              {
+                                  text: 'Share',
+                                  leftIcon: 'md-share',
+                                  clickCB: () => {
+                                      this.onClickShareButton();
+                                  }
+                              }
+                             ];
     }
 
     /**
@@ -168,18 +168,18 @@ export class LibraryPage {
      * @returns {void}
      */
     public ionViewWillEnter(): void {
-        this.appState.getProperty('selectedNodes').then(
+        this.appState.get('selectedNodes').then(
             (selectedNodes: any) => {
                 this.selectedNodes = selectedNodes;
-                this.appState.getProperty('lastViewedFolderKey')
+                this.appState.get('lastViewedFolderKey')
                     .then(
                         (lastViewedFolderKey: any) => {
                             // swich folders, according to AppState
                             this.switchFolder(lastViewedFolderKey, false);
                             console.log(
                                 'LibraryPage:ionViewWillEnter(): ' +
-                                'lastViewedFolderKey=' +
-                                lastViewedFolderKey);
+                                    'lastViewedFolderKey=' +
+                                    lastViewedFolderKey);
                         });
             }
         );
@@ -253,11 +253,11 @@ export class LibraryPage {
         alertAndDo(
             this.alertController,
             'Permanently delete ' + nNodes + ' item' +
-            (nNodes > 1 ? 's?' : '?'),
+                (nNodes > 1 ? 's?' : '?'),
             'Ok',
             () => {
                 console.log('Library::deleteNodes(): deleting ' + nNodes +
-                    ' selected items ...');
+                            ' selected items ...');
                 this.idbAppFS.deleteNodes(keyDict).subscribe(
                     () => {
                         let i: number,
@@ -435,12 +435,12 @@ export class LibraryPage {
             return;
         }
         /*
-        TODO: without the alert we may want the return statement here
-        if (this.folderNode && this.folderNode[DB_KEY_PATH] === key) {
-            // we're already in that folder
-            alert('why switch twice in a row to the same folder?');
-            return;
-        }
+          TODO: without the alert we may want the return statement here
+          if (this.folderNode && this.folderNode[DB_KEY_PATH] === key) {
+          // we're already in that folder
+          alert('why switch twice in a row to the same folder?');
+          return;
+          }
         */
         // console.log('switchFolder(' + key + ', ' + updateState + ')');
 
@@ -515,8 +515,8 @@ export class LibraryPage {
         console.log('onClickCheckbox');
 
         const nodeKey: number = node[DB_KEY_PATH],
-            nSelected: number = Object.keys(this.selectedNodes).length,
-            selectedNode: TreeNode = this.selectedNodes[nodeKey];
+              nSelected: number = Object.keys(this.selectedNodes).length,
+              selectedNode: TreeNode = this.selectedNodes[nodeKey];
 
         if (selectedNode) {
             // the node is selected, meaning it is checked, uncheck it
@@ -622,9 +622,9 @@ export class LibraryPage {
      */
     public onClickRename(node: TreeNode, item: ItemSliding): void {
         console.log('onClickNewFolder() - navController: ' +
-            this.navController);
+                    this.navController);
         const displayType: string =
-            IdbAppFS.isFolderNode(node) ? 'folder' : 'track';
+              IdbAppFS.isFolderNode(node) ? 'folder' : 'track';
         let alert: Alert = this.alertController.create({
             title: 'Rename ' + displayType + ':' ,
             // message: 'Enter the folder name',
@@ -670,7 +670,7 @@ export class LibraryPage {
      */
     public onClickNewFolder(): void {
         console.log('onClickNewFolder() - navController: ' +
-            this.navController);
+                    this.navController);
 
         let alert: Alert = this.alertController.create({
             title: 'New Folder',
@@ -680,39 +680,39 @@ export class LibraryPage {
                 placeholder: 'Folder name ...'
             }],
             buttons: [{
-                    text: 'Cancel',
-                    handler: (data: any) => {
-                        console.log('Cancel clicked in new-folder alert');
-                        this.idbAppFS.createNode(
-                            data.folderName,
-                            this.folderNode[DB_KEY_PATH]
-                        );
-                    }
-                },
-                {
-                    text: 'Done',
-                    handler: (data: any) => {
-                        console.log('Done clicked in new-folder alert');
-                        this.idbAppFS.createNode(
-                            data.folderName,
-                            this.folderNode[DB_KEY_PATH]
-                        ).subscribe(
-                            (parentChild: ParentChild) => {
-                                const childNode: TreeNode = parentChild.child,
-                                    parentNode: TreeNode = parentChild.parent,
-                                    childNodeKey: number =
-                                        childNode[DB_KEY_PATH];
-                                console.log('childNode: ' + childNode.name +
-                                    ', parentNode: ' + parentNode.name);
-                                // console.dir(childNode);
-                                // update folder items dictionary of this page
-                                this.folderItems[childNodeKey] = childNode;
-                                this.folderNode = parentNode;
-                            }
-                        ); // createFolderNode().subscribe(
-                    }
+                text: 'Cancel',
+                handler: (data: any) => {
+                    console.log('Cancel clicked in new-folder alert');
+                    this.idbAppFS.createNode(
+                        data.folderName,
+                        this.folderNode[DB_KEY_PATH]
+                    );
                 }
-            ]
+            },
+                      {
+                          text: 'Done',
+                          handler: (data: any) => {
+                              console.log('Done clicked in new-folder alert');
+                              this.idbAppFS.createNode(
+                                  data.folderName,
+                                  this.folderNode[DB_KEY_PATH]
+                              ).subscribe(
+                                  (parentChild: ParentChild) => {
+                                      const childNode: TreeNode = parentChild.child,
+                                            parentNode: TreeNode = parentChild.parent,
+                                            childNodeKey: number =
+                                            childNode[DB_KEY_PATH];
+                                      console.log('childNode: ' + childNode.name +
+                                                  ', parentNode: ' + parentNode.name);
+                                      // console.dir(childNode);
+                                      // update folder items dictionary of this page
+                                      this.folderItems[childNodeKey] = childNode;
+                                      this.folderNode = parentNode;
+                                  }
+                              ); // createFolderNode().subscribe(
+                          }
+                      }
+                     ]
         });
         alert.present();
     }
@@ -764,7 +764,7 @@ export class LibraryPage {
         }
         if (changed) {
             console.log('CHANGED!!!!!!!!!!!!!!!!!!!!! ' +
-                Object.keys(this.selectedNodes).length);
+                        Object.keys(this.selectedNodes).length);
             // update state with new list of selected nodes
             // TODO: handle errors here
             this.appState.updateProperty(

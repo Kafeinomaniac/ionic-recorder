@@ -1,7 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 export class AppStateMock {
-    public getProperty(key: string): Promise<any> {
+    public get(key: string): Promise<any> {
         return new Promise((resolve, reject) => {
             resolve(null);
         });
