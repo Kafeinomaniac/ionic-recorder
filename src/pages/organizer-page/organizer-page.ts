@@ -23,7 +23,7 @@ import { FS } from '../../models/filesystem/filesystem';
 import { MoveToPage, TrackPage } from '../';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
-const IS_CHECKED_KEY: string = 'isChecked';
+const CHECKED_KEY: string = 'isChecked';
 
 function getFullPath(entry: Entry): string {
     'use strict';
@@ -409,7 +409,7 @@ export class OrganizerPage {
                         console.log(this.selectedEntries);
                         entries.forEach((entry: Entry) => {
                             const fullPath: string = getFullPath(entry);
-                            entry[IS_CHECKED_KEY] =
+                            entry[CHECKED_KEY] =
                                 this.selectedEntries.has(fullPath);
                         });
                         console.dir(entries);
@@ -461,13 +461,13 @@ export class OrganizerPage {
 
     public toggleSelect(entry: Entry): void {
         console.log('toggleSelect(' + entry.name + ')');
-        if (entry[IS_CHECKED_KEY]) {
-            entry[IS_CHECKED_KEY] = false;
+        if (entry[CHECKED_KEY]) {
+            entry[CHECKED_KEY] = false;
             this.selectedEntries.delete(getFullPath(entry));
             this.detectChanges();
         }
         else {
-            entry[IS_CHECKED_KEY] = true;
+            entry[CHECKED_KEY] = true;
             this.selectedEntries.add(getFullPath(entry));
             this.detectChanges();
         }
@@ -539,14 +539,14 @@ export class OrganizerPage {
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
             const fullPath: string = getFullPath(entry),
-                isSelected: boolean = entry[IS_CHECKED_KEY];
+                isSelected: boolean = entry[CHECKED_KEY];
             if (bSelectAll && !isSelected) {
-                entry[IS_CHECKED_KEY] = true;
+                entry[CHECKED_KEY] = true;
                 this.selectedEntries.add(fullPath);
                 bChanged = true;
             }
             else if (!bSelectAll && isSelected) {
-                entry[IS_CHECKED_KEY] = false;
+                entry[CHECKED_KEY] = false;
                 this.selectedEntries.delete(fullPath);
                 bChanged = true;
             }
