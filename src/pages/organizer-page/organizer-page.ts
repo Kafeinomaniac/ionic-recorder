@@ -341,7 +341,7 @@ export class OrganizerPage {
     private confirmAndDeleteSelected(): void {
         const nSelectedEntries: number = this.selectedEntries.size,
             itemsStr: string = nSelectedEntries.toString() + ' item' +
-                (nSelectedEntries > 1) ? 's' : '',
+                ((nSelectedEntries > 1) ? 's' : ''),
             entries: string[] = Array.from(this.selectedEntries),
             sortFun: (a: string, b: string) => number =
                 (a: string, b: string) => {
@@ -360,9 +360,8 @@ export class OrganizerPage {
         entries.sort(sortFun);
 
         alertAndDo(
-            this.alertController, [
+            this.alertController,
                 'Are you sure you want to delete ' + itemsStr + '?',
-                ].join(''),
                 'Yes',
                 () => {
                     FS.removeEntries(
