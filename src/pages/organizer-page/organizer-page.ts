@@ -47,6 +47,8 @@ export class OrganizerPage {
     public entries: Entry[];
     // UI uses directoryEntry
     public directoryEntry: DirectoryEntry;
+    // we remember this just so we can uncheck it when
+    // in dialog of delete button
     public unfiledDirectory: DirectoryEntry;
     // UI uses headerButtons
     public headerButtons: ButtonbarButton[];
@@ -104,9 +106,9 @@ export class OrganizerPage {
                             (path: string) => {
                                 appState.getProperty('selectedEntries').then(
                                     (selectedEntries: Set<string>) => {
-                                    this.selectedEntries = selectedEntries;
-                                    this.switchFolder(path, false);
-                                });
+                                        this.selectedEntries = selectedEntries;
+                                        this.switchFolder(path, false);
+                                    });
                             } // (path: string) => {..
                         ); // State.getProperty('lastViewedFolderPath').then(..
                     },
@@ -334,25 +336,30 @@ export class OrganizerPage {
      */
     private confirmAndDeleteSelected(): void {
         const nSelectedEntries: number = this.selectedEntries.size,
-            itemsStr: string = nSelectedEntries + ' item' +
-                (nSelectedEntries === 1 ? '' : '?');
+              itemsStr: string = nSelectedEntries + ' item';
         alertAndDo(
-            this.alertController,
-            'Are you sure you want to delete ' + itemsStr + '?',
-            'Yes',
-            () => {
-                FS.removeEntries(this.fileSystem, Array.from(this.selectedEntries))
-                    .subscribe(() => {
-                    this.selectedEntries.clear();
-                    this.appState.updateProperty(
-                        'selectedEntries',
-                        this.selectedEntries
-                    ).then(
-                        () => {
-                        this.switchFolder(getFullPath(this.directoryEntry), false);
+            this.alertController, [
+                'Are you sure you want to delete ' + itemsStr + '?',
+                ].join(''),
+                'Yes',
+                () => {
+                    FS.removeEntries(
+                        this.fileSystem,
+                        Array.from(this.selectedEntries)
+                    ).subscribe(() => {
+                        this.selectedEntries.clear();
+                        this.appState.updateProperty(
+                            'selectedEntries',
+                            this.selectedEntries
+                        ).then(
+                            () => {
+                                this.switchFolder(
+                                    getFullPath(this.directoryEntry),
+                                    false
+                                );
+                            });
                     });
-                });
-            }
+                }
         );
     }
 
@@ -390,7 +397,7 @@ export class OrganizerPage {
         // disable delete and move
         if (this.selectedEntries.size === 1 &&
             this.selectedEntries.has('/Unfiled/')) {
-                return true;
+            return true;
         }
         return false;
     }
@@ -575,7 +582,7 @@ export class OrganizerPage {
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
             const fullPath: string = getFullPath(entry),
-                isSelected: boolean = entry[CHECKED_KEY];
+                  isSelected: boolean = entry[CHECKED_KEY];
             if (bSelectAll && !isSelected) {
                 entry[CHECKED_KEY] = true;
                 this.selectedEntries.add(fullPath);
