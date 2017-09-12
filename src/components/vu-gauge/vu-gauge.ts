@@ -86,9 +86,10 @@ export class VuGauge implements OnChanges {
      * @returns {void}
      */
     public ngOnChanges(
-        changeRecord: {
-            [propertyName: string]: SimpleChange }
+        changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
+        console.log(changeRecord);
+        console.dir(changeRecord);
         if (this.leds.length > 0) {
             let fill: string, i: number;
             for (i = 0; i < this.nbars; i++) {

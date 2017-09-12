@@ -76,7 +76,7 @@ export class FS {
             else if (entry.isDirectory) {
                 (<DirectoryEntry>entry).removeRecursively(
                     () => {
-                        console.log('Removed directory entry ' + entry.fullPath);
+                        console.log('Removed directory ' + entry.fullPath);
                         observer.next();
                         observer.complete();
                     },
@@ -133,7 +133,8 @@ export class FS {
                     },
                     (err: any) => {
                         console.log('getPathEntry error2: ' + err +
-                            ' - it things path:' + path + ' is a file!');
+                                    ' - it wrongly thinks path:' + path +
+                                    ' is a file!');
                         observer.error(err);
                     }
                 );
@@ -148,8 +149,8 @@ export class FS {
     ): Observable<FileSystem> {
         const fsType: number = (
             bPersistent ?
-            window.PERSISTENT :
-            window.TEMPORARY
+                window.PERSISTENT :
+                window.TEMPORARY
         );
         let src: Observable<FileSystem> = Observable.create((observer) => {
             window['webkitStorageInfo'].requestQuota(
@@ -158,7 +159,7 @@ export class FS {
                 (grantedBytes: number) => {
                     (
                         window.requestFileSystem ||
-                        window['webkitRequestFileSystem']
+                            window['webkitRequestFileSystem']
                     )(
                         fsType,
                         grantedBytes,
@@ -166,7 +167,7 @@ export class FS {
                             console.log('grantedBytes: ' + grantedBytes);
                             console.log('onInitFs():fs.name: ' + fs.name);
                             console.log('onInitFs():fs.root.toURL(): ' +
-                                fs.root.toURL());
+                                        fs.root.toURL());
                             observer.next(fs);
                             observer.complete();
                         },
@@ -202,8 +203,7 @@ export class FS {
                                 observer.next();
                                 observer.complete();
                             };
-
-                                fileWriter.onerror = (err1: any) => {
+                            fileWriter.onerror = (err1: any) => {
                                 console.log('Write failed err1: ' + err1);
                                 observer.error(err1);
                             };

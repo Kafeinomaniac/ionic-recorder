@@ -18,7 +18,7 @@
     </ion-navbar>
     <ion-toolbar>
         <p *ngIf="directoryEntry" text-center>
-            {{directoryEntry.fullPath}}
+            {{getFullPath(directoryEntry)}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>

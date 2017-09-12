@@ -6,7 +6,7 @@ import {
     ActionSheet,
     ActionSheetController,
     Content,
-    ItemSliding,
+    // ItemSliding,
     ModalController,
     NavController,
     Platform
@@ -20,16 +20,14 @@ import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import { FS } from '../../models/filesystem/filesystem';
-import { MoveToPage, TrackPage } from '../';
+import {
+    MoveToPage
+    // , TrackPage
+} from '../';
 // import { Keyboard } from '@ionic-native/keyboard';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const CHECKED_KEY: string = 'isChecked';
-
-function getFullPath(entry: Entry): string {
-    'use strict';
-    return entry.isDirectory ? entry.fullPath + '/' : entry.fullPath;
-}
 
 /**
  * @name OrganizerPage
@@ -256,8 +254,8 @@ export class OrganizerPage {
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
         const pathParts: string[] = this.directoryEntry.fullPath.split('/')
-              .filter((str: string) => { return str !== '' });
-        const parentPath = '/' +
+              .filter((str: string) => { return str !== ''; });
+        const parentPath: string = '/' +
               pathParts.splice(0, pathParts.length - 1).join('/') +
               '/';
         this.switchFolder(parentPath, true);
@@ -334,6 +332,14 @@ export class OrganizerPage {
         return false;
     }
 
+    public getFullPath(entry: Entry): string {
+        const fullPath: string = entry.fullPath,
+            len: number = fullPath.length;
+        return entry.isDirectory && (len > 1) ?
+            entry.fullPath + '/' :
+            entry.fullPath;
+    }
+
     /**
      * @returns {void}
      */
@@ -344,8 +350,8 @@ export class OrganizerPage {
             entries: string[] = Array.from(this.selectedEntries),
             sortFun: (a: string, b: string) => number =
             (a: string, b: string) => {
-                const lenA = a.split('/').length,
-                      lenB = b.split('/').length;
+                const lenA: number = a.split('/').length,
+                      lenB: number = b.split('/').length;
                 if (lenA < lenB) {
                     return -1;
                 }
@@ -373,7 +379,7 @@ export class OrganizerPage {
                     ).then(
                         () => {
                             this.switchFolder(
-                                getFullPath(this.directoryEntry),
+                                this.getFullPath(this.directoryEntry),
                                 false
                             );
                         });
@@ -475,7 +481,7 @@ export class OrganizerPage {
                                     entries);
                         console.log(this.selectedEntries);
                         entries.forEach((entry: Entry) => {
-                            const fullPath: string = getFullPath(entry);
+                            const fullPath: string = this.getFullPath(entry);
                             entry[CHECKED_KEY] =
                                 this.selectedEntries.has(fullPath);
                         });
@@ -530,12 +536,12 @@ export class OrganizerPage {
         console.log('toggleSelect(' + entry.name + ')');
         if (entry[CHECKED_KEY]) {
             entry[CHECKED_KEY] = false;
-            this.selectedEntries.delete(getFullPath(entry));
+            this.selectedEntries.delete(this.getFullPath(entry));
             this.detectChanges();
         }
         else {
             entry[CHECKED_KEY] = true;
-            this.selectedEntries.add(getFullPath(entry));
+            this.selectedEntries.add(this.getFullPath(entry));
             this.detectChanges();
         }
         this.appState.updateProperty('selectedEntries', this.selectedEntries)
@@ -547,10 +553,9 @@ export class OrganizerPage {
      * @returns {void}
      */
     public addFolder(): void {
-        let parentPath: string = this.directoryEntry.fullPath+'/',
+        let parentPath: string = this.directoryEntry.fullPath + '/',
             newFolderAlert: Alert = this.alertController.create({
-                title: 'Create a new folder in ' + //this.directoryEntry.fullPath,
-                parentPath,
+                title: 'Create a new folder in ' + parentPath,
                 // message: 'Enter the folder name',
                 inputs: [{
                     name: 'folderName',
@@ -574,7 +579,7 @@ export class OrganizerPage {
                                 alert('how did we reach this code?');
                                 return;
                             }
-                            if (folderName[folderName.length-1] !== '/') {
+                            if (folderName[folderName.length - 1] !== '/') {
                                 // last char isn't a slash, add a
                                 // slash at the end
                                 folderName += '/';
@@ -606,10 +611,10 @@ export class OrganizerPage {
      * @returns {void}
      */
     private selectAllOrNoneInFolder(bSelectAll: boolean): void {
-        console.log('selectAllOrNoneInFolder(' + bSelectAll +')');
+        console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
-            const fullPath: string = getFullPath(entry),
+            const fullPath: string = this.getFullPath(entry),
                   isSelected: boolean = entry[CHECKED_KEY];
             if (bSelectAll && !isSelected) {
                 entry[CHECKED_KEY] = true;

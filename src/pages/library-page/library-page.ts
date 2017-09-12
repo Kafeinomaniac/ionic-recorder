@@ -686,7 +686,7 @@ export class LibraryPage {
                         this.idbAppFS.createNode(
                             data.folderName,
                             this.folderNode[DB_KEY_PATH]
-                        )
+                        );
                     }
                 },
                 {
