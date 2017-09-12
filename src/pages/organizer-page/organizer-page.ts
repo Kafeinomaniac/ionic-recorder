@@ -20,7 +20,6 @@ import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
 import { FS } from '../../models/filesystem/filesystem';
-import { alertAndDo } from '../../models/utils/alerts';
 import { MoveToPage, TrackPage } from '../';
 import { Keyboard } from '@ionic-native/keyboard';
 
@@ -339,49 +338,51 @@ export class OrganizerPage {
      * @returns {void}
      */
     private confirmAndDeleteSelected(): void {
-        const nSelectedEntries: number = this.selectedEntries.size,
+        let nSelectedEntries: number = this.selectedEntries.size,
             itemsStr: string = nSelectedEntries.toString() + ' item' +
-                ((nSelectedEntries > 1) ? 's' : ''),
+            ((nSelectedEntries > 1) ? 's' : ''),
             entries: string[] = Array.from(this.selectedEntries),
             sortFun: (a: string, b: string) => number =
-                (a: string, b: string) => {
-                    const lenA = a.split('/').length,
-                        lenB = b.split('/').length;
-                    if (lenA < lenB) {
-                        return -1;
-                    }
-                    else if (lenA === lenB) {
-                        return 0;
-                    }
-                    else {
-                        return 1;
-                    }
-                };
+            (a: string, b: string) => {
+                const lenA = a.split('/').length,
+                      lenB = b.split('/').length;
+                if (lenA < lenB) {
+                    return -1;
+                }
+                else if (lenA === lenB) {
+                    return 0;
+                }
+                else {
+                    return 1;
+                }
+            },
+            deleteAlert: Alert = this.alertController.create();
+
         entries.sort(sortFun);
 
-        alertAndDo(
-            this.alertController,
-                'Are you sure you want to delete ' + itemsStr + '?',
-                'Yes',
-                () => {
-                    FS.removeEntries(
-                        this.fileSystem,
-                        entries
-                    ).subscribe(() => {
-                        this.selectedEntries.clear();
-                        this.appState.updateProperty(
-                            'selectedEntries',
-                            this.selectedEntries
-                        ).then(
-                            () => {
-                                this.switchFolder(
-                                    getFullPath(this.directoryEntry),
-                                    false
-                                );
-                            });
-                    });
-                }
-        );
+        deleteAlert.setTitle('Are you sure you want to delete ' +
+                             itemsStr + '?');
+        deleteAlert.addButton({
+            text: 'Yes',
+            handler: () => {
+                FS.removeEntries(this.fileSystem, entries).subscribe(() => {
+                    this.selectedEntries.clear();
+                    this.appState.updateProperty(
+                        'selectedEntries',
+                        this.selectedEntries
+                    ).then(
+                        () => {
+                            this.switchFolder(
+                                getFullPath(this.directoryEntry),
+                                false
+                            );
+                        });
+                });
+            }
+        });
+        deleteAlert.addButton('Cancel');
+
+        deleteAlert.present();
     }
 
     /**
@@ -391,18 +392,20 @@ export class OrganizerPage {
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
         if (this.selectedEntries.has('/Unfiled/')) {
-            alertAndDo(
-                this.alertController, [
-                    '/Unfiled folder cannot be deleted. But it\'s selected. ',
-                    'Automatically unselect it?'
-                ].join(''),
-                'Yes',
-                () => {
+            let deleteAlert: Alert = this.alertController.create();
+
+            deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
+                                 '\'s selected. Automatically unselect it?');
+            deleteAlert.addButton({
+                text: 'Yes',
+                handler: () => {
                     this.selectedEntries.delete('/Unfiled/');
                     this.unfiledDirectory[CHECKED_KEY] = false;
                     this.confirmAndDeleteSelected();
                 }
-            );
+            });
+            deleteAlert.addButton('Cancel');
+            deleteAlert.present();
         }
         else {
             this.confirmAndDeleteSelected();

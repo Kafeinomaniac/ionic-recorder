@@ -7,6 +7,20 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+1 selected-page - bottom-buttons
+2 move-to-page - only show folders, no files, or show files disabled
+  which is a much better solution
+  top-buttons: (1) Move items here, (2) Go home, (3) Go to parent
+3 create a link and have it start an in-app-browser if clicked
+4 implement the info button
+5 add a setting in settings page which designates where we 
+  try to record files into - which directory - the default
+  save directory for recordings
+6 add button can add a recording - jumps to recording page which
+  now but only this time will record in the current dir rather
+  than in /Unfiled
+
+
 * when deleting an entry you must check (in organizer page) whether
   that entry is in the selected - actually it is in the selected
   nodes, right now the only way to delete something is to select it
