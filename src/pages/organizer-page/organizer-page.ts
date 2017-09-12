@@ -23,6 +23,7 @@ import { FS } from '../../models/filesystem/filesystem';
 import { MoveToPage, TrackPage } from '../';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
+const IS_CHECKED_KEY: string = 'isChecked';
 
 function getFullPath(entry: Entry): string {
     'use strict';
@@ -216,13 +217,13 @@ export class OrganizerPage {
         selectAlert.addButton({
             text: 'All',
             handler: () => {
-                this.selectAllInFolder();
+                this.selectAllOrNoneInFolder(true);
             }
         });
         selectAlert.addButton({
             text: 'None',
             handler: () => {
-                this.selectNoneInFolder();
+                this.selectAllOrNoneInFolder(false);
             }
         });
 
@@ -236,7 +237,7 @@ export class OrganizerPage {
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
-        this.switchFolder('/');
+        this.switchFolder('/', true);
     }
 
     /**
@@ -250,7 +251,7 @@ export class OrganizerPage {
         const parentPath = '/' +
               pathParts.splice(0, pathParts.length - 1).join('/') +
               '/';
-        this.switchFolder(parentPath);
+        this.switchFolder(parentPath, true);
     }
 
     /**
@@ -261,30 +262,31 @@ export class OrganizerPage {
         console.log('onClickAddButton()');
         let actionSheet: ActionSheet = this.actionSheetController.create({
             title: 'Create new ... in ' + this.directoryEntry.fullPath,
-            buttons: [{
-                text: 'Folder',
-                icon: 'folder',
-                handler: () => {
-                    console.log('Add folder clicked.');
-                    this.addFolder();
+            buttons: [
+                {
+                    text: 'Folder',
+                    icon: 'folder',
+                    handler: () => {
+                        console.log('Add folder clicked.');
+                        this.addFolder();
+                    }
+                },
+                {
+                    text: 'URL',
+                    icon: 'link',
+                    handler: () => {
+                        console.log('Add URL clicked.');
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    // icon: 'close',
+                    handler: () => {
+                        console.log('Cancel clicked.');
+                    }
                 }
-            },
-                      {
-                          text: 'URL',
-                          icon: 'link',
-                          handler: () => {
-                              console.log('Add URL clicked.');
-                          }
-                      },
-                      {
-                          text: 'Cancel',
-                          role: 'cancel',
-                          // icon: 'close',
-                          handler: () => {
-                              console.log('Cancel clicked.');
-                          }
-                      }
-                     ]
+            ]
         });
         actionSheet.present();
     }
@@ -388,7 +390,10 @@ export class OrganizerPage {
      * @param {boolean} whether to update app state 'lastFolderViewed' property
      * @returns {void}
      */
-    private switchFolder(path: string, bUpdateAppState: boolean = true): void {
+    private switchFolder(
+        path: string,
+        bUpdateAppState: boolean = true
+    ): void {
         console.log('OrganizerPage.switchFolder(' + path + ', ' +
                     bUpdateAppState + ')');
         FS.getPathEntry(this.fileSystem, path, false).subscribe(
@@ -401,8 +406,13 @@ export class OrganizerPage {
                     (entries: Entry[]) => {
                         console.log('OrganizerPage.switchFolder() entries: ' +
                                     entries);
-                        console.dir(entries);
                         console.log(this.selectedEntries);
+                        entries.forEach((entry: Entry) => {
+                            const fullPath: string = getFullPath(entry);
+                            entry[IS_CHECKED_KEY] =
+                                this.selectedEntries.has(fullPath);
+                        });
+                        console.dir(entries);
                         this.entries = entries;
                         this.detectChanges();
                         if (bUpdateAppState) {
@@ -430,18 +440,9 @@ export class OrganizerPage {
                 this.changeDetectorRef.detectChanges();
                 this.content.resize();
             },
-            0);
+            0
+        );
     }
-
-    // public ionViewWillEnter(): void {
-    //     console.log('OrganizerPage.ionViewWillEnter()');
-    //     this.detectChanges();
-    // }
-
-    // public ionViewDidEnter(): void {
-    //     console.log('OrganizerPage.ionViewDidEnter()');
-    //     this.detectChanges();
-    // }
 
     /**
      * UI calls this when the new folder button is clicked
@@ -455,31 +456,21 @@ export class OrganizerPage {
             entry.name,
             '/'
         ].join('');
-        this.switchFolder(dirPath);
+        this.switchFolder(dirPath, true);
     }
 
     public toggleSelect(entry: Entry): void {
         console.log('toggleSelect(' + entry.name + ')');
-        const fullPath: string = getFullPath(entry);
-        if (fullPath === '/') {
-            alert('fullPath === \'/\'');
-            debugger;
-        }
-        if (this.selectedEntries.has(fullPath)) {
-            this.selectedEntries.delete(fullPath);
+        if (entry[IS_CHECKED_KEY]) {
+            entry[IS_CHECKED_KEY] = false;
+            this.selectedEntries.delete(getFullPath(entry));
         }
         else {
-            this.selectedEntries.add(fullPath);
+            entry[IS_CHECKED_KEY] = true;
+            this.selectedEntries.add(getFullPath(entry));
         }
         this.appState.updateProperty('selectedEntries', this.selectedEntries)
             .then();
-        // this.detectChanges();
-    }
-
-    public isSelected(entry: Entry): boolean {
-        // console.log('isSelected(' + entry.name  + '): ' +
-        //      this.selectedEntries.has(getFullPath(entry)));
-        return this.selectedEntries.has(getFullPath(entry));
     }
 
     /**
@@ -537,37 +528,33 @@ export class OrganizerPage {
     }
 
     /**
-     * Select all items in current folder
-     * @returns {void}
-     */
-    private selectAllInFolder(): void {
-        this.selectAllOrNoneInFolder(true);
-    }
-
-    /**
-     * Get rid of selection on all nodes in current folder
-     * @returns {void}
-     */
-    private selectNoneInFolder(): void {
-        this.selectAllOrNoneInFolder(false);
-    }
-
-    /**
      * Select all or no items in current folder, depending on 'all; argument
      * @param {boolean} if true, select all, if false, select none
      * @returns {void}
      */
-    private selectAllOrNoneInFolder(bSelecting: boolean): void {
-        for (let i: number = 0; i < this.entries.length; i++) {
-            const entry: Entry = this.entries[i],
-                  isSelected: boolean = this.isSelected(entry);
-            if ((bSelecting && !isSelected) || (!bSelecting && isSelected)) {
-                // reverse (toggle) node selection status
-                this.toggleSelect(entry);
-                // remember that something, at least one, has changed
+    private selectAllOrNoneInFolder(bSelectAll: boolean): void {
+        console.log('selectAllOrNoneInFolder(' + bSelectAll +')');
+        let bChanged: boolean = false;
+        this.entries.forEach((entry: Entry) => {
+            const fullPath: string = getFullPath(entry),
+                isSelected: boolean = entry[IS_CHECKED_KEY];
+            if (bSelectAll && !isSelected) {
+                entry[IS_CHECKED_KEY] = true;
+                this.selectedEntries.add(fullPath);
+                bChanged = true;
             }
+            else if (!bSelectAll && isSelected) {
+                entry[IS_CHECKED_KEY] = false;
+                this.selectedEntries.delete(fullPath);
+                bChanged = true;
+            }
+        });
+        if (bChanged) {
+            this.appState.updateProperty(
+                'selectedEntries',
+                this.selectedEntries
+            ).then();
         }
-        this.detectChanges();
     }
 
     public reorderEntries(indexes: any): void {
