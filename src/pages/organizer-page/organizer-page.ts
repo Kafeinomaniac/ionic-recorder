@@ -464,10 +464,12 @@ export class OrganizerPage {
         if (entry[IS_CHECKED_KEY]) {
             entry[IS_CHECKED_KEY] = false;
             this.selectedEntries.delete(getFullPath(entry));
+            this.detectChanges();
         }
         else {
             entry[IS_CHECKED_KEY] = true;
             this.selectedEntries.add(getFullPath(entry));
+            this.detectChanges();
         }
         this.appState.updateProperty('selectedEntries', this.selectedEntries)
             .then();
