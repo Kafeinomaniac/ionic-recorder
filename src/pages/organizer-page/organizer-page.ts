@@ -319,7 +319,7 @@ export class OrganizerPage {
         // if the only thing selected is the unfiled folder
         // disable delete and move
         if (this.selectedEntries.size === 1 &&
-            this.selectedEntries.has('/Unfiled')) {
+            this.selectedEntries.has('/Unfiled/')) {
             return true;
         }
         return false;
@@ -353,8 +353,8 @@ export class OrganizerPage {
         // if the only thing selected is the unfiled folder
         // disable delete and move
         if (this.selectedEntries.size === 1 &&
-            this.selectedEntries.has('/Unfiled')) {
-            return true;
+            this.selectedEntries.has('/Unfiled/')) {
+                return true;
         }
         return false;
     }
