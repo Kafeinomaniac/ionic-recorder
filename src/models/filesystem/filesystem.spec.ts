@@ -39,11 +39,8 @@ describe('services/filesystem', () => {
         );
     });
 
-    // there is an /Unfiled directory in the filesystem because,
-    // even though this test deletes it, the initialization of the
-    // app recreates it, so we can delete it here with no error
     it('can delete /Unfiled recursively', (done) => {
-        FS.removeEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+        FS.removeEntries(FILE_SYSTEM, ['/Unfiled/'], true).subscribe(
             () => {
                 done();
             }

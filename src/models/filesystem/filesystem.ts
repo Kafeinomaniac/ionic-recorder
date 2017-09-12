@@ -52,7 +52,12 @@ export class FS {
                     FS.removeEntry(entry, bIgnoreErrors).subscribe();
                 },
                 (err: any) => {
-                    observer.error(err);
+                    if (bIgnoreErrors) {
+                        observer.next();
+                    }
+                    else {
+                        observer.error(err);
+                    }
                 },
                 () => {
                     observer.next();
