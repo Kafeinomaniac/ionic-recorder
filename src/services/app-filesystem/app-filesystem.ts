@@ -36,6 +36,17 @@ export class AppFS {
             });
     }
 
+    public removeEntries(paths: string[]): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
+            FS.removeEntries(this.fileSystem, paths).subscribe(
+                null,
+                (err: any) => {
+                    observer.error(err);
+                }
+            );
+        });;
+        return source;
+    }
     /**
      * Wait indefinitely until DB is ready for use, via an observable.
      * @returns {Observable<IDBDatabase>} Observable that emits the database

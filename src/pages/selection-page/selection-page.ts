@@ -18,8 +18,8 @@ export class SelectionPage {
     public entries: Entry[];
     public selectedPaths: Set<string>;
 
-    private appState: AppState;
-    private appFS: AppFS;
+    protected appState: AppState;
+    protected appFS: AppFS;
 
     /**
      * @constructor

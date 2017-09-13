@@ -25,6 +25,7 @@ import {
     // , TrackPage
 } from '../';
 // import { Keyboard } from '@ionic-native/keyboard';
+import { AppFS } from '../../services';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 
@@ -38,11 +39,8 @@ const REQUEST_SIZE: number = 1024 * 1024 * 1024;
     selector: 'organizer-page',
     templateUrl: 'organizer-page.html'
 })
-export class OrganizerPage {
+export class OrganizerPage extends SelectionPage {
     @ViewChild(Content) public content: Content;
-    // private keyboard: Keyboard;
-    private fileSystem: FileSystem;
-    public entries: Entry[];
     // UI uses directoryEntry
     public directoryEntry: DirectoryEntry;
     // we remember this just so we can uncheck it when
@@ -58,9 +56,14 @@ export class OrganizerPage {
     private alertController: AlertController;
     private modalController: ModalController;
     private changeDetectorRef: ChangeDetectorRef;
-    private appState: AppState;
+
+    // appState now handled by selectionpage as private
+    // private appState: AppState;
+
     // UI uses selectedPaths
-    private selectedPaths: Set<string>;
+
+    // selectedPaths now from SelectionPage
+    // public selectedPaths: Set<string>;
 
     /**
      * @constructor
@@ -78,46 +81,26 @@ export class OrganizerPage {
         modalController: ModalController,
         changeDetectorRef: ChangeDetectorRef,
         appState: AppState,
+        appFS: AppFS,
         platform: Platform
     ) {
+        super(appState, appFS);
+
         console.log('constructor():OrganizerPage');
         // this.keyboard = keyboard;
-        this.appState = appState;
         this.changeDetectorRef = changeDetectorRef;
-        this.fileSystem = null;
-        this.entries = [];
         this.directoryEntry = null;
-        this.unfiledDirectory = null;
-        this.selectedPaths = new Set<string>();
         this.actionSheetController = actionSheetController;
 
-        // get the filesystem
-        FS.getFileSystem(true, REQUEST_SIZE).subscribe(
-            (fileSystem: FileSystem) => {
-                // remember the filesystem you got
-                this.fileSystem = fileSystem;
-                // create the /Unfiled/ folder if not already there
-                FS.getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
-                    (directoryEntry: DirectoryEntry) => {
-                        console.log('Created /Unfiled/');
-                        this.unfiledDirectory = directoryEntry;
-                        // get last viewed folder to switch to it
-                        appState.get('lastViewedFolderPath').then(
-                            (path: string) => {
-                                appState.get('selectedPaths').then(
-                                    (selectedPaths: Set<string>) => {
-                                        this.selectedPaths = selectedPaths;
-                                        this.switchFolder(path, false);
-                                    });
-                            } // (path: string) => {..
-                        ); // State.get('lastViewedFolderPath').then(..
-                    },
-                    (err3: any) => {
-                        alert('err3: ' + err3);
-                    }
-                ); // FS.getPathEntry(..).subscribe(..
-            }
-        ); // FS.getFileSystem(true).subscribe(..
+        appState.get('lastViewedFolderPath').then(
+            (path: string) => {
+                this.switchFolder(path, false);
+                appState.get('selectedPaths').then(
+                    (selectedPaths: Set<string>) => {
+                        this.selectedPaths = selectedPaths;
+                    });
+            } // (path: string) => {..
+        ); // appState.get('lastViewedFolderPath').then(..
 
         this.navController = navController;
         this.alertController = alertController;
@@ -331,14 +314,6 @@ export class OrganizerPage {
         return false;
     }
 
-    public getFullPath(entry: Entry): string {
-        const fullPath: string = entry.fullPath,
-              len: number = fullPath.length;
-        return entry.isDirectory && (len > 1) ?
-            entry.fullPath + '/' :
-            entry.fullPath;
-    }
-
     /**
      * @returns {void}
      */
@@ -371,7 +346,7 @@ export class OrganizerPage {
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
-                FS.removeEntries(this.fileSystem, entries).subscribe(() => {
+                this.appFS.removeEntries(entries).subscribe(() => {
                     this.selectedPaths.clear();
                     this.appState.set(
                         'selectedPaths',
@@ -454,14 +429,6 @@ export class OrganizerPage {
     }
 
     /**
-     * UI calls this to determine the icon for an entry.
-     * @param {Entry} entry
-     */
-    public entryIcon(entry: Entry): string {
-        return entry.isDirectory ? 'folder' : 'play';
-    }
-
-    /**
      * Switch to a new folder
      * @param {number} key of treenode corresponding to folder to switch to
      * @param {boolean} whether to update app state 'lastFolderViewed' property
@@ -473,7 +440,7 @@ export class OrganizerPage {
     ): void {
         console.log('OrganizerPage.switchFolder(' + path + ', ' +
                     bUpdateAppState + ')');
-        FS.getPathEntry(this.fileSystem, path, false).subscribe(
+        this.appFS.getPathEntry(path, false).subscribe(
             (directoryEntry: DirectoryEntry) => {
                 this.directoryEntry = directoryEntry;
                 if (!directoryEntry) {
@@ -531,22 +498,6 @@ export class OrganizerPage {
         this.switchFolder(dirPath, true);
     }
 
-    public toggleSelect(entry: Entry): void {
-        console.log('toggleSelect(' + entry.name + ')');
-        const fullPath: string = this.getFullPath(entry);
-        if (this.selectedPaths.has(fullPath)) {
-            this.selectedPaths.delete(fullPath);
-        }
-        else {
-            this.selectedPaths.add(fullPath);
-        }
-
-        this.appState.set('selectedPaths', this.selectedPaths)
-            .then(() => {
-                this.detectChanges();
-            });
-    }
-
     // not just colonoscopy - mri look, cat scan or what
     // thickening of the wall -- opinion on what to do now
     // colonoscopy or cat scan first?
@@ -595,7 +546,7 @@ export class OrganizerPage {
                             }
                             // create the folder via getPathEntry()
                             FS.getPathEntry(
-                                this.fileSystem,
+                                this.appFS.fileSystem,
                                 parentPath + folderName,
                                 true
                             ).subscribe(
@@ -612,10 +563,6 @@ export class OrganizerPage {
             });
         newFolderAlert.present();
         // this.keyboard.show();
-    }
-
-    public isSelected(entry: Entry): boolean {
-        return this.selectedPaths.has(this.getFullPath(entry));
     }
 
     /**
@@ -644,14 +591,5 @@ export class OrganizerPage {
                 this.selectedPaths
             ).then();
         }
-    }
-
-    public reorderEntries(indexes: any): void {
-        console.log('reorderEntries(' + indexes + ')');
-        console.log(typeof(indexes));
-        console.dir(indexes);
-        let entry: Entry = this.entries[indexes.from];
-        this.entries.splice(indexes.from, 1);
-        this.entries.splice(indexes.to, 0, entry);
     }
 }
