@@ -19,7 +19,6 @@ import {
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { SelectionPage } from '../../pages';
-import { FS } from '../../models/filesystem/filesystem';
 import {
     MoveToPage
     // , TrackPage
@@ -320,23 +319,24 @@ export class OrganizerPage extends SelectionPage {
             itemsStr: string = nSelectedEntries.toString() + ' item' +
             ((nSelectedEntries > 1) ? 's' : ''),
             entries: string[] = Array.from(this.selectedPaths),
-            sortFun: (a: string, b: string) => number =
-            (a: string, b: string) => {
-                const lenA: number = a.split('/').length,
-                      lenB: number = b.split('/').length;
-                if (lenA < lenB) {
-                    return -1;
-                }
-                else if (lenA === lenB) {
-                    return 0;
-                }
-                else {
-                    return 1;
-                }
-            },
+            // sortFun: (a: string, b: string) => number =
+            // (a: string, b: string) => {
+            //     const lenA: number = a.split('/').length,
+            //           lenB: number = b.split('/').length;
+            //     if (lenA < lenB) {
+            //         return -1;
+            //     }
+            //     else if (lenA === lenB) {
+            //         return 0;
+            //     }
+            //     else {
+            //         return 1;
+            //     }
+            // },
             deleteAlert: Alert = this.alertController.create();
 
-        entries.sort(sortFun);
+        // entries.sort(sortFun);
+        entries.sort();
         console.log(entries);
         deleteAlert.setTitle('Are you sure you want to delete ' +
                              itemsStr + '?');
@@ -444,7 +444,7 @@ export class OrganizerPage extends SelectionPage {
                 if (!directoryEntry) {
                     alert('!directoryEntry!');
                 }
-                FS.readDirectory(directoryEntry).subscribe(
+                this.appFS.readDirectory(directoryEntry).subscribe(
                     (entries: Entry[]) => {
                         console.log('OrganizerPage.switchFolder() entries: ' +
                                     entries);
@@ -462,12 +462,12 @@ export class OrganizerPage extends SelectionPage {
                     (err1: any) => {
                         alert('err1: ' + err1);
                     }
-                ); // FS.readDirectory().susbscribe(..
+                ); // this.appFS.readDirectory().susbscribe(..
             },
             (err2: any) => {
                 alert('err2: ' + err2);
             }
-        ); // FS.getPathEntry(..).subscribe(..
+        ); // this.appFS.getPathEntry(..).subscribe(..
     }
 
     private detectChanges(): void {
@@ -533,8 +533,7 @@ export class OrganizerPage extends SelectionPage {
                                 folderName += '/';
                             }
                             // create the folder via getPathEntry()
-                            FS.getPathEntry(
-                                this.appFS.fileSystem,
+                            this.appFS.getPathEntry(
                                 parentPath + folderName,
                                 true
                             ).subscribe(

@@ -69,6 +69,23 @@ export class AppFS {
         return source;
     }
 
+    public readDirectory(
+        directoryEntry: DirectoryEntry
+    ): Observable<Entry[]> {
+        let source: Observable<Entry[]> = Observable.create((observer) => {
+            FS.readDirectory(directoryEntry).subscribe(
+                (entries: Entry[]) => {
+                    observer.next(entries);
+                    observer.complete();
+                },
+                (err: any) => {
+                    observer.error(err);
+                }
+            );
+        });
+        return source;
+    }
+
     public getPathEntry(path: string, bCreate: boolean): Observable<Entry> {
         let source: Observable<Entry> = Observable.create((observer) => {
             this.getFileSystem().subscribe(
