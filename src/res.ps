@@ -1,0 +1,1636 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 18 36 594 756
+%%Title: Enscript Output
+%%Creator: GNU Enscript 1.6.5.90
+%%CreationDate: Wed Sep 13 11:33:35 2017
+%%Orientation: Landscape
+%%Pages: (atend)
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: (atend)
+%%EndComments
+%%BeginProlog
+%%BeginResource: procset Enscript-Prolog 1.6.5 90
+%
+% Procedures.
+%
+
+/_S {	% save current state
+  /_s save def
+} def
+/_R {	% restore from saved state
+  _s restore
+} def
+
+/S {	% showpage protecting gstate
+  gsave
+  showpage
+  grestore
+} bind def
+
+/MF {	% fontname newfontname -> -	make a new encoded font
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  % insert only valid encoding vectors
+  encoding_vector length 256 eq {
+    newfont /Encoding encoding_vector put
+  } if
+
+  newfontname newfont definefont pop
+} def
+
+/MF_PS { % fontname newfontname -> -	make a new font preserving its enc
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  newfontname newfont definefont pop
+} def
+
+/SF { % fontname width height -> -	set a new font
+  /height exch def
+  /width exch def
+
+  findfont
+  [width 0 0 height 0 0] makefont setfont
+} def
+
+/SUF { % fontname width height -> -	set a new user font
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF
+  /F-gs-user-font width height SF
+} def
+
+/SUF_PS { % fontname width height -> -	set a new user font preserving its enc
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF_PS
+  /F-gs-user-font width height SF
+} def
+
+/M {moveto} bind def
+/s {show} bind def
+
+/Box {	% x y w h -> -			define box path
+  /d_h exch def /d_w exch def /d_y exch def /d_x exch def
+  d_x d_y  moveto
+  d_w 0 rlineto
+  0 d_h rlineto
+  d_w neg 0 rlineto
+  closepath
+} def
+
+/bgs {	% x y height blskip gray str -> -	show string with bg color
+  /str exch def
+  /gray exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    gray setgray
+    fill
+  grestore
+  x y M str s
+} def
+
+/bgcs { % x y height blskip red green blue str -> -  show string with bg color
+  /str exch def
+  /blue exch def
+  /green exch def
+  /red exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    red green blue setrgbcolor
+    fill
+  grestore
+  x y M str s
+} def
+
+% Highlight bars.
+/highlight_bars {	% nlines lineheight output_y_margin gray -> -
+  gsave
+    setgray
+    /ymarg exch def
+    /lineheight exch def
+    /nlines exch def
+
+    % This 2 is just a magic number to sync highlight lines to text.
+    0 d_header_y ymarg sub 2 sub translate
+
+    /cw d_output_w cols div def
+    /nrows d_output_h ymarg 2 mul sub lineheight div cvi def
+
+    % for each column
+    0 1 cols 1 sub {
+      cw mul /xp exch def
+
+      % for each rows
+      0 1 nrows 1 sub {
+        /rn exch def
+        rn lineheight mul neg /yp exch def
+        rn nlines idiv 2 mod 0 eq {
+	  % Draw highlight bar.  4 is just a magic indentation.
+	  xp 4 add yp cw 8 sub lineheight neg Box fill
+	} if
+      } for
+    } for
+
+  grestore
+} def
+
+% Line highlight bar.
+/line_highlight {	% x y width height gray -> -
+  gsave
+    /gray exch def
+    Box gray setgray fill
+  grestore
+} def
+
+% Column separator lines.
+/column_lines {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h translate
+    /cw d_output_w cols div def
+    1 1 cols 1 sub {
+      cw mul 0 moveto
+      0 d_output_h rlineto stroke
+    } for
+  grestore
+} def
+
+% Column borders.
+/column_borders {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h moveto
+    0 d_output_h rlineto
+    d_output_w 0 rlineto
+    0 d_output_h neg rlineto
+    closepath stroke
+  grestore
+} def
+
+% Do the actual underlay drawing
+/draw_underlay {
+  ul_style 0 eq {
+    ul_str true charpath stroke
+  } {
+    ul_str show
+  } ifelse
+} def
+
+% Underlay
+/underlay {	% - -> -
+  gsave
+    0 d_page_h translate
+    d_page_h neg d_page_w atan rotate
+
+    ul_gray setgray
+    ul_font setfont
+    /dw d_page_h dup mul d_page_w dup mul add sqrt def
+    ul_str stringwidth pop dw exch sub 2 div ul_h_ptsize -2 div moveto
+    draw_underlay
+  grestore
+} def
+
+/user_underlay {	% - -> -
+  gsave
+    ul_x ul_y translate
+    ul_angle rotate
+    ul_gray setgray
+    ul_font setfont
+    0 0 ul_h_ptsize 2 div sub moveto
+    draw_underlay
+  grestore
+} def
+
+% Page prefeed
+/page_prefeed {		% bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} def
+
+% Wrapped line markers
+/wrapped_line_mark {	% x y charwith charheight type -> -
+  /type exch def
+  /h exch def
+  /w exch def
+  /y exch def
+  /x exch def
+
+  type 2 eq {
+    % Black boxes (like TeX does)
+    gsave
+      0 setlinewidth
+      x w 4 div add y M
+      0 h rlineto w 2 div 0 rlineto 0 h neg rlineto
+      closepath fill
+    grestore
+  } {
+    type 3 eq {
+      % Small arrows
+      gsave
+        .2 setlinewidth
+        x w 2 div add y h 2 div add M
+        w 4 div 0 rlineto
+        x w 4 div add y lineto stroke
+
+        x w 4 div add w 8 div add y h 4 div add M
+        x w 4 div add y lineto
+	w 4 div h 8 div rlineto stroke
+      grestore
+    } {
+      % do nothing
+    } ifelse
+  } ifelse
+} def
+
+% EPSF import.
+
+/BeginEPSF {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack
+  userdict begin
+  /showpage { } def
+  0 setgray 0 setlinecap
+  1 setlinewidth 0 setlinejoin
+  10 setmiterlimit [ ] 0 setdash newpath
+  /languagelevel where {
+    pop languagelevel
+    1 ne {
+      false setstrokeadjust false setoverprint
+    } if
+  } if
+} bind def
+
+/EndEPSF {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+%%EndResource
+%%BeginResource: procset Enscript-Encoding-88591 1.6.5 90
+/encoding_vector [
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/space        	/exclam       	/quotedbl     	/numbersign
+/dollar       	/percent      	/ampersand    	/quoteright
+/parenleft    	/parenright   	/asterisk     	/plus
+/comma        	/hyphen       	/period       	/slash
+/zero         	/one          	/two          	/three
+/four         	/five         	/six          	/seven
+/eight        	/nine         	/colon        	/semicolon
+/less         	/equal        	/greater      	/question
+/at           	/A            	/B            	/C
+/D            	/E            	/F            	/G
+/H            	/I            	/J            	/K
+/L            	/M            	/N            	/O
+/P            	/Q            	/R            	/S
+/T            	/U            	/V            	/W
+/X            	/Y            	/Z            	/bracketleft
+/backslash    	/bracketright 	/asciicircum  	/underscore
+/quoteleft    	/a            	/b            	/c
+/d            	/e            	/f            	/g
+/h            	/i            	/j            	/k
+/l            	/m            	/n            	/o
+/p            	/q            	/r            	/s
+/t            	/u            	/v            	/w
+/x            	/y            	/z            	/braceleft
+/bar          	/braceright   	/tilde        	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/.notdef      	/.notdef      	/.notdef      	/.notdef
+/space        	/exclamdown   	/cent         	/sterling
+/currency     	/yen          	/brokenbar    	/section
+/dieresis     	/copyright    	/ordfeminine  	/guillemotleft
+/logicalnot   	/hyphen       	/registered   	/macron
+/degree       	/plusminus    	/twosuperior  	/threesuperior
+/acute        	/mu           	/paragraph    	/bullet
+/cedilla      	/onesuperior  	/ordmasculine 	/guillemotright
+/onequarter   	/onehalf      	/threequarters	/questiondown
+/Agrave       	/Aacute       	/Acircumflex  	/Atilde
+/Adieresis    	/Aring        	/AE           	/Ccedilla
+/Egrave       	/Eacute       	/Ecircumflex  	/Edieresis
+/Igrave       	/Iacute       	/Icircumflex  	/Idieresis
+/Eth          	/Ntilde       	/Ograve       	/Oacute
+/Ocircumflex  	/Otilde       	/Odieresis    	/multiply
+/Oslash       	/Ugrave       	/Uacute       	/Ucircumflex
+/Udieresis    	/Yacute       	/Thorn        	/germandbls
+/agrave       	/aacute       	/acircumflex  	/atilde
+/adieresis    	/aring        	/ae           	/ccedilla
+/egrave       	/eacute       	/ecircumflex  	/edieresis
+/igrave       	/iacute       	/icircumflex  	/idieresis
+/eth          	/ntilde       	/ograve       	/oacute
+/ocircumflex  	/otilde       	/odieresis    	/divide
+/oslash       	/ugrave       	/uacute       	/ucircumflex
+/udieresis    	/yacute       	/thorn        	/ydieresis
+] def
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Courier
+/HFpt_w 10 def
+/HFpt_h 10 def
+/Courier-Bold /HF-gs-font MF
+/HF /HF-gs-font findfont [HFpt_w 0 0 HFpt_h 0 0] makefont def
+/Courier /F-gs-font MF
+/F-gs-font 7 7 SF
+/#copies 1 def
+% Pagedevice definitions:
+gs_languagelevel 1 gt {
+  <<
+    /PageSize [612 792]
+  >> setpagedevice
+} if
+%%BeginResource: procset Enscript-Header-simple 1.6.5 90
+
+/do_header {	% print default simple header
+  gsave
+    d_header_x d_header_y HFpt_h 3 div add translate
+
+    HF setfont
+    user_header_p {
+      5 0 moveto user_header_left_str show
+
+      d_header_w user_header_center_str stringwidth pop sub 2 div
+      0 moveto user_header_center_str show
+
+      d_header_w user_header_right_str stringwidth pop sub 5 sub
+      0 moveto user_header_right_str show
+    } {
+      5 0 moveto fname show
+      45 0 rmoveto fmodstr show
+      45 0 rmoveto pagenumstr show
+    } ifelse
+
+  grestore
+} def
+%%EndResource
+/d_page_w 720 def
+/d_page_h 576 def
+/d_header_x 0 def
+/d_header_y 561 def
+/d_header_w 720 def
+/d_header_h 15 def
+/d_footer_x 0 def
+/d_footer_y 0 def
+/d_footer_w 720 def
+/d_footer_h 0 def
+/d_output_w 720 def
+/d_output_h 561 def
+/cols 2 def
+%%EndSetup
+%%Page: (1) 1
+%%BeginPageSetup
+_S
+90 rotate
+36 -594 translate
+/pagenum 1 def
+/fname (pages/organizer-page/organizer-page.ts) def
+/fdir (pages/organizer-page) def
+/ftail (organizer-page.ts) def
+% User defined strings:
+/fmodstr (Wed Sep 13 11:09:08 2017) def
+/pagenumstr (1) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 551 M
+(// Copyright \(c\) 2017 Tracktunes Inc) s
+5 535 M
+(import {) s
+5 527 M
+(    Alert,) s
+5 519 M
+(    AlertController,) s
+5 511 M
+(    ActionSheet,) s
+5 503 M
+(    ActionSheetController,) s
+5 495 M
+(    Content,) s
+5 487 M
+(    // ItemSliding,) s
+5 479 M
+(    ModalController,) s
+5 471 M
+(    NavController,) s
+5 463 M
+(    Platform) s
+5 455 M
+(} from 'ionic-angular';) s
+5 447 M
+(import {) s
+5 439 M
+(    ChangeDetectorRef,) s
+5 431 M
+(    Component,) s
+5 423 M
+(    ViewChild) s
+5 415 M
+(} from '@angular/core';) s
+5 407 M
+(import { AppState } from '../../services/app-state/app-state';) s
+5 399 M
+(import { ButtonbarButton } from '../../components/button-bar/button-bar';) s
+5 391 M
+(import { SelectionPage } from '../../pages';) s
+5 383 M
+(import {) s
+5 375 M
+(    MoveToPage) s
+5 367 M
+(    // , TrackPage) s
+5 359 M
+(} from '../';) s
+5 351 M
+(// import { Keyboard } from '@ionic-native/keyboard';) s
+5 343 M
+(import { AppFS } from '../../services';) s
+5 327 M
+(/**) s
+5 319 M
+( * @name OrganizerPage) s
+5 311 M
+( * @description) s
+5 303 M
+( * Page of file/folder interface to all recorded files. AddFolderPage) s
+5 295 M
+( * music organizer.) s
+5 287 M
+( */) s
+5 279 M
+(@Component\({) s
+5 271 M
+(    selector: 'organizer-page',) s
+5 263 M
+(    templateUrl: 'organizer-page.html') s
+5 255 M
+(}\)) s
+5 247 M
+(export class OrganizerPage extends SelectionPage {) s
+5 239 M
+(    @ViewChild\(Content\) public content: Content;) s
+5 231 M
+(    // UI uses directoryEntry) s
+5 223 M
+(    public directoryEntry: DirectoryEntry;) s
+5 215 M
+(    // we remember this just so we can uncheck it when) s
+5 207 M
+(    // in dialog of delete button) s
+5 199 M
+(    public unfiledDirectory: DirectoryEntry;) s
+5 191 M
+(    // UI uses headerButtons) s
+5 183 M
+(    public headerButtons: ButtonbarButton[];) s
+5 175 M
+(    // UI uses footerButtons) s
+5 167 M
+(    public footerButtons: ButtonbarButton[];) s
+5 159 M
+(    private navController: NavController;) s
+5 151 M
+(    // actionSheetController is used by add button) s
+5 143 M
+(    private actionSheetController: ActionSheetController;) s
+5 135 M
+(    private alertController: AlertController;) s
+5 127 M
+(    private modalController: ModalController;) s
+5 119 M
+(    private changeDetectorRef: ChangeDetectorRef;) s
+5 103 M
+(    // appState now handled by selectionpage as private) s
+5 95 M
+(    // private appState: AppState;) s
+5 79 M
+(    // UI uses selectedPaths) s
+5 63 M
+(    // selectedPaths now from SelectionPage) s
+5 55 M
+(    // public selectedPaths: Set<string>;) s
+5 39 M
+(    /**) s
+5 31 M
+(     * @constructor) s
+5 23 M
+(     * @param {NavController}) s
+5 15 M
+(     * @param {AlertController}) s
+5 7 M
+(     * @param {ModalController}) s
+365 551 M
+(     * @param {AppState}) s
+365 543 M
+(     * @param {Platform}) s
+365 535 M
+(     */) s
+365 527 M
+(    constructor\() s
+365 519 M
+(        // keyboard: Keyboard,) s
+365 511 M
+(        navController: NavController,) s
+365 503 M
+(        alertController: AlertController,) s
+365 495 M
+(        actionSheetController: ActionSheetController,) s
+365 487 M
+(        modalController: ModalController,) s
+365 479 M
+(        changeDetectorRef: ChangeDetectorRef,) s
+365 471 M
+(        appState: AppState,) s
+365 463 M
+(        appFS: AppFS,) s
+365 455 M
+(        platform: Platform) s
+365 447 M
+(    \) {) s
+365 439 M
+(        super\(appState, appFS\);) s
+365 423 M
+(        console.log\('constructor\(\):OrganizerPage'\);) s
+365 415 M
+(        // this.keyboard = keyboard;) s
+365 407 M
+(        this.changeDetectorRef = changeDetectorRef;) s
+365 399 M
+(        this.directoryEntry = null;) s
+365 391 M
+(        this.actionSheetController = actionSheetController;) s
+365 375 M
+(        appState.get\('lastViewedFolderPath'\).then\() s
+365 367 M
+(            \(path: string\) => {) s
+365 359 M
+(                this.switchFolder\(path, false\);) s
+365 351 M
+(                appState.get\('selectedPaths'\).then\() s
+365 343 M
+(                    \(selectedPaths: Set<string>\) => {) s
+365 335 M
+(                        this.selectedPaths = selectedPaths;) s
+365 327 M
+(                    }\);) s
+365 319 M
+(            } // \(path: string\) => {..) s
+365 311 M
+(        \); // appState.get\('lastViewedFolderPath'\).then\(..) s
+365 295 M
+(        this.navController = navController;) s
+365 287 M
+(        this.alertController = alertController;) s
+365 279 M
+(        this.modalController = modalController;) s
+365 263 M
+(        // helper function used in disabledCB below) s
+365 255 M
+(        const atHome: \(\) => boolean = \(\) => {) s
+365 247 M
+(            return this.directoryEntry &&) s
+365 239 M
+(                this.directoryEntry.name === '' &&) s
+365 231 M
+(                this.directoryEntry.fullPath === '/';) s
+365 223 M
+(        };) s
+365 207 M
+(        this.headerButtons = [) s
+365 199 M
+(            {) s
+365 191 M
+(                text: 'Select...',) s
+365 183 M
+(                leftIcon: platform.is\('ios'\) ?) s
+365 175 M
+(                    'radio-button-off' : 'square-outline',) s
+365 167 M
+(                rightIcon: 'md-arrow-dropdown',) s
+365 159 M
+(                clickCB: \(\) => {) s
+365 151 M
+(                    this.onClickSelectButton\(\);) s
+365 143 M
+(                },) s
+365 135 M
+(                disabledCB: \(\) => {) s
+365 127 M
+(                    return this.entries.length <= 1;) s
+365 119 M
+(                }) s
+365 111 M
+(            },) s
+365 103 M
+(            {) s
+365 95 M
+(                text: 'Go home',) s
+365 87 M
+(                leftIcon: 'home',) s
+365 79 M
+(                clickCB: \(\) => {) s
+365 71 M
+(                    this.onClickHomeButton\(\);) s
+365 63 M
+(                },) s
+365 55 M
+(                disabledCB: atHome) s
+365 47 M
+(            },) s
+365 39 M
+(            {) s
+365 31 M
+(                text: 'Go to parent',) s
+365 23 M
+(                leftIcon: 'arrow-up',) s
+365 15 M
+(                rightIcon: 'folder',) s
+365 7 M
+(                // rightIcon: 'ios-folder-outline',) s
+_R
+S
+%%Page: (2) 2
+%%BeginPageSetup
+_S
+90 rotate
+36 -594 translate
+/pagenum 2 def
+/fname (pages/organizer-page/organizer-page.ts) def
+/fdir (pages/organizer-page) def
+/ftail (organizer-page.ts) def
+% User defined strings:
+/fmodstr (Wed Sep 13 11:09:08 2017) def
+/pagenumstr (2) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 551 M
+(                clickCB: \(\) => {) s
+5 543 M
+(                    this.onClickParentButton\(\);) s
+5 535 M
+(                },) s
+5 527 M
+(                disabledCB: atHome) s
+5 519 M
+(            },) s
+5 511 M
+(            {) s
+5 503 M
+(                text: 'Add...',) s
+5 495 M
+(                leftIcon: 'add',) s
+5 487 M
+(                clickCB: \(\) => {) s
+5 479 M
+(                    this.onClickAddButton\(\);) s
+5 471 M
+(                }) s
+5 463 M
+(            }) s
+5 455 M
+(        ];) s
+5 439 M
+(        this.footerButtons = [) s
+5 431 M
+(            {) s
+5 423 M
+(                text: 'Info',) s
+5 415 M
+(                leftIcon: 'information-circle',) s
+5 407 M
+(                clickCB: \(\) => {) s
+5 399 M
+(                    this.onClickInfoButton\(\);) s
+5 391 M
+(                }) s
+5 383 M
+(            },) s
+5 375 M
+(            {) s
+5 367 M
+(                text: 'Move to...',) s
+5 359 M
+(                leftIcon: 'share-alt',) s
+5 351 M
+(                rightIcon: 'folder',) s
+5 343 M
+(                clickCB: \(\) => {) s
+5 335 M
+(                    this.onClickMoveButton\(\);) s
+5 327 M
+(                },) s
+5 319 M
+(                disabledCB: \(\) => {) s
+5 311 M
+(                    return this.moveButtonDisabled\(\);) s
+5 303 M
+(                }) s
+5 295 M
+(            },) s
+5 287 M
+(            {) s
+5 279 M
+(                text: 'Delete',) s
+5 271 M
+(                leftIcon: 'trash',) s
+5 263 M
+(                clickCB: \(\) => {) s
+5 255 M
+(                    this.onClickDeleteButton\(\);) s
+5 247 M
+(                },) s
+5 239 M
+(                disabledCB: \(\) => {) s
+5 231 M
+(                    return this.deleteButtonDisabled\(\);) s
+5 223 M
+(                }) s
+5 215 M
+(            },) s
+5 207 M
+(            {) s
+5 199 M
+(                text: 'Share',) s
+5 191 M
+(                leftIcon: 'md-share',) s
+5 183 M
+(                clickCB: \(\) => {) s
+5 175 M
+(                    this.onClickShareButton\(\);) s
+5 167 M
+(                }) s
+5 159 M
+(            }) s
+5 151 M
+(        ];) s
+5 135 M
+(    }) s
+5 119 M
+(    /**) s
+5 111 M
+(     * UI calls this when the 'Select...' button is clicked.) s
+5 103 M
+(     * @returns {void}) s
+5 95 M
+(     */) s
+5 87 M
+(    public onClickSelectButton\(\): void {) s
+5 79 M
+(        console.log\('onClickSelectButton\(\)'\);) s
+5 63 M
+(        let selectAlert: Alert = this.alertController.create\(\);) s
+5 55 M
+(        selectAlert.setTitle\('Select which, in ' +) s
+5 47 M
+(                             this.directoryEntry.fullPath\);) s
+5 39 M
+(        selectAlert.addButton\({) s
+5 31 M
+(            text: 'All',) s
+5 23 M
+(            handler: \(\) => {) s
+5 15 M
+(                this.selectAllOrNoneInFolder\(true\);) s
+5 7 M
+(            }) s
+365 551 M
+(        }\);) s
+365 543 M
+(        selectAlert.addButton\({) s
+365 535 M
+(            text: 'None',) s
+365 527 M
+(            handler: \(\) => {) s
+365 519 M
+(                this.selectAllOrNoneInFolder\(false\);) s
+365 511 M
+(            }) s
+365 503 M
+(        }\);) s
+365 487 M
+(        selectAlert.addButton\('Cancel'\);) s
+365 479 M
+(        selectAlert.present\(\);) s
+365 471 M
+(    }) s
+365 455 M
+(    /**) s
+365 447 M
+(     * UI calls this when the 'Go home' button is clicked.) s
+365 439 M
+(     * @returns {void}) s
+365 431 M
+(     */) s
+365 423 M
+(    public onClickHomeButton\(\): void {) s
+365 415 M
+(        console.log\('onClickHomeButton\(\)'\);) s
+365 407 M
+(        this.switchFolder\('/', true\);) s
+365 399 M
+(    }) s
+365 383 M
+(    /**) s
+365 375 M
+(     * UI calls this when the 'Go to parent' button is clicked.) s
+365 367 M
+(     * @returns {void}) s
+365 359 M
+(     */) s
+365 351 M
+(    public onClickParentButton\(\): void {) s
+365 343 M
+(        console.log\('onClickParentButton\(\)'\);) s
+365 335 M
+(        const pathParts: string[] = this.directoryEntry.fullPath.split\('/'\)) s
+365 327 M
+(              .filter\(\(str: string\) => { return str !== ''; }\);) s
+365 319 M
+(        const parentPath: string = '/' +) s
+365 311 M
+(              pathParts.splice\(0, pathParts.length - 1\).join\('/'\) +) s
+365 303 M
+(              '/';) s
+365 295 M
+(        this.switchFolder\(parentPath, true\);) s
+365 287 M
+(    }) s
+365 271 M
+(    /**) s
+365 263 M
+(     * UI calls this when the 'Add...' button is clicked.) s
+365 255 M
+(     * @returns {void}) s
+365 247 M
+(     */) s
+365 239 M
+(    public onClickAddButton\(\): void {) s
+365 231 M
+(        console.log\('onClickAddButton\(\)'\);) s
+365 223 M
+(        let actionSheet: ActionSheet = this.actionSheetController.create\({) s
+365 215 M
+(            title: 'Create new ... in ' + this.directoryEntry.fullPath,) s
+365 207 M
+(            buttons: [) s
+365 199 M
+(                {) s
+365 191 M
+(                    text: 'Folder',) s
+365 183 M
+(                    icon: 'folder',) s
+365 175 M
+(                    handler: \(\) => {) s
+365 167 M
+(                        console.log\('Add folder clicked.'\);) s
+365 159 M
+(                        this.addFolder\(\);) s
+365 151 M
+(                    }) s
+365 143 M
+(                },) s
+365 135 M
+(                {) s
+365 127 M
+(                    text: 'URL',) s
+365 119 M
+(                    icon: 'link',) s
+365 111 M
+(                    handler: \(\) => {) s
+365 103 M
+(                        console.log\('Add URL clicked.'\);) s
+365 95 M
+(                    }) s
+365 87 M
+(                },) s
+365 79 M
+(                {) s
+365 71 M
+(                    text: 'Cancel',) s
+365 63 M
+(                    role: 'cancel',) s
+365 55 M
+(                    // icon: 'close',) s
+365 47 M
+(                    handler: \(\) => {) s
+365 39 M
+(                        console.log\('Cancel clicked.'\);) s
+365 31 M
+(                    }) s
+365 23 M
+(                }) s
+365 15 M
+(            ]) s
+365 7 M
+(        }\);) s
+_R
+S
+%%Page: (3) 3
+%%BeginPageSetup
+_S
+90 rotate
+36 -594 translate
+/pagenum 3 def
+/fname (pages/organizer-page/organizer-page.ts) def
+/fdir (pages/organizer-page) def
+/ftail (organizer-page.ts) def
+% User defined strings:
+/fmodstr (Wed Sep 13 11:09:08 2017) def
+/pagenumstr (3) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 551 M
+(        actionSheet.present\(\);) s
+5 543 M
+(    }) s
+5 527 M
+(    /**) s
+5 519 M
+(     * UI calls this when the info button is clicked.) s
+5 511 M
+(     * Shows cumulative info on all selected items.) s
+5 503 M
+(     * @returns {void}) s
+5 495 M
+(     */) s
+5 487 M
+(    public onClickInfoButton\(\): void {) s
+5 479 M
+(        console.log\('onClickInfoButton'\);) s
+5 471 M
+(    }) s
+5 455 M
+(    /**) s
+5 447 M
+(     * UI calls this when move button is clicked.) s
+5 439 M
+(     * Moves selected items into a folder.) s
+5 431 M
+(     * @returns {void}) s
+5 423 M
+(     */) s
+5 415 M
+(    public onClickMoveButton\(\): void {) s
+5 407 M
+(        console.log\('onClickMoveButton'\);) s
+5 399 M
+(        // this.modalController.create\(MoveToPage\).present\(\);) s
+5 391 M
+(        this.navController.push\(MoveToPage\);) s
+5 383 M
+(    }) s
+5 367 M
+(    /**) s
+5 359 M
+(     * UI calls this to determine whether to disable move button.) s
+5 351 M
+(     * @returns {boolean}) s
+5 343 M
+(     */) s
+5 335 M
+(    public moveButtonDisabled\(\): boolean {) s
+5 327 M
+(        // if the only thing selected is the unfiled folder) s
+5 319 M
+(        // disable delete and move) s
+5 311 M
+(        if \(this.selectedPaths.size === 1 &&) s
+5 303 M
+(            this.selectedPaths.has\('/Unfiled/'\)\) {) s
+5 295 M
+(            return true;) s
+5 287 M
+(        }) s
+5 279 M
+(        return false;) s
+5 271 M
+(    }) s
+5 255 M
+(    /**) s
+5 247 M
+(     * @returns {void}) s
+5 239 M
+(     */) s
+5 231 M
+(    private confirmAndDeleteSelected\(\): void {) s
+5 223 M
+(        let nSelectedEntries: number = this.selectedPaths.size,) s
+5 215 M
+(            itemsStr: string = nSelectedEntries.toString\(\) + ' item' +) s
+5 207 M
+(            \(\(nSelectedEntries > 1\) ? 's' : ''\),) s
+5 199 M
+(            entries: string[] = Array.from\(this.selectedPaths\),) s
+5 191 M
+(            // sortFun: \(a: string, b: string\) => number =) s
+5 183 M
+(            // \(a: string, b: string\) => {) s
+5 175 M
+(            //     const lenA: number = a.split\('/'\).length,) s
+5 167 M
+(            //           lenB: number = b.split\('/'\).length;) s
+5 159 M
+(            //     if \(lenA < lenB\) {) s
+5 151 M
+(            //         return -1;) s
+5 143 M
+(            //     }) s
+5 135 M
+(            //     else if \(lenA === lenB\) {) s
+5 127 M
+(            //         return 0;) s
+5 119 M
+(            //     }) s
+5 111 M
+(            //     else {) s
+5 103 M
+(            //         return 1;) s
+5 95 M
+(            //     }) s
+5 87 M
+(            // },) s
+5 79 M
+(            deleteAlert: Alert = this.alertController.create\(\);) s
+5 63 M
+(        // entries.sort\(sortFun\);) s
+5 55 M
+(        entries.sort\(\);) s
+5 47 M
+(        console.log\(entries\);) s
+5 39 M
+(        deleteAlert.setTitle\('Are you sure you want to delete ' +) s
+5 31 M
+(                             itemsStr + '?'\);) s
+5 23 M
+(        deleteAlert.addButton\('Cancel'\);) s
+5 15 M
+(        deleteAlert.addButton\({) s
+5 7 M
+(            text: 'Yes',) s
+365 551 M
+(            handler: \(\) => {) s
+365 543 M
+(                this.appFS.removeEntries\(entries\).subscribe\(\(\) => {) s
+365 535 M
+(                    this.selectedPaths.clear\(\);) s
+365 527 M
+(                    this.appState.set\() s
+365 519 M
+(                        'selectedPaths',) s
+365 511 M
+(                        this.selectedPaths) s
+365 503 M
+(                    \).then\() s
+365 495 M
+(                        \(\) => {) s
+365 487 M
+(                            this.switchFolder\() s
+365 479 M
+(                                this.getFullPath\(this.directoryEntry\),) s
+365 471 M
+(                                false) s
+365 463 M
+(                            \);) s
+365 455 M
+(                        }\);) s
+365 447 M
+(                }\);) s
+365 439 M
+(            }) s
+365 431 M
+(        }\);) s
+365 415 M
+(        deleteAlert.present\(\);) s
+365 407 M
+(    }) s
+365 391 M
+(    /**) s
+365 383 M
+(     * UI calls this when delete button is clicked.) s
+365 375 M
+(     * @returns {void}) s
+365 367 M
+(     */) s
+365 359 M
+(    public onClickDeleteButton\(\): void {) s
+365 351 M
+(        console.log\('onClickDeleteButton\(\)'\);) s
+365 343 M
+(        if \(this.selectedPaths.has\('/Unfiled/'\)\) {) s
+365 335 M
+(            let deleteAlert: Alert = this.alertController.create\(\);) s
+365 319 M
+(            deleteAlert.setTitle\('/Unfiled folder cannot be deleted. But it' +) s
+365 311 M
+(                                 '\\'s selected. Automatically unselect it?'\);) s
+365 303 M
+(            deleteAlert.addButton\('Cancel'\);) s
+365 295 M
+(            deleteAlert.addButton\({) s
+365 287 M
+(                text: 'Yes',) s
+365 279 M
+(                handler: \(\) => {) s
+365 271 M
+(                    this.selectedPaths.delete\('/Unfiled/'\);) s
+365 263 M
+(                    this.selectedPaths.delete\() s
+365 255 M
+(                        this.getFullPath\(this.unfiledDirectory\)) s
+365 247 M
+(                    \);) s
+365 239 M
+(                    this.confirmAndDeleteSelected\(\);) s
+365 231 M
+(                }) s
+365 223 M
+(            }\);) s
+365 215 M
+(            deleteAlert.present\(\);) s
+365 207 M
+(        }) s
+365 199 M
+(        else {) s
+365 191 M
+(            this.confirmAndDeleteSelected\(\);) s
+365 183 M
+(        }) s
+365 175 M
+(    }) s
+365 159 M
+(    /**) s
+365 151 M
+(     * UI calls this to determine whether disable the delete button) s
+365 143 M
+(     * @returns {boolean}) s
+365 135 M
+(     */) s
+365 127 M
+(    public deleteButtonDisabled\(\): boolean {) s
+365 119 M
+(        // if the only thing selected is the unfiled folder) s
+365 111 M
+(        // disable delete and move) s
+365 103 M
+(        if \(this.selectedPaths.size === 1 &&) s
+365 95 M
+(            this.selectedPaths.has\('/Unfiled/'\)\) {) s
+365 87 M
+(            return true;) s
+365 79 M
+(        }) s
+365 71 M
+(        return false;) s
+365 63 M
+(    }) s
+365 47 M
+(    /**) s
+365 39 M
+(     * UI calls this when social sharing button is clicked) s
+365 31 M
+(     * @returns {void}) s
+365 23 M
+(     */) s
+365 15 M
+(    public onClickShareButton\(\): void {) s
+365 7 M
+(        console.log\('onClickShareButton\(\)'\);) s
+_R
+S
+%%Page: (4) 4
+%%BeginPageSetup
+_S
+90 rotate
+36 -594 translate
+/pagenum 4 def
+/fname (pages/organizer-page/organizer-page.ts) def
+/fdir (pages/organizer-page) def
+/ftail (organizer-page.ts) def
+% User defined strings:
+/fmodstr (Wed Sep 13 11:09:08 2017) def
+/pagenumstr (4) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 551 M
+(    }) s
+5 535 M
+(    /**) s
+5 527 M
+(     * UI calls this when selected badge on top right is clicked) s
+5 519 M
+(     * @returns {void}) s
+5 511 M
+(     */) s
+5 503 M
+(    public onClickSelectedBadge\(\): void {) s
+5 495 M
+(        console.log\('onClickSelectedBadge\(\)'\);) s
+5 487 M
+(        if \(this.selectedPaths.size\) {) s
+5 479 M
+(            // only go to edit selections if at least one is selected) s
+5 471 M
+(            this.navController.push\(SelectionPage\);) s
+5 463 M
+(        }) s
+5 455 M
+(    }) s
+5 439 M
+(    /**) s
+5 431 M
+(     * Switch to a new folder) s
+5 423 M
+(     * @param {number} key of treenode corresponding to folder to switch to) s
+5 415 M
+(     * @param {boolean} whether to update app state 'lastFolderViewed' property) s
+5 407 M
+(     * @returns {void}) s
+5 399 M
+(     */) s
+5 391 M
+(    private switchFolder\() s
+5 383 M
+(        path: string,) s
+5 375 M
+(        bUpdateAppState: boolean = true) s
+5 367 M
+(    \): void {) s
+5 359 M
+(        console.log\('OrganizerPage.switchFolder\(' + path + ', ' +) s
+5 351 M
+(                    bUpdateAppState + '\)'\);) s
+5 343 M
+(        this.appFS.getPathEntry\(path, false\).subscribe\() s
+5 335 M
+(            \(directoryEntry: DirectoryEntry\) => {) s
+5 327 M
+(                this.directoryEntry = directoryEntry;) s
+5 319 M
+(                if \(!directoryEntry\) {) s
+5 311 M
+(                    alert\('!directoryEntry!'\);) s
+5 303 M
+(                }) s
+5 295 M
+(                this.appFS.readDirectory\(directoryEntry\).subscribe\() s
+5 287 M
+(                    \(entries: Entry[]\) => {) s
+5 279 M
+(                        console.log\('OrganizerPage.switchFolder\(\) entries: ' +) s
+5 271 M
+(                                    entries\);) s
+5 263 M
+(                        console.log\(this.selectedPaths\);) s
+5 255 M
+(                        console.dir\(entries\);) s
+5 247 M
+(                        this.entries = entries;) s
+5 239 M
+(                        this.detectChanges\(\);) s
+5 231 M
+(                        if \(bUpdateAppState\) {) s
+5 223 M
+(                            this.appState.set\() s
+5 215 M
+(                                'lastViewedFolderPath',) s
+5 207 M
+(                                path) s
+5 199 M
+(                            \).then\(\);) s
+5 191 M
+(                        }) s
+5 183 M
+(                    },) s
+5 175 M
+(                    \(err1: any\) => {) s
+5 167 M
+(                        alert\('err1: ' + err1\);) s
+5 159 M
+(                    }) s
+5 151 M
+(                \); // this.appFS.readDirectory\(\).susbscribe\(..) s
+5 143 M
+(            },) s
+5 135 M
+(            \(err2: any\) => {) s
+5 127 M
+(                alert\('err2: ' + err2\);) s
+5 119 M
+(            }) s
+5 111 M
+(        \); // this.appFS.getPathEntry\(..\).subscribe\(..) s
+5 103 M
+(    }) s
+5 87 M
+(    private detectChanges\(\): void {) s
+5 79 M
+(        console.log\('OrganizerPage.detectChanges\(\)'\);) s
+5 71 M
+(        setTimeout\() s
+5 63 M
+(            \(\) => {) s
+5 55 M
+(                this.changeDetectorRef.detectChanges\(\);) s
+5 47 M
+(                this.content.resize\(\);) s
+5 39 M
+(            },) s
+5 31 M
+(            0) s
+5 23 M
+(        \);) s
+5 15 M
+(    }) s
+365 551 M
+(    /**) s
+365 543 M
+(     * UI calls this when the new folder button is clicked) s
+365 535 M
+(     * @returns {void}) s
+365 527 M
+(     */) s
+365 519 M
+(    public onClickEntry\(entry: Entry\): void {) s
+365 511 M
+(        console.log\('onClickEntry\(\)'\);) s
+365 503 M
+(        const dirPath: string = [) s
+365 495 M
+(            this.directoryEntry.fullPath,) s
+365 487 M
+(            '/',) s
+365 479 M
+(            entry.name,) s
+365 471 M
+(            '/') s
+365 463 M
+(        ].join\(''\);) s
+365 455 M
+(        this.switchFolder\(dirPath, true\);) s
+365 447 M
+(    }) s
+365 431 M
+(    /**) s
+365 423 M
+(     * UI calls this when the new folder button is clicked) s
+365 415 M
+(     * @returns {void}) s
+365 407 M
+(     */) s
+365 399 M
+(    public addFolder\(\): void {) s
+365 391 M
+(        let parentPath: string = this.getFullPath\(this.directoryEntry\),) s
+365 383 M
+(            newFolderAlert: Alert = this.alertController.create\({) s
+365 375 M
+(                title: 'Create a new folder in ' + parentPath,) s
+365 367 M
+(                // message: 'Enter the folder name',) s
+365 359 M
+(                inputs: [{) s
+365 351 M
+(                    name: 'folderName',) s
+365 343 M
+(                    placeholder: 'Enter folder name...') s
+365 335 M
+(                }],) s
+365 327 M
+(                buttons: [) s
+365 319 M
+(                    {) s
+365 311 M
+(                        text: 'Cancel',) s
+365 303 M
+(                        role: 'cancel',) s
+365 295 M
+(                        handler: \(\) => {) s
+365 287 M
+(                            console.log\('Cancel clicked in new-folder alert'\);) s
+365 279 M
+(                            // this.keyboard.close\(\);) s
+365 271 M
+(                        }) s
+365 263 M
+(                    },) s
+365 255 M
+(                    {) s
+365 247 M
+(                        text: 'Done',) s
+365 239 M
+(                        handler: \(data: any\) => {) s
+365 231 M
+(                            let folderName: string = data.folderName;) s
+365 223 M
+(                            if \(!folderName.length\) {) s
+365 215 M
+(                                // this code should never be reached) s
+365 207 M
+(                                alert\('how did we reach this code?'\);) s
+365 199 M
+(                                return;) s
+365 191 M
+(                            }) s
+365 183 M
+(                            if \(folderName[folderName.length - 1] !== '/'\) {) s
+365 175 M
+(                                // last char isn't a slash, add a) s
+365 167 M
+(                                // slash at the end) s
+365 159 M
+(                                folderName += '/';) s
+365 151 M
+(                            }) s
+365 143 M
+(                            // create the folder via getPathEntry\(\)) s
+365 135 M
+(                            this.appFS.getPathEntry\() s
+365 127 M
+(                                parentPath + folderName,) s
+365 119 M
+(                                true) s
+365 111 M
+(                            \).subscribe\() s
+365 103 M
+(                                \(directoryEntry: DirectoryEntry\) => {) s
+365 95 M
+(                                    // re-read parent) s
+365 87 M
+(                                    // to load in new info) s
+365 79 M
+(                                    this.switchFolder\(parentPath, false\);) s
+365 71 M
+(                                    // this.keyboard.close\(\);) s
+365 63 M
+(                                }) s
+365 55 M
+(                            \);) s
+365 47 M
+(                        }) s
+365 39 M
+(                    }) s
+365 31 M
+(                ]) s
+365 23 M
+(            }\);) s
+365 15 M
+(        newFolderAlert.present\(\);) s
+365 7 M
+(        // this.keyboard.show\(\);) s
+_R
+S
+%%Page: (5) 5
+%%BeginPageSetup
+_S
+90 rotate
+36 -594 translate
+/pagenum 5 def
+/fname (pages/organizer-page/organizer-page.ts) def
+/fdir (pages/organizer-page) def
+/ftail (organizer-page.ts) def
+% User defined strings:
+/fmodstr (Wed Sep 13 11:09:08 2017) def
+/pagenumstr (5) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 551 M
+(    }) s
+5 535 M
+(    /**) s
+5 527 M
+(     * Select all or no items in current folder, depending on 'all; argument) s
+5 519 M
+(     * @param {boolean} if true, select all, if false, select none) s
+5 511 M
+(     * @returns {void}) s
+5 503 M
+(     */) s
+5 495 M
+(    private selectAllOrNoneInFolder\(bSelectAll: boolean\): void {) s
+5 487 M
+(        console.log\('selectAllOrNoneInFolder\(' + bSelectAll + '\)'\);) s
+5 479 M
+(        let bChanged: boolean = false;) s
+5 471 M
+(        this.entries.forEach\(\(entry: Entry\) => {) s
+5 463 M
+(            const fullPath: string = this.getFullPath\(entry\),) s
+5 455 M
+(                  isSelected: boolean = this.isSelected\(entry\);) s
+5 447 M
+(            if \(bSelectAll && !isSelected\) {) s
+5 439 M
+(                this.selectedPaths.add\(fullPath\);) s
+5 431 M
+(                bChanged = true;) s
+5 423 M
+(            }) s
+5 415 M
+(            else if \(!bSelectAll && isSelected\) {) s
+5 407 M
+(                this.selectedPaths.delete\(fullPath\);) s
+5 399 M
+(                bChanged = true;) s
+5 391 M
+(            }) s
+5 383 M
+(        }\);) s
+5 375 M
+(        if \(bChanged\) {) s
+5 367 M
+(            this.appState.set\() s
+5 359 M
+(                'selectedPaths',) s
+5 351 M
+(                this.selectedPaths) s
+5 343 M
+(            \).then\(\);) s
+5 335 M
+(        }) s
+5 327 M
+(    }) s
+5 319 M
+(}) s
+_R
+S
+%%Trailer
+%%Pages: 5
+%%DocumentNeededResources: font Courier-Bold Courier
+%%EOF

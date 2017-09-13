@@ -16,8 +16,8 @@
 </ion-header>
 
 <ion-content>
-    <ion-list [reorder]="entries.length > 1" (ionItemReorder)="reorderEntries($event)">
-        <ion-item clear *ngFor="let entry of entries" class="selection-page-item">
+    <ion-list [reorder]="selectedEntries.length > 1" (ionItemReorder)="reorderEntries($event)">
+        <ion-item clear *ngFor="let entry of selectedEntries" class="selection-page-item">
             <ion-label ion-button clear (click)="toggleSelect(entry)">
                 <ion-icon [name]="entryIcon(entry)"></ion-icon>
                 &nbsp;

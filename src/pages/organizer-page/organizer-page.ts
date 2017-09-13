@@ -6,7 +6,6 @@ import {
     ActionSheet,
     ActionSheetController,
     Content,
-    // ItemSliding,
     ModalController,
     NavController,
     Platform
@@ -19,11 +18,7 @@ import {
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { SelectionPage } from '../../pages';
-import {
-    MoveToPage
-    // , TrackPage
-} from '../';
-// import { Keyboard } from '@ionic-native/keyboard';
+import { MoveToPage } from '../';
 import { AppFS } from '../../services';
 
 /**
@@ -38,6 +33,7 @@ import { AppFS } from '../../services';
 })
 export class OrganizerPage extends SelectionPage {
     @ViewChild(Content) public content: Content;
+    public entries: Entry[];
     // UI uses directoryEntry
     public directoryEntry: DirectoryEntry;
     // we remember this just so we can uncheck it when
@@ -71,7 +67,6 @@ export class OrganizerPage extends SelectionPage {
      * @param {Platform}
      */
     constructor(
-        // keyboard: Keyboard,
         navController: NavController,
         alertController: AlertController,
         actionSheetController: ActionSheetController,
@@ -84,20 +79,10 @@ export class OrganizerPage extends SelectionPage {
         super(appState, appFS);
 
         console.log('constructor():OrganizerPage');
-        // this.keyboard = keyboard;
         this.changeDetectorRef = changeDetectorRef;
         this.directoryEntry = null;
         this.actionSheetController = actionSheetController;
-
-        appState.get('lastViewedFolderPath').then(
-            (path: string) => {
-                this.switchFolder(path, false);
-                appState.get('selectedPaths').then(
-                    (selectedPaths: Set<string>) => {
-                        this.selectedPaths = selectedPaths;
-                    });
-            } // (path: string) => {..
-        ); // appState.get('lastViewedFolderPath').then(..
+        this.entries = [];
 
         this.navController = navController;
         this.alertController = alertController;
@@ -188,6 +173,30 @@ export class OrganizerPage extends SelectionPage {
             }
         ];
 
+    }
+
+    public getLastViewedFolderPathFromStorage(): void {
+        this.appState.get('lastViewedFolderPath').then(
+            (path: string) => {
+                this.switchFolder(path, false);
+            } // (path: string) => {..
+        ); // appState.get('lastViewedFolderPath').then(..
+    }
+
+    /**
+     */
+    public ionViewWillEnter(): void {
+        console.log('OrganizerPage.ionViewWillEnter()');
+        super.ionViewWillEnter();
+        this.getLastViewedFolderPathFromStorage();
+    }
+
+    /**
+     * @param {Entry} entry
+     */
+    public toggleSelect(entry: Entry): void {
+        super.toggleSelect(entry);
+        this.detectChanges();
     }
 
     /**
@@ -319,20 +328,6 @@ export class OrganizerPage extends SelectionPage {
             itemsStr: string = nSelectedEntries.toString() + ' item' +
             ((nSelectedEntries > 1) ? 's' : ''),
             entries: string[] = Array.from(this.selectedPaths),
-            // sortFun: (a: string, b: string) => number =
-            // (a: string, b: string) => {
-            //     const lenA: number = a.split('/').length,
-            //           lenB: number = b.split('/').length;
-            //     if (lenA < lenB) {
-            //         return -1;
-            //     }
-            //     else if (lenA === lenB) {
-            //         return 0;
-            //     }
-            //     else {
-            //         return 1;
-            //     }
-            // },
             deleteAlert: Alert = this.alertController.create();
 
         // entries.sort(sortFun);
@@ -370,8 +365,7 @@ export class OrganizerPage extends SelectionPage {
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
         if (this.selectedPaths.has('/Unfiled/')) {
-            let deleteAlert: Alert = this.alertController.create();
-
+            const deleteAlert: Alert = this.alertController.create();
             deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
                                  '\'s selected. Automatically unselect it?');
             deleteAlert.addButton('Cancel');
@@ -470,7 +464,10 @@ export class OrganizerPage extends SelectionPage {
         ); // this.appFS.getPathEntry(..).subscribe(..
     }
 
-    private detectChanges(): void {
+    /**
+     * @returns {void}
+     */
+     private detectChanges(): void {
         console.log('OrganizerPage.detectChanges()');
         setTimeout(
             () => {
@@ -515,7 +512,6 @@ export class OrganizerPage extends SelectionPage {
                         role: 'cancel',
                         handler: () => {
                             console.log('Cancel clicked in new-folder alert');
-                            // this.keyboard.close();
                         }
                     },
                     {
@@ -541,7 +537,6 @@ export class OrganizerPage extends SelectionPage {
                                     // re-read parent
                                     // to load in new info
                                     this.switchFolder(parentPath, false);
-                                    // this.keyboard.close();
                                 }
                             );
                         }
@@ -549,7 +544,6 @@ export class OrganizerPage extends SelectionPage {
                 ]
             });
         newFolderAlert.present();
-        // this.keyboard.show();
     }
 
     /**

@@ -15,7 +15,7 @@ import { AppFS } from '../../services';
     templateUrl: 'selection-page.html'
 })
 export class SelectionPage {
-    public entries: Entry[];
+    public selectedEntries: Entry[];
     public selectedPaths: Set<string>;
 
     protected appState: AppState;
@@ -24,6 +24,7 @@ export class SelectionPage {
     /**
      * @constructor
      * @param {AppState}
+     * @param {AppFS}
      */
     constructor(
         appState: AppState,
@@ -33,31 +34,41 @@ export class SelectionPage {
         this.appState = appState;
         this.appFS = appFS;
 
-        this.entries = [];
+        this.selectedEntries = [];
         this.selectedPaths = new Set<string>();
     }
 
-    public ionViewWillEnter(): void {
-        console.log('SelectionPage.ionViewWillEnter()');
+    /**
+     */
+    public getSelectedPathsFromStorage(): void {
+        console.log('SelectionPage.updateSelectedPaths()');
         this.appState.get('selectedPaths').then(
             (selectedPaths: Set<string>) => {
                 this.selectedPaths = selectedPaths;
                 const sortedEntriesPaths: string[] =
                     Array.from(selectedPaths).sort();
                 this.appFS.getEntriesFromPaths(sortedEntriesPaths)
-                    .subscribe((entries: Entry[]) => {
-                        this.entries = entries;
+                    .subscribe((selectedEntries: Entry[]) => {
+                        this.selectedEntries = selectedEntries;
                     });
                 }
             );
     }
 
+    /**
+     */
+    public ionViewWillEnter(): void {
+        console.log('SelectionPage.ionViewWillEnter()');
+        this.getSelectedPathsFromStorage();
+    }
+
+    /**
+     * @param {Entry} entry
+     */
     public getFullPath(entry: Entry): string {
-        const fullPath: string = entry.fullPath,
-              len: number = fullPath.length;
-        return entry.isDirectory && (len > 1) ?
-            entry.fullPath + '/' :
-            entry.fullPath;
+        const fullPath: string = entry.fullPath;
+        return entry.isDirectory && (fullPath.length > 1) ?
+            fullPath + '/' : fullPath;
     }
 
     /**
@@ -68,11 +79,17 @@ export class SelectionPage {
         return entry.isDirectory ? 'folder' : 'play';
     }
 
+    /**
+     * @param {Entry} entry
+     */
     public isSelected(entry: Entry): boolean {
         console.log('isSelected(' + entry.name + ')');
         return this.selectedPaths.has(this.getFullPath(entry));
     }
 
+    /**
+     * @param {Entry} entry
+     */
     public toggleSelect(entry: Entry): void {
         console.log('toggleSelect(' + entry.name + ')');
         const fullPath: string = this.getFullPath(entry);
@@ -82,16 +99,18 @@ export class SelectionPage {
         else {
             this.selectedPaths.add(fullPath);
         }
-
         this.appState.set('selectedPaths', this.selectedPaths).then();
     }
 
+    /**
+     * @param {any} indexes
+     */
     public reorderEntries(indexes: any): void {
         console.log('reorderEntries(' + indexes + ')');
         console.log(typeof(indexes));
         console.dir(indexes);
-        let entry: Entry = this.entries[indexes.from];
-        this.entries.splice(indexes.from, 1);
-        this.entries.splice(indexes.to, 0, entry);
+        const entry: Entry = this.selectedEntries[indexes.from];
+        this.selectedEntries.splice(indexes.from, 1);
+        this.selectedEntries.splice(indexes.to, 0, entry);
     }
 }
