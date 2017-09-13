@@ -37,13 +37,17 @@ export class AppFS {
     }
 
     public removeEntries(paths: string[]): Observable<void> {
+        console.log('appFS.removeEntries()');
         let source: Observable<void> = Observable.create((observer) => {
             FS.removeEntries(this.fileSystem, paths).subscribe(
                 null,
                 (err: any) => {
                     observer.error(err);
                 }
-            );
+            ),
+            (err: any) => {
+                observer.error(err);
+            }
         });
         return source;
     }

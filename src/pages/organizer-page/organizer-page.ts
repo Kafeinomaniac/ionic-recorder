@@ -36,9 +36,6 @@ export class OrganizerPage extends SelectionPage {
     public entries: Entry[];
     // UI uses directoryEntry
     public directoryEntry: DirectoryEntry;
-    // we remember this just so we can uncheck it when
-    // in dialog of delete button
-    public unfiledDirectory: DirectoryEntry;
     // UI uses headerButtons
     public headerButtons: ButtonbarButton[];
     // UI uses footerButtons
@@ -49,14 +46,6 @@ export class OrganizerPage extends SelectionPage {
     private alertController: AlertController;
     private modalController: ModalController;
     private changeDetectorRef: ChangeDetectorRef;
-
-    // appState now handled by selectionpage as private
-    // private appState: AppState;
-
-    // UI uses selectedPaths
-
-    // selectedPaths now from SelectionPage
-    // public selectedPaths: Set<string>;
 
     /**
      * @constructor
@@ -339,19 +328,29 @@ export class OrganizerPage extends SelectionPage {
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
-                this.appFS.removeEntries(entries).subscribe(() => {
-                    this.selectedPaths.clear();
-                    this.appState.set(
-                        'selectedPaths',
-                        this.selectedPaths
-                    ).then(
-                        () => {
-                            this.switchFolder(
-                                this.getFullPath(this.directoryEntry),
-                                false
-                            );
-                        });
-                });
+                alert('what 1');
+                this.appFS.removeEntries(entries).subscribe(
+                    () => {
+                        alert('what 2');
+                        this.selectedPaths.clear();
+                        this.appState.set(
+                            'selectedPaths',
+                            this.selectedPaths
+                        ).then(
+                            () => {
+                                console.log(
+                                    'OrganizerPage.confirmAndDeleteSelected()' +
+                                    ': after set selected paths, bef. switch'
+                                );
+                                this.switchFolder(
+                                    this.getFullPath(this.directoryEntry),
+                                    false
+                                );
+                            });
+                    },
+                    (err: any) => {
+                       alert('whoa: ' + err);
+                    });
             }
         });
 
@@ -374,7 +373,7 @@ export class OrganizerPage extends SelectionPage {
                 handler: () => {
                     this.selectedPaths.delete('/Unfiled/');
                     this.selectedPaths.delete(
-                        this.getFullPath(this.unfiledDirectory)
+                        this.getFullPath(this.appFS.unfiledDirectory)
                     );
                     this.confirmAndDeleteSelected();
                 }

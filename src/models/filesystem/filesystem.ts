@@ -30,8 +30,7 @@ export class FS {
 
     public static removeEntries(
         fileSystem: FileSystem,
-        paths: string[],
-        bIgnoreErrors: boolean = true
+        paths: string[]
     ): Observable<void> {
         let entryObservableArray: Observable<Entry>[] =
                 paths.map((path: string) => {
@@ -40,15 +39,10 @@ export class FS {
             source: Observable<void> = Observable.create((observer) => {
             Observable.from(entryObservableArray).concatAll().subscribe(
                 (entry: Entry) => {
-                    FS.removeEntry(entry, bIgnoreErrors).subscribe();
+                    FS.removeEntry(entry).subscribe();
                 },
                 (err: any) => {
-                    if (bIgnoreErrors) {
-                        observer.next();
-                    }
-                    else {
-                        observer.error(err);
-                    }
+                    observer.error(err);
                 },
                 () => {
                     observer.next();
@@ -60,8 +54,7 @@ export class FS {
     }
 
     public static removeEntry(
-        entry: Entry,
-        bIgnoreErrors: boolean = true
+        entry: Entry
     ): Observable<void> {
         console.log('removeEntry(' + entry.fullPath + ')');
         let source: Observable<void> = Observable.create((observer) => {
@@ -74,14 +67,7 @@ export class FS {
                     },
                     (err: FileError) => {
                         console.log('remove file error: ' + err);
-                        if (bIgnoreErrors) {
-                            console.log('ignoring: ' + entry.fullPath);
-                            observer.next();
-                            observer.complete();
-                        }
-                        else {
-                            observer.error(err);
-                        }
+                        observer.error(err);
                     }
                 );
             }
@@ -94,14 +80,7 @@ export class FS {
                     },
                     (err: FileError) => {
                         console.log('remove dir error: ' + err);
-                        if (bIgnoreErrors) {
-                            console.log('ignoring: ' + entry.fullPath);
-                            observer.next();
-                            observer.complete();
-                        }
-                        else {
-                            observer.error(err);
-                        }
+                        observer.error(err);
                     }
                 );
             }
@@ -200,12 +179,12 @@ export class FS {
 
     public static writeFile(
         fs: FileSystem,
-        name: string,
+        fullPath: string,
         blob: Blob
     ): Observable<void> {
         let src: Observable<void> = Observable.create((observer) => {
             fs.root.getFile(
-                name, { create: true },
+                fullPath, { create: true },
                 (fileEntry: FileEntry) => {
                     // Create a FileWriter object for our FileEntry (log.txt).
                     fileEntry.createWriter(
@@ -236,10 +215,10 @@ export class FS {
         return src;
     }
 
-    public static readFile(fs: FileSystem, name: string): Observable<any> {
+    public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
         let src: Observable<any> = Observable.create((observer) => {
             fs.root.getFile(
-                name, {},
+                fullPath, {},
                 (fileEntry: FileEntry) => {
                     fileEntry.file(
                         (file: File) => {

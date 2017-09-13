@@ -83,7 +83,8 @@ export class SelectionPage {
      * @param {Entry} entry
      */
     public isSelected(entry: Entry): boolean {
-        console.log('isSelected(' + entry.name + ')');
+        console.log('isSelected(' + entry.name + '): ' +
+            this.selectedPaths.has(this.getFullPath(entry)));
         return this.selectedPaths.has(this.getFullPath(entry));
     }
 

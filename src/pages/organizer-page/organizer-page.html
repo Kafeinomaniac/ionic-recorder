@@ -9,7 +9,7 @@
             Organizer
         </ion-title>
         <ion-buttons end *ngIf="selectedPaths.size">
-            <button ion-button small (click)="onClickSelectedBadge()" [disabled]="selectedPaths.size === 1">
+            <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
                     {{selectedPaths.size}} selected &nbsp; <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
