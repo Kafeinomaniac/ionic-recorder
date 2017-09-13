@@ -59,7 +59,7 @@ export class AppState {
                     if (value === null) {
                         console.log('VALUE NOT IN STORAGE!');
                         value = DEFAULT_STATE[key];
-                        this.updateProperty(key, value).then(() => {
+                        this.set(key, value).then(() => {
                             console.log('UPDATED STORAGE: key=' + key +
                                         ', value=' + value);
                             resolve(value);
@@ -81,7 +81,7 @@ export class AppState {
      * there is no need for an update (emits false in that case) or after we
      * have made the update in the DB (emits true in that case)
      */
-    public updateProperty(key: string, value: any): Promise<any> {
+    public set(key: string, value: any): Promise<any> {
         if (key in DEFAULT_STATE) {
             console.log('=====> APP STATE UPDATE <======= key:' +
                         key + ', value:' + value);

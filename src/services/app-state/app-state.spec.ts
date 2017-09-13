@@ -37,7 +37,7 @@ describe('When appState initialized', () => {
     it('can update lastTabIndex and read it', (done) => {
         setTimeout(
             () => {
-                appState.updateProperty('lastTabIndex', 9999).then(
+                appState.set('lastTabIndex', 9999).then(
                     (bUpdated: number) => {
                         expect(bUpdated).toBe(9999);
                         appState.get('lastTabIndex').then(
@@ -53,7 +53,7 @@ describe('When appState initialized', () => {
     it('can update lastTabIndex back to what it was', (done) => {
         setTimeout(
             () => {
-                appState.updateProperty('lastTabIndex', savedTabIndex)
+                appState.set('lastTabIndex', savedTabIndex)
                     .then(
                         (bUpdated: number) => {
                             expect(bUpdated).toBe(savedTabIndex);

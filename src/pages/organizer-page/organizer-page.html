@@ -9,7 +9,7 @@
             Organizer
         </ion-title>
         <ion-buttons end *ngIf="selectedEntries.size">
-            <button ion-button small (click)="onClickSelectedBadge()">
+            <button ion-button small (click)="onClickSelectedBadge()" [disabled]="selectedEntries.size === 1">
                 <ion-badge item-right>
                     {{selectedEntries.size}} selected &nbsp; <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
@@ -33,7 +33,7 @@
                 &nbsp;
                 {{entry.name}}
             </ion-label>
-            <ion-checkbox [checked]="entry.isChecked" (click)="toggleSelect(entry)"></ion-checkbox>
+            <ion-checkbox [checked]="isSelected(entry)" (click)="toggleSelect(entry)"></ion-checkbox>
         </ion-item>
         <ion-item class="organizer-page-empty-folder-message" *ngIf="!entries.length">
             <h2>

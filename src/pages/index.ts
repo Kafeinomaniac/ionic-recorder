@@ -2,6 +2,7 @@
 
 export * from './about-page/about-page';
 export * from './edit-selection-page/edit-selection-page';
+export * from './selection-page/selection-page';
 export * from './library-page/library-page';
 export * from './loading-page/loading-page';
 export * from './moveto-page/moveto-page';

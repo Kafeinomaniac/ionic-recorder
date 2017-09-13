@@ -6,7 +6,7 @@ export class AppStateMock {
             resolve(null);
         });
     }
-    public updateProperty(key: string, value: any): Promise<any> {
+    public set(key: string, value: any): Promise<any> {
         return new Promise((resolve, reject) => {
             resolve(null);
         });

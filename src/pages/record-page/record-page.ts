@@ -149,11 +149,11 @@ export class RecordPage {
         this.percentGain = (this.gainFactor * 100.0).toFixed(0);
 
         if (updateStorage) {
-            this.appState.updateProperty('gain', {
+            this.appState.set('gain', {
                 factor: this.gainFactor,
                 maxFactor: this.maxGainFactor
             }).then(null, (error: any) => {
-                const msg: string = 'AppState:updateProperty(): ' + error;
+                const msg: string = 'AppState:set(): ' + error;
                 alert(msg);
                 throw Error(msg);
             });
@@ -223,7 +223,7 @@ export class RecordPage {
                         // here's where we get the key
                         recordingInfo.dbKey = parentChild.child[DB_KEY_PATH];
                         // remember last recording's information
-                        this.appState.updateProperty(
+                        this.appState.set(
                             'lastRecordingInfo',
                             recordingInfo
                         ).then(

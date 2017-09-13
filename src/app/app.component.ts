@@ -106,7 +106,7 @@ export class IonicRecorderApp {
             // the app it starts with the last tab you've visited last
             // time you used it
             // console.log('updating tab index to be: ' + tabIndex);
-            this.appState.updateProperty('lastTabIndex', tabIndex).then();
+            this.appState.set('lastTabIndex', tabIndex).then();
         }
     }
 

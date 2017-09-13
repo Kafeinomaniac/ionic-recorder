@@ -137,15 +137,21 @@ export class MoveToPage {
                                   this.folderNode[DB_KEY_PATH]
                               ).subscribe(
                                   (parentChild: ParentChild) => {
-                                      const childNode: TreeNode = parentChild.child,
-                                            parentNode: TreeNode = parentChild.parent,
+                                      const childNode: TreeNode =
+                                            parentChild.child,
+                                            parentNode: TreeNode =
+                                            parentChild.parent,
                                             childNodeKey: number =
                                             childNode[DB_KEY_PATH];
-                                      console.log('childNode: ' + childNode.name +
-                                                  ', parentNode: ' + parentNode.name);
+                                      console.log('childNode: ' +
+                                                  childNode.name +
+                                                  ', parentNode: ' +
+                                                  parentNode.name);
                                       // console.dir(childNode);
-                                      // update folder items dictionary of this page
-                                      this.folderItems[childNodeKey] = childNode;
+                                      // update folder items
+                                      // dictionary of this page
+                                      this.folderItems[childNodeKey] =
+                                          childNode;
                                       this.folderNode = parentNode;
                                   }
                               ); // createFolderNode().subscribe(

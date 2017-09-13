@@ -148,7 +148,7 @@ export class EditSelectionPage {
         }
 
         // update state with new list of selected nodes
-        this.appState.updateProperty('selectedNodes', this.selectedNodes)
+        this.appState.set('selectedNodes', this.selectedNodes)
             .then();
     }
 

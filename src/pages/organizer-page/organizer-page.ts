@@ -18,7 +18,7 @@ import {
 } from '@angular/core';
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
+import { SelectionPage } from '../../pages';
 import { FS } from '../../models/filesystem/filesystem';
 import {
     MoveToPage
@@ -27,7 +27,6 @@ import {
 // import { Keyboard } from '@ionic-native/keyboard';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
-const CHECKED_KEY: string = 'isChecked';
 
 /**
  * @name OrganizerPage
@@ -374,7 +373,7 @@ export class OrganizerPage {
             handler: () => {
                 FS.removeEntries(this.fileSystem, entries).subscribe(() => {
                     this.selectedEntries.clear();
-                    this.appState.updateProperty(
+                    this.appState.set(
                         'selectedEntries',
                         this.selectedEntries
                     ).then(
@@ -407,7 +406,9 @@ export class OrganizerPage {
                 text: 'Yes',
                 handler: () => {
                     this.selectedEntries.delete('/Unfiled/');
-                    this.unfiledDirectory[CHECKED_KEY] = false;
+                    this.selectedEntries.delete(
+                        this.getFullPath(this.unfiledDirectory)
+                    );
                     this.confirmAndDeleteSelected();
                 }
             });
@@ -446,7 +447,10 @@ export class OrganizerPage {
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
-        this.navController.push(EditSelectionPage);
+        if (this.selectedEntries.size) {
+            // only go to edit selections if at least one is selected
+            this.navController.push(SelectionPage);
+        }
     }
 
     /**
@@ -480,16 +484,11 @@ export class OrganizerPage {
                         console.log('OrganizerPage.switchFolder() entries: ' +
                                     entries);
                         console.log(this.selectedEntries);
-                        entries.forEach((entry: Entry) => {
-                            const fullPath: string = this.getFullPath(entry);
-                            entry[CHECKED_KEY] =
-                                this.selectedEntries.has(fullPath);
-                        });
                         console.dir(entries);
                         this.entries = entries;
                         this.detectChanges();
                         if (bUpdateAppState) {
-                            this.appState.updateProperty(
+                            this.appState.set(
                                 'lastViewedFolderPath',
                                 path
                             ).then();
@@ -534,26 +533,36 @@ export class OrganizerPage {
 
     public toggleSelect(entry: Entry): void {
         console.log('toggleSelect(' + entry.name + ')');
-        if (entry[CHECKED_KEY]) {
-            entry[CHECKED_KEY] = false;
-            this.selectedEntries.delete(this.getFullPath(entry));
-            this.detectChanges();
+        const fullPath: string = this.getFullPath(entry);
+        if (this.selectedEntries.has(fullPath)) {
+            this.selectedEntries.delete(fullPath);
         }
         else {
-            entry[CHECKED_KEY] = true;
-            this.selectedEntries.add(this.getFullPath(entry));
-            this.detectChanges();
+            this.selectedEntries.add(fullPath);
         }
-        this.appState.updateProperty('selectedEntries', this.selectedEntries)
-            .then();
+
+        this.appState.set('selectedEntries', this.selectedEntries)
+            .then(() => {
+                this.detectChanges();
+            });
     }
+
+    // not just colonoscopy - mri look, cat scan or what
+    // thickening of the wall -- opinion on what to do now
+    // colonoscopy or cat scan first?
+
+    // balzora
+    // ganju
+    // loebb
+
+    // gastroenterology
 
     /**
      * UI calls this when the new folder button is clicked
      * @returns {void}
      */
     public addFolder(): void {
-        let parentPath: string = this.directoryEntry.fullPath + '/',
+        let parentPath: string = this.getFullPath(this.directoryEntry),
             newFolderAlert: Alert = this.alertController.create({
                 title: 'Create a new folder in ' + parentPath,
                 // message: 'Enter the folder name',
@@ -605,6 +614,10 @@ export class OrganizerPage {
         // this.keyboard.show();
     }
 
+    public isSelected(entry: Entry): boolean {
+        return this.selectedEntries.has(this.getFullPath(entry));
+    }
+
     /**
      * Select all or no items in current folder, depending on 'all; argument
      * @param {boolean} if true, select all, if false, select none
@@ -615,20 +628,18 @@ export class OrganizerPage {
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
             const fullPath: string = this.getFullPath(entry),
-                  isSelected: boolean = entry[CHECKED_KEY];
+                  isSelected: boolean = this.isSelected(entry);
             if (bSelectAll && !isSelected) {
-                entry[CHECKED_KEY] = true;
                 this.selectedEntries.add(fullPath);
                 bChanged = true;
             }
             else if (!bSelectAll && isSelected) {
-                entry[CHECKED_KEY] = false;
                 this.selectedEntries.delete(fullPath);
                 bChanged = true;
             }
         });
         if (bChanged) {
-            this.appState.updateProperty(
+            this.appState.set(
                 'selectedEntries',
                 this.selectedEntries
             ).then();

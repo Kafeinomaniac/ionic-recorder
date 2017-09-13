@@ -3,6 +3,7 @@
 import {
     AboutPage,
     EditSelectionPage,
+    SelectionPage,
     LibraryPage,
     LoadingPage,
     MoveToPage,
@@ -35,6 +36,7 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         LibraryPage,
         MoveToPage,
         EditSelectionPage,
+        SelectionPage,
         LoadingPage,
         OrganizerPage,
         RecordPage,
@@ -57,6 +59,7 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         LibraryPage,
         MoveToPage,
         EditSelectionPage,
+        SelectionPage,
         LoadingPage,
         OrganizerPage,
         RecordPage,
