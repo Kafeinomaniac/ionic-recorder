@@ -2,46 +2,37 @@ import { Observable } from 'rxjs/Rx';
 
 export class FS {
 
+    public static getEntriesFromPaths(
+        fileSystem: FileSystem,
+        paths: string[]
+    ): Observable<Entry[]> {
+        let entryObservableArray: Observable<Entry>[] =
+                paths.map((path: string) => {
+                    return FS.getPathEntry(fileSystem, path, false);
+                }),
+            result: Entry[] = [],
+            source: Observable<Entry[]> = Observable.create((observer) => {
+            Observable.from(entryObservableArray).concatAll().subscribe(
+                (entry: Entry) => {
+                    result.push(entry);
+                },
+                (err: any) => {
+                    observer.error(err);
+                },
+                () => {
+                    observer.next(result);
+                    observer.complete();
+                }
+            );
+        });
+        return source;
+    }
+
     public static removeEntries(
         fileSystem: FileSystem,
         paths: string[],
         bIgnoreErrors: boolean = true
     ): Observable<void> {
-        /* -- the old, not in-order buggy code
-        let source: Observable<void> = Observable.create((observer) => {
-            const nPaths: number = paths.length;
-            let nDeleted: number = 0;
-            for (let path of paths) {
-                FS.getPathEntry(fileSystem, path, false).subscribe(
-                    (entry: Entry) => {
-                        FS.removeEntry(entry).subscribe(
-                            () => {
-                                nDeleted++;
-                                if (nDeleted === nPaths) {
-                                    observer.next();
-                                    observer.complete();
-                                }
-                            },
-                            (err1: any) => {
-                                if (bIgnoreErrors) {
-                                    nDeleted++;
-                                    if (nDeleted === nPaths) {
-                                        observer.next();
-                                        observer.complete();
-                                    }
-                                }
-                                else {
-                                    observer.error(err1);
-                                }
-                            }
-                        );
-                    },
-                    (err2: any) => {
-                        observer.error(err2);
-                    }
-                );
-            }
-        */
         let entryObservableArray: Observable<Entry>[] =
                 paths.map((path: string) => {
                     return FS.getPathEntry(fileSystem, path, false);

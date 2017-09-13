@@ -13,6 +13,7 @@ import {
     TrackPage
 } from '../pages';
 import { AppState } from '../services/app-state/app-state';
+import { AppFS } from '../services';
 import { AudioPlay } from '../components/audio-player/audio-player';
 import { BrowserModule } from '@angular/platform-browser';
 import { ButtonBar } from '../components/button-bar/button-bar';
@@ -74,6 +75,7 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         IdbAppData,
         IdbAppFS,
         AppState,
+        AppFS,
         MasterClock
     ]
 })

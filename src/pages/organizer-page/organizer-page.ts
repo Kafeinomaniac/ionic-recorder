@@ -59,8 +59,8 @@ export class OrganizerPage {
     private modalController: ModalController;
     private changeDetectorRef: ChangeDetectorRef;
     private appState: AppState;
-    // UI uses selectedEntries
-    private selectedEntries: Set<string>;
+    // UI uses selectedPaths
+    private selectedPaths: Set<string>;
 
     /**
      * @constructor
@@ -88,7 +88,7 @@ export class OrganizerPage {
         this.entries = [];
         this.directoryEntry = null;
         this.unfiledDirectory = null;
-        this.selectedEntries = new Set<string>();
+        this.selectedPaths = new Set<string>();
         this.actionSheetController = actionSheetController;
 
         // get the filesystem
@@ -104,9 +104,9 @@ export class OrganizerPage {
                         // get last viewed folder to switch to it
                         appState.get('lastViewedFolderPath').then(
                             (path: string) => {
-                                appState.get('selectedEntries').then(
-                                    (selectedEntries: Set<string>) => {
-                                        this.selectedEntries = selectedEntries;
+                                appState.get('selectedPaths').then(
+                                    (selectedPaths: Set<string>) => {
+                                        this.selectedPaths = selectedPaths;
                                         this.switchFolder(path, false);
                                     });
                             } // (path: string) => {..
@@ -324,8 +324,8 @@ export class OrganizerPage {
     public moveButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.selectedEntries.size === 1 &&
-            this.selectedEntries.has('/Unfiled/')) {
+        if (this.selectedPaths.size === 1 &&
+            this.selectedPaths.has('/Unfiled/')) {
             return true;
         }
         return false;
@@ -343,10 +343,10 @@ export class OrganizerPage {
      * @returns {void}
      */
     private confirmAndDeleteSelected(): void {
-        let nSelectedEntries: number = this.selectedEntries.size,
+        let nSelectedEntries: number = this.selectedPaths.size,
             itemsStr: string = nSelectedEntries.toString() + ' item' +
             ((nSelectedEntries > 1) ? 's' : ''),
-            entries: string[] = Array.from(this.selectedEntries),
+            entries: string[] = Array.from(this.selectedPaths),
             sortFun: (a: string, b: string) => number =
             (a: string, b: string) => {
                 const lenA: number = a.split('/').length,
@@ -372,10 +372,10 @@ export class OrganizerPage {
             text: 'Yes',
             handler: () => {
                 FS.removeEntries(this.fileSystem, entries).subscribe(() => {
-                    this.selectedEntries.clear();
+                    this.selectedPaths.clear();
                     this.appState.set(
-                        'selectedEntries',
-                        this.selectedEntries
+                        'selectedPaths',
+                        this.selectedPaths
                     ).then(
                         () => {
                             this.switchFolder(
@@ -396,7 +396,7 @@ export class OrganizerPage {
      */
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
-        if (this.selectedEntries.has('/Unfiled/')) {
+        if (this.selectedPaths.has('/Unfiled/')) {
             let deleteAlert: Alert = this.alertController.create();
 
             deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
@@ -405,8 +405,8 @@ export class OrganizerPage {
             deleteAlert.addButton({
                 text: 'Yes',
                 handler: () => {
-                    this.selectedEntries.delete('/Unfiled/');
-                    this.selectedEntries.delete(
+                    this.selectedPaths.delete('/Unfiled/');
+                    this.selectedPaths.delete(
                         this.getFullPath(this.unfiledDirectory)
                     );
                     this.confirmAndDeleteSelected();
@@ -426,8 +426,8 @@ export class OrganizerPage {
     public deleteButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.selectedEntries.size === 1 &&
-            this.selectedEntries.has('/Unfiled/')) {
+        if (this.selectedPaths.size === 1 &&
+            this.selectedPaths.has('/Unfiled/')) {
             return true;
         }
         return false;
@@ -447,7 +447,7 @@ export class OrganizerPage {
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
-        if (this.selectedEntries.size) {
+        if (this.selectedPaths.size) {
             // only go to edit selections if at least one is selected
             this.navController.push(SelectionPage);
         }
@@ -483,7 +483,7 @@ export class OrganizerPage {
                     (entries: Entry[]) => {
                         console.log('OrganizerPage.switchFolder() entries: ' +
                                     entries);
-                        console.log(this.selectedEntries);
+                        console.log(this.selectedPaths);
                         console.dir(entries);
                         this.entries = entries;
                         this.detectChanges();
@@ -534,14 +534,14 @@ export class OrganizerPage {
     public toggleSelect(entry: Entry): void {
         console.log('toggleSelect(' + entry.name + ')');
         const fullPath: string = this.getFullPath(entry);
-        if (this.selectedEntries.has(fullPath)) {
-            this.selectedEntries.delete(fullPath);
+        if (this.selectedPaths.has(fullPath)) {
+            this.selectedPaths.delete(fullPath);
         }
         else {
-            this.selectedEntries.add(fullPath);
+            this.selectedPaths.add(fullPath);
         }
 
-        this.appState.set('selectedEntries', this.selectedEntries)
+        this.appState.set('selectedPaths', this.selectedPaths)
             .then(() => {
                 this.detectChanges();
             });
@@ -615,7 +615,7 @@ export class OrganizerPage {
     }
 
     public isSelected(entry: Entry): boolean {
-        return this.selectedEntries.has(this.getFullPath(entry));
+        return this.selectedPaths.has(this.getFullPath(entry));
     }
 
     /**
@@ -630,18 +630,18 @@ export class OrganizerPage {
             const fullPath: string = this.getFullPath(entry),
                   isSelected: boolean = this.isSelected(entry);
             if (bSelectAll && !isSelected) {
-                this.selectedEntries.add(fullPath);
+                this.selectedPaths.add(fullPath);
                 bChanged = true;
             }
             else if (!bSelectAll && isSelected) {
-                this.selectedEntries.delete(fullPath);
+                this.selectedPaths.delete(fullPath);
                 bChanged = true;
             }
         });
         if (bChanged) {
             this.appState.set(
-                'selectedEntries',
-                this.selectedEntries
+                'selectedPaths',
+                this.selectedPaths
             ).then();
         }
     }

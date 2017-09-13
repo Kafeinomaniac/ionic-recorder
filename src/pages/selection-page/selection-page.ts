@@ -1,21 +1,8 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import {
-    Alert,
-    AlertController,
-    Content,
-    ModalController,
-    NavController,
-    Platform
-} from 'ionic-angular';
-import {
-    Component,
-    ViewChild
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { AppState } from '../../services/app-state/app-state';
-import { FS } from '../../models/filesystem/filesystem';
-
-const REQUEST_SIZE: number = 1024 * 1024 * 1024;
+import { AppFS } from '../../services';
 
 /**
  * @name SelectionPage
@@ -28,78 +15,41 @@ const REQUEST_SIZE: number = 1024 * 1024 * 1024;
     templateUrl: 'selection-page.html'
 })
 export class SelectionPage {
-    @ViewChild(Content) public content: Content;
-    // private keyboard: Keyboard;
-    private fileSystem: FileSystem;
     public entries: Entry[];
-    // UI uses directoryEntry
-    public directoryEntry: DirectoryEntry;
-    // we remember this just so we can uncheck it when
-    // in dialog of delete button
-    public unfiledDirectory: DirectoryEntry;
-    private navController: NavController;
-    // actionSheetController is used by add button
-    private alertController: AlertController;
-    private modalController: ModalController;
+    public selectedPaths: Set<string>;
+
     private appState: AppState;
-    // UI uses selectedEntries
-    private selectedEntries: Set<string>;
+    private appFS: AppFS;
 
     /**
      * @constructor
-     * @param {NavController}
-     * @param {AlertController}
-     * @param {ModalController}
      * @param {AppState}
-     * @param {Platform}
      */
     constructor(
-        // keyboard: Keyboard,
-        navController: NavController,
-        alertController: AlertController,
-        modalController: ModalController,
         appState: AppState,
-        platform: Platform
+        appFS: AppFS
     ) {
         console.log('constructor():SelectionPage');
-        // this.keyboard = keyboard;
         this.appState = appState;
-        this.fileSystem = null;
-        this.entries = [];
-        this.directoryEntry = null;
-        this.unfiledDirectory = null;
-        this.selectedEntries = new Set<string>();
+        this.appFS = appFS;
 
-        this.navController = navController;
-        this.alertController = alertController;
-        this.modalController = modalController;
+        this.entries = [];
+        this.selectedPaths = new Set<string>();
     }
 
     public ionViewWillEnter(): void {
         console.log('SelectionPage.ionViewWillEnter()');
-        // get the filesystem
-        FS.getFileSystem(true, REQUEST_SIZE).subscribe(
-            (fileSystem: FileSystem) => {
-                this.fileSystem = fileSystem;
-                this.appState.get('selectedEntries').then(
-                    (selectedEntries: Set<string>) => {
-                        this.selectedEntries = selectedEntries;
-                        selectedEntries.forEach((path: string) => {
-                            FS.getPathEntry(fileSystem, path, false).subscribe(
-                                (entry: Entry) => {
-                                    this.entries.push(entry);
-                                },
-                                (err: any) => {
-                                    alert('Error: SelectionPage constructor!');
-                                }
-                            );
-                        });
-                        this.selectedEntries = selectedEntries;
-                    }
-                );
-            }
-        );
-
+        this.appState.get('selectedPaths').then(
+            (selectedPaths: Set<string>) => {
+                this.selectedPaths = selectedPaths;
+                const sortedEntriesPaths: string[] =
+                    Array.from(selectedPaths).sort();
+                this.appFS.getEntriesFromPaths(sortedEntriesPaths)
+                    .subscribe((entries: Entry[]) => {
+                        this.entries = entries;
+                    });
+                }
+            );
     }
 
     public getFullPath(entry: Entry): string {
@@ -120,20 +70,20 @@ export class SelectionPage {
 
     public isSelected(entry: Entry): boolean {
         console.log('isSelected(' + entry.name + ')');
-        return this.selectedEntries.has(this.getFullPath(entry));
+        return this.selectedPaths.has(this.getFullPath(entry));
     }
 
     public toggleSelect(entry: Entry): void {
         console.log('toggleSelect(' + entry.name + ')');
         const fullPath: string = this.getFullPath(entry);
-        if (this.selectedEntries.has(fullPath)) {
-            this.selectedEntries.delete(fullPath);
+        if (this.selectedPaths.has(fullPath)) {
+            this.selectedPaths.delete(fullPath);
         }
         else {
-            this.selectedEntries.add(fullPath);
+            this.selectedPaths.add(fullPath);
         }
 
-        this.appState.set('selectedEntries', this.selectedEntries).then();
+        this.appState.set('selectedPaths', this.selectedPaths).then();
     }
 
     public reorderEntries(indexes: any): void {

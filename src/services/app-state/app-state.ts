@@ -15,7 +15,7 @@ interface State {
     lastViewedFolderKey: number;
     lastRecordingInfo: RecordingInfo;
     selectedNodes: KeyDict;
-    selectedEntries: Set<string>;
+    selectedPaths: Set<string>;
     gain: GainState;
     lastViewedFolderPath: string;
 }
@@ -25,7 +25,7 @@ const DEFAULT_STATE: State = {
     lastViewedFolderKey: 2,
     lastRecordingInfo: null,
     selectedNodes: {},
-    selectedEntries: new Set<string>(),
+    selectedPaths: new Set<string>(),
     gain: { factor: 1.0, maxFactor: 2.0 },
     lastViewedFolderPath: '/Unfiled/'
 };
@@ -57,21 +57,23 @@ export class AppState {
                 // it in storage, as taken from DEFAULT_STATE
                 this.storage.get(key).then((value: any) => {
                     if (value === null) {
-                        console.log('VALUE NOT IN STORAGE!');
+                        console.log('get(' + key +
+                                    ') VALUE NOT IN STORAGE!');
                         value = DEFAULT_STATE[key];
                         this.set(key, value).then(() => {
-                            console.log('UPDATED STORAGE: key=' + key +
+                            console.log('get(' + key +
+                                        ') UPDATED STORAGE: key=' + key +
                                         ', value=' + value);
                             resolve(value);
                         });
                     }
                     else {
-                        console.log('VALUE IN STORAGE: key=' + key +
-                                    ', value=' + value);
+                        console.log('get(' + key +
+                                    ') VALUE IN STORAGE=' + value);
                         resolve(value);
                     }
-                });
-            }
+                }); // this.storage.get(key).then((value: any) => {
+            } // if (key in DEFAULT_STATE) {
         });
     }
 

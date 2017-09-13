@@ -7,6 +7,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+1 services/app-filesystem/ - keeps this.fileSystem, only asks once,
+  injectable singleton
+2 use it in selection-page
+3 use it in organizer-page and have organizer-page extend selection-page
+
 1 selected-page - bottom-buttons
 2 move-to-page - only show folders, no files, or show files disabled
   which is a much better solution

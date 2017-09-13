@@ -8,10 +8,10 @@
         <ion-title>
             Organizer
         </ion-title>
-        <ion-buttons end *ngIf="selectedEntries.size">
-            <button ion-button small (click)="onClickSelectedBadge()" [disabled]="selectedEntries.size === 1">
+        <ion-buttons end *ngIf="selectedPaths.size">
+            <button ion-button small (click)="onClickSelectedBadge()" [disabled]="selectedPaths.size === 1">
                 <ion-badge item-right>
-                    {{selectedEntries.size}} selected &nbsp; <ion-icon name="md-create"></ion-icon>
+                    {{selectedPaths.size}} selected &nbsp; <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
             </button>
         </ion-buttons>
@@ -43,7 +43,7 @@
     </ion-list>
 </ion-content>
 
-<ion-footer [hidden]="!selectedEntries.size">
+<ion-footer [hidden]="!selectedPaths.size">
     <ion-toolbar>
         <button-bar [buttons]="footerButtons">
         </button-bar>
