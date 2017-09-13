@@ -44,7 +44,7 @@ export class AppFS {
                     observer.error(err);
                 }
             );
-        });;
+        });
         return source;
     }
     /**

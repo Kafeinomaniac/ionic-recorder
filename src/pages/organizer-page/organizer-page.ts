@@ -27,8 +27,6 @@ import {
 // import { Keyboard } from '@ionic-native/keyboard';
 import { AppFS } from '../../services';
 
-const REQUEST_SIZE: number = 1024 * 1024 * 1024;
-
 /**
  * @name OrganizerPage
  * @description
@@ -497,16 +495,6 @@ export class OrganizerPage extends SelectionPage {
         ].join('');
         this.switchFolder(dirPath, true);
     }
-
-    // not just colonoscopy - mri look, cat scan or what
-    // thickening of the wall -- opinion on what to do now
-    // colonoscopy or cat scan first?
-
-    // balzora
-    // ganju
-    // loebb
-
-    // gastroenterology
 
     /**
      * UI calls this when the new folder button is clicked
