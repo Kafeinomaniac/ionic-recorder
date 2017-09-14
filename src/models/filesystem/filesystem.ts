@@ -6,6 +6,7 @@ export class FS {
         fileSystem: FileSystem,
         paths: string[]
     ): Observable<Entry[]> {
+        console.log('FS.getEntriesFromPaths(fs, ' + paths + ')');
         let entryObservableArray: Observable<Entry>[] =
                 paths.map((path: string) => {
                     return FS.getPathEntry(fileSystem, path, false);
@@ -32,6 +33,7 @@ export class FS {
         fileSystem: FileSystem,
         paths: string[]
     ): Observable<void> {
+        console.log('FS.removeEntries(fs, ' + paths + ')');
         let entryObservableArray: Observable<Entry>[] =
                 paths.map((path: string) => {
                     return FS.getPathEntry(fileSystem, path, false);
@@ -39,10 +41,15 @@ export class FS {
             source: Observable<void> = Observable.create((observer) => {
             Observable.from(entryObservableArray).concatAll().subscribe(
                 (entry: Entry) => {
-                    FS.removeEntry(entry).subscribe();
+                    FS.removeEntry(entry).subscribe(
+                        null,
+                        (err1: any) => {
+                            observer.error('err1: ' + err1);
+                        }
+                    );
                 },
-                (err: any) => {
-                    observer.error(err);
+                (err2: any) => {
+                    observer.error(err2);
                 },
                 () => {
                     observer.next();
@@ -56,12 +63,13 @@ export class FS {
     public static removeEntry(
         entry: Entry
     ): Observable<void> {
-        console.log('removeEntry(' + entry.fullPath + ')');
+        console.log('FS.removeEntry(' + entry.fullPath + ')');
         let source: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
                 entry.remove(
                     () => {
-                        console.log('Removed file entry ' + entry.fullPath);
+                        console.log('FS.removeEntry(): Done removing ' +
+                            entry.fullPath);
                         observer.next();
                         observer.complete();
                     },
@@ -74,7 +82,8 @@ export class FS {
             else if (entry.isDirectory) {
                 (<DirectoryEntry>entry).removeRecursively(
                     () => {
-                        console.log('Removed directory ' + entry.fullPath);
+                        console.log('FS.removeEntry(): Done removing ' +
+                            entry.fullPath);
                         observer.next();
                         observer.complete();
                     },
@@ -93,6 +102,7 @@ export class FS {
         path: string,
         bCreate: boolean = false
     ): Observable<Entry> {
+        console.log('FS.getPathEntry(fs, ' + path + ', ' + bCreate + ')');
         let source: Observable<Entry> = Observable.create((observer) => {
             if (path === '/') {
                 observer.next(fileSystem.root);
@@ -108,7 +118,8 @@ export class FS {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log('getPathEntry error1: ' + err);
+                        console.log('FS.getPathEntry(.., ' + path +
+                           ') error1: ' + err);
                         observer.error(err);
                     }
                 );
@@ -138,6 +149,8 @@ export class FS {
         bPersistent: boolean = true,
         requestSize: number
     ): Observable<FileSystem> {
+        console.log('FS.getFileSystem(bPersistent=' + bPersistent +
+            ', requestSize=' + requestSize);
         const fsType: number = (
             bPersistent ?
                 window.PERSISTENT :
@@ -182,6 +195,7 @@ export class FS {
         fullPath: string,
         blob: Blob
     ): Observable<void> {
+        console.log('FS.writeFile(fs, ' + fullPath + ', blob)');
         let src: Observable<void> = Observable.create((observer) => {
             fs.root.getFile(
                 fullPath, { create: true },
@@ -216,6 +230,7 @@ export class FS {
     }
 
     public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
+        console.log('FS.readFile(fs, ' + fullPath + ')');
         let src: Observable<any> = Observable.create((observer) => {
             fs.root.getFile(
                 fullPath, {},
@@ -255,6 +270,8 @@ export class FS {
         parentDirectoryEntry: DirectoryEntry,
         name: string
     ): Observable<DirectoryEntry> {
+        console.log('FS.createDirectory(' + parentDirectoryEntry.fullPath +
+            ', ' + name +')');
         let src: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
                 name,

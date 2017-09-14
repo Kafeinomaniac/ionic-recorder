@@ -45,14 +45,14 @@ export class SelectionPage {
         this.appState.get('selectedPaths').then(
             (selectedPaths: Set<string>) => {
                 this.selectedPaths = selectedPaths;
-                const sortedEntriesPaths: string[] =
+                const sortedSelectedPaths: string[] =
                     Array.from(selectedPaths).sort();
-                this.appFS.getEntriesFromPaths(sortedEntriesPaths)
+                this.appFS.getEntriesFromPaths(sortedSelectedPaths)
                     .subscribe((selectedEntries: Entry[]) => {
                         this.selectedEntries = selectedEntries;
                     });
                 }
-            );
+            ); // this.appState.get('selectedPaths').then(
     }
 
     /**

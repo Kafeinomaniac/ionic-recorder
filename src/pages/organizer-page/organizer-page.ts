@@ -319,15 +319,38 @@ export class OrganizerPage extends SelectionPage {
             entries: string[] = Array.from(this.selectedPaths),
             deleteAlert: Alert = this.alertController.create();
 
-        // entries.sort(sortFun);
         entries.sort();
+
+        console.log('<-----------------------> SORTED ENTRIES <------------>');
         console.log(entries);
+        console.log('<-----------------------> SORTED ENTRIES <------------>');
+
         deleteAlert.setTitle('Are you sure you want to delete ' +
                              itemsStr + '?');
+
         deleteAlert.addButton('Cancel');
+
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
+                const fullPath: string = this.getFullPath(this.directoryEntry),
+                    fullPathLength: number = fullPath.length;
+                let switchToFolder: string = fullPath;
+                this.selectedPaths.forEach(
+                    (path: string) => {
+                        const pathLength: number = path.length;
+                        if (fullPathLength >= pathLength &&
+                            fullPath.substring(0, pathLength) === path) {
+                            // current entry contains start equal to
+                            // some selected path, which means current
+                            // entry is or is a subdir of a selected path,
+                            // which means it will be deleted
+                            console.log('ENFORCING ROOT SWITCH !*!*!*!*!');
+                            switchToFolder = '/';
+                        }
+                    } // (path: string) => {
+                ); // this.selectedPaths.forEach(
+
                 alert('what 1');
                 this.appFS.removeEntries(entries).subscribe(
                     () => {
@@ -339,11 +362,12 @@ export class OrganizerPage extends SelectionPage {
                         ).then(
                             () => {
                                 console.log(
-                                    'OrganizerPage.confirmAndDeleteSelected()' +
-                                    ': after set selected paths, bef. switch'
+                                    'OrganizerPage.confirmAndDeleteSelected' +
+                                    '(): after set selected paths, bef. switch'
                                 );
+
                                 this.switchFolder(
-                                    this.getFullPath(this.directoryEntry),
+                                    switchToFolder,
                                     false
                                 );
                             });

@@ -20,7 +20,7 @@ export class AppFS {
      * @constructor
      */
     constructor() {
-        console.log('constructor():AppFileSystem');
+        console.log('AppFS.constructor()');
         this.fileSystem = null;
         // get the filesystem
         FS.getFileSystem(true, REQUEST_SIZE).subscribe(
@@ -37,10 +37,14 @@ export class AppFS {
     }
 
     public removeEntries(paths: string[]): Observable<void> {
-        console.log('appFS.removeEntries()');
+        console.log('appFS.removeEntries(' + paths + ')');
+        console.dir(paths);
         let source: Observable<void> = Observable.create((observer) => {
             FS.removeEntries(this.fileSystem, paths).subscribe(
-                null,
+                () => {
+                    observer.next();
+                    observer.complete();
+                },
                 (err: any) => {
                     observer.error(err);
                 }
@@ -57,6 +61,7 @@ export class AppFS {
      * when it's ready for use.
      */
     public getFileSystem(): Observable<FileSystem> {
+        console.log('AppFS.getFileSystem()');
         let source: Observable<FileSystem> = Observable.create((observer) => {
             let repeat: () => void = () => {
                 console.log('!!!WAIT_FOR_FS!!!');
@@ -76,6 +81,7 @@ export class AppFS {
     public readDirectory(
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
+        console.log('AppFS.readDirectory(' + directoryEntry.fullPath +')');
         let source: Observable<Entry[]> = Observable.create((observer) => {
             FS.readDirectory(directoryEntry).subscribe(
                 (entries: Entry[]) => {
@@ -91,6 +97,7 @@ export class AppFS {
     }
 
     public getPathEntry(path: string, bCreate: boolean): Observable<Entry> {
+        console.log('AppFS.getPathEntry(' + path + ', ' + bCreate + ')');
         let source: Observable<Entry> = Observable.create((observer) => {
             this.getFileSystem().subscribe(
                 (fileSystem: FileSystem) => {
@@ -113,6 +120,7 @@ export class AppFS {
     }
 
     public getEntriesFromPaths(paths: string[]): Observable<Entry[]> {
+        console.log('AppFS.getEntriesFromPaths(' + paths + ')');
         let source: Observable<Entry[]> = Observable.create((observer) => {
             this.getFileSystem().subscribe(
                 (fileSystem: FileSystem) => {
