@@ -40,6 +40,16 @@ describe('services/filesystem', () => {
         );
     });
 
+
+    it('can read the root directory contents to be empty', (done) => {
+        FS.readDirectory(FILE_SYSTEM.root).subscribe(
+            (entries: Entry[]) => {
+                expect(entries.length).toEqual(0);
+                done();
+            }
+        );
+    });
+
     it('cannot delete /Unfiled recursively', (done) => {
         FS.removeEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
             null,
