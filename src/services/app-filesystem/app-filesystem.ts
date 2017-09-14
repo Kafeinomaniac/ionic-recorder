@@ -48,10 +48,7 @@ export class AppFS {
                 (err: any) => {
                     observer.error(err);
                 }
-            ),
-            (err: any) => {
-                observer.error(err);
-            }
+            );
         });
         return source;
     }
@@ -81,7 +78,7 @@ export class AppFS {
     public readDirectory(
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
-        console.log('AppFS.readDirectory(' + directoryEntry.fullPath +')');
+        console.log('AppFS.readDirectory(' + directoryEntry.fullPath + ')');
         let source: Observable<Entry[]> = Observable.create((observer) => {
             FS.readDirectory(directoryEntry).subscribe(
                 (entries: Entry[]) => {

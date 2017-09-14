@@ -271,7 +271,7 @@ export class FS {
         name: string
     ): Observable<DirectoryEntry> {
         console.log('FS.createDirectory(' + parentDirectoryEntry.fullPath +
-            ', ' + name +')');
+            ', ' + name + ')');
         let src: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
                 name,

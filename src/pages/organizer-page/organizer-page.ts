@@ -6,7 +6,6 @@ import {
     ActionSheet,
     ActionSheetController,
     Content,
-    ModalController,
     NavController,
     Platform
 } from 'ionic-angular';
@@ -18,7 +17,7 @@ import {
 import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { SelectionPage } from '../../pages';
-import { MoveToPage } from '../';
+import { MoveTo2Page } from '../../pages';
 import { AppFS } from '../../services';
 
 /**
@@ -40,18 +39,16 @@ export class OrganizerPage extends SelectionPage {
     public headerButtons: ButtonbarButton[];
     // UI uses footerButtons
     public footerButtons: ButtonbarButton[];
-    private navController: NavController;
+    protected navController: NavController;
     // actionSheetController is used by add button
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
-    private modalController: ModalController;
     private changeDetectorRef: ChangeDetectorRef;
 
     /**
      * @constructor
      * @param {NavController}
      * @param {AlertController}
-     * @param {ModalController}
      * @param {AppState}
      * @param {Platform}
      */
@@ -59,7 +56,6 @@ export class OrganizerPage extends SelectionPage {
         navController: NavController,
         alertController: AlertController,
         actionSheetController: ActionSheetController,
-        modalController: ModalController,
         changeDetectorRef: ChangeDetectorRef,
         appState: AppState,
         appFS: AppFS,
@@ -75,7 +71,6 @@ export class OrganizerPage extends SelectionPage {
 
         this.navController = navController;
         this.alertController = alertController;
-        this.modalController = modalController;
 
         // helper function used in disabledCB below
         const atHome: () => boolean = () => {
@@ -291,8 +286,7 @@ export class OrganizerPage extends SelectionPage {
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
-        // this.modalController.create(MoveToPage).present();
-        this.navController.push(MoveToPage);
+        this.navController.push(MoveTo2Page);
     }
 
     /**
@@ -334,7 +328,7 @@ export class OrganizerPage extends SelectionPage {
             text: 'Yes',
             handler: () => {
                 const fullPath: string = this.getFullPath(this.directoryEntry),
-                    fullPathLength: number = fullPath.length;
+                      fullPathLength: number = fullPath.length;
                 let switchToFolder: string = fullPath;
                 this.selectedPaths.forEach(
                     (path: string) => {
@@ -373,7 +367,7 @@ export class OrganizerPage extends SelectionPage {
                             });
                     },
                     (err: any) => {
-                       alert('whoa: ' + err);
+                        alert('whoa: ' + err);
                     });
             }
         });
@@ -449,7 +443,7 @@ export class OrganizerPage extends SelectionPage {
      * @param {boolean} whether to update app state 'lastFolderViewed' property
      * @returns {void}
      */
-    private switchFolder(
+    public switchFolder(
         path: string,
         bUpdateAppState: boolean = true
     ): void {
@@ -490,7 +484,7 @@ export class OrganizerPage extends SelectionPage {
     /**
      * @returns {void}
      */
-     private detectChanges(): void {
+    private detectChanges(): void {
         console.log('OrganizerPage.detectChanges()');
         setTimeout(
             () => {
@@ -540,32 +534,29 @@ export class OrganizerPage extends SelectionPage {
                     {
                         text: 'Done',
                         handler: (data: any) => {
-                            let folderName: string = data.folderName;
-                            if (!folderName.length) {
+                            let fullPath: string = parentPath + data.folderName;
+                            if (!fullPath.length) {
                                 // this code should never be reached
                                 alert('how did we reach this code?');
                                 return;
                             }
-                            if (folderName[folderName.length - 1] !== '/') {
+                            if (fullPath[fullPath.length - 1] !== '/') {
                                 // last char isn't a slash, add a
                                 // slash at the end
-                                folderName += '/';
+                                fullPath += '/';
                             }
                             // create the folder via getPathEntry()
-                            this.appFS.getPathEntry(
-                                parentPath + folderName,
-                                true
-                            ).subscribe(
+                            this.appFS.getPathEntry(fullPath, true).subscribe(
                                 (directoryEntry: DirectoryEntry) => {
                                     // re-read parent
                                     // to load in new info
                                     this.switchFolder(parentPath, false);
                                 }
-                            );
-                        }
+                            ); // appFS.getPathEntry(fullPath, true).subscribe(
+                        } // handler: (data: any) => {
                     }
-                ]
-            });
+                ] // buttons: [
+            }); // newFolderAlert: Alert = this.alertController.create({
         newFolderAlert.present();
     }
 
@@ -590,10 +581,7 @@ export class OrganizerPage extends SelectionPage {
             }
         });
         if (bChanged) {
-            this.appState.set(
-                'selectedPaths',
-                this.selectedPaths
-            ).then();
+            this.appState.set('selectedPaths', this.selectedPaths).then();
         }
     }
 }
