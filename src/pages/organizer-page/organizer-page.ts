@@ -32,6 +32,8 @@ import { AppFS } from '../../services';
 })
 export class OrganizerPage extends SelectionPage {
     @ViewChild(Content) public content: Content;
+    public directoryEntries: Entry[];
+
     public entries: Entry[];
     // UI uses directoryEntry
     public directoryEntry: DirectoryEntry;
@@ -67,17 +69,10 @@ export class OrganizerPage extends SelectionPage {
         this.changeDetectorRef = changeDetectorRef;
         this.directoryEntry = null;
         this.actionSheetController = actionSheetController;
-        this.entries = [];
+        this.directoryEntries = [];
 
         this.navController = navController;
         this.alertController = alertController;
-
-        // helper function used in disabledCB below
-        const atHome: () => boolean = () => {
-            return this.directoryEntry &&
-                this.directoryEntry.name === '' &&
-                this.directoryEntry.fullPath === '/';
-        };
 
         this.headerButtons = [
             {
@@ -98,7 +93,7 @@ export class OrganizerPage extends SelectionPage {
                 clickCB: () => {
                     this.onClickHomeButton();
                 },
-                disabledCB: atHome
+                disabledCB: this.appFS.atHome
             },
             {
                 text: 'Go to parent',
@@ -108,7 +103,7 @@ export class OrganizerPage extends SelectionPage {
                 clickCB: () => {
                     this.onClickParentButton();
                 },
-                disabledCB: atHome
+                disabledCB: this.appFS.atHome
             },
             {
                 text: 'Add...',
@@ -172,6 +167,9 @@ export class OrganizerPage extends SelectionPage {
     public ionViewWillEnter(): void {
         console.log('OrganizerPage.ionViewWillEnter()');
         super.ionViewWillEnter();
+
+
+
         this.getLastViewedFolderPathFromStorage();
     }
 

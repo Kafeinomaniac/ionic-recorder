@@ -11,7 +11,9 @@
         <ion-buttons end *ngIf="selectedPaths.size">
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{selectedPaths.size}} selected &nbsp; <ion-icon name="md-create"></ion-icon>
+                    {{selectedPaths.size}} selected
+                    &nbsp;
+                    <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
             </button>
         </ion-buttons>
@@ -26,16 +28,20 @@
 </ion-header>
 
 <ion-content>
-    <ion-list [reorder]="entries.length > 1" (ionItemReorder)="reorderEntries($event)">
-        <ion-item clear *ngFor="let entry of entries" class="organizer-page-item">
+    <ion-list [reorder]="directoryEntries.length > 1"
+              (ionItemReorder)="reorderEntries($event)">
+        <ion-item clear *ngFor="let entry of directoryEntries"
+                  class="organizer-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
                 <ion-icon [name]="entryIcon(entry)"></ion-icon>
                 &nbsp;
                 {{entry.name}}
             </ion-label>
-            <ion-checkbox [checked]="isSelected(entry)" (click)="toggleSelect(entry)"></ion-checkbox>
+            <ion-checkbox [checked]="isSelected(entry)"
+                          (click)="toggleSelect(entry)"></ion-checkbox>
         </ion-item>
-        <ion-item class="organizer-page-empty-folder-message" *ngIf="!entries.length">
+        <ion-item *ngIf="!directoryEntries.length"
+                  class="organizer-page-empty-folder-message">
             <h2>
                 Empty folder
             </h2>

@@ -47,7 +47,7 @@ export class IonicRecorderApp {
         statusBar: StatusBar,
         appState: AppState
     ) {
-        console.log('constructor(): IonicRecordApp');
+        console.log('IonicRecorderApp.constructor()');
 
         this.platform = platform;
         this.menu = menu;
@@ -73,15 +73,6 @@ export class IonicRecorderApp {
             // [ NOTE: cordova must be available for StatusBar ]
             statusBar.styleDefault();
             statusBar.backgroundColorByHexString('#000000');
-
-            // NOTE: uncomment next line to start with a specific page
-            // this.goToPage(this.pages[1]);
-            this.appState.get('lastTabIndex').then(
-                (lastTabIndex: number) => {
-                    console.log('initializeApp():lastTabIndex = ' +
-                                lastTabIndex);
-                    this.tabs.select(lastTabIndex);
-                });
         });
     }
 

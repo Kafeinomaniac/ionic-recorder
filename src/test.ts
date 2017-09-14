@@ -26,6 +26,7 @@ import {
 import { ConfigMock, PlatformMock } from 'ionic-mocks';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getTestBed, TestBed } from '@angular/core/testing';
+import { AppState, AppStateMock } from './services';
 // import { ClickersService } from './services';
 // import { ClickersServiceMock } from './services/clickers.mock';
 
@@ -75,7 +76,8 @@ export class TestUtils {
                 App, Form, Keyboard, DomController,
                 MenuController, NavController,
                 {provide: Platform, useFactory: () => PlatformMock.instance()},
-                {provide: Config, useFactory: () => ConfigMock.instance()}
+                {provide: Config, useFactory: () => ConfigMock.instance()},
+                {provide: AppState, useClass: AppStateMock}
                 // {provide: ClickersService, useClass: ClickersServiceMock},
             ],
             imports: [
