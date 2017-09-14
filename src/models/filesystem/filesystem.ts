@@ -8,24 +8,24 @@ export class FS {
     ): Observable<Entry[]> {
         console.log('FS.getEntriesFromPaths(fs, ' + paths + ')');
         let entryObservableArray: Observable<Entry>[] =
-                paths.map((path: string) => {
-                    return FS.getPathEntry(fileSystem, path, false);
-                }),
+            paths.map((path: string) => {
+                return FS.getPathEntry(fileSystem, path, false);
+            }),
             result: Entry[] = [],
             source: Observable<Entry[]> = Observable.create((observer) => {
-            Observable.from(entryObservableArray).concatAll().subscribe(
-                (entry: Entry) => {
-                    result.push(entry);
-                },
-                (err: any) => {
-                    observer.error(err);
-                },
-                () => {
-                    observer.next(result);
-                    observer.complete();
-                }
-            );
-        });
+                Observable.from(entryObservableArray).concatAll().subscribe(
+                    (entry: Entry) => {
+                        result.push(entry);
+                    },
+                    (err: any) => {
+                        observer.error(err);
+                    },
+                    () => {
+                        observer.next(result);
+                        observer.complete();
+                    }
+                );
+            });
         return source;
     }
 
@@ -35,41 +35,39 @@ export class FS {
     ): Observable<void> {
         console.log('FS.removeEntries(fs, ' + paths + ')');
         let entryObservableArray: Observable<Entry>[] =
-                paths.map((path: string) => {
-                    return FS.getPathEntry(fileSystem, path, false);
-                }),
+            paths.map((path: string) => {
+                return FS.getPathEntry(fileSystem, path, false);
+            }),
             source: Observable<void> = Observable.create((observer) => {
-            Observable.from(entryObservableArray).concatAll().subscribe(
-                (entry: Entry) => {
-                    FS.removeEntry(entry).subscribe(
-                        null,
-                        (err1: any) => {
-                            observer.error('err1: ' + err1);
-                        }
-                    );
-                },
-                (err2: any) => {
-                    observer.error(err2);
-                },
-                () => {
-                    observer.next();
-                    observer.complete();
-                }
-            );
-        });
+                Observable.from(entryObservableArray).concatAll().subscribe(
+                    (entry: Entry) => {
+                        FS.removeEntry(entry).subscribe(
+                            null,
+                            (err1: any) => {
+                                observer.error('err1: ' + err1);
+                            }
+                        );
+                    },
+                    (err2: any) => {
+                        observer.error(err2);
+                    },
+                    () => {
+                        observer.next();
+                        observer.complete();
+                    }
+                );
+            });
         return source;
     }
 
-    public static removeEntry(
-        entry: Entry
-    ): Observable<void> {
+    public static removeEntry(entry: Entry): Observable<void> {
         console.log('FS.removeEntry(' + entry.fullPath + ')');
         let source: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
                 entry.remove(
                     () => {
                         console.log('FS.removeEntry(): Done removing ' +
-                            entry.fullPath);
+                                    entry.fullPath);
                         observer.next();
                         observer.complete();
                     },
@@ -83,7 +81,7 @@ export class FS {
                 (<DirectoryEntry>entry).removeRecursively(
                     () => {
                         console.log('FS.removeEntry(): Done removing ' +
-                            entry.fullPath);
+                                    entry.fullPath);
                         observer.next();
                         observer.complete();
                     },
@@ -119,7 +117,7 @@ export class FS {
                     },
                     (err: any) => {
                         console.log('FS.getPathEntry(.., ' + path +
-                           ') error1: ' + err);
+                                    ') error1: ' + err);
                         observer.error(err);
                     }
                 );
@@ -150,7 +148,7 @@ export class FS {
         requestSize: number
     ): Observable<FileSystem> {
         console.log('FS.getFileSystem(bPersistent=' + bPersistent +
-            ', requestSize=' + requestSize);
+                    ', requestSize=' + requestSize);
         const fsType: number = (
             bPersistent ?
                 window.PERSISTENT :
@@ -271,7 +269,7 @@ export class FS {
         name: string
     ): Observable<DirectoryEntry> {
         console.log('FS.createDirectory(' + parentDirectoryEntry.fullPath +
-            ', ' + name + ')');
+                    ', ' + name + ')');
         let src: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
                 name,
@@ -290,8 +288,8 @@ export class FS {
 
     public static readDirectory(
         directoryEntry: DirectoryEntry
-    ): Observable < Entry[] > {
-        let src: Observable < Entry[] > = Observable.create((observer) => {
+    ): Observable<Entry[]> {
+        let src: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],
                 readEntries: () => void = () => {
