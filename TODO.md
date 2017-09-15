@@ -7,24 +7,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
-* have a SelectionTracker service class - a singleton that uses
-  app state and which tracks selections
-* have a DirectoryWalker service that uses app file system and app
-  state and walks directories -- as a matter of fact!  why not
-  make AppFileSystem do that?
-  - the only question is whether we'll need more than one browser going
-  in the app at the same time. the only time that can happen is when we
-  click the MoveTo button - at that point we will be browsing and
-  if we use a singleton for that, then whatever we were at before going
-  to the MoveTo window will be what we start when we go to the MoveTo
-  window and whatever we end up with when we exit the MoveTo window, e.g.
-  we move stuff elsewhere, - that elsewhere is where we'll end up when
-  back in the library/explorer page.
-
-  is that OK?  i think so!  i think it's desireable.  if you move stuff
-  you want to end up where you've moved everything so that you can check it. the interface easily allows to go back to any location
-
-  this brings to mind - do go back to recent.
+* Refactor: 
+  Functions shared between moveto & organizer:
+  - switch folder() / this.entries / this.directoryEntry / atHome()
+  - make above a class called DirWalker
+  - give this class a cache layer?
 
 1 services/app-filesystem/ - keeps this.fileSystem, only asks once,
   injectable singleton

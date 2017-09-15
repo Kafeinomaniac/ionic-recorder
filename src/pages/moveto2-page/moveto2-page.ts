@@ -16,7 +16,7 @@ import { AppFS } from '../../services';
     selector: 'moveto2-page',
     templateUrl: 'moveto2-page.html'
 })
-export class MoveTo2Page extends SelectionPage {
+export class MoveTo2Page {
     private headerButtons: ButtonbarButton[];
     /**
      * @constructor
@@ -28,7 +28,6 @@ export class MoveTo2Page extends SelectionPage {
         appFS: AppFS
     ) {
         console.log('MoveTo2Page.constructor()');
-        super(appState, appFS);
         this.headerButtons = [
             {
                 text: 'Move here!',

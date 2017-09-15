@@ -8,10 +8,10 @@
         <ion-title>
             Organizer
         </ion-title>
-        <ion-buttons end *ngIf="selectedPaths.size">
+        <ion-buttons end *ngIf="appFS.selectedPaths.size">
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{selectedPaths.size}} selected
+                    {{appFS.selectedPaths.size}} selected
                     &nbsp;
                     <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
@@ -19,8 +19,8 @@
         </ion-buttons>
     </ion-navbar>
     <ion-toolbar>
-        <p *ngIf="directoryEntry" text-center>
-            {{getFullPath(directoryEntry)}}
+        <p *ngIf="appFS.directoryEntry" text-center>
+            {{appFS.getFullPath(appFS.directoryEntry)}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>
@@ -28,28 +28,27 @@
 </ion-header>
 
 <ion-content>
-    <ion-list [reorder]="directoryEntries.length > 1"
+    <ion-list [reorder]="appFS.entries.length > 1"
               (ionItemReorder)="reorderEntries($event)">
-        <ion-item clear *ngFor="let entry of directoryEntries"
+        <ion-item clear *ngFor="let entry of appFS.entries"
                   class="organizer-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
                 <ion-icon [name]="entryIcon(entry)"></ion-icon>
                 &nbsp;
                 {{entry.name}}
             </ion-label>
-            <ion-checkbox [checked]="isSelected(entry)"
-                          (click)="toggleSelect(entry)"></ion-checkbox>
+            <ion-checkbox [checked]="appFS.isEntrySelected(entry)"
+                          (click)="appFS.toggleSelectEntry(entry)">
+            </ion-checkbox>
         </ion-item>
-        <ion-item *ngIf="!directoryEntries.length"
+        <ion-item *ngIf="!appFS.entries.length"
                   class="organizer-page-empty-folder-message">
-            <h2>
-                Empty folder
-            </h2>
+            <h2>Empty folder</h2>
         </ion-item>
     </ion-list>
 </ion-content>
 
-<ion-footer [hidden]="!selectedPaths.size">
+<ion-footer [hidden]="!appFS.selectedPaths.size">
     <ion-toolbar>
         <button-bar [buttons]="footerButtons">
         </button-bar>

@@ -1,54 +1,120 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
 import { FS } from '../../models';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 25;
 
+// storage keys
+const PATH_KEY: string = 'directoryPath';
+const SELECTED_KEY: string = 'selectedPaths';
+
 /**
- * @name AppFileSystem
+ * @name AppFS
  * @description
  */
 @Injectable()
 export class AppFS {
+    public isReady: boolean;
+    public entries: Entry[];
     private fileSystem: FileSystem;
-    private directoryEntry: DirectoryEntry;
+    public directoryEntry: DirectoryEntry;
+    public selectedPaths: Set<string>;
+    private storage: Storage;
 
     /**
      * @constructor
      */
-    constructor() {
+    constructor(storage: Storage) {
         console.log('AppFS.constructor()');
+        this.storage = storage;
+        this.isReady = false;
+        this.entries = [];
         this.fileSystem = null;
         this.directoryEntry = null;
-        // get the filesystem
-        FS.waitForFileSystem(true, REQUEST_SIZE).subscribe(
+        this.selectedPaths = new Set<string>();
+
+        // get the filesystem and remember it
+        FS.getFileSystem(true, REQUEST_SIZE).subscribe(
             (fileSystem: FileSystem) => {
                 // remember the filesystem you got
                 this.fileSystem = fileSystem;
                 // create the /Unfiled/ directory if not already there
                 FS.getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
                     (directoryEntry: DirectoryEntry) => {
-                        console.log('Created /Unfiled/');
-                    },
-                    (err1: any) => {
-                        alert('Error in AppFS.constructor()! ' + err1);
+                        console.log('Created /Unfiled/ (or already there)');
+                        // grab remembered location from storage and go there
+                        this.storage.get(PATH_KEY).then(
+                            (directoryPath: string) => {
+                                if (!directoryPath) {
+                                    // it was not in storage, go to root
+                                    directoryPath = '/';
+                                }
+                                // grab selection from storage
+                                this.storage.get(SELECTED_KEY).then(
+                                    (paths: Set<string>) => {
+                                        this.storage.set(
+                                            SELECTED_KEY,
+                                            paths ? paths : this.selectedPaths
+                                        );
+                                        // finally signal we're ready
+                                        this.isReady = true;
+                                        console.log('AppFS.isReady == true');
+                                        // before switchDirectory avoid looping
+                                        this.switchDirectory(directoryPath)
+                                            .subscribe(
+                                                null,
+                                                (err1: any) => {
+                                                    alert('err1: ' + err1);
+                                                }
+                                            ); // this.switchDirectory(
+                                    }).catch((err2: any) => {
+                                        alert('err2: ' + err2);
+                                    }); // ).catch((err1: any) => {
+                            } // (directoryPath: string) => {
+                        ).catch((err3: any) => {
+                            alert('err3: ' + err3);
+                        }); // ).catch((err3: any) => {
+                    }, // (directoryEntry: DirectoryEntry) => {
+                    (err4: any) => {
+                        alert('err4: ' + err4);
                     }
-                ); // FS.getPathEntry().subscribe(
+                ); // FS.getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
             }, // (fileSystem: FileSystem) => {
-            (err2: any) => {
-                alert('Error in AppFS.constructor()! ' + err2);
+            (err5: any) => {
+                alert('err5: ' + err5);
             }
-        ); // FS.waitForFileSystem(true, REQUEST_SIZE).subscribe(
+        ); // FS.getFileSystem(true, REQUEST_SIZE).subscribe(
     } // constructor() {
 
+    public getPath(): string {
+        return this.getFullPath(this.directoryEntry);
+    }
+
+    public getSelectedPathsArray(): string[] {
+        return Array.from(this.selectedPaths);
+    }
+
+    public clearSelection(): void {
+        this.selectedPaths.clear();
+        this.storage.set(SELECTED_KEY, this.selectedPaths);
+    }
+
+    /**
+     *
+     * @returns {boolean}
+     * Returns true or false, depending if we're at home or not
+     * if directoryEntry is not defined the default is to be at home
+     * so we return true in that case
+     */
     public atHome(): boolean {
-        console.log('AppFS.atHome(): '+
-                    (this.directoryEntry && 
-                     this.directoryEntry.fullPath === '/'));
-        return this.directoryEntry && this.directoryEntry.fullPath === '/';
+        const bAtHome: boolean = !this.directoryEntry ||
+              this.directoryEntry.fullPath === '/';
+        console.log('AppFS.atHome(): ' + bAtHome);
+        return bAtHome;
     }
 
     /**
@@ -56,13 +122,12 @@ export class AppFS {
      * @returns {Observable<FileSystem>} Observable that emits the file
      * system when it's ready for use.
      */
-    public waitForFileSystem(): Observable<FileSystem> {
-        console.log('AppFS.getFileSystem()');
-        let source: Observable<FileSystem> = Observable.create((observer) => {
+    public waitTillReady(): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
             let repeat: () => void = () => {
-                console.log('!!!WAIT_FOR_FS!!!');
-                if (this.fileSystem) {
-                    observer.next(this.fileSystem);
+                console.log('AppFS.waitTillReady().repeat()');
+                if (this.isReady) {
+                    observer.next();
                     observer.complete();
                 }
                 else {
@@ -74,26 +139,51 @@ export class AppFS {
         return source;
     }
 
+    public createDirectory(path: string): Observable<DirectoryEntry> {
+        let source: Observable<DirectoryEntry> =
+            Observable.create((observer) => {
+                if (path[path.length - 1] !== '/') {
+                    observer.error('path must end with / for createDirectory');
+                }
+                else {
+                    FS.getPathEntry(this.fileSystem, path, true).subscribe(
+                        (directoryEntry: Entry) => {
+                            observer.next(directoryEntry);
+                            observer.complete();
+                        },
+                        (err: any) => {
+                            observer.error(err);
+                        }
+                    );
+                }
+            });
+        return source;
+    }
+
     /**
      * Wait until file system is ready for use, to emit observable.
      * @returns {Observable<FileSystem>} Observable that emits the file
      * system when it's ready for use.
      */
-
     public switchDirectory(path: string): Observable<Entry[]> {
-        console.log('AppFileSystem.switchDirectory(' + path + ')');
+        console.log('AppFS.switchDirectory(' + path + ')');
         let source: Observable<Entry[]> = Observable.create((observer) => {
             // get the file system
-            this.waitForFileSystem().subscribe(
-                (fileSystem: FileSystem) => {
+            this.waitTillReady().subscribe(
+                () => {
                     // got file system, now get entry object for path
                     // of directory we're switching to
-                    FS.getPathEntry(fileSystem, path, bCreate).subscribe(
-                        (directoryEntry: Entry) => {
-                            this.directoryEntry = directoryEntry;
+                    FS.getPathEntry(this.fileSystem, path, false).subscribe(
+                        (entry: Entry) => {
+                            this.directoryEntry = <DirectoryEntry>entry;
                             // we got the directory entry, now read it
-                            FS.readDirectory(directoryEntry).subscribe(
+                            FS.readDirectory(<DirectoryEntry>entry).subscribe(
                                 (entries: Entry[]) => {
+                                    this.entries = entries;
+                                    console.dir(entries);
+                                    // store path as last visited too
+                                    this.storage.set(PATH_KEY, path);
+                                    // return with new entries
                                     observer.next(entries);
                                     observer.complete();
                                 },
@@ -105,41 +195,166 @@ export class AppFS {
                         (err2: any) => {
                             observer.error(err2);
                         }
-                    ); // FS.getPathEntry(fileSystem, path, bCreate).subscribe(
-                },
+                    ); // FS.getPathEntry(fileSystem, path, false).subscribe(
+                }, // () => {
                 (err3: any) => {
                     observer.error(err3);
                 }
-            ); // this.waitForFileSystem().subscribe(
+            ); // this.waitTillReady().subscribe(
         }); // let source: Observable<void> = Observable.create((observer) => {
         return source;
     }
 
     /**
+     * @param {Entry} entry
+     */
+    public getFullPath(entry: Entry): string {
+        const fullPath: string = entry.fullPath;
+        return entry.isDirectory && (fullPath.length > 1) ?
+            fullPath + '/' : fullPath;
+    }
+
+    /**
+     * @param {string} path
+     */
+    public isPathSelected(path: string): boolean {
+        console.log('isPathSelected(' + path + '): ' +
+                    this.selectedPaths.has(path));
+        return this.selectedPaths.has(path);
+    }
+
+    /**
+     * @param {Entry} entry
+     */
+    public isEntrySelected(entry: Entry): boolean {
+        return this.isPathSelected(this.getFullPath(entry));
+    }
+
+    public selectPath(path: string): void {
+        console.log('selectPath(' + path + ')');
+        this.selectedPaths.add(path);
+        this.storage.set(SELECTED_KEY, this.selectedPaths);
+    }
+
+    /**
+     * @param {Entry} entry
+     */
+    public selectEntry(entry: Entry): void {
+        this.selectPath(this.getFullPath(entry));
+    }
+
+    public unselectPath(path: string): void {
+        console.log('unselectPath(' + path + ')');
+        this.selectedPaths.delete(path);
+        this.storage.set(SELECTED_KEY, this.selectedPaths);
+    }
+
+    /**
+     * @param {Entry} entry
+     */
+    public unSelectEntry(entry: Entry): void {
+        this.unselectPath(this.getFullPath(entry));
+    }
+
+    /**
+     * @param {Entry} entry
+     */
+    public toggleSelectEntry(entry: Entry): void {
+        const fullPath: string = this.getFullPath(entry);
+        console.log('toggleSelect(' + fullPath + ')');
+        if (this.selectedPaths.has(fullPath)) {
+            this.selectedPaths.delete(fullPath);
+        }
+        else {
+            this.selectedPaths.add(fullPath);
+        }
+        this.storage.set(SELECTED_KEY, this.selectedPaths);
+    }
+
+    /**
+     * Select all or no items in current folder, depending on 'all; argument
+     * @param {boolean} if true, select all, if false, select none
+     * @returns {void}
+     */
+    public selectAllOrNone(bSelectAll: boolean): void {
+        console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
+        let bChanged: boolean = false;
+        this.entries.forEach((entry: Entry) => {
+            const fullPath: string = this.getFullPath(entry),
+                  isSelected: boolean = this.isEntrySelected(entry);
+            if (bSelectAll && !isSelected) {
+                this.selectedPaths.add(fullPath);
+                bChanged = true;
+            }
+            else if (!bSelectAll && isSelected) {
+                this.selectedPaths.delete(fullPath);
+                bChanged = true;
+            }
+        });
+        if (bChanged) {
+            this.storage.set(SELECTED_KEY, this.selectedPaths);
+        }
+    }
+
+    public nSelected(): number {
+        return this.selectedPaths.size;
+    }
+
+    /**
      * Removes entries, supplied as an array of full path strings,
      * sequentially.
-     * @param {string[]} paths 
+     * @param {string[]} paths
      */
     public removeEntries(paths: string[]): Observable<void> {
         console.log('AppFS.removeEntries(' + paths + ')');
+        const fullPath: string = this.getFullPath(this.directoryEntry),
+              fullPathSize: number = fullPath.length;
         let source: Observable<void> = Observable.create((observer) => {
             // get the file system
-            this.waitForFileSystem().subscribe(
-                (fileSystem: FileSystem) => {
-                    FS.removeEntries(fileSystem, paths).subscribe(
+            this.waitTillReady().subscribe(
+                () => {
+                    FS.removeEntries(this.fileSystem, paths).subscribe(
                         () => {
-                            observer.next();
-                            observer.complete();
+                            // unselect removed paths, also track:
+                            // if removed path contains current directory,
+                            // then switch to root directory
+                            let switchHome: boolean = false;
+                            paths.forEach((path: string) => {
+                                const pathSize: number = path.length;
+                                if (fullPathSize >= pathSize &&
+                                    fullPath.substring(0, pathSize) === path) {
+                                    switchHome = true;
+                                }
+                                // make sure not tracking selected for deleted
+                                this.selectedPaths.delete(path);
+                            });
+
+                            // store selection in case it has changed
+                            this.storage.set(SELECTED_KEY, this.selectedPaths);
+
+                            if (switchHome) {
+                                this.switchDirectory('/').subscribe(
+                                    (entries: Entry[]) => {
+                                        observer.next();
+                                        observer.complete();
+                                    }
+                                );
+                            }
+                            else {
+                                // return
+                                observer.next();
+                                observer.complete();
+                            }
                         },
                         (err1: any) => {
                             observer.error(err1);
-                        } // FS.removeEntries(fileSystem, paths).subscribe(
-                    ); // 
-                }, // (fileSystem: FileSystem) => {
+                        } // FS.removeEntries(this.fileSystem, paths).subscribe(
+                    ); //
+                }, // () => {
                 (err2: any) => {
                     observer.error(err2);
                 }
-            ); // this.waitForFileSystem().subscribe(
+            ); // this.waitTillReady().subscribe(
 
         });
         return source;

@@ -30,13 +30,8 @@ import { AppFS } from '../../services';
     selector: 'organizer-page',
     templateUrl: 'organizer-page.html'
 })
-export class OrganizerPage extends SelectionPage {
+export class OrganizerPage {
     @ViewChild(Content) public content: Content;
-    public directoryEntries: Entry[];
-
-    public entries: Entry[];
-    // UI uses directoryEntry
-    public directoryEntry: DirectoryEntry;
     // UI uses headerButtons
     public headerButtons: ButtonbarButton[];
     // UI uses footerButtons
@@ -46,6 +41,7 @@ export class OrganizerPage extends SelectionPage {
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
     private changeDetectorRef: ChangeDetectorRef;
+    private appFS: AppFS;
 
     /**
      * @constructor
@@ -63,16 +59,13 @@ export class OrganizerPage extends SelectionPage {
         appFS: AppFS,
         platform: Platform
     ) {
-        super(appState, appFS);
 
         console.log('constructor():OrganizerPage');
         this.changeDetectorRef = changeDetectorRef;
-        this.directoryEntry = null;
         this.actionSheetController = actionSheetController;
-        this.directoryEntries = [];
-
         this.navController = navController;
         this.alertController = alertController;
+        this.appFS = appFS;
 
         this.headerButtons = [
             {
@@ -84,7 +77,7 @@ export class OrganizerPage extends SelectionPage {
                     this.onClickSelectButton();
                 },
                 disabledCB: () => {
-                    return this.entries.length <= 1;
+                    return this.appFS.entries.length <= 1;
                 }
             },
             {
@@ -154,30 +147,19 @@ export class OrganizerPage extends SelectionPage {
 
     }
 
-    public getLastViewedFolderPathFromStorage(): void {
-        this.appState.get('lastViewedFolderPath').then(
-            (path: string) => {
-                this.switchFolder(path, false);
-            } // (path: string) => {..
-        ); // appState.get('lastViewedFolderPath').then(..
-    }
-
-    /**
-     */
     public ionViewWillEnter(): void {
-        console.log('OrganizerPage.ionViewWillEnter()');
-        super.ionViewWillEnter();
-
-
-
-        this.getLastViewedFolderPathFromStorage();
+        this.appFS.waitTillReady().subscribe(
+            () => {
+                this.detectChanges();
+            }
+        );
     }
 
     /**
      * @param {Entry} entry
      */
     public toggleSelect(entry: Entry): void {
-        super.toggleSelect(entry);
+        this.appFS.toggleSelectEntry(entry);
         this.detectChanges();
     }
 
@@ -189,18 +171,17 @@ export class OrganizerPage extends SelectionPage {
         console.log('onClickSelectButton()');
 
         let selectAlert: Alert = this.alertController.create();
-        selectAlert.setTitle('Select which, in ' +
-                             this.directoryEntry.fullPath);
+        selectAlert.setTitle('Select which, in ' + this.appFS.getPath());
         selectAlert.addButton({
             text: 'All',
             handler: () => {
-                this.selectAllOrNoneInFolder(true);
+                this.appFS.selectAllOrNone(true);
             }
         });
         selectAlert.addButton({
             text: 'None',
             handler: () => {
-                this.selectAllOrNoneInFolder(false);
+                this.appFS.selectAllOrNone(false);
             }
         });
 
@@ -214,7 +195,7 @@ export class OrganizerPage extends SelectionPage {
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
-        this.switchFolder('/', true);
+        this.appFS.switchDirectory('/').subscribe();
     }
 
     /**
@@ -223,12 +204,12 @@ export class OrganizerPage extends SelectionPage {
      */
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
-        const pathParts: string[] = this.directoryEntry.fullPath.split('/')
-              .filter((str: string) => { return str !== ''; });
-        const parentPath: string = '/' +
-              pathParts.splice(0, pathParts.length - 1).join('/') +
-              '/';
-        this.switchFolder(parentPath, true);
+        const path: string = this.appFS.getPath(),
+              pathParts: string[] = path.split('/').filter(
+                  (str: string) => { return str !== ''; }),
+              parentPath: string = '/' +
+              pathParts.splice(0, pathParts.length - 1).join('/') + '/';
+        this.appFS.switchDirectory(parentPath);
     }
 
     /**
@@ -238,7 +219,7 @@ export class OrganizerPage extends SelectionPage {
     public onClickAddButton(): void {
         console.log('onClickAddButton()');
         let actionSheet: ActionSheet = this.actionSheetController.create({
-            title: 'Create new ... in ' + this.directoryEntry.fullPath,
+            title: 'Create new ... in ' + this.appFS.getPath(),
             buttons: [
                 {
                     text: 'Folder',
@@ -294,8 +275,8 @@ export class OrganizerPage extends SelectionPage {
     public moveButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.selectedPaths.size === 1 &&
-            this.selectedPaths.has('/Unfiled/')) {
+        if (this.appFS.nSelected() === 1 &&
+            this.appFS.isPathSelected('/Unfiled')) {
             return true;
         }
         return false;
@@ -305,10 +286,11 @@ export class OrganizerPage extends SelectionPage {
      * @returns {void}
      */
     private confirmAndDeleteSelected(): void {
-        let nSelectedEntries: number = this.selectedPaths.size,
+        let nSelectedEntries: number = this.appFS.nSelected(),
             itemsStr: string = nSelectedEntries.toString() + ' item' +
             ((nSelectedEntries > 1) ? 's' : ''),
-            entries: string[] = Array.from(this.selectedPaths),
+            // entries: string[] = Array.from(this.selectedPaths),
+            entries: string[] = this.appFS.getSelectedPathsArray(),
             deleteAlert: Alert = this.alertController.create();
 
         entries.sort();
@@ -325,48 +307,7 @@ export class OrganizerPage extends SelectionPage {
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
-                const fullPath: string = this.getFullPath(this.directoryEntry),
-                      fullPathLength: number = fullPath.length;
-                let switchToFolder: string = fullPath;
-                this.selectedPaths.forEach(
-                    (path: string) => {
-                        const pathLength: number = path.length;
-                        if (fullPathLength >= pathLength &&
-                            fullPath.substring(0, pathLength) === path) {
-                            // current entry contains start equal to
-                            // some selected path, which means current
-                            // entry is or is a subdir of a selected path,
-                            // which means it will be deleted
-                            console.log('ENFORCING ROOT SWITCH !*!*!*!*!');
-                            switchToFolder = '/';
-                        }
-                    } // (path: string) => {
-                ); // this.selectedPaths.forEach(
-
-                alert('what 1');
-                this.appFS.removeEntries(entries).subscribe(
-                    () => {
-                        alert('what 2');
-                        this.selectedPaths.clear();
-                        this.appState.set(
-                            'selectedPaths',
-                            this.selectedPaths
-                        ).then(
-                            () => {
-                                console.log(
-                                    'OrganizerPage.confirmAndDeleteSelected' +
-                                    '(): after set selected paths, bef. switch'
-                                );
-
-                                this.switchFolder(
-                                    switchToFolder,
-                                    false
-                                );
-                            });
-                    },
-                    (err: any) => {
-                        alert('whoa: ' + err);
-                    });
+                this.appFS.removeEntries(entries).subscribe();
             }
         });
 
@@ -379,7 +320,8 @@ export class OrganizerPage extends SelectionPage {
      */
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
-        if (this.selectedPaths.has('/Unfiled/')) {
+
+        if (this.appFS.isPathSelected('/Unfiled/')) {
             const deleteAlert: Alert = this.alertController.create();
             deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
                                  '\'s selected. Automatically unselect it?');
@@ -387,10 +329,7 @@ export class OrganizerPage extends SelectionPage {
             deleteAlert.addButton({
                 text: 'Yes',
                 handler: () => {
-                    this.selectedPaths.delete('/Unfiled/');
-                    this.selectedPaths.delete(
-                        this.getFullPath(this.appFS.unfiledDirectory)
-                    );
+                    this.appFS.unselectPath('/Unfiled/');
                     this.confirmAndDeleteSelected();
                 }
             });
@@ -408,8 +347,8 @@ export class OrganizerPage extends SelectionPage {
     public deleteButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.selectedPaths.size === 1 &&
-            this.selectedPaths.has('/Unfiled/')) {
+        if (this.appFS.nSelected() === 1 &&
+            this.appFS.isPathSelected('/Unfiled')) {
             return true;
         }
         return false;
@@ -429,54 +368,10 @@ export class OrganizerPage extends SelectionPage {
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
-        if (this.selectedPaths.size) {
+        if (this.appFS.nSelected()) {
             // only go to edit selections if at least one is selected
             this.navController.push(SelectionPage);
         }
-    }
-
-    /**
-     * Switch to a new folder
-     * @param {number} key of treenode corresponding to folder to switch to
-     * @param {boolean} whether to update app state 'lastFolderViewed' property
-     * @returns {void}
-     */
-    public switchFolder(
-        path: string,
-        bUpdateAppState: boolean = true
-    ): void {
-        console.log('OrganizerPage.switchFolder(' + path + ', ' +
-                    bUpdateAppState + ')');
-        this.appFS.getPathEntry(path, false).subscribe(
-            (directoryEntry: DirectoryEntry) => {
-                this.directoryEntry = directoryEntry;
-                if (!directoryEntry) {
-                    alert('!directoryEntry!');
-                }
-                this.appFS.readDirectory(directoryEntry).subscribe(
-                    (entries: Entry[]) => {
-                        console.log('OrganizerPage.switchFolder() entries: ' +
-                                    entries);
-                        console.log(this.selectedPaths);
-                        console.dir(entries);
-                        this.entries = entries;
-                        this.detectChanges();
-                        if (bUpdateAppState) {
-                            this.appState.set(
-                                'lastViewedFolderPath',
-                                path
-                            ).then();
-                        }
-                    },
-                    (err1: any) => {
-                        alert('err1: ' + err1);
-                    }
-                ); // this.appFS.readDirectory().susbscribe(..
-            },
-            (err2: any) => {
-                alert('err2: ' + err2);
-            }
-        ); // this.appFS.getPathEntry(..).subscribe(..
     }
 
     /**
@@ -499,13 +394,18 @@ export class OrganizerPage extends SelectionPage {
      */
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
-        const dirPath: string = [
-            this.directoryEntry.fullPath,
-            '/',
-            entry.name,
-            '/'
-        ].join('');
-        this.switchFolder(dirPath, true);
+        if (entry.isDirectory) {
+            this.appFS.switchDirectory(this.appFS.getFullPath(entry))
+                .subscribe();
+        }
+    }
+
+    /**
+     * UI calls this to determine the icon for an entry.
+     * @param {Entry} entry
+     */
+    public entryIcon(entry: Entry): string {
+        return entry.isDirectory ? 'folder' : 'play';
     }
 
     /**
@@ -513,7 +413,7 @@ export class OrganizerPage extends SelectionPage {
      * @returns {void}
      */
     public addFolder(): void {
-        let parentPath: string = this.getFullPath(this.directoryEntry),
+        let parentPath: string = this.appFS.getPath(),
             newFolderAlert: Alert = this.alertController.create({
                 title: 'Create a new folder in ' + parentPath,
                 // message: 'Enter the folder name',
@@ -544,11 +444,11 @@ export class OrganizerPage extends SelectionPage {
                                 fullPath += '/';
                             }
                             // create the folder via getPathEntry()
-                            this.appFS.getPathEntry(fullPath, true).subscribe(
+                            this.appFS.createDirectory(fullPath).subscribe(
                                 (directoryEntry: DirectoryEntry) => {
                                     // re-read parent
                                     // to load in new info
-                                    this.switchFolder(parentPath, false);
+                                    this.appFS.switchDirectory(parentPath);
                                 }
                             ); // appFS.getPathEntry(fullPath, true).subscribe(
                         } // handler: (data: any) => {
@@ -558,28 +458,4 @@ export class OrganizerPage extends SelectionPage {
         newFolderAlert.present();
     }
 
-    /**
-     * Select all or no items in current folder, depending on 'all; argument
-     * @param {boolean} if true, select all, if false, select none
-     * @returns {void}
-     */
-    private selectAllOrNoneInFolder(bSelectAll: boolean): void {
-        console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
-        let bChanged: boolean = false;
-        this.entries.forEach((entry: Entry) => {
-            const fullPath: string = this.getFullPath(entry),
-                  isSelected: boolean = this.isSelected(entry);
-            if (bSelectAll && !isSelected) {
-                this.selectedPaths.add(fullPath);
-                bChanged = true;
-            }
-            else if (!bSelectAll && isSelected) {
-                this.selectedPaths.delete(fullPath);
-                bChanged = true;
-            }
-        });
-        if (bChanged) {
-            this.appState.set('selectedPaths', this.selectedPaths).then();
-        }
-    }
 }

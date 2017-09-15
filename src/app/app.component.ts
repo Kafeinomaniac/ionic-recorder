@@ -73,6 +73,11 @@ export class IonicRecorderApp {
             // [ NOTE: cordova must be available for StatusBar ]
             statusBar.styleDefault();
             statusBar.backgroundColorByHexString('#000000');
+            this.appState.get('lastTabIndex').then(
+                (tabIndex: any) => {
+                    this.goToPage(this.pages[tabIndex ? tabIndex-1 : 0]);
+                }
+            );
         });
     }
 
