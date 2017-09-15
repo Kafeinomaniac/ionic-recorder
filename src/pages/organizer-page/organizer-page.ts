@@ -59,10 +59,6 @@ export class OrganizerPage {
         this.navController = navController;
         this.alertController = alertController;
         this.appFS = appFS;
-
-        this.headerButtons = [];
-        this.footerButtons = [];
-
         this.headerButtons = [
             {
                 text: 'Select...',
@@ -90,8 +86,7 @@ export class OrganizerPage {
                 leftIcon: 'add',
                 clickCB: () => { this.onClickAddButton() }
             }
-        ]; // this.headerButtons = [
-
+        ];
         this.footerButtons = [
             {
                 text: 'Info',
@@ -116,8 +111,7 @@ export class OrganizerPage {
                 leftIcon: 'md-share',
                 clickCB: () => { this.onClickShareButton() }
             }
-        ]; // this.footerButtons = [
-
+        ];
     }
 
     public ionViewDidEnter(): void {
