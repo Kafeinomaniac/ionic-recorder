@@ -15,8 +15,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { SelectionPage } from '../../pages';
-import { MoveTo2Page } from '../../pages';
+import { MoveTo2Page, SelectionPage } from '../../pages';
 import { AppFS } from '../../services';
 
 /**
@@ -63,54 +62,56 @@ export class OrganizerPage {
         this.navController = navController;
         this.alertController = alertController;
         this.appFS = appFS;
+
         appFS.whenReady().subscribe(
             () => {
-                this.headerButtons = [
-                    {
-                        text: 'Select...',
-                        leftIcon: platform.is('ios') ?
-                            'radio-button-off' : 'square-outline',
-                        rightIcon: 'md-arrow-dropdown',
-                        clickCB: () => {
-                            this.onClickSelectButton();
-                        },
-                        disabledCB: () => {
-                            return this.appFS.entries.length <= 1;
-                        }
-                    },
-                    {
-                        text: 'Go home',
-                        leftIcon: 'home',
-                        clickCB: () => {
-                            this.onClickHomeButton();
-                        },
-                        disabledCB: () => {
-                            return this.appFS.directoryEntry.fullPath === '/';
-                        }
-                    },
-                    {
-                        text: 'Go to parent',
-                        leftIcon: 'arrow-up',
-                        rightIcon: 'folder',
-                        // rightIcon: 'ios-folder-outline',
-                        clickCB: () => {
-                            this.onClickParentButton();
-                        },
-                        disabledCB: () => {
-                            return this.appFS.directoryEntry.fullPath === '/';
-                        }
-                    },
-                    {
-                        text: 'Add...',
-                        leftIcon: 'add',
-                        clickCB: () => {
-                            this.onClickAddButton();
-                        }
-                    }
-                ];
 
             }
         );
+
+        this.headerButtons = [
+            {
+                text: 'Select...',
+                leftIcon: platform.is('ios') ?
+                    'radio-button-off' : 'square-outline',
+                rightIcon: 'md-arrow-dropdown',
+                clickCB: () => {
+                    this.onClickSelectButton();
+                },
+                disabledCB: () => {
+                    return this.appFS.entries.length <= 1;
+                }
+            },
+            {
+                text: 'Go home',
+                leftIcon: 'home',
+                clickCB: () => {
+                    this.onClickHomeButton();
+                },
+                disabledCB: () => {
+                    return this.appFS.directoryEntry.fullPath === '/';
+                }
+            },
+            {
+                text: 'Go to parent',
+                leftIcon: 'arrow-up',
+                rightIcon: 'folder',
+                // rightIcon: 'ios-folder-outline',
+                clickCB: () => {
+                    this.onClickParentButton();
+                },
+                disabledCB: () => {
+                    return this.appFS.directoryEntry.fullPath === '/';
+                }
+            },
+            {
+                text: 'Add...',
+                leftIcon: 'add',
+                clickCB: () => {
+                    this.onClickAddButton();
+                }
+            }
+        ]; // this.headerButtons = [
 
         this.footerButtons = [
             {
@@ -148,7 +149,7 @@ export class OrganizerPage {
                     this.onClickShareButton();
                 }
             }
-        ];
+        ]; // this.footerButtons = [
 
     }
 
@@ -389,7 +390,7 @@ export class OrganizerPage {
         console.log('OrganizerPage.detectChanges()');
         setTimeout(
             () => {
-                this.changeDetectorRef.detectChanges();
+                // this.changeDetectorRef.detectChanges();
                 this.content.resize();
             },
             0

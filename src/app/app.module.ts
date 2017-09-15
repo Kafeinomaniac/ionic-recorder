@@ -26,7 +26,6 @@ import { IonicRecorderApp } from './app.component';
 import { IonicStorageModule } from '@ionic/storage';
 import { MasterClock } from '../services/master-clock/master-clock';
 import { ProgressSlider } from '../components/progress-slider/progress-slider';
-import { Keyboard } from '@ionic-native/keyboard';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { VuGauge } from '../components/vu-gauge/vu-gauge';
@@ -71,7 +70,6 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         TrackPage
     ],
     providers: [
-        Keyboard,
         SplashScreen,
         StatusBar,
         { provide: ErrorHandler, useClass: IonicErrorHandler },

@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
 
-<ion-header>
+<ion-header *ngIf="appFS.isReady">
     <ion-navbar>
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
@@ -27,7 +27,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="appFS.isReady">
     <ion-list [reorder]="appFS.entries.length > 1"
               (ionItemReorder)="reorderEntries($event)">
         <ion-item clear *ngFor="let entry of appFS.entries"

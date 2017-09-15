@@ -3,7 +3,7 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { FS } from '../../models';
+import { FS, isUndefined } from '../../models';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 25;
@@ -57,13 +57,9 @@ export class AppFS {
                                 // grab selection from storage
                                 this.storage.get(SELECTED_KEY).then(
                                     (paths: Set<string>) => {
-                                        if (!paths) {
-                                            paths = new Set<string>();
-                                            this.storage.set(
-                                                SELECTED_KEY,
-                                                paths);
+                                        if (paths) {
+                                            this.selectedPaths = paths;
                                         }
-                                        this.selectedPaths = paths;
                                         // finally signal we're ready
                                         console.log('AppFS.isReady == true');
                                         // before switchDirectory avoid looping
@@ -198,6 +194,7 @@ export class AppFS {
                     FS.readDirectory(<DirectoryEntry>entry).subscribe(
                         (entries: Entry[]) => {
                             this.entries = entries;
+                            console.log('entries: .........................');
                             console.dir(entries);
                             // store path as last visited too
                             this.storage.set(PATH_KEY, path);
