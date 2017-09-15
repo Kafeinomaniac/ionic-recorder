@@ -87,7 +87,6 @@ export class OrganizerPage {
                         clickCB: () => {
                             this.onClickHomeButton();
                         },
-                        // disabledCB: this.appFS.atHome
                         disabledCB: () => {
                             return this.appFS.directoryEntry.fullPath === '/';
                         }
@@ -100,7 +99,6 @@ export class OrganizerPage {
                         clickCB: () => {
                             this.onClickParentButton();
                         },
-                        // disabledCB: this.appFS.atHome
                         disabledCB: () => {
                             return this.appFS.directoryEntry.fullPath === '/';
                         }
@@ -286,7 +284,7 @@ export class OrganizerPage {
         // if the only thing selected is the unfiled folder
         // disable delete and move
         if (this.appFS.selectedPaths.size === 1 &&
-            this.appFS.isPathSelected('/Unfiled')) {
+            this.appFS.isPathSelected('/Unfiled/')) {
             return true;
         }
         return false;
@@ -361,7 +359,7 @@ export class OrganizerPage {
         // if the only thing selected is the unfiled folder
         // disable delete and move
         if (this.appFS.selectedPaths.size === 1 &&
-            this.appFS.isPathSelected('/Unfiled')) {
+            this.appFS.isPathSelected('/Unfiled/')) {
             return true;
         }
         return false;

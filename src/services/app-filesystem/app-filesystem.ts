@@ -57,10 +57,13 @@ export class AppFS {
                                 // grab selection from storage
                                 this.storage.get(SELECTED_KEY).then(
                                     (paths: Set<string>) => {
-                                        this.storage.set(
-                                            SELECTED_KEY,
-                                            paths ? paths : this.selectedPaths
-                                        );
+                                        if (!paths) {
+                                            paths = new Set<string>();
+                                            this.storage.set(
+                                                SELECTED_KEY,
+                                                paths);
+                                        }
+                                        this.selectedPaths = paths;
                                         // finally signal we're ready
                                         this.isReady = true;
                                         console.log('AppFS.isReady == true');
@@ -242,8 +245,8 @@ export class AppFS {
      * @param {string} path
      */
     public isPathSelected(path: string): boolean {
-        console.log('isPathSelected(' + path + '): ' +
-                    this.selectedPaths.has(path));
+        // console.log('isPathSelected(' + path + '): ' +
+        //             this.selectedPaths.has(path));
         return this.selectedPaths.has(path);
     }
 
@@ -285,7 +288,7 @@ export class AppFS {
      */
     public toggleSelectEntry(entry: Entry): void {
         const fullPath: string = this.getFullPath(entry);
-        console.log('toggleSelect(' + fullPath + ')');
+        console.log('toggleSelectEntry(' + fullPath + ')');
         if (this.selectedPaths.has(fullPath)) {
             this.selectedPaths.delete(fullPath);
         }
@@ -293,6 +296,7 @@ export class AppFS {
             this.selectedPaths.add(fullPath);
         }
         this.storage.set(SELECTED_KEY, this.selectedPaths);
+        console.dir(this.selectedPaths);
     }
 
     /**

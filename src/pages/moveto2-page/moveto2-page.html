@@ -8,17 +8,19 @@
         <ion-title>
             MoveTo2
         </ion-title>
-        <ion-buttons end *ngIf="selectedPaths.size">
+        <ion-buttons end *ngIf="appFS.selectedPaths.size">
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{selectedPaths.size}} selected &nbsp; <ion-icon name="md-create"></ion-icon>
+                    {{appFS.selectedPaths.size}} selected
+                    &nbsp;
+                    <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
             </button>
         </ion-buttons>
     </ion-navbar>
     <ion-toolbar>
-        <p *ngIf="directoryEntry" text-center>
-            {{getFullPath(directoryEntry)}}
+        <p *ngIf="appFS.directoryEntry" text-center>
+            {{appFS.getFullPath(appFS.directoryEntry)}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>
