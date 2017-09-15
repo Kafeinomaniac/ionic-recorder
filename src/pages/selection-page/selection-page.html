@@ -20,13 +20,15 @@
               (ionItemReorder)="reorderEntries($event)">
         <ion-item clear *ngFor="let entry of selectedEntries"
                   class="selection-page-item">
-            <ion-label ion-button clear (click)="appFS.toggleSelect(entry)">
+            <ion-label ion-button clear
+                       (click)="appFS.toggleSelectEntry(entry)">
                 <ion-icon [name]="appFS.entryIcon(entry)"></ion-icon>
                 &nbsp;
                 {{appFS.getFullPath(entry)}}
             </ion-label>
             <ion-checkbox [checked]="appFS.isEntrySelected(entry)"
-                          (click)="appFS.toggleSelect(entry)"></ion-checkbox>
+                          (click)="appFS.toggleSelectEntry(entry)">
+            </ion-checkbox>
         </ion-item>
     </ion-list>
 </ion-content>
