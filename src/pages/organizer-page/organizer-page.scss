@@ -23,7 +23,8 @@ $content-text-color: color($colors, almost-dark);
             }
             ion-label.button span.button-inner {
                 color: $content-text-color;
-                // text-transform: : none; is needed to remove uppercase transform
+                // text-transform: : none;
+                // is needed to remove uppercase transform
                 text-transform: none;
                 // justify-content: unset is needed for label
                 // text to not be centered; now it is left justified

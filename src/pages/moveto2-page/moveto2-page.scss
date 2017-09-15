@@ -6,7 +6,6 @@ moveto2-page {
     ion-header ion-toolbar div.toolbar-content button-bar button:first-child {
         color:green;
     }
-
     ion-toolbar p {
         margin-top: 0.1em;
         margin-bottom: 0.5em;
@@ -27,7 +26,8 @@ moveto2-page {
             }
             ion-label.button span.button-inner {
                 color: $content-text-color;
-                // text-transform: : none; is needed to remove uppercase transform
+                // text-transform: : none;
+                // is needed to remove uppercase transform
                 text-transform: none;
                 // justify-content: unset is needed for label
                 // text to not be centered; now it is left justified

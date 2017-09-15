@@ -14,7 +14,6 @@ import {
     Component,
     ViewChild
 } from '@angular/core';
-import { AppState } from '../../services/app-state/app-state';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { SelectionPage } from '../../pages';
 import { MoveTo2Page } from '../../pages';
@@ -46,7 +45,6 @@ export class OrganizerPage {
      * @param {AlertController}
      * @param {ActionSheetController}
      * @param {ChangeDetectorRef}
-     * @param {AppState}
      * @param {AppFS}
      * @param {Platform}
      */
@@ -55,7 +53,6 @@ export class OrganizerPage {
         alertController: AlertController,
         actionSheetController: ActionSheetController,
         changeDetectorRef: ChangeDetectorRef,
-        appState: AppState,
         appFS: AppFS,
         platform: Platform
     ) {
@@ -66,7 +63,7 @@ export class OrganizerPage {
         this.navController = navController;
         this.alertController = alertController;
         this.appFS = appFS;
-        appFS.waitTillReady().subscribe(
+        appFS.whenReady().subscribe(
             () => {
                 this.headerButtons = [
                     {
@@ -156,7 +153,7 @@ export class OrganizerPage {
     }
 
     public ionViewDidEnter(): void {
-        this.appFS.waitTillReady().subscribe(
+        this.appFS.whenReady().subscribe(
             () => {
                 this.detectChanges();
             }

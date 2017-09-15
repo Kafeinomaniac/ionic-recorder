@@ -39,7 +39,7 @@ export class MoveTo2Page {
         this.changeDetectorRef = changeDetectorRef;
         this.appFS = appFS;
 
-        appFS.waitTillReady().subscribe(
+        appFS.whenReady().subscribe(
             () => {
                 this.headerButtons = [
                     {

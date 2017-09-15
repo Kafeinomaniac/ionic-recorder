@@ -113,10 +113,10 @@ export class AppFS {
      * @returns {Observable<FileSystem>} Observable that emits the file
      * system when it's ready for use.
      */
-    public waitTillReady(): Observable<void> {
+    public whenReady(): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
             let repeat: () => void = () => {
-                console.log('AppFS.waitTillReady().repeat()');
+                console.log('AppFS.whenReady().repeat()');
                 if (this.isReady) {
                     observer.next();
                     observer.complete();
@@ -134,7 +134,7 @@ export class AppFS {
         console.log('AppFS.getSelectedEntries()');
         let source: Observable<Entry[]> = Observable.create((observer) => {
             // get the file system
-            this.waitTillReady().subscribe(
+            this.whenReady().subscribe(
                 () => {
                     FS.getEntriesFromPaths(
                         this.fileSystem,
@@ -328,7 +328,7 @@ export class AppFS {
               fullPathSize: number = fullPath.length;
         let source: Observable<void> = Observable.create((observer) => {
             // get the file system
-            this.waitTillReady().subscribe(
+            this.whenReady().subscribe(
                 () => {
                     FS.deleteEntries(this.fileSystem, paths).subscribe(
                         () => {
@@ -371,7 +371,7 @@ export class AppFS {
                 (err2: any) => {
                     observer.error(err2);
                 }
-            ); // this.waitTillReady().subscribe(
+            ); // this.whenReady().subscribe(
 
         });
         return source;
