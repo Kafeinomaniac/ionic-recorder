@@ -65,7 +65,6 @@ export class OrganizerPage {
 
         appFS.whenReady().subscribe(
             () => {
-
             }
         );
 
