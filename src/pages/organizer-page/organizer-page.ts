@@ -1,22 +1,19 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import {
-    Alert,
-    AlertController,
     ActionSheet,
     ActionSheetController,
+    Alert,
+    AlertController,
     Content,
     NavController,
     Platform
 } from 'ionic-angular';
-import {
-    ChangeDetectorRef,
-    Component,
-    ViewChild
-} from '@angular/core';
-import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { MoveTo2Page, SelectionPage } from '../../pages';
+
 import { AppFS } from '../../services';
+import { ButtonbarButton } from '../../components/';
+import { MoveTo2Page, SelectionPage } from '../../pages';
 
 /**
  * @name OrganizerPage
@@ -63,10 +60,8 @@ export class OrganizerPage {
         this.alertController = alertController;
         this.appFS = appFS;
 
-        appFS.whenReady().subscribe(
-            () => {
-            }
-        );
+        this.headerButtons = [];
+        this.footerButtons = [];
 
         this.headerButtons = [
             {
@@ -74,41 +69,26 @@ export class OrganizerPage {
                 leftIcon: platform.is('ios') ?
                     'radio-button-off' : 'square-outline',
                 rightIcon: 'md-arrow-dropdown',
-                clickCB: () => {
-                    this.onClickSelectButton();
-                },
-                disabledCB: () => {
-                    return this.appFS.entries.length <= 1;
-                }
+                clickCB: () => { this.onClickSelectButton() },
+                disabledCB: () => { return this.selectButtonDisabled() }
             },
             {
                 text: 'Go home',
                 leftIcon: 'home',
-                clickCB: () => {
-                    this.onClickHomeButton();
-                },
-                disabledCB: () => {
-                    return this.appFS.directoryEntry.fullPath === '/';
-                }
+                clickCB: () => { this.onClickHomeButton() },
+                disabledCB: () => { return this.atHome() }
             },
             {
                 text: 'Go to parent',
                 leftIcon: 'arrow-up',
                 rightIcon: 'folder',
-                // rightIcon: 'ios-folder-outline',
-                clickCB: () => {
-                    this.onClickParentButton();
-                },
-                disabledCB: () => {
-                    return this.appFS.directoryEntry.fullPath === '/';
-                }
+                clickCB: () => { this.onClickParentButton() },
+                disabledCB: () => { return this.atHome() }
             },
             {
                 text: 'Add...',
                 leftIcon: 'add',
-                clickCB: () => {
-                    this.onClickAddButton();
-                }
+                clickCB: () => { this.onClickAddButton() }
             }
         ]; // this.headerButtons = [
 
@@ -116,37 +96,25 @@ export class OrganizerPage {
             {
                 text: 'Info',
                 leftIcon: 'information-circle',
-                clickCB: () => {
-                    this.onClickInfoButton();
-                }
+                clickCB: () => { this.onClickInfoButton() }
             },
             {
                 text: 'Move to...',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
-                clickCB: () => {
-                    this.onClickMoveButton();
-                },
-                disabledCB: () => {
-                    return this.moveButtonDisabled();
-                }
+                clickCB: () => { this.onClickMoveButton() },
+                disabledCB: () => { return this.moveButtonDisabled() }
             },
             {
                 text: 'Delete',
                 leftIcon: 'trash',
-                clickCB: () => {
-                    this.onClickDeleteButton();
-                },
-                disabledCB: () => {
-                    return this.deleteButtonDisabled();
-                }
+                clickCB: () => { this.onClickDeleteButton() },
+                disabledCB: () => { return this.deleteButtonDisabled() }
             },
             {
                 text: 'Share',
                 leftIcon: 'md-share',
-                clickCB: () => {
-                    this.onClickShareButton();
-                }
+                clickCB: () => { this.onClickShareButton() }
             }
         ]; // this.footerButtons = [
 
@@ -186,6 +154,11 @@ export class OrganizerPage {
         selectAlert.present();
     }
 
+    public selectButtonDisabled(): boolean {
+        console.log('selectButtonDisabled()');
+        return this.appFS.nEntries() <= 1;
+    }
+
     /**
      * UI calls this when the 'Go home' button is clicked.
      * @returns {void}
@@ -197,6 +170,11 @@ export class OrganizerPage {
                 this.detectChanges();
             }
         );
+    }
+
+    public atHome(): boolean {
+        console.log('atHome(): ' + this.appFS.atHome());
+        return this.appFS.atHome();
     }
 
     /**
@@ -280,7 +258,7 @@ export class OrganizerPage {
     public moveButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.appFS.selectedPaths.size === 1 &&
+        if (this.appFS.nSelected() === 1 &&
             this.appFS.isPathSelected('/Unfiled/')) {
             return true;
         }
@@ -291,10 +269,9 @@ export class OrganizerPage {
      * @returns {void}
      */
     private confirmAndDeleteSelected(): void {
-        let nSelectedEntries: number = this.appFS.selectedPaths.size,
-            itemsStr: string = nSelectedEntries.toString() + ' item' +
-            ((nSelectedEntries > 1) ? 's' : ''),
-            // entries: string[] = Array.from(this.selectedPaths),
+        let nSelected: number = this.appFS.nSelected(),
+            itemsStr: string = nSelected.toString() + ' item' +
+            ((nSelected > 1) ? 's' : ''),
             entries: string[] = this.appFS.getSelectedPathsArray(),
             deleteAlert: Alert = this.alertController.create();
 
@@ -355,7 +332,7 @@ export class OrganizerPage {
     public deleteButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.appFS.selectedPaths.size === 1 &&
+        if (this.appFS.nSelected() === 1 &&
             this.appFS.isPathSelected('/Unfiled/')) {
             return true;
         }
@@ -376,7 +353,7 @@ export class OrganizerPage {
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
-        if (this.appFS.selectedPaths.size) {
+        if (this.appFS.nSelected()) {
             // only go to edit selections if at least one is selected
             this.navController.push(SelectionPage);
         }
@@ -389,7 +366,7 @@ export class OrganizerPage {
         console.log('OrganizerPage.detectChanges()');
         setTimeout(
             () => {
-                // this.changeDetectorRef.detectChanges();
+                this.changeDetectorRef.detectChanges();
                 this.content.resize();
             },
             0

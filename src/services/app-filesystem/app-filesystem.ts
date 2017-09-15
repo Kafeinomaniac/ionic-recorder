@@ -57,16 +57,15 @@ export class AppFS {
                                 // grab selection from storage
                                 this.storage.get(SELECTED_KEY).then(
                                     (paths: Set<string>) => {
-                                        if (paths) {
+                                        if (paths &&
+                                            Object.keys(paths).length > 0) {
                                             this.selectedPaths = paths;
                                         }
-                                        // finally signal we're ready
-                                        console.log('AppFS.isReady == true');
-                                        // before switchDirectory avoid looping
                                         this.switchDirectory(directoryPath)
                                             .subscribe(
                                                 () => {
                                                     this.isReady = true;
+                                                    console.log('AppFS.READY!');
                                                 },
                                                 (err1: any) => {
                                                     alert('err1: ' + err1);
@@ -153,7 +152,6 @@ export class AppFS {
         return source;
     }
 
-
     public createDirectory(path: string): Observable<DirectoryEntry> {
         let source: Observable<DirectoryEntry> =
             Observable.create((observer) => {
@@ -237,6 +235,9 @@ export class AppFS {
     public isPathSelected(path: string): boolean {
         // console.log('isPathSelected(' + path + '): ' +
         //             this.selectedPaths.has(path));
+        if (!(this.selectedPaths.has)) {
+            debugger;
+        }
         return this.selectedPaths.has(path);
     }
 
@@ -258,6 +259,23 @@ export class AppFS {
      */
     public selectEntry(entry: Entry): void {
         this.selectPath(this.getFullPath(entry));
+    }
+
+    public atHome(): boolean {
+        console.log('AppFS.atHome(): ' +
+                    (this.directoryEntry.fullPath === '/'));
+        return this.directoryEntry.fullPath === '/';
+    }
+
+    public nEntries(): number {
+        console.log('AppFS.nEntries(): ' + this.entries.length);
+        return this.entries.length;
+    }
+
+    public nSelected(): number {
+        console.log('AppFS.nSelected(isReady:' + this.isReady +
+                    '): ' + this.selectedPaths.size);
+        return this.selectedPaths.size;
     }
 
     public unselectPath(path: string): void {
