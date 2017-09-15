@@ -19,7 +19,6 @@ export class SelectionPage {
 
     /**
      * @constructor
-     * @param {AppState}
      * @param {AppFS}
      */
     constructor(appFS: AppFS) {
