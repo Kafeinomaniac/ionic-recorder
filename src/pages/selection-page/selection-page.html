@@ -8,23 +8,25 @@
         <ion-buttons end>
             <button ion-button small>
                 <ion-badge item-right>
-                    {{selectedPaths.size}} selected
+                    {{appFS.selectedPaths.size}} selected
                 </ion-badge>
             </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
 
-<ion-content>
-    <ion-list [reorder]="selectedEntries.length > 1" (ionItemReorder)="reorderEntries($event)">
-        <ion-item clear *ngFor="let entry of selectedEntries" class="selection-page-item">
-            <ion-label ion-button clear (click)="toggleSelect(entry)">
-                <ion-icon [name]="entryIcon(entry)"></ion-icon>
+<ion-content *ngIf="appFS.isReady && selectedEntries">
+    <ion-list [reorder]="selectedEntries.length > 1"
+              (ionItemReorder)="reorderEntries($event)">
+        <ion-item clear *ngFor="let entry of selectedEntries"
+                  class="selection-page-item">
+            <ion-label ion-button clear (click)="appFS.toggleSelect(entry)">
+                <ion-icon [name]="appFS.entryIcon(entry)"></ion-icon>
                 &nbsp;
-                {{getFullPath(entry)}}
+                {{appFS.getFullPath(entry)}}
             </ion-label>
-            <ion-checkbox [checked]="isSelected(entry)" (click)="toggleSelect(entry)"></ion-checkbox>
+            <ion-checkbox [checked]="appFS.isEntrySelected(entry)"
+                          (click)="appFS.toggleSelect(entry)"></ion-checkbox>
         </ion-item>
     </ion-list>
 </ion-content>
-

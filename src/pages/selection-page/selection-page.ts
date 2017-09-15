@@ -14,26 +14,23 @@ import { AppFS } from '../../services';
     templateUrl: 'selection-page.html'
 })
 export class SelectionPage {
-    protected appFS: AppFS;
+    public appFS: AppFS;
+    public selectedEntries: Entry[];
 
     /**
      * @constructor
      * @param {AppState}
      * @param {AppFS}
      */
-    constructor(
-        appFS: AppFS
-    ) {
+    constructor(appFS: AppFS) {
         console.log('constructor():SelectionPage');
         this.appFS = appFS;
-    }
-
-    /**
-     * UI calls this to determine the icon for an entry.
-     * @param {Entry} entry
-     */
-    public entryIcon(entry: Entry): string {
-        return entry.isDirectory ? 'folder' : 'play';
+        this.selectedEntries = [];
+        appFS.getSelectedEntries().subscribe(
+            (entries: Entry[]) => {
+                this.selectedEntries = entries;
+            }
+        );
     }
 
     /**
@@ -43,8 +40,8 @@ export class SelectionPage {
         console.log('reorderEntries(' + indexes + ')');
         console.log(typeof(indexes));
         console.dir(indexes);
-        // const entry: Entry = this.selectedEntries[indexes.from];
-        // this.selectedEntries.splice(indexes.from, 1);
-        // this.selectedEntries.splice(indexes.to, 0, entry);
+        const entry: Entry = this.selectedEntries[indexes.from];
+        this.selectedEntries.splice(indexes.from, 1);
+        this.selectedEntries.splice(indexes.to, 0, entry);
     }
 }

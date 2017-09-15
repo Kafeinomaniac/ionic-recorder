@@ -33,7 +33,7 @@
         <ion-item clear *ngFor="let entry of appFS.entries"
                   class="organizer-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
-                <ion-icon [name]="entryIcon(entry)"></ion-icon>
+                <ion-icon [name]="appFS.entryIcon(entry)"></ion-icon>
                 &nbsp;
                 {{entry.name}}
             </ion-label>

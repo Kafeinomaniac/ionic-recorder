@@ -32,12 +32,9 @@ import { AppFS } from '../../services';
 })
 export class OrganizerPage {
     @ViewChild(Content) public content: Content;
-    // UI uses headerButtons
     public headerButtons: ButtonbarButton[];
-    // UI uses footerButtons
     public footerButtons: ButtonbarButton[];
     protected navController: NavController;
-    // actionSheetController is used by add button
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
     private changeDetectorRef: ChangeDetectorRef;
@@ -47,7 +44,10 @@ export class OrganizerPage {
      * @constructor
      * @param {NavController}
      * @param {AlertController}
+     * @param {ActionSheetController}
+     * @param {ChangeDetectorRef}
      * @param {AppState}
+     * @param {AppFS}
      * @param {Platform}
      */
     constructor(
@@ -418,14 +418,6 @@ export class OrganizerPage {
     }
 
     /**
-     * UI calls this to determine the icon for an entry.
-     * @param {Entry} entry
-     */
-    public entryIcon(entry: Entry): string {
-        return entry.isDirectory ? 'folder' : 'play';
-    }
-
-    /**
      * UI calls this when the new folder button is clicked
      * @returns {void}
      */
@@ -433,7 +425,6 @@ export class OrganizerPage {
         let parentPath: string = this.appFS.getPath(),
             newFolderAlert: Alert = this.alertController.create({
                 title: 'Create a new folder in ' + parentPath,
-                // message: 'Enter the folder name',
                 inputs: [{
                     name: 'folderName',
                     placeholder: 'Enter folder name...'
@@ -479,5 +470,4 @@ export class OrganizerPage {
             }); // newFolderAlert: Alert = this.alertController.create({
         newFolderAlert.present();
     }
-
 }

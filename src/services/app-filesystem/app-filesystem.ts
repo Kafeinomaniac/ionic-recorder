@@ -20,9 +20,10 @@ const SELECTED_KEY: string = 'selectedPaths';
 export class AppFS {
     public isReady: boolean;
     public entries: Entry[];
-    private fileSystem: FileSystem;
     public directoryEntry: DirectoryEntry;
     public selectedPaths: Set<string>;
+
+    private fileSystem: FileSystem;
     private storage: Storage;
 
     /**
@@ -125,6 +126,34 @@ export class AppFS {
         return source;
     }
 
+    public getSelectedEntries(): Observable<Entry[]> {
+        console.log('AppFS.getSelectedEntries()');
+        let source: Observable<Entry[]> = Observable.create((observer) => {
+            // get the file system
+            this.waitTillReady().subscribe(
+                () => {
+                    FS.getEntriesFromPaths(
+                        this.fileSystem,
+                        this.getSelectedPathsArray()
+                    ).subscribe(
+                        (entries: Entry[]) => {
+                            observer.next(entries);
+                            observer.complete();
+                        },
+                        (err1: any) => {
+                            observer.error(err1);
+                        }
+                    );
+                },
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            );
+        });
+        return source;
+    }
+
+
     public createDirectory(path: string): Observable<DirectoryEntry> {
         let source: Observable<DirectoryEntry> =
             Observable.create((observer) => {
@@ -191,6 +220,13 @@ export class AppFS {
             ); // this.waitTillReady().subscribe(
         }); // let source: Observable<void> = Observable.create((observer) => {
         return source;
+    }
+
+    /**
+     * @param {Entry} entry
+     */
+    public entryIcon(entry: Entry): string {
+        return entry.isDirectory ? 'folder' : 'play';
     }
 
     /**
