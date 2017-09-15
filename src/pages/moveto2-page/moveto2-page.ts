@@ -1,6 +1,13 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Component } from '@angular/core';
+import {
+    Content
+} from 'ionic-angular';
+import {
+    ChangeDetectorRef,
+    Component,
+    ViewChild
+} from '@angular/core';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { AppFS } from '../../services';
 
@@ -15,14 +22,21 @@ import { AppFS } from '../../services';
     templateUrl: 'moveto2-page.html'
 })
 export class MoveTo2Page {
+    @ViewChild(Content) public content: Content;
     public appFS: AppFS;
+    private changeDetectorRef: ChangeDetectorRef;
     private headerButtons: ButtonbarButton[];
+
     /**
      * @constructor
      * @param {AppFS}
      */
-    constructor(appFS: AppFS) {
+    constructor(
+        changeDetectorRef: ChangeDetectorRef,
+        appFS: AppFS
+    ) {
         console.log('MoveTo2Page.constructor()');
+        this.changeDetectorRef = changeDetectorRef;
         this.appFS = appFS;
 
         appFS.waitTillReady().subscribe(
@@ -77,7 +91,7 @@ export class MoveTo2Page {
         console.log('onClickHomeButton()');
         this.appFS.switchDirectory('/').subscribe(
             () => {
-                console.log('this.detectChanges();');
+                this.detectChanges();
             }
         );
     }
@@ -95,8 +109,39 @@ export class MoveTo2Page {
               pathParts.splice(0, pathParts.length - 1).join('/') + '/';
         this.appFS.switchDirectory(parentPath).subscribe(
             () => {
-                console.log('this.detectChanges();');
+                this.detectChanges();
             }
+        );
+    }
+
+    /**
+     * UI calls this when the new folder button is clicked
+     * @returns {void}
+     */
+    public onClickEntry(entry: Entry): void {
+        console.log('onClickEntry()');
+        if (entry.isDirectory) {
+            this.appFS.switchDirectory(this.appFS.getFullPath(entry))
+                .subscribe(
+                    () => {
+                        this.detectChanges();
+                    }
+                );
+        }
+    }
+
+
+    /**
+     * @returns {void}
+     */
+    private detectChanges(): void {
+        console.log('OrganizerPage.detectChanges()');
+        setTimeout(
+            () => {
+                this.changeDetectorRef.detectChanges();
+                this.content.resize();
+            },
+            0
         );
     }
 

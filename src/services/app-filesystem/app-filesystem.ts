@@ -65,12 +65,13 @@ export class AppFS {
                                         }
                                         this.selectedPaths = paths;
                                         // finally signal we're ready
-                                        this.isReady = true;
                                         console.log('AppFS.isReady == true');
                                         // before switchDirectory avoid looping
                                         this.switchDirectory(directoryPath)
                                             .subscribe(
-                                                null,
+                                                () => {
+                                                    this.isReady = true;
+                                                },
                                                 (err1: any) => {
                                                     alert('err1: ' + err1);
                                                 }
@@ -186,42 +187,34 @@ export class AppFS {
     public switchDirectory(path: string): Observable<Entry[]> {
         console.log('AppFS.switchDirectory(' + path + ')');
         let source: Observable<Entry[]> = Observable.create((observer) => {
-            // get the file system
-            this.waitTillReady().subscribe(
-                () => {
-                    // got file system, now get entry object for path
-                    // of directory we're switching to
-                    FS.getPathEntry(this.fileSystem, path, false).subscribe(
-                        (entry: Entry) => {
-                            this.directoryEntry = <DirectoryEntry>entry;
-                            console.log('this.directoryEntry = ' +
-                                        this.directoryEntry.fullPath);
-                            // we got the directory entry, now read it
-                            FS.readDirectory(<DirectoryEntry>entry).subscribe(
-                                (entries: Entry[]) => {
-                                    this.entries = entries;
-                                    console.dir(entries);
-                                    // store path as last visited too
-                                    this.storage.set(PATH_KEY, path);
-                                    // return with new entries
-                                    observer.next(entries);
-                                    observer.complete();
-                                },
-                                (err1: any) => {
-                                    observer.error(err1);
-                                }
-                            ); // FS.readDirectory(directoryEntry).subscribe(
+            // got file system, now get entry object for path
+            // of directory we're switching to
+            FS.getPathEntry(this.fileSystem, path, false).subscribe(
+                (entry: Entry) => {
+                    this.directoryEntry = <DirectoryEntry>entry;
+                    console.log('this.directoryEntry = ' +
+                                this.directoryEntry.fullPath);
+                    // we got the directory entry, now read it
+                    FS.readDirectory(<DirectoryEntry>entry).subscribe(
+                        (entries: Entry[]) => {
+                            this.entries = entries;
+                            console.dir(entries);
+                            // store path as last visited too
+                            this.storage.set(PATH_KEY, path);
+                            // return with new entries
+                            observer.next(entries);
+                            observer.complete();
                         },
-                        (err2: any) => {
-                            observer.error(err2);
+                        (err1: any) => {
+                            observer.error(err1);
                         }
-                    ); // FS.getPathEntry(fileSystem, path, false).subscribe(
-                }, // () => {
-                (err3: any) => {
-                    observer.error(err3);
+                    ); // FS.readDirectory(directoryEntry).subscribe(
+                },
+                (err2: any) => {
+                    observer.error(err2);
                 }
-            ); // this.waitTillReady().subscribe(
-        }); // let source: Observable<void> = Observable.create((observer) => {
+            ); // FS.getPathEntry(fileSystem, path, false).subscribe(
+        }); // let source: Observable<Entry[]> = Observable.create((observer)
         return source;
     }
 
