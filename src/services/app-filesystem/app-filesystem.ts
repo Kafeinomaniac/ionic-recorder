@@ -104,20 +104,6 @@ export class AppFS {
     }
 
     /**
-     *
-     * @returns {boolean}
-     * Returns true or false, depending if we're at home or not
-     * if directoryEntry is not defined the default is to be at home
-     * so we return true in that case
-     */
-    public atHome(): boolean {
-        const bAtHome: boolean = !this.directoryEntry ||
-              this.directoryEntry.fullPath === '/';
-        console.log('AppFS.atHome(): ' + bAtHome);
-        return bAtHome;
-    }
-
-    /**
      * Wait until file system is ready for use, to emit observable.
      * @returns {Observable<FileSystem>} Observable that emits the file
      * system when it's ready for use.
@@ -176,6 +162,8 @@ export class AppFS {
                     FS.getPathEntry(this.fileSystem, path, false).subscribe(
                         (entry: Entry) => {
                             this.directoryEntry = <DirectoryEntry>entry;
+                            console.log('this.directoryEntry = ' +
+                                        this.directoryEntry.fullPath);
                             // we got the directory entry, now read it
                             FS.readDirectory(<DirectoryEntry>entry).subscribe(
                                 (entries: Entry[]) => {
@@ -296,24 +284,20 @@ export class AppFS {
         }
     }
 
-    public nSelected(): number {
-        return this.selectedPaths.size;
-    }
-
     /**
      * Removes entries, supplied as an array of full path strings,
      * sequentially.
      * @param {string[]} paths
      */
-    public removeEntries(paths: string[]): Observable<void> {
-        console.log('AppFS.removeEntries(' + paths + ')');
+    public deleteEntries(paths: string[]): Observable<void> {
+        console.log('AppFS.deleteEntries(' + paths + ')');
         const fullPath: string = this.getFullPath(this.directoryEntry),
               fullPathSize: number = fullPath.length;
         let source: Observable<void> = Observable.create((observer) => {
             // get the file system
             this.waitTillReady().subscribe(
                 () => {
-                    FS.removeEntries(this.fileSystem, paths).subscribe(
+                    FS.deleteEntries(this.fileSystem, paths).subscribe(
                         () => {
                             // unselect removed paths, also track:
                             // if removed path contains current directory,
@@ -348,7 +332,7 @@ export class AppFS {
                         },
                         (err1: any) => {
                             observer.error(err1);
-                        } // FS.removeEntries(this.fileSystem, paths).subscribe(
+                        } // FS.deleteEntries(this.fileSystem, paths).subscribe(
                     ); //
                 }, // () => {
                 (err2: any) => {

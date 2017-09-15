@@ -66,46 +66,56 @@ export class OrganizerPage {
         this.navController = navController;
         this.alertController = alertController;
         this.appFS = appFS;
+        appFS.waitTillReady().subscribe(
+            () => {
+                this.headerButtons = [
+                    {
+                        text: 'Select...',
+                        leftIcon: platform.is('ios') ?
+                            'radio-button-off' : 'square-outline',
+                        rightIcon: 'md-arrow-dropdown',
+                        clickCB: () => {
+                            this.onClickSelectButton();
+                        },
+                        disabledCB: () => {
+                            return this.appFS.entries.length <= 1;
+                        }
+                    },
+                    {
+                        text: 'Go home',
+                        leftIcon: 'home',
+                        clickCB: () => {
+                            this.onClickHomeButton();
+                        },
+                        // disabledCB: this.appFS.atHome
+                        disabledCB: () => {
+                            return this.appFS.directoryEntry.fullPath === '/';
+                        }
+                    },
+                    {
+                        text: 'Go to parent',
+                        leftIcon: 'arrow-up',
+                        rightIcon: 'folder',
+                        // rightIcon: 'ios-folder-outline',
+                        clickCB: () => {
+                            this.onClickParentButton();
+                        },
+                        // disabledCB: this.appFS.atHome
+                        disabledCB: () => {
+                            return this.appFS.directoryEntry.fullPath === '/';
+                        }
+                    },
+                    {
+                        text: 'Add...',
+                        leftIcon: 'add',
+                        clickCB: () => {
+                            this.onClickAddButton();
+                        }
+                    }
+                ];
 
-        this.headerButtons = [
-            {
-                text: 'Select...',
-                leftIcon: platform.is('ios') ?
-                    'radio-button-off' : 'square-outline',
-                rightIcon: 'md-arrow-dropdown',
-                clickCB: () => {
-                    this.onClickSelectButton();
-                },
-                disabledCB: () => {
-                    return this.appFS.entries.length <= 1;
-                }
-            },
-            {
-                text: 'Go home',
-                leftIcon: 'home',
-                clickCB: () => {
-                    this.onClickHomeButton();
-                },
-                disabledCB: this.appFS.atHome
-            },
-            {
-                text: 'Go to parent',
-                leftIcon: 'arrow-up',
-                rightIcon: 'folder',
-                // rightIcon: 'ios-folder-outline',
-                clickCB: () => {
-                    this.onClickParentButton();
-                },
-                disabledCB: this.appFS.atHome
-            },
-            {
-                text: 'Add...',
-                leftIcon: 'add',
-                clickCB: () => {
-                    this.onClickAddButton();
-                }
             }
-        ];
+        );
 
         this.footerButtons = [
             {
@@ -147,20 +157,12 @@ export class OrganizerPage {
 
     }
 
-    public ionViewWillEnter(): void {
+    public ionViewDidEnter(): void {
         this.appFS.waitTillReady().subscribe(
             () => {
                 this.detectChanges();
             }
         );
-    }
-
-    /**
-     * @param {Entry} entry
-     */
-    public toggleSelect(entry: Entry): void {
-        this.appFS.toggleSelectEntry(entry);
-        this.detectChanges();
     }
 
     /**
@@ -195,7 +197,11 @@ export class OrganizerPage {
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
-        this.appFS.switchDirectory('/').subscribe();
+        this.appFS.switchDirectory('/').subscribe(
+            () => {
+                this.detectChanges();
+            }
+        );
     }
 
     /**
@@ -209,7 +215,11 @@ export class OrganizerPage {
                   (str: string) => { return str !== ''; }),
               parentPath: string = '/' +
               pathParts.splice(0, pathParts.length - 1).join('/') + '/';
-        this.appFS.switchDirectory(parentPath);
+        this.appFS.switchDirectory(parentPath).subscribe(
+            () => {
+                this.detectChanges();
+            }
+        );
     }
 
     /**
@@ -275,7 +285,7 @@ export class OrganizerPage {
     public moveButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.appFS.nSelected() === 1 &&
+        if (this.appFS.selectedPaths.size === 1 &&
             this.appFS.isPathSelected('/Unfiled')) {
             return true;
         }
@@ -286,7 +296,7 @@ export class OrganizerPage {
      * @returns {void}
      */
     private confirmAndDeleteSelected(): void {
-        let nSelectedEntries: number = this.appFS.nSelected(),
+        let nSelectedEntries: number = this.appFS.selectedPaths.size,
             itemsStr: string = nSelectedEntries.toString() + ' item' +
             ((nSelectedEntries > 1) ? 's' : ''),
             // entries: string[] = Array.from(this.selectedPaths),
@@ -307,7 +317,10 @@ export class OrganizerPage {
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
-                this.appFS.removeEntries(entries).subscribe();
+                this.appFS.deleteEntries(entries).subscribe(
+                    () => {
+                        this.detectChanges();
+                    });
             }
         });
 
@@ -347,7 +360,7 @@ export class OrganizerPage {
     public deleteButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.appFS.nSelected() === 1 &&
+        if (this.appFS.selectedPaths.size === 1 &&
             this.appFS.isPathSelected('/Unfiled')) {
             return true;
         }
@@ -368,7 +381,7 @@ export class OrganizerPage {
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
-        if (this.appFS.nSelected()) {
+        if (this.appFS.selectedPaths.size) {
             // only go to edit selections if at least one is selected
             this.navController.push(SelectionPage);
         }
@@ -396,7 +409,11 @@ export class OrganizerPage {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
             this.appFS.switchDirectory(this.appFS.getFullPath(entry))
-                .subscribe();
+                .subscribe(
+                    () => {
+                        this.detectChanges();
+                    }
+                );
         }
     }
 
@@ -448,7 +465,12 @@ export class OrganizerPage {
                                 (directoryEntry: DirectoryEntry) => {
                                     // re-read parent
                                     // to load in new info
-                                    this.appFS.switchDirectory(parentPath);
+                                    this.appFS.switchDirectory(parentPath)
+                                        .subscribe(
+                                            () => {
+                                                this.detectChanges();
+                                            }
+                                        );
                                 }
                             ); // appFS.getPathEntry(fullPath, true).subscribe(
                         } // handler: (data: any) => {

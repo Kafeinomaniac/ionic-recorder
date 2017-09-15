@@ -29,11 +29,11 @@ export class FS {
         return source;
     }
 
-    public static removeEntries(
+    public static deleteEntries(
         fileSystem: FileSystem,
         paths: string[]
     ): Observable<void> {
-        console.log('FS.removeEntries(fs, ' + paths + ')');
+        console.log('FS.deleteEntries(fs, ' + paths + ')');
         let entryObservableArray: Observable<Entry>[] =
             paths.map((path: string) => {
                 return FS.getPathEntry(fileSystem, path, false);

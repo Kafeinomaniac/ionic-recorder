@@ -51,10 +51,10 @@ describe('services/filesystem', () => {
     });
 
     it('cannot delete /Unfiled recursively', (done) => {
-        FS.removeEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+        FS.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
             null,
             (err: any) => {
-                console.log('Expected Error in FS.removeEntries: ' + err);
+                console.log('Expected Error in FS.deleteEntries: ' + err);
                 done();
             }
         );
@@ -97,7 +97,7 @@ describe('services/filesystem', () => {
     });
 
     it('can delete /Unfiled recursively', (done) => {
-        FS.removeEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+        FS.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
             () => {
                 done();
             }

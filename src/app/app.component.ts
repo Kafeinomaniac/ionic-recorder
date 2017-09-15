@@ -75,7 +75,7 @@ export class IonicRecorderApp {
             statusBar.backgroundColorByHexString('#000000');
             this.appState.get('lastTabIndex').then(
                 (tabIndex: any) => {
-                    this.goToPage(this.pages[tabIndex ? tabIndex-1 : 0]);
+                    this.goToPage(this.pages[tabIndex ? tabIndex - 1 : 0]);
                 }
             );
         });
