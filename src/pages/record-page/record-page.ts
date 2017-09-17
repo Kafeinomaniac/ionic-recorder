@@ -20,9 +20,8 @@ const PAUSE_ICON: string = 'pause';
 const MAX_GAIN_SLIDER_VALUE: number = 1000;
 
 /**
- * @name RecordPage
- * @description
- * The page from which we record-page audio and monitor microphone sound volume.
+ * Page to record audio and monitor microphone sound volume.
+ * @class RecordPage
  */
 @Component({
     selector: 'record-page',

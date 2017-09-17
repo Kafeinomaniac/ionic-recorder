@@ -12,10 +12,8 @@ import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { AppFS } from '../../services';
 
 /**
- * @name MoveTo2Page
- * @description
- * Page of file/folder interface to all recorded files. AddFolderPage
- * music organizer.
+ * @class MoveTo2Page
+ * A page for choosing folder to move selected entries into.
  */
 @Component({
     selector: 'moveto2-page',

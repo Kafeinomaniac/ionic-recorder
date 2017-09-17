@@ -16,10 +16,8 @@ import { ButtonbarButton } from '../../components/';
 import { MoveTo2Page, SelectionPage } from '../../pages';
 
 /**
- * @name OrganizerPage
- * @description
- * Page of file/folder interface to all recorded files. AddFolderPage
- * music organizer.
+ * Music organizer. Page of file/folder interface to all files. 
+ * @class OrganizerPage
  */
 @Component({
     selector: 'organizer-page',
@@ -145,6 +143,8 @@ export class OrganizerPage {
 
         selectAlert.addButton('Cancel');
         selectAlert.present();
+
+        console.log('after selectAlert.present();');
     }
 
     public selectButtonDisabled(): boolean {

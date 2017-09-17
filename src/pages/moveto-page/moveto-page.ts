@@ -25,10 +25,9 @@ import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 
 /**
- * @name MoveToPage
- * @description
  * A modal MoveTo page that displays a selection / browser of files
  * and folders to move items into - you must select a folder here.
+ * @class MoveToPage
  */
 @Component({
     selector: 'moveto-page',

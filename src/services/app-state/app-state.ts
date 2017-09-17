@@ -27,8 +27,7 @@ const DEFAULT_STATE: State = {
 };
 
 /**
- * @name AppState
- * @description
+ * @class AppState
  */
 @Injectable()
 export class AppState {

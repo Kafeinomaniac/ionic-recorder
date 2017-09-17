@@ -4,10 +4,8 @@ import { Component } from '@angular/core';
 import { AppFS } from '../../services';
 
 /**
- * @name SelectionPage
- * @description
- * Page of file/folder interface to all recorded files. AddFolderPage
- * music selection.
+ * Page to see or edit all currently selected items.
+ * @class SelectionPage
  */
 @Component({
     selector: 'selection-page',

@@ -11,10 +11,9 @@ import { MasterClock } from '../master-clock/master-clock';
 import { makeWavBlobHeaderView } from '../../models/utils/wav';
 
 /**
- * @name WebAudioPlay
- * @description
  * Audio Play functions based on WebAudio, originally based on code
  * of Ian McGregor here: http://codepen.io/ianmcgregor/pen/EjdJZZ
+ * @class WebAudioPlay
  */
 @Injectable()
 export class WebAudioPlayWav extends WebAudioPlay {

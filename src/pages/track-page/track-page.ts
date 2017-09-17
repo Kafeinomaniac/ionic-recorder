@@ -18,8 +18,7 @@ import { RecordingInfo } from '../../services/web-audio/common';
 import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
 
 /**
- * @name TrackPage
- * @description
+ * @class TrackPage
  */
 @Component({
     selector: 'track-page',

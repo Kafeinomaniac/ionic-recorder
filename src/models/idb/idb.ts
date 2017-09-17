@@ -27,9 +27,8 @@ export interface IdbConfig {
 }
 
 /**
- * @name Idb
- * @description
- * Basic IndexedDB wrapper for setup and CRUD functions with arbitrary objects
+ * Basic IndexedDB wrapper for setup and CRUD functions with arbitrary objects.
+ * @class Idb
  */
 export class Idb {
     private db: IDBDatabase;

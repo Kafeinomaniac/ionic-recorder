@@ -16,10 +16,9 @@ export interface ButtonbarButton {
 }
 
 /**
- * @name ButtonBar
- * @description
- * A bar that has buttons with two-row labels: icon(s) on top
- * and text on the bottom.
+ * Component: a bar that has buttons with two-row labels: icon(s) on
+ * top and text on the bottom.
+ * @class ButtonBar
  */
 @Component({
     selector: 'button-bar',

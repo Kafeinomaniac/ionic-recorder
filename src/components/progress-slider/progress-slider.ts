@@ -10,11 +10,10 @@ import {
 } from '@angular/core';
 
 /**
- * @name ProgressSlider
- * @description
- * A progress bar that can be clicked to change the progress location,
- * such as the one used in the youtube or other video or audio players
- * to control and visualize media playback.
+ * Component: A progress bar that can be clicked to change the
+ * progress location, such as the one used in the youtube or other
+ * video or audio players to control and visualize media playback.
+ * @class ProgressSlider
  */
 @Component({
     selector: 'progress-slider',

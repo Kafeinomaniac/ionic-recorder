@@ -3,10 +3,8 @@
 import { Component } from '@angular/core';
 
 /**
- * @name LoadingPage
- * @description
- * Load initial page, first wait for DB and AppState singletons
- * to initialize.
+ * Initial empty page while loading. Not sure why this is useful -DT
+ * @class LoadingPage
  */
 @Component({
     selector: 'loading-page',

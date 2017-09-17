@@ -18,10 +18,9 @@ import { formatTime } from '../../models/utils/utils';
 const CLOCK_FUNCTION_NAME: string = 'player';
 
 /**
- * @name WebAudioPlay
- * @description
  * Audio Play functions based on WebAudio. Originally based on
  * code by Ian McGregor: http://codepen.io/ianmcgregor/pen/EjdJZZ
+ * @class WebAudioPlay
  */
 @Injectable()
 export class WebAudioPlay {

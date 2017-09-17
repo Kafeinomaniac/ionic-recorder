@@ -9,8 +9,7 @@ const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 50;
 
 /**
- * @name AppFS
- * @description
+ * @class AppFS
  */
 @Injectable()
 export class AppFS {

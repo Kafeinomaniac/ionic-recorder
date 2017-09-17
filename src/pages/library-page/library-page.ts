@@ -35,10 +35,9 @@ export function getFolderPath(folderNode: TreeNode): string {
 }
 
 /**
- * @name LibraryPage
- * @description
  * Page of file/folder interface to all recorded files. AddFolderPage
  * music organizer.
+ * @class LibraryPage
  */
 @Component({
     selector: 'library-page',

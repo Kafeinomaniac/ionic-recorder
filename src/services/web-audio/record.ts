@@ -54,9 +54,8 @@ interface AudioGainNode extends AudioNode {
 }
 
 /**
- * @name WebAudioRecord
- * @description
- * Audio Record functions based on WebAudio.
+ * Audio recording functions using Web Audio API
+ * @class WebAudioRecord
  */
 @Injectable()
 export class WebAudioRecord {

@@ -5,10 +5,8 @@ import { Component } from '@angular/core';
 const APP_VERSION: string = '0.2.1-alpha.63';
 
 /**
- * @name AboutPage
- * @description
- * A modal About page that displays the version number of this program
- * among other info.
+ * Page that displays info about the app.
+ * @class AboutPage
  */
 @Component({
     selector: 'about-page',

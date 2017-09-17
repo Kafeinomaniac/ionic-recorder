@@ -10,9 +10,8 @@ import {
 import { Idb } from '../../models/idb/idb';
 
 /**
- * @name SettingsPage
- * @description
- * Change app settings-page.
+ * Page to change app settings.
+ * @class SettingsPage
  */
 @Component({
     selector: 'settings-page',

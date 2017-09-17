@@ -17,9 +17,8 @@ const DB_CHUNK1: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
 const DB_CHUNK2: Int16Array = new Int16Array(DB_CHUNK_LENGTH);
 
 /**
- * @name WebAudioRecord
- * @description
  * Audio Record functions based on WebAudio.
+ * @class WebAudioRecord
  */
 @Injectable()
 export class WebAudioRecordWav extends WebAudioRecord {

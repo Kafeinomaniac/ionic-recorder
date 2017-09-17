@@ -10,10 +10,9 @@ import { RecordingInfo } from '../../services/web-audio/common';
 import { WebAudioPlayWav } from '../../services/web-audio/play-wav';
 
 /**
- * @name AudioPlay
- * @description
  * An toolbar-like (row on the screen) audio player for controlling
  * blob playback.
+ * @class AudioPlay
  */
 @Component({
     providers: [WebAudioPlayWav],
