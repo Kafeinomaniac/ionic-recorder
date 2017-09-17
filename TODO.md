@@ -7,6 +7,9 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* app-state.spec.fs
+* app-fs.spec.fs
+
 * Refactor: 
   Functions shared between moveto & organizer:
   - switch folder() / this.entries / this.directoryEntry / atHome()

@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { KeyDict } from '../../models/idb/idb-fs';
-import { RecordingInfo } from '..//web-audio/common';
+import { RecordingInfo } from '../web-audio/common';
 
 export interface GainState {
     factor: number;
@@ -16,7 +16,6 @@ interface State {
     lastRecordingInfo: RecordingInfo;
     selectedNodes: KeyDict;
     gain: GainState;
-    lastViewedFolderPath: string;
 }
 
 const DEFAULT_STATE: State = {
@@ -24,8 +23,7 @@ const DEFAULT_STATE: State = {
     lastViewedFolderKey: 2,
     lastRecordingInfo: null,
     selectedNodes: {},
-    gain: { factor: 1.0, maxFactor: 2.0 },
-    lastViewedFolderPath: '/Unfiled/'
+    gain: { factor: 1.0, maxFactor: 2.0 }
 };
 
 /**
@@ -54,22 +52,18 @@ export class AppState {
                 // TODO: if key is not stored yet then we want to store
                 // it in storage, as taken from DEFAULT_STATE
                 this.storage.get(key).then((value: any) => {
-                    if (value === null) {
-                        console.log('get(' + key +
-                                    ') VALUE NOT IN STORAGE!');
+                    // if (value === null) {
+                    if ((typeof value === 'undefined') || value === null) {
+                        console.log('get(' + key + ') VALUE NOT IN STORAGE!');
+                        console.dir(value);
                         value = DEFAULT_STATE[key];
-                        this.set(key, value).then(() => {
-                            console.log('get(' + key +
-                                        ') UPDATED STORAGE: key=' + key +
-                                        ', value=' + value);
-                            resolve(value);
-                        });
+                        this.set(key, value);
                     }
                     else {
                         console.log('get(' + key +
                                     ') VALUE IN STORAGE=' + value);
-                        resolve(value);
                     }
+                    resolve(value);
                 }); // this.storage.get(key).then((value: any) => {
             } // if (key in DEFAULT_STATE) {
         });
@@ -77,15 +71,12 @@ export class AppState {
 
     /**
      * Sets a state property (in DB if necessary)
-     * @returns {Observable<boolean>} Emits after either we establish that
-     * there is no need for an update (emits false in that case) or after we
-     * have made the update in the DB (emits true in that case)
      */
-    public set(key: string, value: any): Promise<any> {
+    public set(key: string, value: any): void {
         if (key in DEFAULT_STATE) {
             console.log('=====> APP STATE UPDATE <======= key:' +
                         key + ', value:' + value);
-            return this.storage.set(key, value);
+            this.storage.set(key, value);
         }
         else {
             throw Error('Wrong key used in set()');

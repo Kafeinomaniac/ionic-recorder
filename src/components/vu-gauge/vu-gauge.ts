@@ -49,8 +49,8 @@ export class VuGauge implements OnChanges {
      */
     private fillColor(ledIndex: number, lightness: string): string {
         return ['hsl(', 120 - ledIndex * this.hStep,
-            ',100%,', lightness, ')'
-        ].join('');
+                ',100%,', lightness, ')'
+               ].join('');
     }
 
     /**
@@ -66,7 +66,7 @@ export class VuGauge implements OnChanges {
         // 'xStep' is the step by which we walk along the x-axis to
         // draw.
         const percentWidth: number = 100 / (2 * this.nbars - 1),
-            xStep: number = 2 * percentWidth;
+              xStep: number = 2 * percentWidth;
         this.ledWidth = percentWidth + '%';
         this.hStep = 120 / (this.nbars - 1);
         for (let i: number = 0; i < this.nbars; i++) {
@@ -88,8 +88,8 @@ export class VuGauge implements OnChanges {
     public ngOnChanges(
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
-        console.log(changeRecord);
-        console.dir(changeRecord);
+        // console.log(changeRecord);
+        // console.dir(changeRecord);
         if (this.leds.length > 0) {
             let fill: string, i: number;
             for (i = 0; i < this.nbars; i++) {

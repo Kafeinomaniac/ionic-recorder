@@ -40,10 +40,18 @@ describe('services/filesystem', () => {
         );
     });
 
+    it('can delete /Unfiled recursively', (done) => {
+        FS.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+            () => {
+                done();
+            }
+        );
+    });
 
     it('can read the root directory contents to be empty', (done) => {
         FS.readDirectory(FILE_SYSTEM.root).subscribe(
             (entries: Entry[]) => {
+                console.dir(entries);
                 expect(entries.length).toEqual(0);
                 done();
             }
@@ -146,15 +154,15 @@ describe('services/filesystem', () => {
 
     it('can delete the file it just created', (done) => {
         FS.getPathEntry(FILE_SYSTEM, TEST_FILENAME, true).subscribe(
-                (entry: Entry) => {
-                    FS.removeEntry(entry).subscribe(
-                        () => {
-                            done();
-                        }
-                    );
-                }
-            );
-        });
+            (entry: Entry) => {
+                FS.removeEntry(entry).subscribe(
+                    () => {
+                        done();
+                    }
+                );
+            }
+        );
+    });
 
     it('can read the root directory contents to be empty', (done) => {
         FS.readDirectory(FILE_SYSTEM.root).subscribe(

@@ -152,10 +152,6 @@ export class RecordPage {
             this.appState.set('gain', {
                 factor: this.gainFactor,
                 maxFactor: this.maxGainFactor
-            }).then(null, (error: any) => {
-                const msg: string = 'AppState:set(): ' + error;
-                alert(msg);
-                throw Error(msg);
             });
         }
     }
@@ -223,13 +219,7 @@ export class RecordPage {
                         // here's where we get the key
                         recordingInfo.dbKey = parentChild.child[DB_KEY_PATH];
                         // remember last recording's information
-                        this.appState.set(
-                            'lastRecordingInfo',
-                            recordingInfo
-                        ).then(
-                            () => {
-                                console.log('rec key: ' + recordingInfo.dbKey);
-                            });
+                        this.appState.set('lastRecordingInfo', recordingInfo);
                     },
                     (err1: any) => {
                         throw new Error(err1);

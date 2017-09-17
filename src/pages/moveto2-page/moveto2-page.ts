@@ -130,7 +130,6 @@ export class MoveTo2Page {
         }
     }
 
-
     /**
      * @returns {void}
      */

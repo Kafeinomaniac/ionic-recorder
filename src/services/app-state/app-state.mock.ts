@@ -6,9 +6,6 @@ export class AppStateMock {
             resolve(null);
         });
     }
-    public set(key: string, value: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            resolve(null);
-        });
+    public set(key: string, value: any): void {
     }
 }

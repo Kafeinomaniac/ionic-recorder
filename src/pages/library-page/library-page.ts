@@ -286,7 +286,7 @@ export class LibraryPage {
                         if (bSelectionChanged) {
                             this.appState.set(
                                 'selectedNodes',
-                                this.selectedNodes).then();
+                                this.selectedNodes);
                         }
                         else {
                             console.log('SUCCESS DELETING ALL');
@@ -481,7 +481,7 @@ export class LibraryPage {
 
         // update last viewed folder state in DB
         if (updateState) {
-            this.appState.set('lastViewedFolderKey', key).then();
+            this.appState.set('lastViewedFolderKey', key);
         }
     }
 
@@ -538,8 +538,7 @@ export class LibraryPage {
         }
 
         // update state with new list of selected nodes
-        this.appState.set('selectedNodes', this.selectedNodes)
-            .then();
+        this.appState.set('selectedNodes', this.selectedNodes);
     }
 
     /**
@@ -773,9 +772,7 @@ export class LibraryPage {
                         Object.keys(this.selectedNodes).length);
             // update state with new list of selected nodes
             // TODO: handle errors here
-            this.appState.set(
-                'selectedNodes',
-                this.selectedNodes).then();
+            this.appState.set('selectedNodes', this.selectedNodes);
 
             // resize if anything changed
             this.resize();

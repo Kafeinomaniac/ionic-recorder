@@ -8,10 +8,10 @@
         <ion-title>
             Organizer
         </ion-title>
-        <ion-buttons end *ngIf="appFS.selectedPaths.size">
+        <ion-buttons end *ngIf="appFS.nSelected() > 0">
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{appFS.selectedPaths.size}} selected
+                    {{appFS.nSelected()}} selected
                     &nbsp;
                     <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
@@ -20,7 +20,7 @@
     </ion-navbar>
     <ion-toolbar>
         <p *ngIf="appFS.directoryEntry" text-center>
-            {{appFS.getFullPath(appFS.directoryEntry)}}
+            {{appFS.getPath()}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>

@@ -65,51 +65,51 @@ export class OrganizerPage {
                 leftIcon: platform.is('ios') ?
                     'radio-button-off' : 'square-outline',
                 rightIcon: 'md-arrow-dropdown',
-                clickCB: () => { this.onClickSelectButton() },
-                disabledCB: () => { return this.selectButtonDisabled() }
+                clickCB: () => { this.onClickSelectButton(); },
+                disabledCB: () => { return this.selectButtonDisabled(); }
             },
             {
                 text: 'Go home',
                 leftIcon: 'home',
-                clickCB: () => { this.onClickHomeButton() },
-                disabledCB: () => { return this.atHome() }
+                clickCB: () => { this.onClickHomeButton(); },
+                disabledCB: () => { return this.atHome(); }
             },
             {
                 text: 'Go to parent',
                 leftIcon: 'arrow-up',
                 rightIcon: 'folder',
-                clickCB: () => { this.onClickParentButton() },
-                disabledCB: () => { return this.atHome() }
+                clickCB: () => { this.onClickParentButton(); },
+                disabledCB: () => { return this.atHome(); }
             },
             {
                 text: 'Add...',
                 leftIcon: 'add',
-                clickCB: () => { this.onClickAddButton() }
+                clickCB: () => { this.onClickAddButton(); }
             }
         ];
         this.footerButtons = [
             {
                 text: 'Info',
                 leftIcon: 'information-circle',
-                clickCB: () => { this.onClickInfoButton() }
+                clickCB: () => { this.onClickInfoButton(); }
             },
             {
                 text: 'Move to...',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
-                clickCB: () => { this.onClickMoveButton() },
-                disabledCB: () => { return this.moveButtonDisabled() }
+                clickCB: () => { this.onClickMoveButton(); },
+                disabledCB: () => { return this.moveButtonDisabled(); }
             },
             {
                 text: 'Delete',
                 leftIcon: 'trash',
-                clickCB: () => { this.onClickDeleteButton() },
-                disabledCB: () => { return this.deleteButtonDisabled() }
+                clickCB: () => { this.onClickDeleteButton(); },
+                disabledCB: () => { return this.deleteButtonDisabled(); }
             },
             {
                 text: 'Share',
                 leftIcon: 'md-share',
-                clickCB: () => { this.onClickShareButton() }
+                clickCB: () => { this.onClickShareButton(); }
             }
         ];
     }
@@ -266,14 +266,13 @@ export class OrganizerPage {
         let nSelected: number = this.appFS.nSelected(),
             itemsStr: string = nSelected.toString() + ' item' +
             ((nSelected > 1) ? 's' : ''),
-            entries: string[] = this.appFS.getSelectedPathsArray(),
+            // entries: string[] = this.appFS.getSelectedPathsArray(),
             deleteAlert: Alert = this.alertController.create();
 
-        entries.sort();
-
-        console.log('<-----------------------> SORTED ENTRIES <------------>');
-        console.log(entries);
-        console.log('<-----------------------> SORTED ENTRIES <------------>');
+        // entries.sort();
+        // console.log('<-------------------> SORTED ENTRIES <------------>');
+        // console.log(entries);
+        // console.log('<-------------------> SORTED ENTRIES <------------>');
 
         deleteAlert.setTitle('Are you sure you want to delete ' +
                              itemsStr + '?');
@@ -283,7 +282,8 @@ export class OrganizerPage {
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
-                this.appFS.deleteEntries(entries).subscribe(
+                // this.appFS.deleteEntries(entries).subscribe(
+                this.appFS.deleteSelected().subscribe(
                     () => {
                         this.detectChanges();
                     });

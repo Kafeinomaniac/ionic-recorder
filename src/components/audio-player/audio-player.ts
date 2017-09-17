@@ -41,8 +41,8 @@ export class AudioPlay implements OnChanges {
             [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['recordingInfo'] && this.recordingInfo) {
-            console.log('AudioPlay:ngOnChanges(): [recordingInfo]: ' +
-                this.recordingInfo);
+            // console.log('AudioPlay:ngOnChanges(): [recordingInfo]: ' +
+            //     this.recordingInfo);
             this.player.setRecordingInfo(this.recordingInfo);
         }
     }
