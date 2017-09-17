@@ -52,6 +52,9 @@ export class AppFS {
                         // appState.get('filesystemPath').then(
                         this.storage.get('filesystemPath').then(
                             (directoryPath: string) => {
+                                if (directoryPath === '//') {
+                                    debugger;
+                                }
                                 if (!directoryPath) {
                                     // it was not in storage, go to root
                                     directoryPath = '/';
@@ -259,14 +262,6 @@ export class AppFS {
      * @param {string} path
      */
     public isPathSelected(path: string): boolean {
-        // console.log('isPathSelected(' + path + '): ' +
-        //             this.selectedPaths.has(path));
-
-        // if (!(this.selectedPaths.has)) {
-        //     debugger;
-        // }
-
-        // return this.selectedPaths.has(path);
         return this.selectedPaths.hasOwnProperty(path);
     }
 
@@ -292,19 +287,19 @@ export class AppFS {
     }
 
     public atHome(): boolean {
-        console.log('AppFS.atHome(): ' +
-                    (this.directoryEntry.fullPath === '/'));
+        // console.log('AppFS.atHome(): ' +
+        //             (this.directoryEntry.fullPath === '/'));
         return this.directoryEntry.fullPath === '/';
     }
 
     public nEntries(): number {
-        console.log('AppFS.nEntries(): ' + this.entries.length);
+        // console.log('AppFS.nEntries(): ' + this.entries.length);
         return this.entries.length;
     }
 
     public nSelected(): number {
-        console.log('AppFS.nSelected(isReady:' + this.isReady +
-                    '): ' + Object.keys(this.selectedPaths).length);
+        // console.log('AppFS.nSelected(isReady:' + this.isReady +
+        //             '): ' + Object.keys(this.selectedPaths).length);
         return Object.keys(this.selectedPaths).length;
     }
 

@@ -149,7 +149,7 @@ export class OrganizerPage {
     }
 
     public selectButtonDisabled(): boolean {
-        console.log('selectButtonDisabled()');
+        // console.log('selectButtonDisabled()');
         return this.appFS.nEntries() <= 1;
     }
 
@@ -167,7 +167,7 @@ export class OrganizerPage {
     }
 
     public atHome(): boolean {
-        console.log('atHome(): ' + this.appFS.atHome());
+        // console.log('atHome(): ' + this.appFS.atHome());
         return this.appFS.atHome();
     }
 
