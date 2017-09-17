@@ -321,7 +321,6 @@ export class AppFS {
     /**
      * Select all or no items in current folder, depending on 'all; argument
      * @param {boolean} if true, select all, if false, select none
-     * @returns {void}
      */
     public selectAllOrNone(bSelectAll: boolean): void {
         console.log('AppFS.selectAllOrNoneInFolder(' + bSelectAll + ')');

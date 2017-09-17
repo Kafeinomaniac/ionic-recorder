@@ -165,7 +165,6 @@ export class LibraryPage {
 
     /**
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
-     * @returns {void}
      */
     public ionViewWillEnter(): void {
         this.appState.get('selectedNodes').then(
@@ -195,7 +194,6 @@ export class LibraryPage {
 
     /**
      * Moves items in DB and in UI when move button is clicked
-     * @returns {void}
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
@@ -205,7 +203,6 @@ export class LibraryPage {
 
     /**
      * Moves items in DB and in UI when more button is clicked
-     * @returns {void}
      */
     public onClickMoreButton(): void {
         console.log('onClickMoreButton');
@@ -242,7 +239,6 @@ export class LibraryPage {
     /**
      * Delete nodes from  UI and from local DB
      * @param {KeyDict} dictionary of nodes to delete
-     * @returns {void}
      */
     private deleteNodes(keyDict: KeyDict): void {
         let keys: string[] = Object.keys(keyDict),
@@ -299,7 +295,6 @@ export class LibraryPage {
     /**
      * Checks if selected nodes are only in current folder, if not prompts user
      * for which nodes s/he wants to delete and proceedes with deletion
-     * @returns {void}
      */
     private checkIfDeletingInOtherFolders(): void {
         let nSelectedNodes: number = Object.keys(this.selectedNodes).length,
@@ -356,7 +351,6 @@ export class LibraryPage {
 
     /**
      * Deletes selected nodes when delete button gets clicked
-     * @returns {void}
      */
     public onClickDeleteButton(): void {
         if (this.selectedNodes[UNFILED_FOLDER_KEY]) {
@@ -380,7 +374,6 @@ export class LibraryPage {
     }
 
     /**
-     * @returns {void}
      */
     public onClickShareButton(): void {
         console.log('onClickShareButton()');
@@ -396,7 +389,6 @@ export class LibraryPage {
 
     /**
      * UI callback for sharing the selected items when share button is clicked
-     * @returns{void}
      */
     public onClickSharebutton(): void {
         console.log('onClickSharebutton');
@@ -423,7 +415,6 @@ export class LibraryPage {
      * Switch to a new folder
      * @param {number} key of treenode corresponding to folder to switch to
      * @param {boolean} whether to update app state 'lastFolderViewed' property
-     * @returns {void}
      */
 
     // switch to folder whose key is 'key'
@@ -509,7 +500,6 @@ export class LibraryPage {
     /**
      * UI calls this when a UI item gets checked
      * @param {TreeNode} node corresponding to UI item that just got checked
-     * @returns {void}
      */
     public onClickCheckbox(node: TreeNode): void {
         console.log('onClickCheckbox');
@@ -543,7 +533,6 @@ export class LibraryPage {
 
     /**
      * UI calls this when a list item (name) is clicked
-     * @returns {void}
      */
     public onClickListItem(node: TreeNode): void {
         console.log('onClickListItem');
@@ -565,7 +554,6 @@ export class LibraryPage {
 
     /**
      * UI calls this when the goHome button is clicked
-     * @returns {void}
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
@@ -576,7 +564,6 @@ export class LibraryPage {
 
     /**
      * Initiates select button action when that button is clicked
-     * @returns {void}
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
@@ -585,7 +572,6 @@ export class LibraryPage {
 
     /**
      * Initiates select button action when that button is clicked
-     * @returns {void}
      */
     public onClickSelectButton(): void {
         console.log('onClickSelectButton()');
@@ -606,7 +592,6 @@ export class LibraryPage {
 
     /**
      * UI calls this when the goToParent button is clicked
-     * @returns {void}
      */
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
@@ -617,7 +602,6 @@ export class LibraryPage {
 
     /**
      * UI calls this when the new folder button is clicked
-     * @returns {void}
      */
     public onClickRename(node: TreeNode, item: ItemSliding): void {
         console.log('onClickNewFolder() - navController: ' +
@@ -665,7 +649,6 @@ export class LibraryPage {
 
     /**
      * UI calls this when the new folder button is clicked
-     * @returns {void}
      */
     public onClickNewFolder(): void {
         console.log('onClickNewFolder() - navController: ' +
@@ -724,7 +707,6 @@ export class LibraryPage {
 
     /**
      * UI calls this when the info button (of selected items) clicked
-     * @returns {void}
      */
     public onClickInfoButton(): void {
         console.log('onClickInfoButton');
@@ -733,7 +715,6 @@ export class LibraryPage {
     /**
      * Select all or no items in current folder, depending on 'all; argument
      * @params {boolean} if true, select all, if false, select none
-     * @returns {void}
      */
     private selectAllOrNoneInFolder(selectAll: boolean): void {
         // go through all folderItems
@@ -781,7 +762,6 @@ export class LibraryPage {
 
     /**
      * Select all items in current folder
-     * @returns {void}
      */
     private selectAllInFolder(): void {
         this.selectAllOrNoneInFolder(true);
@@ -789,7 +769,6 @@ export class LibraryPage {
 
     /**
      * Get rid of selection on all nodes in current folder
-     * @returns {void}
      */
     private selectNoneInFolder(): void {
         this.selectAllOrNoneInFolder(false);

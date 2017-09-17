@@ -111,14 +111,12 @@ export class TrackPage {
 
     /**
      * UI callback handling 'move' button click
-     * @returns {void}
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton()');
     }
     /**
      * UI callback handling 'delete' button click
-     * @returns {void}
      */
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
@@ -126,7 +124,6 @@ export class TrackPage {
 
     /**
      * UI callback handling 'share' button click
-     * @returns {void}
      */
     private presentActionSheet(): void {
         this.actionSheetController.create({
@@ -163,7 +160,6 @@ export class TrackPage {
 
     /**
      * UI callback handling 'share' button click
-     * @returns {void}
      */
     public onClickShareButton(): void {
         console.log('onClickShareButton()');

@@ -39,7 +39,6 @@ export class MasterClock {
      * loop and call stop() to end it. While the loop is started you can call
      * addFunction() to add anything you'd like to monitor at the current
      * clock frequency.
-     * @returns {void}
      */
     public start(): void {
         if (this.isRunning) {
@@ -65,7 +64,6 @@ export class MasterClock {
 
     /**
      * Stop the clock. Stop repeat-running any scheduled functions.
-     * @returns {void}
      */
     public stop(): void {
         if (!this.isRunning) {
@@ -84,7 +82,6 @@ export class MasterClock {
      * Add a function to execute on each clock loop
      * @param {string} id used as handle to added function, for later removal
      * @param {Function} function to execute in the clock's loop
-     * @returns {void}
      */
     public addFunction(id: string, fun: () => void): void {
         const nFunctions: number = Object.keys(this.functions).length;
@@ -99,7 +96,6 @@ export class MasterClock {
     /**
      * Remove a function to execute on each clock loop, via its id
      * @param {string} id of function to remove
-     * @returns {void}
      */
     public removeFunction(id: string): void {
         delete this.functions[id];

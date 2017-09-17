@@ -395,7 +395,6 @@ export class Idb {
      * Initialize (find the last key of) all data stores
      * @param {StoreConfig[]} a verified StoreConfig array
      * @param {IDBOpenDBRequest} an open database request object
-     * @returns {void}
      */
     private initStoreKeys(
         storeConfigs: StoreConfig[],
@@ -451,7 +450,6 @@ export class Idb {
      * Create data stores from scratch
      * @param {StoreConfig[]} a verified StoreConfig array
      * @param {IDBOpenDBRequest} an open database request object
-     * @returns {void}
      */
     private createStores(
         storeConfigs: StoreConfig[],

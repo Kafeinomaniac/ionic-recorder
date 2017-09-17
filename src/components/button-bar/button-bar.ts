@@ -39,7 +39,6 @@ export class ButtonBar implements OnChanges {
 
     /**
      * Handle changes
-     * @returns {void}
      */
     public ngOnChanges(
         changeRecord: { [propertyName: string]: SimpleChange }

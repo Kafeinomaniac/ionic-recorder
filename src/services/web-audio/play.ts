@@ -80,7 +80,6 @@ export class WebAudioPlay {
 
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
-     * @returns {void}
      */
     public startMonitoring(): void {
         // console.log('PLAYER: startMonitoring()');
@@ -115,7 +114,6 @@ export class WebAudioPlay {
 
     /**
      * Stops monitoring (stops change detection)
-     * @returns {void}
      */
     public stopMonitoring(): void {
         setTimeout(
@@ -202,7 +200,6 @@ export class WebAudioPlay {
 
     /**
      * Pause
-     * @returns {void}
      */
     public pause(): void {
         let elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
@@ -213,7 +210,6 @@ export class WebAudioPlay {
 
     /**
      * Toggle state between play and pause
-     * @returns {void}
      */
     public togglePlayPause(): void {
         if (!this.isPlaying) {
@@ -237,8 +233,7 @@ export class WebAudioPlay {
     }
 
     /**
-     * Stop playback
-     * @returns {void}
+     * Stop playback.
      */
     public stop(stopMonitoring: boolean = true): void {
         console.log('stop()');

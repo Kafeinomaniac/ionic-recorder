@@ -109,7 +109,6 @@ export class MoveToPage {
 
     /**
      * UI calls this when the new folder button is clicked
-     * @returns {void}
      */
     public onClickAddButton(): void {
         console.log('onClickAddButton() - navController: ' +
@@ -164,7 +163,6 @@ export class MoveToPage {
 
     /**
      * UI calls this when the goHome button is clicked
-     * @returns {void}
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
@@ -175,7 +173,6 @@ export class MoveToPage {
 
     /**
      * UI calls this when the goToParent button is clicked
-     * @returns {void}
      */
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
@@ -186,7 +183,6 @@ export class MoveToPage {
 
     /**
      * Initiates select button action when that button is clicked
-     * @returns {void}
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
@@ -203,7 +199,6 @@ export class MoveToPage {
 
     /**
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
-     * @returns {void}
      */
     public ionViewWillEnter(): void {
         this.appState.get('selectedNodes').then(
@@ -232,7 +227,6 @@ export class MoveToPage {
 
     /**
      * UI calls this when a list item (name) is clicked
-     * @returns {void}
      */
     public onClickListItem(node: TreeNode): void {
         console.log('MoveToPage:onClickListItem()');

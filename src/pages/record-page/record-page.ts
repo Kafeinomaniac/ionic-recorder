@@ -158,7 +158,6 @@ export class RecordPage {
 
     /**
      * Start/pause recording - template button click callback
-     * @returns {void}
      */
     public onClickStartPauseButton(): void {
         // this.currentVolume += Math.abs(Math.random() * 10);
@@ -183,7 +182,6 @@ export class RecordPage {
 
     /**
      * Stop button - template button click callback
-     * @returns {void}
      */
     public onClickStopButton(): void {
         this.recordButtonIcon = START_RESUME_ICON;

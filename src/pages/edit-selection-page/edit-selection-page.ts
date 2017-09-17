@@ -101,7 +101,6 @@ export class EditSelectionPage {
 
     /**
      * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
-     * @returns {void}
      */
     public ionViewWillEnter(): void {
         console.log('EditSelectionPage:ionViewWillEnter()');
@@ -135,7 +134,6 @@ export class EditSelectionPage {
     /**
      * UI calls this when a UI item gets checked
      * @param {TreeNode} node corresponding to UI item that just got checked
-     * @returns {void}
      */
     public onClickCheckbox(key: string): void {
         console.log('onClickCheckbox');

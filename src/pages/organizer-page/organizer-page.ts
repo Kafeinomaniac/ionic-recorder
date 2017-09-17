@@ -124,7 +124,6 @@ export class OrganizerPage {
 
     /**
      * UI calls this when the 'Select...' button is clicked.
-     * @returns {void}
      */
     public onClickSelectButton(): void {
         console.log('onClickSelectButton()');
@@ -155,7 +154,6 @@ export class OrganizerPage {
 
     /**
      * UI calls this when the 'Go home' button is clicked.
-     * @returns {void}
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
@@ -173,7 +171,6 @@ export class OrganizerPage {
 
     /**
      * UI calls this when the 'Go to parent' button is clicked.
-     * @returns {void}
      */
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
@@ -191,7 +188,6 @@ export class OrganizerPage {
 
     /**
      * UI calls this when the 'Add...' button is clicked.
-     * @returns {void}
      */
     public onClickAddButton(): void {
         console.log('onClickAddButton()');
@@ -229,7 +225,6 @@ export class OrganizerPage {
     /**
      * UI calls this when the info button is clicked.
      * Shows cumulative info on all selected items.
-     * @returns {void}
      */
     public onClickInfoButton(): void {
         console.log('onClickInfoButton');
@@ -238,7 +233,6 @@ export class OrganizerPage {
     /**
      * UI calls this when move button is clicked.
      * Moves selected items into a folder.
-     * @returns {void}
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
@@ -260,7 +254,6 @@ export class OrganizerPage {
     }
 
     /**
-     * @returns {void}
      */
     private confirmAndDeleteSelected(): void {
         let nSelected: number = this.appFS.nSelected(),
@@ -294,7 +287,6 @@ export class OrganizerPage {
 
     /**
      * UI calls this when delete button is clicked.
-     * @returns {void}
      */
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
@@ -334,7 +326,6 @@ export class OrganizerPage {
 
     /**
      * UI calls this when social sharing button is clicked
-     * @returns {void}
      */
     public onClickShareButton(): void {
         console.log('onClickShareButton()');
@@ -342,7 +333,6 @@ export class OrganizerPage {
 
     /**
      * UI calls this when selected badge on top right is clicked
-     * @returns {void}
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
@@ -353,7 +343,6 @@ export class OrganizerPage {
     }
 
     /**
-     * @returns {void}
      */
     private detectChanges(): void {
         console.log('OrganizerPage.detectChanges()');
@@ -368,7 +357,6 @@ export class OrganizerPage {
 
     /**
      * UI calls this when the new folder button is clicked
-     * @returns {void}
      */
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
@@ -384,7 +372,6 @@ export class OrganizerPage {
 
     /**
      * UI calls this when the new folder button is clicked
-     * @returns {void}
      */
     public addFolder(): void {
         let parentPath: string = this.appFS.getPath(),

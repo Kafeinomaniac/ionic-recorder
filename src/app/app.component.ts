@@ -83,7 +83,6 @@ export class IonicRecorderApp {
 
     /**
      * Called any time a tab selection has changed
-     * @returns {void}
      */
     public onTabChange(selectedTab: Tab): void {
         const tabIndex: number = selectedTab.index;
@@ -108,7 +107,6 @@ export class IonicRecorderApp {
 
     /**
      * Go to a page (via menu selection)
-     * @returns {void}
      */
     public goToPage(page: TabPage): void {
         const tabIndex: number = page.tabIndex;

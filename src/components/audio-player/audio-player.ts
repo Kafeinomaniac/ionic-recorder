@@ -34,7 +34,6 @@ export class AudioPlay implements OnChanges {
 
     /**
      * Handle changes (play new song) when a new song (url) is loaded
-     * @returns {void}
      */
     public ngOnChanges(
         changeRecord: {

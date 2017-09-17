@@ -77,7 +77,6 @@ export class MoveTo2Page {
 
     /**
      * UI calls this when the 'Select...' button is clicked.
-     * @returns {void}
      */
     public onClickMoveHereButton(): void {
         console.log('onClickMoveHereButton()');
@@ -85,7 +84,6 @@ export class MoveTo2Page {
 
     /**
      * UI calls this when the 'Go home' button is clicked.
-     * @returns {void}
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
@@ -98,7 +96,6 @@ export class MoveTo2Page {
 
     /**
      * UI calls this when the 'Go to parent' button is clicked.
-     * @returns {void}
      */
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
@@ -116,7 +113,6 @@ export class MoveTo2Page {
 
     /**
      * UI calls this when the new folder button is clicked
-     * @returns {void}
      */
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
@@ -131,7 +127,6 @@ export class MoveTo2Page {
     }
 
     /**
-     * @returns {void}
      */
     private detectChanges(): void {
         console.log('OrganizerPage.detectChanges()');

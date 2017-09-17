@@ -133,7 +133,6 @@ export class WebAudioRecord {
 
     /**
      * Initialize audio, get it ready to record
-     * @returns {void}
      */
     private initAudio(): void {
         this.sampleRate = AUDIO_CONTEXT.sampleRate;
@@ -234,7 +233,6 @@ export class WebAudioRecord {
 
     /**
      * Create audioGainNode & scriptProcessorNode
-     * @returns {void}
      */
     private createNodes(): void {
         // create the gainNode
@@ -258,7 +256,6 @@ export class WebAudioRecord {
      *      |--> this.scriptProcessorNode (createScriptProcessor)
      *           |--> MediaStreamAudioDestinationNode
      * @param {MediaStream} stream the stream obtained by getUserMedia
-     * @returns {void}
      */
     private connectNodes(stream: MediaStream): void {
         console.log('connectNodes()');
@@ -301,7 +298,6 @@ export class WebAudioRecord {
 
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
-     * @returns {void}
      */
     public startMonitoring(): void {
         console.log('startMonitoring()');
@@ -333,7 +329,6 @@ export class WebAudioRecord {
 
     /**
      * Stops monitoring (stops change detection)
-     * @returns {void}
      */
     public stopMonitoring(): void {
         console.log('stopMonitoring()');
@@ -343,7 +338,6 @@ export class WebAudioRecord {
     /**
      * Reset all peak stats as if we've just started playing audio at
      * time 0. Call this when you want to compute stats from now.
-     * @returns {void}
      */
     public resetPeaks(): void {
         this.maxVolumeSinceReset = 0;
@@ -358,7 +352,6 @@ export class WebAudioRecord {
     /**
      * Set the multiplier on input volume (gain) effectively changing volume
      * @param {number} factor fraction of volume, where 1.0 is no change
-     * @returns {void}
      */
     public setGainFactor(factor: number): void {
         if (this.status === RecordStatus.READY_STATE) {
@@ -369,7 +362,6 @@ export class WebAudioRecord {
 
     /**
      * Start recording
-     * @returns {void}
      */
     public start(): void {
         this.nRecordedSamples = 0;
@@ -381,7 +373,6 @@ export class WebAudioRecord {
 
     /**
      * Pause recording
-     * @returns {void}
      */
     public pause(): void {
         this.isRecording = false;
@@ -390,7 +381,6 @@ export class WebAudioRecord {
 
     /**
      * Resume recording
-     * @returns {void}
      */
     public resume(): void {
         this.isRecording = true;
@@ -398,7 +388,6 @@ export class WebAudioRecord {
 
     /**
      * Reset recording - just like this.stop() but does not  return anything.
-     * @returns {void}
      */
     private reset(): void {
         this.isRecording = false;
