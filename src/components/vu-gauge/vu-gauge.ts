@@ -36,26 +36,24 @@ export class VuGauge implements OnChanges {
         console.log('constructor():VuGauge');
         this.leds = [];
         this.maxIndex = 0;
-        // some error checking
+
         if (parseInt(this.height, 10)) {
             throw Error('<vu-gauge>must have a height attribute');
         }
     }
 
     /**
-     * Helper function computes an LED fill color string
-     * @param {number} index of LED whose color we're computing
-     * @param {string} percentage (eg. '15%') of lightness to use
+     * Computes an LED fill color string.
+     * @param {number} ledIndex - index of LED whose color we're computing
+     * @param {string} lightness - percentage (eg. '15%') of lightness to use
      */
     private fillColor(ledIndex: number, lightness: string): string {
-        return ['hsl(', 120 - ledIndex * this.hStep,
-                ',100%,', lightness, ')'
-               ].join('');
+        return ['hsl(', 120 - ledIndex * this.hStep, ',100%,', lightness, ')']
+            .join('');
     }
 
     /**
-     * Sets up UI on init once elements have been rendered
-     * @returns {void}
+     * Sets up UI on init once elements have been rendered.
      */
     public ngOnInit(): void {
         // percentWidth is the width, in percent of the total width
@@ -82,16 +80,16 @@ export class VuGauge implements OnChanges {
     }
 
     /**
-     * Updates the UI when value changes
-     * @returns {void}
+     * Updates the UI when value changes.
+     * @param {[propertyName: string]: SimpleChange} changeRecord - the
+     * change record denoting what's changed.
      */
     public ngOnChanges(
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
-        // console.log(changeRecord);
-        // console.dir(changeRecord);
         if (this.leds.length > 0) {
-            let fill: string, i: number;
+            let fill: string,
+                i: number;
             for (i = 0; i < this.nbars; i++) {
                 if (this.valueStep * i < this.value) {
                     fill = this.fillColor(i, '50%');
