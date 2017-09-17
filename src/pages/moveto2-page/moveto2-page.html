@@ -30,15 +30,12 @@
 <ion-content>
     <ion-list>
         <ion-item clear *ngFor="let entry of appFS.entries"
-                  class="moveto2-page-item">
+                  [hidden]="entry.isFile" class="moveto2-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
                 <ion-icon [name]="appFS.entryIcon(entry)"></ion-icon>
                 &nbsp;
                 {{entry.name}}
             </ion-label>
-            <ion-checkbox [checked]="appFS.isEntrySelected(entry)"
-                          (click)="appFS.toggleSelectEntry(entry)">
-            </ion-checkbox>
         </ion-item>
         <ion-item *ngIf="!appFS.entries.length"
                   class="moveto2-page-empty-folder-message">

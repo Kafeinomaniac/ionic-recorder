@@ -3,8 +3,10 @@
 $content-text-color: color($colors, almost-dark);
 
 #tabpanel-t0-3 moveto2-page {
-    ion-header ion-toolbar div.toolbar-content button-bar button:first-child {
-        color:green;
+    ion-header {
+        p, ion-toolbar div.toolbar-content button-bar button:first-child {
+            color:green;
+        } 
     }
     ion-toolbar p {
         margin-top: 0.1em;
