@@ -53,7 +53,7 @@ export class AppFS {
                         this.storage.get('filesystemPath').then(
                             (directoryPath: string) => {
                                 if (directoryPath === '//') {
-                                    debugger;
+                                    alert('dir path is //');
                                 }
                                 if (!directoryPath) {
                                     // it was not in storage, go to root
@@ -75,8 +75,6 @@ export class AppFS {
                                         else {
                                             this.selectedPaths = paths;
                                         }
-                                        console.log('SP:::::::::::::::::: ' +
-                                            Object.keys(this.selectedPaths));
                                         this.switchDirectory(directoryPath)
                                             .subscribe(
                                                 () => {
@@ -391,9 +389,6 @@ export class AppFS {
                                 // this.selectedPaths.delete(path);
                                 this.unselectPath(path);
                             });
-                            if (this.selectedPaths !== {}) {
-                                alert('something is wrong');
-                            }
                             // store selection in case it has changed
                             // this.appState.set('filesystemSelected',
                             //                   this.selectedPaths);

@@ -7,5 +7,6 @@ export class AppStateMock {
         });
     }
     public set(key: string, value: any): void {
+        console.log('still an empty block in app state mock!');
     }
 }
