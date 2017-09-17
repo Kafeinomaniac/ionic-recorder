@@ -28,7 +28,7 @@
 </ion-header>
 
 <ion-content *ngIf="appFS.isReady">
-    <ion-list [reorder]="appFS.entries.length > 1"
+    <ion-list [reorder]="appFS.nEntries() > 1"
               (ionItemReorder)="reorderEntries($event)">
         <ion-item clear *ngFor="let entry of appFS.entries"
                   class="organizer-page-item">
@@ -48,7 +48,7 @@
     </ion-list>
 </ion-content>
 
-<ion-footer [hidden]="!appFS.selectedPaths.size">
+<ion-footer [hidden]="!appFS.nSelected()">
     <ion-toolbar>
         <button-bar [buttons]="footerButtons">
         </button-bar>

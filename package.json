@@ -21,7 +21,7 @@
         "test-ci": "ng test --watch=false --code-coverage",
         "deploy": "./scripts/deploy.sh"
     },
-    "version": "0.2.1-alpha.61",
+    "version": "0.2.1-alpha.62",
     "dependencies": {
         "@angular/common": "4.3.6",
         "@angular/compiler": "4.3.6",

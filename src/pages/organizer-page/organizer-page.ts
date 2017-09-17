@@ -274,8 +274,7 @@ export class OrganizerPage {
         // console.log(entries);
         // console.log('<-------------------> SORTED ENTRIES <------------>');
 
-        deleteAlert.setTitle('Are you sure you want to delete ' +
-                             itemsStr + '?');
+        deleteAlert.setTitle('Sure you want to delete ' + itemsStr + '?');
 
         deleteAlert.addButton('Cancel');
 

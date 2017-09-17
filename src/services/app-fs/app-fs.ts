@@ -72,6 +72,8 @@ export class AppFS {
                                         else {
                                             this.selectedPaths = paths;
                                         }
+                                        console.log('SP:::::::::::::::::: ' +
+                                            Object.keys(this.selectedPaths));
                                         this.switchDirectory(directoryPath)
                                             .subscribe(
                                                 () => {
@@ -277,14 +279,8 @@ export class AppFS {
 
     public selectPath(path: string): void {
         console.log('selectPath(' + path + ')');
-        // this.selectedPaths.add(path);
-
-        // we store the order in which selections were done in the
-        // value part of the (key, value) pairs of selections
-        const orderIndex: number = this.selectedPaths.size;
+        const orderIndex: number = this.nSelected();
         this.selectedPaths[path] = orderIndex;
-
-        // this.appState.set('filesystemSelected', this.selectedPaths);
         this.storage.set('filesystemSelected', this.selectedPaths);
     }
 
@@ -307,9 +303,6 @@ export class AppFS {
     }
 
     public nSelected(): number {
-        // console.log('AppFS.nSelected(isReady:' + this.isReady +
-        //             '): ' + this.selectedPaths.size);
-        // return this.selectedPaths.size;
         console.log('AppFS.nSelected(isReady:' + this.isReady +
                     '): ' + Object.keys(this.selectedPaths).length);
         return Object.keys(this.selectedPaths).length;
@@ -317,10 +310,8 @@ export class AppFS {
 
     public unselectPath(path: string): void {
         console.log('unselectPath(' + path + ')');
-        // this.selectedPaths.delete(path);
         delete this.selectedPaths[path];
 
-        // this.appState.set('filesystemSelected', this.selectedPaths);
         this.storage.set('filesystemSelected', this.selectedPaths);
     }
 
@@ -337,34 +328,13 @@ export class AppFS {
     public toggleSelectEntry(entry: Entry): void {
         const fullPath: string = this.getFullPath(entry);
         console.log('toggleSelectEntry(' + fullPath + ')');
-
-        // if (this.selectedPaths.has(fullPath)) {
-        //     this.selectedPaths.delete(fullPath);
-        // }
-        // else {
-        //     this.selectedPaths.add(fullPath);
-        // }
         if (this.isPathSelected(fullPath)) {
             this.unselectPath(fullPath);
         }
         else {
             this.selectPath(fullPath);
         }
-
-        // this.appState.set('filesystemSelected', this.selectedPaths);
-        this.storage.set('filesystemSelected', this.selectedPaths);
-
-        console.log('************** set selected: ' + this.selectedPaths);
-        console.dir(this.selectedPaths);
-
-        // this.appState.get('filesystemSelected').then(
-        this.storage.get('filesystemSelected').then(
-            (val: any) => {
-                console.log('************** get selected: ' + val);
-                console.dir(val);
-            }
-        );
-    }
+}
 
     /**
      * Select all or no items in current folder, depending on 'all; argument
