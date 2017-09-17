@@ -8,10 +8,9 @@ import {
 } from '@angular/core';
 
 /**
- * @name VuGauge
- * @description
  * An LED lights display. LEDs are displayed either dark (off) or lit up
  * (on), depending on where 'value' is in the interval ['min', 'max'].
+ * @class VuGauge
  */
 @Component({
     selector: 'vu-gauge',
