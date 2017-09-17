@@ -2,12 +2,11 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-// import { AppState } from '../../services';
 import { Storage } from '@ionic/storage';
 import { FS } from '../../models';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
-const WAIT_MSEC: number = 25;
+const WAIT_MSEC: number = 50;
 
 /**
  * @name AppFS
@@ -18,25 +17,20 @@ export class AppFS {
     public isReady: boolean;
     public entries: Entry[];
     public directoryEntry: DirectoryEntry;
-    // public selectedPaths: Set<string>;
     public selectedPaths: {[path: string]: number};
     private fileSystem: FileSystem;
-    // private appState: AppState;
     private storage: Storage;
 
     /**
      * @constructor
      */
-    // constructor(appState: AppState) {
     constructor(storage: Storage) {
         console.log('AppFS.constructor()');
-        // this.appState = appState;
         this.storage = storage;
         this.isReady = false;
         this.entries = [];
         this.fileSystem = null;
         this.directoryEntry = null;
-        // this.selectedPaths = new Set<string>();
         this.selectedPaths = {};
 
         // get the filesystem and remember it
@@ -49,7 +43,6 @@ export class AppFS {
                     (directoryEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/ (or already there)');
                         // grab remembered location from storage and go there
-                        // appState.get('filesystemPath').then(
                         this.storage.get('filesystemPath').then(
                             (directoryPath: string) => {
                                 if (directoryPath === '//') {
@@ -60,7 +53,6 @@ export class AppFS {
                                     directoryPath = '/';
                                 }
                                 // grab selection from storage
-                                // appState.get('filesystemSelected').then(
                                 this.storage.get('filesystemSelected').then(
                                     // (paths: Set<string>) => {
                                     (paths: {[path: string]: number}) => {
@@ -112,19 +104,16 @@ export class AppFS {
     }
 
     public getSelectedPathsArray(): string[] {
-        // return Array.from(this.selectedPaths);
         return Object.keys(this.selectedPaths);
     }
 
     public clearSelection(): void {
-        // this.selectedPaths.clear();
         for (let key in this.selectedPaths) {
             delete this.selectedPaths[key];
         }
         if (this.selectedPaths !== {}) {
             alert('noway');
         }
-        // this.appState.set('filesystemSelected', {});
         this.storage.set('filesystemSelected', this.selectedPaths);
     }
 
@@ -178,6 +167,7 @@ export class AppFS {
     }
 
     public createDirectory(path: string): Observable<DirectoryEntry> {
+        console.log('AppFS.createDirectory(' + path + ')');
         let source: Observable<DirectoryEntry> =
             Observable.create((observer) => {
                 if (path[path.length - 1] !== '/') {
@@ -220,7 +210,6 @@ export class AppFS {
                             console.log('entries: .........................');
                             console.dir(entries);
                             // store path as last visited too
-                            // this.appState.set('filesystemPath', path);
                             this.storage.set('filesystemPath', path);
 
                             // return with new entries
@@ -271,7 +260,7 @@ export class AppFS {
     }
 
     public selectPath(path: string): void {
-        console.log('selectPath(' + path + ')');
+        console.log('AppFS.selectPath(' + path + ')');
         const orderIndex: number = this.nSelected();
         this.selectedPaths[path] = orderIndex;
         this.storage.set('filesystemSelected', this.selectedPaths);
@@ -302,7 +291,7 @@ export class AppFS {
     }
 
     public unselectPath(path: string): void {
-        console.log('unselectPath(' + path + ')');
+        console.log('AppFS.unselectPath(' + path + ')');
         delete this.selectedPaths[path];
 
         this.storage.set('filesystemSelected', this.selectedPaths);
@@ -320,14 +309,14 @@ export class AppFS {
      */
     public toggleSelectEntry(entry: Entry): void {
         const fullPath: string = this.getFullPath(entry);
-        console.log('toggleSelectEntry(' + fullPath + ')');
+        console.log('AppFS.toggleSelectEntry(' + fullPath + ')');
         if (this.isPathSelected(fullPath)) {
             this.unselectPath(fullPath);
         }
         else {
             this.selectPath(fullPath);
         }
-}
+    }
 
     /**
      * Select all or no items in current folder, depending on 'all; argument
@@ -335,36 +324,30 @@ export class AppFS {
      * @returns {void}
      */
     public selectAllOrNone(bSelectAll: boolean): void {
-        console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
+        console.log('AppFS.selectAllOrNoneInFolder(' + bSelectAll + ')');
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
             const fullPath: string = this.getFullPath(entry),
                   isSelected: boolean = this.isEntrySelected(entry);
             if (bSelectAll && !isSelected) {
-                // this.selectedPaths.add(fullPath);
                 this.selectPath(fullPath);
                 bChanged = true;
             }
             else if (!bSelectAll && isSelected) {
-                // this.selectedPaths.delete(fullPath);
                 this.unselectPath(fullPath);
                 bChanged = true;
             }
         });
         if (bChanged) {
-            // this.appState.set('filesystemSelected', this.selectedPaths);
             this.storage.set('filesystemSelected', this.selectedPaths);
         }
     }
 
     /**
-     * Removes entries, supplied as an array of full path strings,
-     * sequentially.
-     * @param {string[]} paths
+     * Deletes selected entries.
      */
-    // public deleteEntries(paths: string[]): Observable<void> {
     public deleteSelected(): Observable<void> {
-        // NB: sort() is important below for proper deletion order
+        // sort() is important below for proper deletion order
         const paths: string[] = Object.keys(this.selectedPaths).sort(),
               fullPath: string = this.getFullPath(this.directoryEntry),
               fullPathSize: number = fullPath.length;
@@ -390,8 +373,6 @@ export class AppFS {
                                 this.unselectPath(path);
                             });
                             // store selection in case it has changed
-                            // this.appState.set('filesystemSelected',
-                            //                   this.selectedPaths);
                             this.storage.set('filesystemSelected',
                                              this.selectedPaths);
 
