@@ -344,6 +344,32 @@ export class AppFS {
     /**
      * Deletes selected entries.
      */
+    public moveSelected(): Observable<void> {
+        const paths: string[] = Object.keys(this.selectedPaths).sort();
+        let source: Observable<void> = Observable.create((observer) => {
+            this.whenReady().subscribe(
+                () => {
+                    FS.moveEntries(
+                        this.fileSystem,
+                        paths,
+                        this.directoryEntry
+                    ).subscribe(
+                        null,
+                        (err1: any) => {
+                            observer.error(err1);
+                        } // FS.deleteEntries(this.fileSystem, paths).subscribe(
+                    ); //
+                }, // () => {
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            ); // this.whenReady().subscribe(
+        });
+        return source;
+    }
+        /**
+     * Deletes selected entries.
+     */
     public deleteSelected(): Observable<void> {
         // sort() is important below for proper deletion order
         const paths: string[] = Object.keys(this.selectedPaths).sort(),

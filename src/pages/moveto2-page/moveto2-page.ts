@@ -106,6 +106,12 @@ export class MoveTo2Page {
      */
     public onClickMoveHereButton(): void {
         console.log('onClickMoveHereButton()');
+        this.appFS.moveSelected().subscribe(
+            () => {
+                console.log('moved em');
+                this.detectChanges();
+            }
+        );
     }
 
     /**

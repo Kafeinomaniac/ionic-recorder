@@ -155,7 +155,7 @@ describe('services/filesystem', () => {
     it('can delete the file it just created', (done) => {
         FS.getPathEntry(FILE_SYSTEM, TEST_FILENAME, true).subscribe(
             (entry: Entry) => {
-                FS.removeEntry(entry).subscribe(
+                FS.deleteEntry(entry).subscribe(
                     () => {
                         done();
                     }

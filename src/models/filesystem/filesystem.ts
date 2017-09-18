@@ -41,7 +41,7 @@ export class FS {
             source: Observable<void> = Observable.create((observer) => {
                 Observable.from(entryObservableArray).concatAll().subscribe(
                     (entry: Entry) => {
-                        FS.removeEntry(entry).subscribe(
+                        FS.deleteEntry(entry).subscribe(
                             null,
                             (err1: any) => {
                                 observer.error('err1: ' + err1);
@@ -60,13 +60,64 @@ export class FS {
         return source;
     }
 
-    public static removeEntry(entry: Entry): Observable<void> {
-        console.log('FS.removeEntry(' + entry.fullPath + ')');
+    public static moveEntries(
+        fileSystem: FileSystem,
+        paths: string[],
+        parent: DirectoryEntry
+    ): Observable<void> {
+        console.log('FS.moveEntries(fs, ' + paths + ')');
+        let entryObservableArray: Observable<Entry>[] =
+            paths.map((path: string) => {
+                return FS.getPathEntry(fileSystem, path, false);
+            }),
+            source: Observable<void> = Observable.create((observer) => {
+                Observable.from(entryObservableArray).concatAll().subscribe(
+                    (entry: Entry) => {
+                        FS.moveEntry(entry, parent).subscribe(
+                            null,
+                            (err1: any) => {
+                                observer.error('err1: ' + err1);
+                            }
+                        );
+                    },
+                    (err2: any) => {
+                        observer.error(err2);
+                    },
+                    () => {
+                        observer.next();
+                        observer.complete();
+                    }
+                );
+            });
+        return source;
+    }
+
+    public static moveEntry(
+        entry: Entry,
+        parent: DirectoryEntry
+    ): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
+            const successCB: (entry: Entry) => void = (entry: Entry) => {
+                console.log('FS.moveEntry.successCB()'); 
+                observer.next();
+                observer.complete();
+            };
+            const errorCB: (error: FileError) => void = (error: FileError) => {
+                console.log('FS.moveEntry.errorCB()');
+                observer.error(error); 
+            };
+            entry.moveTo(parent, entry.name, successCB, errorCB);
+        });
+        return source;
+    }
+
+    public static deleteEntry(entry: Entry): Observable<void> {
+        console.log('FS.deleteEntry(' + entry.fullPath + ')');
         let source: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
                 entry.remove(
                     () => {
-                        console.log('FS.removeEntry(): Done removing ' +
+                        console.log('FS.deleteEntry(): Done removing ' +
                                     entry.fullPath);
                         observer.next();
                         observer.complete();
@@ -80,7 +131,7 @@ export class FS {
             else if (entry.isDirectory) {
                 (<DirectoryEntry>entry).removeRecursively(
                     () => {
-                        console.log('FS.removeEntry(): Done removing ' +
+                        console.log('FS.deleteEntry(): Done removing ' +
                                     entry.fullPath);
                         observer.next();
                         observer.complete();
@@ -150,9 +201,7 @@ export class FS {
         console.log('FS.getFileSystem(bPersistent=' + bPersistent +
                     ', requestSize=' + requestSize);
         const fsType: number = (
-            bPersistent ?
-                window.PERSISTENT :
-                window.TEMPORARY
+            bPersistent ? window.PERSISTENT :  window.TEMPORARY
         );
         let src: Observable<FileSystem> = Observable.create((observer) => {
             window['webkitStorageInfo'].requestQuota(

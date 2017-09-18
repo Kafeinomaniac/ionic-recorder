@@ -267,13 +267,7 @@ export class OrganizerPage {
         let nSelected: number = this.appFS.nSelected(),
             itemsStr: string = nSelected.toString() + ' item' +
             ((nSelected > 1) ? 's' : ''),
-            // entries: string[] = this.appFS.getSelectedPathsArray(),
             deleteAlert: Alert = this.alertController.create();
-
-        // entries.sort();
-        // console.log('<-------------------> SORTED ENTRIES <------------>');
-        // console.log(entries);
-        // console.log('<-------------------> SORTED ENTRIES <------------>');
 
         deleteAlert.setTitle('Sure you want to delete ' + itemsStr + '?');
 
