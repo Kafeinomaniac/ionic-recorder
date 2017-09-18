@@ -354,7 +354,10 @@ export class AppFS {
                         paths,
                         this.directoryEntry
                     ).subscribe(
-                        null,
+                        () => {
+                            // TODO: do some error checking before getting here
+                            // but also here
+                        },
                         (err1: any) => {
                             observer.error(err1);
                         } // FS.deleteEntries(this.fileSystem, paths).subscribe(
