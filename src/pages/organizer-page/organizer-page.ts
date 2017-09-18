@@ -367,6 +367,15 @@ export class OrganizerPage {
     /**
      * UI calls this when the new folder button is clicked
      */
+    public onClickCheckbox(entry: Entry): void {
+        console.log('onClickCheckbox()');
+        this.appFS.toggleSelectEntry(entry);
+        this.detectChanges();
+    }
+
+    /**
+     * UI calls this when the new folder button is clicked
+     */
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
