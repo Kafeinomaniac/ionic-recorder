@@ -110,6 +110,9 @@ export class MoveTo2Page {
             () => {
                 console.log('moved em');
                 this.detectChanges();
+            },
+            (err: any) => {
+                alert(err);
             }
         );
     }

@@ -65,7 +65,7 @@ export class FS {
         paths: string[],
         parent: DirectoryEntry
     ): Observable<void> {
-        console.log('FS.moveEntries(fs, ' + paths + ')');
+        console.log('FS.moveEntries(fs, ' + paths + ',' + parent.name + ')');
         let entryObservableArray: Observable<Entry>[] =
             paths.map((path: string) => {
                 return FS.getPathEntry(fileSystem, path, false);
