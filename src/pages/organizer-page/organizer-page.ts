@@ -7,6 +7,8 @@ import {
     Alert,
     AlertController,
     Content,
+    Modal,
+    ModalController,
     NavController,
     Platform
 } from 'ionic-angular';
@@ -16,7 +18,7 @@ import { ButtonbarButton } from '../../components/';
 import { MoveTo2Page, SelectionPage } from '../../pages';
 
 /**
- * Music organizer. Page of file/folder interface to all files. 
+ * Page - file/folder based music organizer.
  * @class OrganizerPage
  */
 @Component({
@@ -27,6 +29,7 @@ export class OrganizerPage {
     @ViewChild(Content) public content: Content;
     public headerButtons: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
+    protected modalController: ModalController;
     protected navController: NavController;
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
@@ -43,6 +46,7 @@ export class OrganizerPage {
      * @param {Platform}
      */
     constructor(
+        modalController: ModalController,
         navController: NavController,
         alertController: AlertController,
         actionSheetController: ActionSheetController,
@@ -54,6 +58,7 @@ export class OrganizerPage {
         console.log('constructor():OrganizerPage');
         this.changeDetectorRef = changeDetectorRef;
         this.actionSheetController = actionSheetController;
+        this.modalController = modalController;
         this.navController = navController;
         this.alertController = alertController;
         this.appFS = appFS;
@@ -236,7 +241,10 @@ export class OrganizerPage {
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
-        this.navController.push(MoveTo2Page);
+        // this.navController.push(MoveTo2Page);
+        let modal: Modal = this.modalController.create(MoveTo2Page);
+        modal.present();
+        console.log('after modal.present();');
     }
 
     /**
@@ -336,10 +344,11 @@ export class OrganizerPage {
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
-        if (this.appFS.nSelected()) {
-            // only go to edit selections if at least one is selected
-            this.navController.push(SelectionPage);
-        }
+        // only go to edit selections if at least one is selected
+        // this.navController.push(SelectionPage);
+        let modal: Modal = this.modalController.create(SelectionPage);
+        modal.present();
+        console.log('after modal.present();');
     }
 
     /**

@@ -1,6 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Component } from '@angular/core';
+import { ViewController } from 'ionic-angular';
 import { AppFS } from '../../services';
 
 /**
@@ -14,20 +15,29 @@ import { AppFS } from '../../services';
 export class SelectionPage {
     public appFS: AppFS;
     public selectedEntries: Entry[];
+    private viewController: ViewController;
 
     /**
      * @constructor
-     * @param {AppFS}
+     * @param {AppFS} appFS -
+     * @param {ViewController} viewController -
      */
-    constructor(appFS: AppFS) {
+    constructor(appFS: AppFS, viewController: ViewController) {
         console.log('constructor():SelectionPage');
         this.appFS = appFS;
+        this.viewController = viewController;
         this.selectedEntries = [];
         appFS.getSelectedEntries().subscribe(
             (entries: Entry[]) => {
                 this.selectedEntries = entries;
             }
         );
+    }
+
+    public dismiss(data?: any): void {
+        // using the injected ViewController this page
+        // can "dismiss" itself and pass back data
+        this.viewController.dismiss(data);
     }
 
     /**

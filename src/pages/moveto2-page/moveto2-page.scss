@@ -1,19 +1,17 @@
 // Copyright (c) 2017 Tracktunes Inc
-
 $content-text-color: color($colors, almost-dark);
-
-#tabpanel-t0-3 moveto2-page {
+moveto2-page {
     ion-header {
-        p, ion-toolbar div.toolbar-content button-bar button:first-child {
-            color:green;
-        } 
+        ion-title div.toolbar-title,
+        p,
+        ion-toolbar div.toolbar-content button-bar button:first-child {
+            color: green;
+        }
     }
     ion-toolbar p {
         margin-top: 0.1em;
-        margin-bottom: 0.5em;
-        // color: color($colors, primary, base);
-    }
-    // control appearance of the text that says a folder is empty
+        margin-bottom: 0.5em; // color: color($colors, primary, base);
+    } // control appearance of the text that says a folder is empty
     ion-content ion-list {
         ion-item.moveto2-page-item {
             ion-checkbox {
@@ -27,11 +25,9 @@ $content-text-color: color($colors, almost-dark);
                 }
             }
             ion-label.button span.button-inner {
-                color: $content-text-color;
-                // text-transform: : none;
+                color: $content-text-color; // text-transform: : none;
                 // is needed to remove uppercase transform
-                text-transform: none;
-                // justify-content: unset is needed for label
+                text-transform: none; // justify-content: unset is needed for label
                 // text to not be centered; now it is left justified
                 justify-content: unset;
                 ion-icon {
@@ -39,8 +35,7 @@ $content-text-color: color($colors, almost-dark);
                     min-width: .9em;
                 }
             }
-        }
-        // control appearance of the text that says a folder is empty
+        } // control appearance of the text that says a folder is empty
         ion-item.moveto2-page-empty-folder-message {
             text-align: center;
             color: map-get($colors, logo-orange);

@@ -1,23 +1,23 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
 
 <ion-header>
-    <ion-navbar>
-        <button ion-button menuToggle>
-            <ion-icon name="menu"></ion-icon>
-        </button>
+    <ion-toolbar>
+        <ion-buttons start>
+            <button ion-button (click)="dismiss()">Cancel</button>
+          </ion-buttons>
         <ion-title>
-            MoveTo2
+            Move to
         </ion-title>
-        <ion-buttons end *ngIf="appFS.selectedPaths.size">
+        <ion-buttons end>
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{appFS.selectedPaths.size}} selected
+                    {{appFS.nSelected()}} selected
                     &nbsp;
                     <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
             </button>
         </ion-buttons>
-    </ion-navbar>
+    </ion-toolbar>
     <ion-toolbar>
         <p *ngIf="appFS.directoryEntry" text-center>
             {{appFS.getFullPath(appFS.directoryEntry)}}

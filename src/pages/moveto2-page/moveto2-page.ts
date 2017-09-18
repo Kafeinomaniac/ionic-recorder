@@ -1,7 +1,10 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import {
-    Content
+    Content,
+    Modal,
+    ModalController,
+    ViewController
 } from 'ionic-angular';
 import {
     ChangeDetectorRef,
@@ -10,6 +13,7 @@ import {
 } from '@angular/core';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { AppFS } from '../../services';
+import { SelectionPage } from '../../pages';
 
 /**
  * @class MoveTo2Page
@@ -22,6 +26,8 @@ import { AppFS } from '../../services';
 export class MoveTo2Page {
     @ViewChild(Content) public content: Content;
     public appFS: AppFS;
+    private modalController: ModalController;
+    private viewController: ViewController;
     private changeDetectorRef: ChangeDetectorRef;
     private headerButtons: ButtonbarButton[];
 
@@ -31,11 +37,15 @@ export class MoveTo2Page {
      */
     constructor(
         changeDetectorRef: ChangeDetectorRef,
-        appFS: AppFS
+        appFS: AppFS,
+        modalController: ModalController,
+        viewController: ViewController
     ) {
         console.log('MoveTo2Page.constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.appFS = appFS;
+        this.modalController = modalController;
+        this.viewController = viewController;
 
         appFS.whenReady().subscribe(
             () => {
@@ -71,6 +81,24 @@ export class MoveTo2Page {
                 ];
             }
         );
+    }
+
+    /**
+     * UI calls this when selected badge on top right is clicked
+     */
+    public onClickSelectedBadge(): void {
+        console.log('onClickSelectedBadge()');
+        // only go to edit selections if at least one is selected
+        // this.navController.push(SelectionPage);
+        let modal: Modal = this.modalController.create(SelectionPage);
+        modal.present();
+        console.log('after modal.present();');
+    }
+
+    public dismiss(data?: any): void {
+        // using the injected ViewController this page
+        // can "dismiss" itself and pass back data
+        this.viewController.dismiss(data);
     }
 
     /**

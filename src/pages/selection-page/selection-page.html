@@ -2,13 +2,17 @@
 
 <ion-header>
     <ion-navbar>
+        <ion-buttons start>
+            <ion-icon name="arrow-left"></ion-icon>
+            <button ion-button (click)="dismiss()">Done</button>
+          </ion-buttons>
         <ion-title>
-            Edit Selection
+            Edit Selected
         </ion-title>
         <ion-buttons end>
             <button ion-button small>
                 <ion-badge item-right>
-                    {{appFS.selectedPaths.size}} selected
+                    {{appFS.nSelected()}} selected
                 </ion-badge>
             </button>
         </ion-buttons>
