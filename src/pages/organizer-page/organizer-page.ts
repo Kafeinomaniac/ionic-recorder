@@ -282,10 +282,15 @@ export class OrganizerPage {
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
-                // this.appFS.deleteEntries(entries).subscribe(
                 this.appFS.deleteSelected().subscribe(
                     () => {
-                        this.detectChanges();
+                        this.appFS.switchDirectory(this.appFS.getFullPath(
+                            this.appFS.directoryEntry
+                        )).subscribe(
+                            () => {
+                                this.detectChanges();
+                            }
+                        );
                     });
             }
         });
