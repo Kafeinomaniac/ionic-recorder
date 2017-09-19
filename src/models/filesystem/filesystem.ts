@@ -98,13 +98,13 @@ export class FS {
     ): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
             const successCB: (entry: Entry) => void = (entry: Entry) => {
-                console.log('FS.moveEntry.successCB()'); 
+                console.log('FS.moveEntry.successCB()');
                 observer.next();
                 observer.complete();
             };
             const errorCB: (error: FileError) => void = (error: FileError) => {
                 console.log('FS.moveEntry.errorCB()');
-                observer.error(error); 
+                observer.error(error);
             };
             entry.moveTo(parent, entry.name, successCB, errorCB);
         });

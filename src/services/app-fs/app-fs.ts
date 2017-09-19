@@ -346,6 +346,7 @@ export class AppFS {
      */
     public moveSelected(): Observable<void> {
         const paths: string[] = Object.keys(this.selectedPaths).sort();
+        console.log('AppFS.moveSelected(): ' + paths);
         let source: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
@@ -357,6 +358,17 @@ export class AppFS {
                         () => {
                             // TODO: do some error checking before getting here
                             // but also here
+                            paths.forEach((path: string) => {
+                                this.unselectPath(path);
+                            });
+                            this.switchDirectory(this.getFullPath(
+                                this.directoryEntry
+                            )).subscribe(
+                                (entries: Entry[]) => {
+                                    observer.next();
+                                    observer.complete();
+                                }
+                            );
                         },
                         (err1: any) => {
                             observer.error(err1);
@@ -378,7 +390,7 @@ export class AppFS {
         const paths: string[] = Object.keys(this.selectedPaths).sort(),
               fullPath: string = this.getFullPath(this.directoryEntry),
               fullPathSize: number = fullPath.length;
-        console.log('AppFS.deleteEntries(' + paths + ')');
+        console.log('AppFS.deleteSelected(): ' + paths);
         let source: Observable<void> = Observable.create((observer) => {
             // get the file system
             this.whenReady().subscribe(
