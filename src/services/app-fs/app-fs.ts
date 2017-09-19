@@ -382,7 +382,8 @@ export class AppFS {
         });
         return source;
     }
-        /**
+
+    /**
      * Deletes selected entries.
      */
     public deleteSelected(): Observable<void> {

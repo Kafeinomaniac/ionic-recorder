@@ -97,7 +97,7 @@ export class FS {
         parent: DirectoryEntry
     ): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
-            const successCB: (entry: Entry) => void = (entry: Entry) => {
+            const successCB: (ent: Entry) => void = (ent: Entry) => {
                 console.log('FS.moveEntry.successCB()');
                 observer.next();
                 observer.complete();
