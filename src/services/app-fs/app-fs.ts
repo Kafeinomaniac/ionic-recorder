@@ -31,10 +31,32 @@ export class AppFS {
         this.fileSystem = null;
         this.directoryEntry = null;
         this.selectedPaths = {};
-
         // get the filesystem and remember it
         FS.getFileSystem(true, REQUEST_SIZE).subscribe(
             (fileSystem: FileSystem) => {
+
+                FS.getPathEntry(fileSystem, '/Unfiled/test.wav', true)
+                    .subscribe(
+                        (entry: Entry) => {
+                            FS.deleteEntry(entry).subscribe(
+                                () => { 
+                                    console.log('FIRST delete test.wav'); 
+                                    FS.getPathEntry(
+                                        fileSystem,
+                                        '/Unfiled/test.wav',
+                                        true
+                                    ).subscribe(
+                                        () => {
+                                            console.log('NOW create test.wav');
+                                        }
+                                    );
+
+                                }
+                            );
+                        }
+                    );
+
+
                 // remember the filesystem you got
                 this.fileSystem = fileSystem;
                 // create the /Unfiled/ directory if not already there
@@ -97,6 +119,14 @@ export class AppFS {
             }
         ); // FS.getFileSystem(true, REQUEST_SIZE).subscribe(
     } // constructor() {
+
+    public getMetadata(fullPath: string): Observable<Metadata> {
+        return FS.getMetadata(this.fileSystem, fullPath);
+    }
+
+    public appendToFile(fullPath: string, blob: Blob): Observable<FileEntry> {
+        return FS.appendToFile(this.fileSystem, fullPath, blob);
+    }
 
     public getPath(): string {
         return this.getFullPath(this.directoryEntry);

@@ -3,11 +3,15 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { IdbAppData } from '../idb-app-data/idb-app-data';
-import { RecordingInfo, WAV_MIME_TYPE } from './common';
+import { AUDIO_CONTEXT, RecordingInfo, WAV_MIME_TYPE } from './common';
 import { DoubleBufferSetter } from '../../models/utils/double-buffer';
 import { WebAudioRecord } from './record';
 import { MasterClock } from '../master-clock/master-clock';
 import { MAX, MIN } from '../../models/utils/utils';
+
+import { AppFS } from '../../services';
+import { makeWavBlobHeaderView } from '../../models/utils/wav';
+// import { AUDIO_CONTEXT, WAV_MIME_TYPE, RecordingInfo } from './common';
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH
 export const DB_CHUNK_LENGTH: number = 131072;
@@ -26,22 +30,39 @@ export class WebAudioRecordWav extends WebAudioRecord {
     private dbKeys: number[];
     private setter: DoubleBufferSetter;
 
-    // this is how we signal
-    constructor(masterClock: MasterClock, idb: IdbAppData) {
-        super(masterClock);
+    private appFS: AppFS;
 
+    // this is how we signal
+    constructor(masterClock: MasterClock, idb: IdbAppData, appFS: AppFS) {
+        super(masterClock);
         console.log('constructor():WebAudioRecordWav');
 
         this.idb = idb;
         this.dbKeys = [];
 
+        this.appFS = appFS;
+        
         this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
+            const wavBlob: Blob = new Blob(
+                [
+                    makeWavBlobHeaderView(
+                        this.setter.activeBuffer.length,
+                        AUDIO_CONTEXT.sampleRate
+                    ),
+                    this.setter.activeBuffer
+                ],
+                { type: WAV_MIME_TYPE }
+            );
+
+            this.appFS.appendToFile('/Unfiled/test.wav', wavBlob);
+
             this.idb.createChunk(this.setter.activeBuffer).subscribe(
                 (key: number) => {
                     // increment the buffers-saved counter
                     this.dbKeys.push(key);
                     console.log('saved chunk: ' + this.dbKeys.length +
-                        ', key: ' + key);
+                        ', key: ' + key + 'buffer len: ' + 
+                        this.setter.activeBuffer.length);
                 });
         });
 
@@ -66,8 +87,37 @@ export class WebAudioRecordWav extends WebAudioRecord {
                 (recordingInfo: RecordingInfo) => {
                     const lastChunk: Int16Array = this.setter.activeBuffer
                         .subarray(0, this.setter.bufferIndex);
+
                     this.idb.createChunk(lastChunk).subscribe(
                         (key: number) => {
+
+                            const wavBlob: Blob = new Blob(
+                                [
+                                    makeWavBlobHeaderView(
+                                        this.setter.activeBuffer.length,
+                                        AUDIO_CONTEXT.sampleRate
+                                    ),
+                                    this.setter.activeBuffer
+                                ],
+                                { type: WAV_MIME_TYPE }
+                            );
+                
+                            this.appFS.appendToFile(
+                                '/Unfiled/test.wav',
+                                wavBlob
+                            ).subscribe(
+                                (fileEntry: FileEntry) => {
+                                    this.appFS.getMetadata(
+                                        '/Unfiled/test.wav'
+                                    ).subscribe(
+                                        (md: Metadata) => {
+                                            console.log('METADATA: ' + md);
+                                            console.dir(md);
+                                        }
+                                    );
+                                }
+                            );
+
                             this.dbKeys.push(key);
                             console.log('saved final chunk: ' +
                                 this.dbKeys.length + ', key: ' + key);
