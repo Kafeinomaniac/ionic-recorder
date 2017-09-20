@@ -106,6 +106,18 @@ export class MoveTo2Page {
      */
     public onClickMoveHereButton(): void {
         console.log('onClickMoveHereButton()');
+        if (this.appFS.isPathSelected('/Unfiled/')) {
+            // TODO: do not allow /Unfiled folder to be 
+            // moved
+        }
+        // TODO: do not allow moving a parent folder into
+        // itself or any of its children
+
+        // TODO: do not allow a child folder to be moved
+        // into the parent because it is already there - so
+        // do a filter first to get rid of those paths 
+        // that are already going to be at the same place
+        // as a result of the move 
         this.appFS.moveSelected().subscribe(
             () => {
                 console.log('moved em');
