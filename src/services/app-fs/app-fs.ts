@@ -34,29 +34,6 @@ export class AppFS {
         // get the filesystem and remember it
         FS.getFileSystem(true, REQUEST_SIZE).subscribe(
             (fileSystem: FileSystem) => {
-
-                FS.getPathEntry(fileSystem, '/Unfiled/test.wav', true)
-                    .subscribe(
-                        (entry: Entry) => {
-                            FS.deleteEntry(entry).subscribe(
-                                () => { 
-                                    console.log('FIRST delete test.wav'); 
-                                    FS.getPathEntry(
-                                        fileSystem,
-                                        '/Unfiled/test.wav',
-                                        true
-                                    ).subscribe(
-                                        () => {
-                                            console.log('NOW create test.wav');
-                                        }
-                                    );
-
-                                }
-                            );
-                        }
-                    );
-
-
                 // remember the filesystem you got
                 this.fileSystem = fileSystem;
                 // create the /Unfiled/ directory if not already there

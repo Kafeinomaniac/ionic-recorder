@@ -12,7 +12,7 @@ export class FS {
                 return FS.getPathEntry(fileSystem, path, false);
             }),
             result: Entry[] = [],
-            source: Observable<Entry[]> = Observable.create((observer) => {
+            src: Observable<Entry[]> = Observable.create((observer) => {
                 Observable.from(entryObservableArray).concatAll().subscribe(
                     (entry: Entry) => {
                         result.push(entry);
@@ -26,7 +26,7 @@ export class FS {
                     }
                 );
             });
-        return source;
+        return src;
     }
 
     public static deleteEntries(
@@ -38,7 +38,7 @@ export class FS {
             paths.map((path: string) => {
                 return FS.getPathEntry(fileSystem, path, false);
             }),
-            source: Observable<void> = Observable.create((observer) => {
+            src: Observable<void> = Observable.create((observer) => {
                 Observable.from(entryObservableArray).concatAll().subscribe(
                     (entry: Entry) => {
                         FS.deleteEntry(entry).subscribe(
@@ -57,7 +57,7 @@ export class FS {
                     }
                 );
             });
-        return source;
+        return src;
     }
 
     public static moveEntries(
@@ -70,7 +70,7 @@ export class FS {
             paths.map((path: string) => {
                 return FS.getPathEntry(fileSystem, path, false);
             }),
-            source: Observable<void> = Observable.create((observer) => {
+            src: Observable<void> = Observable.create((observer) => {
                 Observable.from(entryObservableArray).concatAll().subscribe(
                     (entry: Entry) => {
                         FS.moveEntry(entry, parent).subscribe(
@@ -89,14 +89,14 @@ export class FS {
                     }
                 );
             });
-        return source;
+        return src;
     }
 
     public static moveEntry(
         entry: Entry,
         parent: DirectoryEntry
     ): Observable<void> {
-        let source: Observable<void> = Observable.create((observer) => {
+        let src: Observable<void> = Observable.create((observer) => {
             const successCB: (ent: Entry) => void = (ent: Entry) => {
                 console.log('FS.moveEntry.successCB()');
                 observer.next();
@@ -108,12 +108,12 @@ export class FS {
             };
             entry.moveTo(parent, entry.name, successCB, errorCB);
         });
-        return source;
+        return src;
     }
 
     public static deleteEntry(entry: Entry): Observable<void> {
         console.log('FS.deleteEntry(' + entry.fullPath + ')');
-        let source: Observable<void> = Observable.create((observer) => {
+        let src: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
                 entry.remove(
                     () => {
@@ -143,7 +143,7 @@ export class FS {
                 );
             }
         });
-        return source;
+        return src;
     }
 
     public static getPathEntry(
@@ -152,7 +152,7 @@ export class FS {
         bCreate: boolean = false
     ): Observable<Entry> {
         console.log('FS.getPathEntry(fs, ' + path + ', ' + bCreate + ')');
-        let source: Observable<Entry> = Observable.create((observer) => {
+        let src: Observable<Entry> = Observable.create((observer) => {
             if (path === '/') {
                 observer.next(fileSystem.root);
                 observer.complete();
@@ -191,7 +191,7 @@ export class FS {
                 );
             } // if (path[path.length - 1] === '/') { .. else { ..}
         });
-        return source;
+        return src;
     }
 
     public static getFileSystem(
@@ -203,7 +203,7 @@ export class FS {
         const fsType: number = (
             bPersistent ? window.PERSISTENT :  window.TEMPORARY
         );
-        let source: Observable<FileSystem> = Observable.create((observer) => {
+        let src: Observable<FileSystem> = Observable.create((observer) => {
             window['webkitStorageInfo'].requestQuota(
                 fsType,
                 requestSize,
@@ -234,58 +234,97 @@ export class FS {
                 }
             );
         });
-        return source;
+        return src;
     }
 
-public static appendToFile(
-    fs: FileSystem,
-    fullPath: string,
-    blob: Blob
-): Observable<FileEntry> {
-    console.log('FS.appendToFile(fs, ' + fullPath + ', blob)');
-    let source: Observable<FileEntry> = Observable.create((observer) => {
-        fs.root.getFile(
-            fullPath, { create: false },
-            (fileEntry: FileEntry) => {
-                // Create a FileWriter object for our FileEntry (log.txt).
-                fileEntry.createWriter(
-                    (fileWriter: FileWriter) => {
-                        fileWriter.onwriteend = (event: any) => {
-                            console.log('Write completed. ' + event);
-                            observer.next(fileEntry);
-                            observer.complete();
-                        };
-                        fileWriter.onerror = (err1: any) => {
-                            console.log('Write failed err1: ' + err1);
-                            observer.error(err1);
-                        };
-                        // see to end and write from there
-                        console.log('***** writer.length: ' +
-                            fileWriter.length + ' *************');
-                        fileWriter.seek(fileWriter.length);
-                        fileWriter.write(blob);                        
-                    },
-                    (err2: any) => {
-                        console.log('Write failed err2: ' + err2);
-                        observer.error(err2);
-                    }
-                );
-            },
-            (err3: any) => {
-                console.log('Write failed err3: ' + err3);
-                observer.error(err3);
-            }
-        ); // fs.root.getFile(
-    });
-    return source;
-}
+    public static writeFile(
+        fs: FileSystem,
+        name: string,
+        blob: Blob
+    ): Observable<void> {
+        let src: Observable<void> = Observable.create((observer) => {
+            fs.root.getFile(
+                name, { create: true },
+                (fileEntry: FileEntry) => {
+                    // Create a FileWriter object for our FileEntry (log.txt).
+                    fileEntry.createWriter(
+                        (fileWriter: FileWriter) => {
+                            fileWriter.onwriteend = (event: any) => {
+                                console.log('Write completed. ' + event);
+                                observer.next();
+                                observer.complete();
+                            };
 
-public static getMetadata(
-    fs: FileSystem,
-    fullPath: string
-): Observable<Metadata> {
+                            fileWriter.onerror = (err1: any) => {
+                                console.log('Write failed err1: ' + err1);
+                                observer.error(err1);
+                            };
+                            fileWriter.write(blob);
+                        },
+                        (err2: any) => {
+                            console.log('Write failed err2: ' + err2);
+                            observer.error(err2);
+                        }
+                    );
+                },
+                (err3: any) => {
+                    console.log('Write failed err3: ' + err3);
+                    observer.error(err3);
+                }
+            ); // fs.root.getFile(
+        });
+        return src;
+    }
+
+    public static appendToFile(
+        fs: FileSystem,
+        fullPath: string,
+        blob: Blob
+    ): Observable<FileEntry> {
+        console.log('FS.appendToFile(fs, ' + fullPath + ', blob)');
+        let src: Observable<FileEntry> = Observable.create((observer) => {
+            fs.root.getFile(
+                fullPath, { create: false },
+                (fileEntry: FileEntry) => {
+                    // Create a FileWriter object for our FileEntry (log.txt).
+                    fileEntry.createWriter(
+                        (fileWriter: FileWriter) => {
+                            fileWriter.onwriteend = (event: any) => {
+                                console.log('Write completed. ' + event);
+                                observer.next(fileEntry);
+                                observer.complete();
+                            };
+                            fileWriter.onerror = (err1: any) => {
+                                console.log('Write failed err1: ' + err1);
+                                observer.error(err1);
+                            };
+                            // see to end and write from there
+                            console.log('***** writer.length: ' +
+                                        fileWriter.length + ' *************');
+                            fileWriter.seek(fileWriter.length);
+                            fileWriter.write(blob);
+                        },
+                        (err2: any) => {
+                            console.log('Write failed err2: ' + err2);
+                            observer.error(err2);
+                        }
+                    );
+                },
+                (err3: any) => {
+                    console.log('Write failed err3: ' + err3);
+                    observer.error(err3);
+                }
+            ); // fs.root.getFile(
+        });
+        return src;
+    }
+
+    public static getMetadata(
+        fs: FileSystem,
+        fullPath: string
+    ): Observable<Metadata> {
         console.log('FS.readFile(fs, ' + fullPath + ')');
-        let source: Observable<Metadata> = Observable.create((observer) => {
+        let src: Observable<Metadata> = Observable.create((observer) => {
             fs.root.getFile(
                 fullPath,
                 {create: false},
@@ -297,7 +336,7 @@ public static getMetadata(
                             observer.next(metadata);
                             observer.complete();
                         },
-                        (err1: FileError) => { 
+                        (err1: FileError) => {
                             console.log('getMetadata err1: ' + err1);
                             observer.error(err1);
                         }
@@ -309,12 +348,12 @@ public static getMetadata(
                 }
             ); // fs.root.getFile(
         });
-        return source;
+        return src;
     }
 
-public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
+    public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
         console.log('FS.readFile(fs, ' + fullPath + ')');
-        let source: Observable<any> = Observable.create((observer) => {
+        let src: Observable<any> = Observable.create((observer) => {
             fs.root.getFile(
                 fullPath,
                 {create: false},
@@ -333,7 +372,8 @@ public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
                                 console.log('Read failed err1: ' + err1);
                                 observer.error(err1);
                             };
-                            fileReader.readAsArrayBuffer(file);
+                            // fileReader.readAsArrayBuffer(file);
+                            fileReader.readAsBinaryString(file);
                         },
                         (err2: any) => {
                             console.log('Read failed err2: ' + err2);
@@ -347,7 +387,7 @@ public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
                 }
             ); // fs.root.getFile(
         });
-        return source;
+        return src;
     }
 
     public static createDirectory(
@@ -356,7 +396,7 @@ public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
     ): Observable<DirectoryEntry> {
         console.log('FS.createDirectory(' + parentDirectoryEntry.fullPath +
                     ', ' + name + ')');
-        let source: Observable<DirectoryEntry> = Observable.create((observer) => {
+        let src: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
                 name,
                 { create: true },
@@ -369,13 +409,13 @@ public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
                 }
             );
         });
-        return source;
+        return src;
     }
 
     public static readDirectory(
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
-        let source: Observable<Entry[]> = Observable.create((observer) => {
+        let src: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],
                 readEntries: () => void = () => {
@@ -399,7 +439,7 @@ public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
             // start reading dir entries
             readEntries();
         });
-        return source;
+        return src;
     }
 
 }

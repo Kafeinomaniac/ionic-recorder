@@ -18,7 +18,7 @@ beforeEach((done: Function) => {
     );
 });
 
-describe('services/filesystem', () => {
+describe('models/filesystem', () => {
     it('initializes', (done) => {
         setTimeout(
             () => {
@@ -173,4 +173,4 @@ describe('services/filesystem', () => {
         );
     });
 
-}); // describe('services/filesystem', () => {
+}); // describe('models/filesystem', () => {
