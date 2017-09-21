@@ -41,7 +41,7 @@ export class WebAudioRecordWav extends WebAudioRecord {
         this.dbKeys = [];
 
         this.appFS = appFS;
-        
+
         this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
             const wavBlob: Blob = new Blob(
                 [
@@ -61,7 +61,7 @@ export class WebAudioRecordWav extends WebAudioRecord {
                     // increment the buffers-saved counter
                     this.dbKeys.push(key);
                     console.log('saved chunk: ' + this.dbKeys.length +
-                        ', key: ' + key + 'buffer len: ' + 
+                        ', key: ' + key + 'buffer len: ' +
                         this.setter.activeBuffer.length);
                 });
         });
@@ -101,7 +101,7 @@ export class WebAudioRecordWav extends WebAudioRecord {
                                 ],
                                 { type: WAV_MIME_TYPE }
                             );
-                
+
                             this.appFS.appendToFile(
                                 '/Unfiled/test.wav',
                                 wavBlob
