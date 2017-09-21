@@ -351,7 +351,10 @@ export class FS {
         return src;
     }
 
-    public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
+    public static readFile(
+        fs: FileSystem,
+        fullPath: string
+    ): Observable<any> {
         console.log('FS.readFile(fs, ' + fullPath + ')');
         let src: Observable<any> = Observable.create((observer) => {
             fs.root.getFile(
