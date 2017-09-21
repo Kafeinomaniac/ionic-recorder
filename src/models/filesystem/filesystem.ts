@@ -333,7 +333,7 @@ public static readFile(fs: FileSystem, fullPath: string): Observable<any> {
                                 console.log('Read failed err1: ' + err1);
                                 observer.error(err1);
                             };
-                            fileReader.readAsBinaryString(file);
+                            fileReader.readAsArrayBuffer(file);
                         },
                         (err2: any) => {
                             console.log('Read failed err2: ' + err2);
