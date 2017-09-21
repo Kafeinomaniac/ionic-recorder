@@ -237,14 +237,17 @@ export class FS {
         return src;
     }
 
-    public static writeFile(
+    public static writeToFile(
         fs: FileSystem,
-        name: string,
-        blob: Blob
+        path: string,
+        blob: Blob,
+        seekOffset: number = 0,
+        bCreate: boolean = true
     ): Observable<void> {
         let src: Observable<void> = Observable.create((observer) => {
             fs.root.getFile(
-                name, { create: true },
+                path,
+                { create: bCreate },
                 (fileEntry: FileEntry) => {
                     // Create a FileWriter object for our FileEntry (log.txt).
                     fileEntry.createWriter(
@@ -259,6 +262,9 @@ export class FS {
                                 console.log('Write failed err1: ' + err1);
                                 observer.error(err1);
                             };
+                            if (seekOffset > 0) {
+                                fileWriter.seek(seekOffset);
+                            }
                             fileWriter.write(blob);
                         },
                         (err2: any) => {
@@ -278,13 +284,14 @@ export class FS {
 
     public static appendToFile(
         fs: FileSystem,
-        fullPath: string,
+        path: string,
         blob: Blob
     ): Observable<FileEntry> {
-        console.log('FS.appendToFile(fs, ' + fullPath + ', blob)');
+        console.log('FS.appendToFile(fs, ' + path + ', blob)');
         let src: Observable<FileEntry> = Observable.create((observer) => {
             fs.root.getFile(
-                fullPath, { create: false },
+                path,
+                { create: false },
                 (fileEntry: FileEntry) => {
                     // Create a FileWriter object for our FileEntry (log.txt).
                     fileEntry.createWriter(
@@ -299,7 +306,7 @@ export class FS {
                                 observer.error(err1);
                             };
                             // see to end and write from there
-                            console.log('***** writer.length: ' +
+                            console.log('*********** writer.length: ' +
                                         fileWriter.length + ' *************');
                             fileWriter.seek(fileWriter.length);
                             fileWriter.write(blob);
@@ -321,12 +328,12 @@ export class FS {
 
     public static getMetadata(
         fs: FileSystem,
-        fullPath: string
+        path: string
     ): Observable<Metadata> {
-        console.log('FS.readFile(fs, ' + fullPath + ')');
+        console.log('FS.getMetadata(fs, ' + path + ')');
         let src: Observable<Metadata> = Observable.create((observer) => {
             fs.root.getFile(
-                fullPath,
+                path,
                 {create: false},
                 (fileEntry: FileEntry) => {
                     fileEntry.getMetadata(
@@ -351,14 +358,14 @@ export class FS {
         return src;
     }
 
-    public static readFile(
+    public static readFromFile(
         fs: FileSystem,
-        fullPath: string
+        path: string
     ): Observable<any> {
-        console.log('FS.readFile(fs, ' + fullPath + ')');
+        console.log('FS.readFromFile(fs, ' + path + ')');
         let src: Observable<any> = Observable.create((observer) => {
             fs.root.getFile(
-                fullPath,
+                path,
                 {create: false},
                 (fileEntry: FileEntry) => {
                     fileEntry.file(
@@ -366,26 +373,29 @@ export class FS {
                             let fileReader: FileReader = new FileReader();
 
                             fileReader.onloadend = (event: ProgressEvent) => {
-                                console.log('Read completed. ' + event);
+                                console.log('FS.readFromFile() completed. ' +
+                                            event);
                                 observer.next(fileReader.result);
                                 observer.complete();
                             };
 
                             fileReader.onerror = (err1: any) => {
-                                console.log('Read failed err1: ' + err1);
+                                console.log('FS.readFromFile() failed err1: ' +
+                                            err1);
                                 observer.error(err1);
                             };
                             // fileReader.readAsArrayBuffer(file);
                             fileReader.readAsBinaryString(file);
                         },
                         (err2: any) => {
-                            console.log('Read failed err2: ' + err2);
+                            console.log('FS.readFromFile() failed err2: ' +
+                                        err2);
                             observer.error(err2);
                         }
                     );
                 },
                 (err3: any) => {
-                    console.log('Read failed err3: ' + err3);
+                    console.log('FS.readFromFile() failed err3: ' + err3);
                     observer.error(err3);
                 }
             ); // fs.root.getFile(
@@ -415,9 +425,10 @@ export class FS {
         return src;
     }
 
-    public static readDirectory(
+    public static readDirectoryEntries(
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
+        console.log('FS.readDirectoryEntries(' + directoryEntry.name + '/');
         let src: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],

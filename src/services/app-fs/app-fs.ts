@@ -210,7 +210,7 @@ export class AppFS {
                     console.log('this.directoryEntry = ' +
                                 this.directoryEntry.fullPath);
                     // we got the directory entry, now read it
-                    FS.readDirectory(<DirectoryEntry>entry).subscribe(
+                    FS.readDirectoryEntries(<DirectoryEntry>entry).subscribe(
                         (entries: Entry[]) => {
                             this.entries = entries;
                             console.log('entries: .........................');
@@ -225,7 +225,7 @@ export class AppFS {
                         (err1: any) => {
                             observer.error(err1);
                         }
-                    ); // FS.readDirectory(directoryEntry).subscribe(
+                    ); // FS.readDirectoryEntries(directoryEntry).subscribe(
                 },
                 (err2: any) => {
                     observer.error(err2);
@@ -446,8 +446,47 @@ export class AppFS {
                     observer.error(err2);
                 }
             ); // this.whenReady().subscribe(
-
         });
         return source;
     }
+
+    public addDataToWavFile(
+        path: string,
+        wavData: Int16Array,
+        bCreate: boolean = true
+    ): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
+            if (bCreate) {
+                console.log('creating wav file...');
+                /*
+                const dataLength = wavData.length,
+                      headerView = makeWavBlobHeaderView(
+                          dataLength,
+                          sampleRate
+                      ),
+                      
+                blob = new Blob(
+                    [
+                );
+                */
+                let blob: Blob = new Blob();
+                FS.writeToFile(this.fileSystem, path, blob).subscribe(
+                    () => {
+                        observer.next();
+                        observer.complete();
+                    },
+                    (err1: any) => {
+                        observer.error(err1);
+                    }
+                );
+            } // if (bCreate) { ..
+            else {
+                console.log('appending to wav file...');
+            } // if (bCreate) { .. } else { ..
+
+        });
+        return source;
+
+    }
+
 }

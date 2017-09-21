@@ -49,7 +49,7 @@ describe('models/filesystem', () => {
     });
 
     it('can read the root directory contents to be empty', (done) => {
-        FS.readDirectory(FILE_SYSTEM.root).subscribe(
+        FS.readDirectoryEntries(FILE_SYSTEM.root).subscribe(
             (entries: Entry[]) => {
                 console.dir(entries);
                 expect(entries.length).toEqual(0);
@@ -114,12 +114,12 @@ describe('models/filesystem', () => {
 
     it('can create a file in root w/content A & read it', (done) => {
         const data: string = 'A';
-        FS.writeFile(
+        FS.writeToFile(
             FILE_SYSTEM,
             TEST_FILENAME,
             new Blob([data], { type: 'text/plain' })
         ).subscribe(() => {
-            FS.readFile(FILE_SYSTEM, TEST_FILENAME)
+            FS.readFromFile(FILE_SYSTEM, TEST_FILENAME)
                 .subscribe(
                     (blob: Blob) => {
                         console.log('READ BLOB!!! ' + blob);
@@ -134,12 +134,12 @@ describe('models/filesystem', () => {
 
     it('can create a file in root w/content B then read it', (done) => {
         const data: string = 'B';
-        FS.writeFile(
+        FS.writeToFile(
             FILE_SYSTEM,
             TEST_FILENAME,
             new Blob([data], { type: 'text/plain' })
         ).subscribe(() => {
-            FS.readFile(FILE_SYSTEM, TEST_FILENAME)
+            FS.readFromFile(FILE_SYSTEM, TEST_FILENAME)
                 .subscribe(
                     (blob: Blob) => {
                         console.log('READ BLOB!!! ' + blob);
@@ -165,7 +165,7 @@ describe('models/filesystem', () => {
     });
 
     it('can read the root directory contents to be empty', (done) => {
-        FS.readDirectory(FILE_SYSTEM.root).subscribe(
+        FS.readDirectoryEntries(FILE_SYSTEM.root).subscribe(
             (entries: Entry[]) => {
                 expect(entries.length).toEqual(0);
                 done();
