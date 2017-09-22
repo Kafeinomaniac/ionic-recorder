@@ -1,16 +1,19 @@
 // Copyright (c) 2017 Tracktunes Inc
-
 $content-text-color: color($colors, almost-dark);
-
 moveto-page {
+    ion-header {
+        ion-title div.toolbar-title,
+        p,
+        ion-toolbar div.toolbar-content button-bar button:first-child {
+            color: green;
+        }
+    }
     ion-toolbar p {
         margin-top: 0.1em;
-        margin-bottom: 0.5em;
-        color: color($colors, primary, base);
-    }
-    // control appearance of the text that says a folder is empty
+        margin-bottom: 0.5em; // color: color($colors, primary, base);
+    } // control appearance of the text that says a folder is empty
     ion-content ion-list {
-        ion-item.library-page-item {
+        ion-item.moveto-page-item {
             ion-checkbox {
                 // margin-right was too large by default, creating
                 // too much of a space between checkbox and item text
@@ -22,34 +25,20 @@ moveto-page {
                 }
             }
             ion-label.button span.button-inner {
-                color: $content-text-color;
-                // text-transform: : none; is needed to remove uppercase transform
-                text-transform: none;
-                // justify-content: unset is needed for label
-                // text to not be centered and go to the left
+                color: $content-text-color; // text-transform: : none;
+                // is needed to remove uppercase transform
+                text-transform: none; // justify-content: unset is needed for label
+                // text to not be centered; now it is left justified
                 justify-content: unset;
                 ion-icon {
-                    font-size: 1.4em;
+                    font-size: 1.8em;
+                    min-width: .9em;
                 }
             }
-        }
-        // control appearance of the text that says a folder is empty
-        ion-item.library-page-empty-folder-message {
+        } // control appearance of the text that says a folder is empty
+        ion-item.moveto-page-empty-folder-message {
             text-align: center;
             color: map-get($colors, logo-orange);
         }
-    }
-}
-// Copyright (c) 2017 Tracktunes Inc
-
-// moveto-page {
-#tabpanel-t0-4 {
-    b {
-        font-weight: 500;
-    }
-    p {
-        padding: 0 40px;
-        font-size: 14px;
-        line-height: 1.5;
     }
 }

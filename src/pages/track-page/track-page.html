@@ -1,4 +1,5 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
+<!-- TODO: recordingInfo needs replacement -->
 
 <ion-header>
     <ion-navbar>
@@ -16,51 +17,6 @@
 </ion-header>
 
 <ion-content>
-    <ion-list *ngIf="recordingInfo">
-        <ion-item text-wrap>
-            <p>
-                <span style="float: left;">Path:</span>
-                <span style="float:right;"> {{recordingInfo.folderPath}}</span>
-            </p>
-        </ion-item>
-        <ion-item>
-            <p>
-                <span style="float: left;">Created on:</span>
-                <span style="float:right;"> {{recordingInfo.displayDateCreated}}</span>
-            </p>
-        </ion-item>
-        <ion-item>
-            <p>
-                <span style="float: left;">Encoding:</span>
-                <span style="float:right;"> {{recordingInfo.encoding}}</span>
-            </p>
-        </ion-item>
-        <ion-item>
-            <p>
-                <span style="float: left;">Duration:</span>
-                <span style="float:right;"> {{recordingInfo.displayDuration}}</span>
-            </p>
-        </ion-item>
-        <ion-item>
-            <p>
-                <span style="float: left;">File size:</span>
-                <span style="float:right;"> {{recordingInfo.size + 44}} bytes</span>
-            </p>
-        </ion-item>
-        <ion-item>
-            <p>
-                <span style="float: left;">Sample rate:</span>
-                <span style="float:right;"> {{recordingInfo.sampleRate}} Hz</span>
-            </p>
-        </ion-item>
-        <ion-item>
-            <p>
-                <span style="float: left;"># of samples:</span>
-                <span style="float:right;"> {{recordingInfo.nSamples}}</span>
-            </p>
-        </ion-item>
-
-    </ion-list>
 </ion-content>
 
 <ion-footer>

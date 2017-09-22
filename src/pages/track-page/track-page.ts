@@ -4,16 +4,6 @@ import { Observable } from 'rxjs/Rx';
 import { ActionSheetController, NavParams, Content } from 'ionic-angular';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { Component, ViewChild } from '@angular/core';
-import {
-    // DB_KEY_PATH,
-    // KeyDict,
-    // ParentChild,
-    // ROOT_FOLDER_KEY,
-    TreeNode
-} from '../../models/idb/idb-fs';
-// import { formatLocalTime } from '../../models/utils/utils';
-// import { formatTime } from '../../models/utils/utils';
-import { IdbAppFS } from '../../services/idb-app-fs/idb-app-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { WebAudioSaveWav } from '../../services/web-audio/save-wav';
 
@@ -31,37 +21,27 @@ export class TrackPage {
     private actionSheetController: ActionSheetController;
     public footerButtons: ButtonbarButton[];
     public recordingInfo: RecordingInfo;
-    private idbAppFS: IdbAppFS;
 
     /**
      * @constructor
      * @param {WebAudioSaveWav}
-     * @param {IdbAppFS}
      * @param {NavParams}
      * @param {ActionSheetController}
      */
     constructor(
         webAudioSaveWav: WebAudioSaveWav,
-        idbAppFS: IdbAppFS,
         navParams: NavParams,
         actionSheetController: ActionSheetController
     ) {
         console.log('constructor():TrackPage');
 
         this.webAudioSaveWav = webAudioSaveWav;
-        this.idbAppFS = idbAppFS;
         this.actionSheetController = actionSheetController;
 
         const key: number = navParams.data;
 
-        this.getTrackInfo(key, true).subscribe(
-            (trackInfo: RecordingInfo) => {
-                this.recordingInfo = trackInfo;
-                this.resize();
-            }
-        );
-
-        this.footerButtons = [{
+        this.footerButtons = [
+            {
                 text: 'Move',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
@@ -87,28 +67,6 @@ export class TrackPage {
     }
 
     /**
-     * @returns {Observable<TrackInfo>}
-     */
-    public getTrackInfo(
-        key: number,
-        getPath: boolean = false
-    ): Observable<RecordingInfo> {
-        let source: Observable<RecordingInfo> =
-            Observable.create((observer) => {
-                this.idbAppFS.readNode(key).subscribe(
-                    (node: TreeNode) => {
-                        observer.next(node.data);
-                        observer.complete();
-                    },
-                    (err: any) => {
-                        observer.error(err);
-                    }
-                );
-            });
-        return source;
-    }
-
-    /**
      * UI callback handling 'move' button click
      */
     public onClickMoveButton(): void {
@@ -127,7 +85,8 @@ export class TrackPage {
     private presentActionSheet(): void {
         this.actionSheetController.create({
             title: 'Share as',
-            buttons: [{
+            buttons: [
+                {
                     text: 'Local file on device',
                     handler: () => {
                         console.log('Share as local file clicked, fname: ' +

@@ -1,5 +1,8 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+// TODO: take care of RecordingInfo - it will change or disappear
+// note this.player.setRecordingInfo() needs changes
+
 import {
     Component,
     Input,

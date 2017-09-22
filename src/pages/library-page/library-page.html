@@ -1,62 +1,54 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
 
-<ion-header>
+<ion-header *ngIf="appFS.isReady">
     <ion-navbar>
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title *ngIf="folderNode">
+        <ion-title>
             Library
         </ion-title>
-        <ion-buttons end *ngIf="nSelectedNodes()">
+        <ion-buttons end *ngIf="appFS.nSelected() > 0">
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{nSelectedNodes()}} selected &nbsp; <ion-icon name="create"></ion-icon>
+                    {{appFS.nSelected()}} selected
+                    &nbsp;
+                    <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
             </button>
         </ion-buttons>
     </ion-navbar>
     <ion-toolbar>
-        <p *ngIf="folderNode" text-center>
-            {{getPath()}}
+        <p *ngIf="appFS.directoryEntry" text-center>
+            {{appFS.getPath()}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
-    <ion-list *ngIf="folderNode">
-        <ion-item-sliding *ngFor="let i of folderNode.childOrder" #item>
-            <ion-item clear class="library-page-item">
-                <ion-label ion-button clear (click)="onClickListItem(folderItems[i])">
-                    <span *ngIf="folderItems[i].data">
-                    <ion-icon name="play">
-                    </ion-icon>
-                    &nbsp;
-                </span>
-                    <ion-icon *ngIf="!folderItems[i].data" name="folder">
-                    </ion-icon>
-                    &nbsp; {{folderItems[i].name}}
-                </ion-label>
-                <ion-checkbox item-left [ngModel]="isSelected(folderItems[i])" (click)="onClickCheckbox(folderItems[i])"></ion-checkbox>
-            </ion-item>
-            <ion-item-options>
-                <button ion-button (click)="onClickRename(folderItems[i], item)">
-                    <ion-icon name="md-create"></ion-icon>
-                    Rename
-                </button>
-            </ion-item-options>
-        </ion-item-sliding>
-        <ion-item class="library-page-empty-folder-message" *ngIf="!folderNode.childOrder.length">
-            <h2>
-                Empty folder
-            </h2>
+<ion-content *ngIf="appFS.isReady">
+    <ion-list [reorder]="appFS.nEntries() > 1"
+              (ionItemReorder)="reorderEntries($event)">
+        <ion-item clear *ngFor="let entry of appFS.entries"
+                  class="library-page-item">
+            <ion-label ion-button clear (click)="onClickEntry(entry)">
+                <ion-icon [name]="appFS.entryIcon(entry)"></ion-icon>
+                &nbsp;
+                {{entry.name}}
+            </ion-label>
+            <ion-checkbox [checked]="appFS.isEntrySelected(entry)"
+                          (click)="onClickCheckbox(entry)">
+            </ion-checkbox>
+        </ion-item>
+        <ion-item *ngIf="!appFS.entries.length"
+                  class="library-page-empty-folder-message">
+            <h2>Empty folder</h2>
         </ion-item>
     </ion-list>
 </ion-content>
 
-<ion-footer [hidden]="nSelectedNodes() === 0">
+<ion-footer [hidden]="!appFS.nSelected()">
     <ion-toolbar>
         <button-bar [buttons]="footerButtons">
         </button-bar>

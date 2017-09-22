@@ -3,12 +3,6 @@
 import { AppState, GainState } from '../../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
 import { Content, NavController } from 'ionic-angular';
-import {
-    IdbAppFS,
-    UNFILED_FOLDER_KEY
-}
-from '../../services/idb-app-fs/idb-app-fs';
-import { ParentChild, DB_KEY_PATH } from '../../models/idb/idb-fs';
 import { RecordingInfo } from '../../services/web-audio/common';
 import { RecordStatus } from '../../services/web-audio/record';
 import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
@@ -31,7 +25,6 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
 export class RecordPage {
     @ViewChild(Content) public content: Content;
     private appState: AppState;
-    private idbAppFS: IdbAppFS;
     // recordButtonIcon referenced by template
     public recordButtonIcon: string = START_RESUME_ICON;
     // template members
@@ -56,13 +49,11 @@ export class RecordPage {
     constructor(
         navController: NavController,
         appState: AppState,
-        idbAppFS: IdbAppFS,
         webAudioRecord: WebAudioRecordWav
     ) {
         console.log('constructor():RecordPage');
         this.navController = navController;
         this.appState = appState;
-        this.idbAppFS = idbAppFS;
         this.webAudioRecord = webAudioRecord;
         this.recordingInfo = null;
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
@@ -207,21 +198,7 @@ export class RecordPage {
                 // next line is for HTML template refs
                 this.recordingInfo = recordingInfo;
                 // create a new filesystem file with recordingInfo as data
-                this.idbAppFS.createNode(
-                    recordingInfo.fileName,
-                    UNFILED_FOLDER_KEY,
-                    recordingInfo
-                ).subscribe(
-                    (parentChild: ParentChild) => {
-                        // here's where we get the key
-                        recordingInfo.dbKey = parentChild.child[DB_KEY_PATH];
-                        // remember last recording's information
-                        this.appState.set('lastRecordingInfo', recordingInfo);
-                    },
-                    (err1: any) => {
-                        throw new Error(err1);
-                    }
-                );
+                // TODO: replace indexed-db code in this block
             },
             (err2: any) => {
                 throw new Error(err2);

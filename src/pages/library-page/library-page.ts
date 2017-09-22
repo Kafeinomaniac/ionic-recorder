@@ -1,42 +1,24 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import {
+    ActionSheet,
+    ActionSheetController,
     Alert,
     AlertController,
     Content,
-    ItemSliding,
+    Modal,
     ModalController,
     NavController,
     Platform
 } from 'ionic-angular';
-import { alertAndDo } from '../../models/utils/alerts';
-import { AppState } from '../../services/app-state/app-state';
-import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { Component, ViewChild } from '@angular/core';
-import {
-    DB_KEY_PATH,
-    KeyDict,
-    ParentChild,
-    ROOT_FOLDER_KEY,
-    TreeNode
-} from '../../models/idb/idb-fs';
-import { EditSelectionPage } from '../edit-selection-page/edit-selection-page';
-import {
-    IdbAppFS,
-    UNFILED_FOLDER_KEY
-} from '../../services/idb-app-fs/idb-app-fs';
-import { isPositiveWholeNumber, isUndefined } from '../../models/utils/utils';
-import { MoveToPage, TrackPage } from '../';
 
-export function getFolderPath(folderNode: TreeNode): string {
-    'use strict';
-    const path: string = folderNode.path + '/' + folderNode.name;
-    return (path === '/') ? path : path.slice(1);
-}
+import { AppFS } from '../../services';
+import { ButtonbarButton } from '../../components/';
+import { MoveToPage, SelectionPage } from '../../pages';
 
 /**
- * Page of file/folder interface to all recorded files. AddFolderPage
- * music organizer.
+ * Files/folders music library page.
  * @class LibraryPage
  */
 @Component({
@@ -45,731 +27,430 @@ export function getFolderPath(folderNode: TreeNode): string {
 })
 export class LibraryPage {
     @ViewChild(Content) public content: Content;
-    public folderNode: TreeNode;
     public headerButtons: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
-    private navController: NavController;
+    protected modalController: ModalController;
+    protected navController: NavController;
+    private actionSheetController: ActionSheetController;
     private alertController: AlertController;
-    private modalController: ModalController;
-    private idbAppFS: IdbAppFS;
-    private appState: AppState;
-    private folderItems: KeyDict;
-    private selectedNodes: KeyDict;
+    private changeDetectorRef: ChangeDetectorRef;
+    private appFS: AppFS;
 
     /**
      * @constructor
      * @param {NavController}
      * @param {AlertController}
-     * @param {ModalController}
-     * @param {IdbAppFS}
-     * @param {AppState}
+     * @param {ActionSheetController}
+     * @param {ChangeDetectorRef}
+     * @param {AppFS}
      * @param {Platform}
      */
     constructor(
+        modalController: ModalController,
         navController: NavController,
         alertController: AlertController,
-        modalController: ModalController,
-        idbAppFS: IdbAppFS,
-        appState: AppState,
+        actionSheetController: ActionSheetController,
+        changeDetectorRef: ChangeDetectorRef,
+        appFS: AppFS,
         platform: Platform
     ) {
+
         console.log('constructor():LibraryPage');
+        this.changeDetectorRef = changeDetectorRef;
+        this.actionSheetController = actionSheetController;
+        this.modalController = modalController;
         this.navController = navController;
         this.alertController = alertController;
-        this.modalController = modalController;
-        this.idbAppFS = idbAppFS;
-        this.appState = appState;
-        this.folderNode = null;
-        this.folderItems = {};
-        this.selectedNodes = {};
-
-        const atHome: () => boolean = () => {
-            return this.folderNode &&
-                this.folderNode[DB_KEY_PATH] === ROOT_FOLDER_KEY;
-        };
-
-        this.headerButtons = [{
-            text: 'Select',
-            leftIcon: platform.is('ios') ?
-                'radio-button-off' : 'square-outline',
-            rightIcon: 'md-arrow-dropdown',
-            clickCB: () => {
-                this.onClickSelectButton();
-            }
-        },
-                              {
-                                  text: 'To /',
-                                  leftIcon: 'home',
-                                  clickCB: () => {
-                                      this.onClickHomeButton();
-                                  },
-                                  disabledCB: atHome
-                              },
-                              {
-                                  text: 'To parent',
-                                  leftIcon: 'arrow-up',
-                                  rightIcon: 'folder',
-                                  clickCB: () => {
-                                      this.onClickParentButton();
-                                  },
-                                  disabledCB: atHome
-                              },
-                              {
-                                  text: 'New folder',
-                                  leftIcon: 'add',
-                                  rightIcon: 'folder',
-                                  clickCB: () => {
-                                      this.onClickNewFolder();
-                                  }
-                              }
-                             ];
-
-        this.footerButtons = [{
-            text: 'Info',
-            leftIcon: 'information-circle',
-            clickCB: () => {
-                this.onClickInfoButton();
-            }
-        },
-                              {
-                                  text: 'Move',
-                                  leftIcon: 'share-alt',
-                                  rightIcon: 'folder',
-                                  clickCB: () => {
-                                      this.onClickMoveButton();
-                                  },
-                                  disabledCB: () => {
-                                      return this.moveButtonDisabled();
-                                  }
-                              },
-                              {
-                                  text: 'Delete',
-                                  leftIcon: 'trash',
-                                  clickCB: () => {
-                                      this.onClickDeleteButton();
-                                  },
-                                  disabledCB: () => {
-                                      return this.deleteButtonDisabled();
-                                  }
-                              },
-                              {
-                                  text: 'Share',
-                                  leftIcon: 'md-share',
-                                  clickCB: () => {
-                                      this.onClickShareButton();
-                                  }
-                              }
-                             ];
-    }
-
-    /**
-     * https://webcake.co/page-lifecycle-hooks-in-ionic-2/
-     */
-    public ionViewWillEnter(): void {
-        this.appState.get('selectedNodes').then(
-            (selectedNodes: any) => {
-                this.selectedNodes = selectedNodes;
-                this.appState.get('lastViewedFolderKey')
-                    .then(
-                        (lastViewedFolderKey: any) => {
-                            // swich folders, according to AppState
-                            this.switchFolder(lastViewedFolderKey, false);
-                            console.log(
-                                'LibraryPage:ionViewWillEnter(): ' +
-                                    'lastViewedFolderKey=' +
-                                    lastViewedFolderKey);
-                        });
-            }
-        );
-    }
-
-    /**
-     * Computes a string representation of folder path (tree node path)
-     * @returns {string} folder path, represented as a string
-     */
-    public getPath(): string {
-        return getFolderPath(this.folderNode);
-    }
-
-    /**
-     * Moves items in DB and in UI when move button is clicked
-     */
-    public onClickMoveButton(): void {
-        console.log('onClickMoveButton');
-        // this.modalController.create(MoveToPage).present();
-        this.navController.push(MoveToPage);
-    }
-
-    /**
-     * Moves items in DB and in UI when more button is clicked
-     */
-    public onClickMoreButton(): void {
-        console.log('onClickMoreButton');
-    }
-
-    /**
-     * Used to tell UI the number of currently selected nodes
-     * @returns {number} number of currently selected nodes
-     */
-    public nSelectedNodes(): number {
-        return Object.keys(this.selectedNodes).length;
-    }
-
-    /**
-     * Returns dictionary of nodes selected in current folder
-     * @returns {KeyDict} dictionary of nodes selected here
-     */
-    private selectedNodesHere(): KeyDict {
-        let key: string,
-            i: number,
-            nodeHere: TreeNode,
-            keyDict: KeyDict = {},
-            keys: string[] = Object.keys(this.selectedNodes);
-        for (i = 0; i < keys.length; i++) {
-            key = keys[i];
-            nodeHere = this.folderItems[key];
-            if (nodeHere) {
-                keyDict[key] = nodeHere;
-            }
-        }
-        return keyDict;
-    }
-
-    /**
-     * Delete nodes from  UI and from local DB
-     * @param {KeyDict} dictionary of nodes to delete
-     */
-    private deleteNodes(keyDict: KeyDict): void {
-        let keys: string[] = Object.keys(keyDict),
-            nNodes: number = keys.length;
-        if (!nNodes) {
-            alert('wow no way!');
-        }
-        alertAndDo(
-            this.alertController,
-            'Permanently delete ' + nNodes + ' item' +
-                (nNodes > 1 ? 's?' : '?'),
-            'Ok',
-            () => {
-                console.log('Library::deleteNodes(): deleting ' + nNodes +
-                            ' selected items ...');
-                this.idbAppFS.deleteNodes(keyDict).subscribe(
-                    () => {
-                        let i: number,
-                            bSelectionChanged: boolean = false,
-                            key: string;
-
-                        for (i = 0; i < nNodes; i++) {
-                            key = keys[i];
-                            // remove from this.folderNode.childOrder
-                            this.folderNode.childOrder =
-                                this.folderNode.childOrder.filter(
-                                    (childKey: number) => {
-                                        return childKey.toString() !== key;
-                                    });
-                            // remove from this.folderItems
-                            if (this.folderItems[key]) {
-                                delete this.folderItems[key];
-                            }
-                            // remove from this.selectedNodes
-                            if (this.selectedNodes[key]) {
-                                delete this.selectedNodes[key];
-                                // remember that we've changed selection
-                                bSelectionChanged = true;
-                            }
-                        } // for (i = 0; i < nNodes; i++) {
-                        if (bSelectionChanged) {
-                            this.appState.set(
-                                'selectedNodes',
-                                this.selectedNodes);
-                        }
-                        else {
-                            console.log('SUCCESS DELETING ALL');
-                        }
-                    }
-                );
-            });
-    }
-
-    /**
-     * Checks if selected nodes are only in current folder, if not prompts user
-     * for which nodes s/he wants to delete and proceedes with deletion
-     */
-    private checkIfDeletingInOtherFolders(): void {
-        let nSelectedNodes: number = Object.keys(this.selectedNodes).length,
-            selectedNodesHere: KeyDict =
-            this.selectedNodesHere(),
-            nSelectedNodesHere: number =
-            Object.keys(selectedNodesHere).length,
-            nSelectedNodesNotHere: number =
-            nSelectedNodes - nSelectedNodesHere;
-
-        if (nSelectedNodes === 0) {
-            // for the case of unselecting only Unfiled folder in the alert
-            // above and nothing is left in selected.  otherwise this condition
-            // should never be met.
-            return;
-        }
-
-        if (nSelectedNodesNotHere) {
-            if (nSelectedNodesHere) {
-                alertAndDo(
-                    this.alertController, [
-                        'You have ', nSelectedNodesNotHere,
-                        ' selected item',
-                        nSelectedNodesNotHere > 1 ? 's' : '',
-                        ' outside this folder. Do you want to delete all ',
-                        nSelectedNodes, ' selected item',
-                        nSelectedNodes > 1 ? 's' : '',
-                        ' or only the ', nSelectedNodesHere,
-                        ' item', nSelectedNodesHere > 1 ? 's' : '',
-                        ' here?'
-                    ].join(''),
-                    'Delete all (' + nSelectedNodes + ')',
-                    () => {
-                        console.log('no action');
-                        this.deleteNodes(this.selectedNodes);
-                    },
-                    'Delete only here (' + nSelectedNodesHere + ')',
-                    () => {
-                        console.log('yes action');
-                        this.deleteNodes(selectedNodesHere);
-                    }
-                );
-            }
-            else {
-                // nothing selected in this folder, but stuff selected outside
-                this.deleteNodes(this.selectedNodes);
-            }
-        }
-        else {
-            // all selected nodes are in this folder
-            this.deleteNodes(selectedNodesHere);
-        }
-    }
-
-    /**
-     * Deletes selected nodes when delete button gets clicked
-     */
-    public onClickDeleteButton(): void {
-        if (this.selectedNodes[UNFILED_FOLDER_KEY]) {
-            console.log('onClickDeleteButton()');
-            alertAndDo(
-                this.alertController, [
-                    'The Unfiled folder is selected for deletion, ',
-                    'but the Unfiled folder cannot be deleted. Unselect it ',
-                    'and delete the rest?'
-                ].join(''),
-                'Yes',
-                () => {
-                    delete this.selectedNodes[UNFILED_FOLDER_KEY];
-                    this.checkIfDeletingInOtherFolders();
-                }
-            );
-        }
-        else {
-            this.checkIfDeletingInOtherFolders();
-        }
-    }
-
-    /**
-     */
-    public onClickShareButton(): void {
-        console.log('onClickShareButton()');
-    }
-
-    /**
-     * Initiates sharing selected items when share button gets clicked
-     * @returns {boolean}
-     */
-    public moreButtonDisabled(): boolean {
-        return false;
-    }
-
-    /**
-     * UI callback for sharing the selected items when share button is clicked
-     */
-    public onClickSharebutton(): void {
-        console.log('onClickSharebutton');
-    }
-
-    /**
-     * Determine whether the move button should be disabled in the UI
-     * @returns {boolean}
-     */
-    public moveButtonDisabled(): boolean {
-        return false;
-    }
-
-    /**
-     * Determine whether the delete button should be disabled in the UI
-     * @returns {boolean}
-     */
-    public deleteButtonDisabled(): boolean {
-        // return this.selectedNodes[UNFILED_FOLDER_KEY];
-        return false;
-    }
-
-    /**
-     * Switch to a new folder
-     * @param {number} key of treenode corresponding to folder to switch to
-     * @param {boolean} whether to update app state 'lastFolderViewed' property
-     */
-
-    // switch to folder whose key is 'key'
-    // if updateState is true, update the app state
-    // property 'lastViewedFolderKey'
-    private switchFolder(key: number, updateState: boolean): void {
-        if (!isPositiveWholeNumber(key)) {
-            alert('switchFolder -- invalid key! key=' + key);
-            return;
-        }
-        /*
-          TODO: without the alert we may want the return statement here
-          if (this.folderNode && this.folderNode[DB_KEY_PATH] === key) {
-          // we're already in that folder
-          alert('why switch twice in a row to the same folder?');
-          return;
-          }
-        */
-        // console.log('switchFolder(' + key + ', ' + updateState + ')');
-
-        // for non-root folders, we set this.folderNode here
-        this.idbAppFS.readNode(key).subscribe(
-            (folderNode: TreeNode) => {
-                if (folderNode[DB_KEY_PATH] !== key) {
-                    alert('in readNode: key mismatch');
-                }
-                // we read all child nodes of the folder we're
-                // switching to in order to fill up this.folderItems
-                let newFolderItems: {
-                    [id: string]: TreeNode
-                } = {};
-                this.idbAppFS.readChildNodes(folderNode).subscribe(
-                    (childNodes: TreeNode[]) => {
-                        this.folderItems = {};
-                        // we found all children of the node we're
-                        // traversing to (key)
-                        for (let i in childNodes) {
-                            let childNode: TreeNode = childNodes[i],
-                                childKey: number = childNode[DB_KEY_PATH];
-                            newFolderItems[childKey] = childNode;
-                        } // for
-                        this.folderNode = folderNode;
-                        this.folderItems = newFolderItems;
-                        this.resize();
-                    },
-                    (err: any) => {
-                        alert('in readChildNodes: ' + err);
-                    }
-                ); // readChildNodes().subscribe(
+        this.appFS = appFS;
+        this.headerButtons = [
+            {
+                text: 'Select...',
+                leftIcon: platform.is('ios') ?
+                    'radio-button-off' : 'square-outline',
+                rightIcon: 'md-arrow-dropdown',
+                clickCB: () => { this.onClickSelectButton(); },
+                disabledCB: () => { return this.selectButtonDisabled(); }
             },
-            (error: any) => {
-                alert('in readNode: ' + error);
-            }
-        );
-
-        // update last viewed folder state in DB
-        if (updateState) {
-            this.appState.set('lastViewedFolderKey', key);
-        }
-    }
-
-    /**
-     * Used by UI to determine whether 'node' is selected
-     * @param {TreeNode} node about which we ask if it's selected
-     * @returns {TreeNode} if 'node' is selected, undefined otherwise.
-     */
-    public isSelected(node: TreeNode): boolean {
-        return !isUndefined(this.selectedNodes[node[DB_KEY_PATH]]);
-    }
-
-    private resize(): void {
-        setTimeout(
-            () => {
-                this.content.resize();
+            {
+                text: 'Go home',
+                leftIcon: 'home',
+                clickCB: () => { this.onClickHomeButton(); },
+                disabledCB: () => { return this.atHome(); }
             },
-            20);
+            {
+                text: 'Go to parent',
+                leftIcon: 'arrow-up',
+                rightIcon: 'folder',
+                clickCB: () => { this.onClickParentButton(); },
+                disabledCB: () => { return this.atHome(); }
+            },
+            {
+                text: 'Add...',
+                leftIcon: 'add',
+                clickCB: () => { this.onClickAddButton(); }
+            }
+        ];
+        this.footerButtons = [
+            {
+                text: 'Info',
+                leftIcon: 'information-circle',
+                clickCB: () => { this.onClickInfoButton(); }
+            },
+            {
+                text: 'Move to...',
+                leftIcon: 'share-alt',
+                rightIcon: 'folder',
+                clickCB: () => { this.onClickMoveButton(); },
+                disabledCB: () => { return this.moveButtonDisabled(); }
+            },
+            {
+                text: 'Delete',
+                leftIcon: 'trash',
+                clickCB: () => { this.onClickDeleteButton(); },
+                disabledCB: () => { return this.deleteButtonDisabled(); }
+            },
+            {
+                text: 'Share',
+                leftIcon: 'md-share',
+                clickCB: () => { this.onClickShareButton(); }
+            }
+        ];
     }
 
     public ionViewDidEnter(): void {
-        this.resize();
-    }
-
-    /**
-     * UI calls this when a UI item gets checked
-     * @param {TreeNode} node corresponding to UI item that just got checked
-     */
-    public onClickCheckbox(node: TreeNode): void {
-        console.log('onClickCheckbox');
-
-        const nodeKey: number = node[DB_KEY_PATH],
-              nSelected: number = Object.keys(this.selectedNodes).length,
-              selectedNode: TreeNode = this.selectedNodes[nodeKey];
-
-        if (selectedNode) {
-            // the node is selected, meaning it is checked, uncheck it
-            delete this.selectedNodes[nodeKey];
-            if (nSelected === 1) {
-                // we're about to transition from something selected to nothing
-                // selected, i.e. footer will disappear, resize after delay
-                this.resize();
+        console.log('LibraryPage.ionViewDidEnter()');
+        // refresh appFS directory in case we're entering this
+        // view after a recording and we happen to be at the /Unfiled
+        // folder. NOTE: this is kind of overkill. We could do
+        // the refresh only when in /Unfiled as in:
+        // if (this.appFS.directoryEntry.fullPath === '/Unfiled') {
+        //     this.appFS.refreshDirectory().subscribe(
+        //         () => {
+        //             this.detectChanges();
+        //         }
+        //     );
+        // }
+        // else {
+        //     this.detectChanges();
+        // }
+        this.appFS.refreshDirectory().subscribe(
+            () => {
+                this.detectChanges();
             }
-        }
-        else {
-            // not selected, check it
-            this.selectedNodes[nodeKey] = node;
-            if (nSelected === 0) {
-                // we're about to transition from nothing selected to something
-                // selected, i.e. footer will appear, resize after delay
-                this.resize();
-            }
-        }
-
-        // update state with new list of selected nodes
-        this.appState.set('selectedNodes', this.selectedNodes);
+        );
     }
 
     /**
-     * UI calls this when a list item (name) is clicked
-     */
-    public onClickListItem(node: TreeNode): void {
-        console.log('onClickListItem');
-        const key: number = node[DB_KEY_PATH];
-        // const nodeKey: number = node[DB_KEY_PATH];
-        if (IdbAppFS.isFolderNode(node)) {
-            // it's a folder! switch to it
-            this.switchFolder(key, true);
-        }
-        else {
-
-            // ***TODO*** only send id here, deduce every other piece
-            // of info in the track-page page code
-
-            // console.dir(node);
-            this.navController.push(TrackPage, key);
-        } // if (IdbAppFS.isFolderNode(node)) { .. else { ..
-    }
-
-    /**
-     * UI calls this when the goHome button is clicked
-     */
-    public onClickHomeButton(): void {
-        console.log('onClickHomeButton()');
-        if (this.folderNode) {
-            this.switchFolder(ROOT_FOLDER_KEY, true);
-        }
-    }
-
-    /**
-     * Initiates select button action when that button is clicked
-     */
-    public onClickSelectedBadge(): void {
-        console.log('onClickSelectedBadge()');
-        this.navController.push(EditSelectionPage);
-    }
-
-    /**
-     * Initiates select button action when that button is clicked
+     * UI calls this when the 'Select...' button is clicked.
      */
     public onClickSelectButton(): void {
         console.log('onClickSelectButton()');
-        alertAndDo(
-            this.alertController,
-            'Select which, in ' + this.getPath(),
-            'All',
-            () => {
-                console.log('action1 doing it now');
-                this.selectAllInFolder();
-            },
-            'None',
-            () => {
-                console.log('action2 doing it now');
-                this.selectNoneInFolder();
-            });
+
+        let selectAlert: Alert = this.alertController.create();
+        selectAlert.setTitle('Select which, in ' + this.appFS.getPath());
+        selectAlert.addButton({
+            text: 'All',
+            handler: () => {
+                this.appFS.selectAllOrNone(true);
+            }
+        });
+        selectAlert.addButton({
+            text: 'None',
+            handler: () => {
+                this.appFS.selectAllOrNone(false);
+            }
+        });
+
+        selectAlert.addButton('Cancel');
+        selectAlert.present();
+
+        console.log('after selectAlert.present();');
+    }
+
+    public selectButtonDisabled(): boolean {
+        // console.log('selectButtonDisabled()');
+        return this.appFS.nEntries() <= 1;
     }
 
     /**
-     * UI calls this when the goToParent button is clicked
+     * UI calls this when the 'Go home' button is clicked.
+     */
+    public onClickHomeButton(): void {
+        console.log('onClickHomeButton()');
+        this.appFS.switchDirectory('/').subscribe(
+            () => {
+                this.detectChanges();
+            }
+        );
+    }
+
+    public atHome(): boolean {
+        // console.log('atHome(): ' + this.appFS.atHome());
+        return this.appFS.atHome();
+    }
+
+    /**
+     * UI calls this when the 'Go to parent' button is clicked.
      */
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
-        if (this.folderNode) {
-            this.switchFolder(this.folderNode.parentKey, true);
-        }
+        const path: string = this.appFS.getPath(),
+              pathParts: string[] = path.split('/').filter(
+                  (str: string) => { return str !== ''; }),
+              parentPath: string = '/' +
+              pathParts.splice(0, pathParts.length - 1).join('/') + '/';
+        this.appFS.switchDirectory(parentPath).subscribe(
+            () => {
+                this.detectChanges();
+            }
+        );
     }
 
     /**
-     * UI calls this when the new folder button is clicked
+     * UI calls this when the 'Add...' button is clicked.
      */
-    public onClickRename(node: TreeNode, item: ItemSliding): void {
-        console.log('onClickNewFolder() - navController: ' +
-                    this.navController);
-        const displayType: string =
-              IdbAppFS.isFolderNode(node) ? 'folder' : 'track';
-        let alert: Alert = this.alertController.create({
-            title: 'Rename ' + displayType + ':' ,
-            // message: 'Enter the folder name',
-            inputs: [{
-                name: 'name',
-                placeholder: node.name
-            }],
+    public onClickAddButton(): void {
+        console.log('onClickAddButton()');
+        let actionSheet: ActionSheet = this.actionSheetController.create({
+            title: 'Create new ... in ' + this.appFS.getPath(),
             buttons: [
                 {
-                    text: 'Cancel',
-                    handler: (data: any) => {
-                        console.log('Cancel clicked in rename alert');
-                        item.close();
+                    text: 'Folder',
+                    icon: 'folder',
+                    handler: () => {
+                        console.log('Add folder clicked.');
+                        this.addFolder();
                     }
                 },
                 {
-                    text: 'Done',
-                    handler: (data: any) => {
-                        console.log('Done clicked in rename alert');
-                        console.log('New name entered: ' + data.name);
-                        node.name = data.name;
-                        this.idbAppFS.updateNode(
-                            node[DB_KEY_PATH],
-                            node
-                        ).subscribe(
-                            () => {
-                                item.close();
-                            },
-                            (err: any) => {
-                                throw Error(err);
-                            }
-                        );
+                    text: 'URL',
+                    icon: 'link',
+                    handler: () => {
+                        console.log('Add URL clicked.');
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    // icon: 'close',
+                    handler: () => {
+                        console.log('Cancel clicked.');
                     }
                 }
             ]
         });
-        alert.present();
+        actionSheet.present();
     }
 
     /**
-     * UI calls this when the new folder button is clicked
-     */
-    public onClickNewFolder(): void {
-        console.log('onClickNewFolder() - navController: ' +
-                    this.navController);
-
-        let alert: Alert = this.alertController.create({
-            title: 'New Folder',
-            // message: 'Enter the folder name',
-            inputs: [{
-                name: 'folderName',
-                placeholder: 'Folder name ...'
-            }],
-            buttons: [{
-                text: 'Cancel',
-                handler: (data: any) => {
-                    console.log('Cancel clicked in new-folder alert');
-                    this.idbAppFS.createNode(
-                        data.folderName,
-                        this.folderNode[DB_KEY_PATH]
-                    );
-                }
-            },
-                      {
-                          text: 'Done',
-                          handler: (data: any) => {
-                              console.log('Done clicked in new-folder alert');
-                              this.idbAppFS.createNode(
-                                  data.folderName,
-                                  this.folderNode[DB_KEY_PATH]
-                              ).subscribe(
-                                  (parentChild: ParentChild) => {
-                                      const childNode: TreeNode =
-                                            parentChild.child,
-                                            parentNode: TreeNode =
-                                            parentChild.parent,
-                                            childNodeKey: number =
-                                            childNode[DB_KEY_PATH];
-                                      console.log('childNode: ' +
-                                                  childNode.name +
-                                                  ', parentNode: ' +
-                                                  parentNode.name);
-                                      // console.dir(childNode);
-                                      // update folder items dictionary
-                                      // of this page
-                                      this.folderItems[childNodeKey] =
-                                          childNode;
-                                      this.folderNode = parentNode;
-                                  }
-                              ); // createFolderNode().subscribe(
-                          }
-                      }
-                     ]
-        });
-        alert.present();
-    }
-
-    /**
-     * UI calls this when the info button (of selected items) clicked
+     * UI calls this when the info button is clicked.
+     * Shows cumulative info on all selected items.
      */
     public onClickInfoButton(): void {
         console.log('onClickInfoButton');
     }
 
     /**
-     * Select all or no items in current folder, depending on 'all; argument
-     * @params {boolean} if true, select all, if false, select none
+     * UI calls this when move button is clicked.
+     * Moves selected items into a folder.
      */
-    private selectAllOrNoneInFolder(selectAll: boolean): void {
-        // go through all folderItems
-        // for each one, ask if it's in selectedNodes
-        // for this to work, we need to make selectedNodes a dictionary
-        let changed: boolean = false,
-            folderItemsKeys: string[] = Object.keys(this.folderItems),
-            i: number,
-            key: string,
-            itemNode: TreeNode,
-            itemKey: number;
-        // loop over folderItems (the current showing folder's items)
-        // because that's where select-all or select-none will apply, i.e.
-        // when we choose select-all, 'all' refers to all items here, not
-        // all items everywhere
-        for (i = 0; i < folderItemsKeys.length; i++) {
-            key = folderItemsKeys[i];
-            itemNode = this.folderItems[key];
-            itemKey = itemNode[DB_KEY_PATH];
+    public onClickMoveButton(): void {
+        console.log('onClickMoveButton');
+        let modal: Modal = this.modalController.create(MoveToPage);
+        modal.present();
+        console.log('after modal.present();');
+    }
 
-            let selectedNode: TreeNode = this.selectedNodes[itemKey];
-            console.log('i: ' + i + ', selected node: ' + selectedNode);
-            if (selectAll && !selectedNode) {
-                // not selected, check it
-                changed = true;
-                this.selectedNodes[itemKey] = itemNode;
-            }
-            else if (!selectAll && selectedNode) {
-                // selected, uncheck it
-                changed = true;
-                delete this.selectedNodes[itemKey];
-            }
+    /**
+     * UI calls this to determine whether to disable move button.
+     * @returns {boolean}
+     */
+    public moveButtonDisabled(): boolean {
+        // if the only thing selected is the unfiled folder
+        // disable delete and move
+        if (this.appFS.nSelected() === 1 &&
+            this.appFS.isPathSelected('/Unfiled/')) {
+            return true;
         }
-        if (changed) {
-            console.log('CHANGED!!!!!!!!!!!!!!!!!!!!! ' +
-                        Object.keys(this.selectedNodes).length);
-            // update state with new list of selected nodes
-            // TODO: handle errors here
-            this.appState.set('selectedNodes', this.selectedNodes);
+        return false;
+    }
 
-            // resize if anything changed
-            this.resize();
+    /**
+     */
+    private confirmAndDeleteSelected(): void {
+        let nSelected: number = this.appFS.nSelected(),
+            itemsStr: string = nSelected.toString() + ' item' +
+            ((nSelected > 1) ? 's' : ''),
+            deleteAlert: Alert = this.alertController.create();
+
+        deleteAlert.setTitle('Sure you want to delete ' + itemsStr + '?');
+
+        deleteAlert.addButton('Cancel');
+
+        deleteAlert.addButton({
+            text: 'Yes',
+            handler: () => {
+                this.appFS.deleteSelected().subscribe(
+                    () => {
+                        this.appFS.switchDirectory(this.appFS.getFullPath(
+                            this.appFS.directoryEntry
+                        )).subscribe(
+                            () => {
+                                this.detectChanges();
+                            }
+                        );
+                    });
+            }
+        });
+
+        deleteAlert.present();
+    }
+
+    /**
+     * UI calls this when delete button is clicked.
+     */
+    public onClickDeleteButton(): void {
+        console.log('onClickDeleteButton()');
+
+        if (this.appFS.isPathSelected('/Unfiled/')) {
+            const deleteAlert: Alert = this.alertController.create();
+            deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
+                                 '\'s selected. Automatically unselect it?');
+            deleteAlert.addButton('Cancel');
+            deleteAlert.addButton({
+                text: 'Yes',
+                handler: () => {
+                    this.appFS.unselectPath('/Unfiled/');
+                    this.confirmAndDeleteSelected();
+                }
+            });
+            deleteAlert.present();
+        }
+        else {
+            this.confirmAndDeleteSelected();
         }
     }
 
     /**
-     * Select all items in current folder
+     * UI calls this to determine whether disable the delete button
+     * @returns {boolean}
      */
-    private selectAllInFolder(): void {
-        this.selectAllOrNoneInFolder(true);
+    public deleteButtonDisabled(): boolean {
+        // if the only thing selected is the unfiled folder
+        // disable delete and move
+        if (this.appFS.nSelected() === 1 &&
+            this.appFS.isPathSelected('/Unfiled/')) {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Get rid of selection on all nodes in current folder
+     * UI calls this when social sharing button is clicked
      */
-    private selectNoneInFolder(): void {
-        this.selectAllOrNoneInFolder(false);
+    public onClickShareButton(): void {
+        console.log('onClickShareButton()');
+    }
+
+    /**
+     * UI calls this when selected badge on top right is clicked
+     */
+    public onClickSelectedBadge(): void {
+        console.log('onClickSelectedBadge()');
+        // only go to edit selections if at least one is selected
+        // this.navController.push(SelectionPage);
+        let modal: Modal = this.modalController.create(SelectionPage);
+        modal.present();
+        console.log('after modal.present();');
+    }
+
+    /**
+     */
+    private detectChanges(): void {
+        console.log('LibraryPage.detectChanges()');
+        setTimeout(
+            () => {
+                this.changeDetectorRef.detectChanges();
+                this.content.resize();
+            },
+            0
+        );
+    }
+
+    /**
+     * UI calls this when the new folder button is clicked
+     */
+    public onClickCheckbox(entry: Entry): void {
+        console.log('onClickCheckbox()');
+        this.appFS.toggleSelectEntry(entry);
+        this.detectChanges();
+    }
+
+    /**
+     * UI calls this when the new folder button is clicked
+     */
+    public onClickEntry(entry: Entry): void {
+        console.log('onClickEntry()');
+        if (entry.isDirectory) {
+            this.appFS.switchDirectory(this.appFS.getFullPath(entry))
+                .subscribe(
+                    () => {
+                        this.detectChanges();
+                    }
+                );
+        }
+    }
+
+    /**
+     * UI calls this when the new folder button is clicked
+     */
+    public addFolder(): void {
+        let parentPath: string = this.appFS.getPath(),
+            newFolderAlert: Alert = this.alertController.create({
+                title: 'Create a new folder in ' + parentPath,
+                inputs: [{
+                    name: 'folderName',
+                    placeholder: 'Enter folder name...'
+                }],
+                buttons: [
+                    {
+                        text: 'Cancel',
+                        role: 'cancel',
+                        handler: () => {
+                            console.log('Cancel clicked in new-folder alert');
+                        }
+                    },
+                    {
+                        text: 'Done',
+                        handler: (data: any) => {
+                            let fullPath: string = parentPath + data.folderName;
+                            if (!fullPath.length) {
+                                // this code should never be reached
+                                alert('how did we reach this code?');
+                                return;
+                            }
+                            if (fullPath[fullPath.length - 1] !== '/') {
+                                // last char isn't a slash, add a
+                                // slash at the end
+                                fullPath += '/';
+                            }
+                            // create the folder via getPathEntry()
+                            this.appFS.createDirectory(fullPath).subscribe(
+                                (directoryEntry: DirectoryEntry) => {
+                                    // re-read parent
+                                    // to load in new info
+                                    this.appFS.switchDirectory(parentPath)
+                                        .subscribe(
+                                            () => {
+                                                this.detectChanges();
+                                            }
+                                        );
+                                }
+                            ); // appFS.getPathEntry(fullPath, true).subscribe(
+                        } // handler: (data: any) => {
+                    }
+                ] // buttons: [
+            }); // newFolderAlert: Alert = this.alertController.create({
+        newFolderAlert.present();
     }
 }

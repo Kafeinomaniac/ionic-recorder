@@ -2,11 +2,11 @@
 
 $content-text-color: color($colors, almost-dark);
 
-#tabpanel-t0-2 library-page {
+#tabpanel-t0-3 library-page {
     ion-toolbar p {
         margin-top: 0.1em;
         margin-bottom: 0.5em;
-        color: color($colors, primary, base);
+        // color: color($colors, primary, base);
     }
     // control appearance of the text that says a folder is empty
     ion-content ion-list {
@@ -23,13 +23,15 @@ $content-text-color: color($colors, almost-dark);
             }
             ion-label.button span.button-inner {
                 color: $content-text-color;
-                // text-transform: : none; is needed to remove uppercase transform
+                // text-transform: : none;
+                // is needed to remove uppercase transform
                 text-transform: none;
                 // justify-content: unset is needed for label
-                // text to not be centered and go to the left
+                // text to not be centered; now it is left justified
                 justify-content: unset;
                 ion-icon {
-                    font-size: 1.4em;
+                    font-size: 1.8em;
+                    min-width: .9em;
                 }
             }
         }

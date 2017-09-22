@@ -7,8 +7,6 @@ import {
     LibraryPage,
     LoadingPage,
     MoveToPage,
-    MoveTo2Page,
-    OrganizerPage,
     RecordPage,
     SettingsPage,
     TrackPage
@@ -19,8 +17,6 @@ import { AudioPlay } from '../components/audio-player/audio-player';
 import { BrowserModule } from '@angular/platform-browser';
 import { ButtonBar } from '../components/button-bar/button-bar';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { IdbAppData } from '../services/idb-app-data/idb-app-data';
-import { IdbAppFS } from '../services/idb-app-fs/idb-app-fs';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { IonicRecorderApp } from './app.component';
 import { IonicStorageModule } from '@ionic/storage';
@@ -36,11 +32,10 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         AboutPage,
         LibraryPage,
         MoveToPage,
-        MoveTo2Page,
+        MoveToPage,
         EditSelectionPage,
         SelectionPage,
         LoadingPage,
-        OrganizerPage,
         RecordPage,
         SettingsPage,
         TrackPage,
@@ -60,11 +55,9 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         AboutPage,
         LibraryPage,
         MoveToPage,
-        MoveTo2Page,
         EditSelectionPage,
         SelectionPage,
         LoadingPage,
-        OrganizerPage,
         RecordPage,
         SettingsPage,
         TrackPage
@@ -73,8 +66,6 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         SplashScreen,
         StatusBar,
         { provide: ErrorHandler, useClass: IonicErrorHandler },
-        IdbAppData,
-        IdbAppFS,
         AppState,
         AppFS,
         MasterClock
