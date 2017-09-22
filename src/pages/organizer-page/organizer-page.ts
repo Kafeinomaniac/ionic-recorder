@@ -119,6 +119,20 @@ export class OrganizerPage {
 
     public ionViewDidEnter(): void {
         console.log('OrganizerPage.ionViewDidEnter()');
+        // refresh appFS directory in case we're entering this
+        // view after a recording and we happen to be at the /Unfiled
+        // folder. NOTE: this is kind of overkill. We could do 
+        // the refresh only when in /Unfiled as in:
+        // if (this.appFS.directoryEntry.fullPath === '/Unfiled') {
+        //     this.appFS.refreshDirectory().subscribe(
+        //         () => {
+        //             this.detectChanges();
+        //         }
+        //     );
+        // }
+        // else {
+        //     this.detectChanges();
+        // }
         this.appFS.refreshDirectory().subscribe(
             () => {
                 this.detectChanges();

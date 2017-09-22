@@ -7,20 +7,23 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
-* Get rid of Idb (archive it)!  Steps:
-  1) add app-fs:
-     - addDataToWavFile(fileName, Int16Array, bCreate)
-       such that:
-       - bCreate == true adds a header and creates the file
-       - bCreate == false appends to existing file, also modifies header
-       For now, put addDataToWavFile() in app-fs.ts
-  2) use addDataToWavFile() in the record code to create your audio wav
-     file
-  3) now we need to verify that the wav file written in organizer is the same
-     as the wav file written in library. If it's the same, we can get rid of
-     the library code. If it's not the same it may be a lot more to investigate
-     why. Figure it out. Fix bugs till it's the same. Only then get rid of
-     library page and related code.
+* save file being recorded by using creation date - the time at which
+  you clicked 'record' - as the filename
+* implement a limited memory player: chunked player, using slice()
+  as described here:
+      https://www.html5rocks.com/en/tutorials/file/dndfiles/
+  you'll need to schedule via web-audio api and for that look
+  and how you did it previously with multi-files
+* get rid of previous chunked player
+* before refactoring, you just need to rewrite player-wav.ts
+* get rid of idb uses
+* refactor all else
+* add tests
+
+* redo the append in a smarter way via seek & write operations, it's
+* that easy. so do a special wav append where you seek first to 0,
+* which is where you'll be anyway so you do not need to seek there at all,
+* just start by rewriting the header there, then 
 
 * app-state.spec.fs
 * app-fs.spec.fs
