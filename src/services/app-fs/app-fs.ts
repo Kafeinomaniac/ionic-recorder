@@ -201,13 +201,22 @@ export class AppFS {
 
     public refreshDirectory(): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
-            this.switchDirectory(this.directoryEntry.fullPath).subscribe(
+            this.whenReady().subscribe(
                 () => {
-                    observer.next();
-                    observer.complete();
+                    this.switchDirectory(
+                        this.directoryEntry.fullPath
+                    ).subscribe(
+                        () => {
+                            observer.next();
+                            observer.complete();
+                        },
+                        (err1: any) => {
+                            observer.error(err1);
+                        }
+                    );
                 },
-                (err: any) => {
-                    observer.error(err);
+                (err2: any) => {
+                    observer.error(err2);
                 }
             );
         });

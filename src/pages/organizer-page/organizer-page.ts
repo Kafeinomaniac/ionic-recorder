@@ -119,13 +119,9 @@ export class OrganizerPage {
 
     public ionViewDidEnter(): void {
         console.log('OrganizerPage.ionViewDidEnter()');
-        this.appFS.whenReady().subscribe(
+        this.appFS.refreshDirectory().subscribe(
             () => {
-                this.appFS.refreshDirectory().subscribe(
-                    () => {
-                        this.detectChanges();
-                    }
-                );
+                this.detectChanges();
             }
         );
     }
