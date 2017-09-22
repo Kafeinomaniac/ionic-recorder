@@ -10,7 +10,7 @@ const WAIT_MSEC: number = 1,
 let storage: Storage = new Storage({}),
     appFS: AppFS = new AppFS(storage);
 
-describe('When AppFS is ready ...', () => {
+describe('services/app-fs', () => {
     it('AppFS instance is not falsy', (done) => {
         setTimeout(
             () => {
@@ -51,7 +51,7 @@ describe('When AppFS is ready ...', () => {
                 for (i = 0; i < dataLength; i++) {
                     data[i] = i + 11;
                 }
-                appFS.appendToWavFile('test.wav', data, 10).subscribe(
+                appFS.appendToWavFile('test.wav', data).subscribe(
                     () => {
                         done();
                     }

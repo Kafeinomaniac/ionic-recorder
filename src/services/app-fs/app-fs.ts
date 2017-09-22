@@ -22,6 +22,7 @@ export class AppFS {
     public selectedPaths: {[path: string]: number};
     private fileSystem: FileSystem;
     private storage: Storage;
+    private nWavFileSamples: number;
 
     /**
      * @constructor
@@ -34,6 +35,7 @@ export class AppFS {
         this.fileSystem = null;
         this.directoryEntry = null;
         this.selectedPaths = {};
+        this.nWavFileSamples = 0;
         // get the filesystem and remember it
         FS.getFileSystem(true, REQUEST_SIZE).subscribe(
             (fileSystem: FileSystem) => {
@@ -458,6 +460,7 @@ export class AppFS {
         wavData: Int16Array
     ): Observable<void> {
         console.log('AppFS.createWavFile(' + path + ')');
+        this.nWavFileSamples = 0;
         let source: Observable<void> = Observable.create((observer) => {
             const nSamples: number = wavData.length,
                   headerView: DataView = makeWavBlobHeaderView(
@@ -470,6 +473,7 @@ export class AppFS {
                   );
             FS.writeToFile(this.fileSystem, path, blob).subscribe(
                 () => {
+                    this.nWavFileSamples += wavData.length;
                     observer.next();
                     observer.complete();
                 },
@@ -483,8 +487,7 @@ export class AppFS {
 
     public appendToWavFile(
         path: string,
-        wavData: Int16Array,
-        nSamplesSoFar: number
+        wavData: Int16Array
     ): Observable<void> {
         console.log('AppFS.addDataToWavFile(' + path + ')');
         let source: Observable<void> = Observable.create((observer) => {
@@ -492,7 +495,7 @@ export class AppFS {
             // of subchunk2size and chunkSize
             let fileSystem: FileSystem = this.fileSystem,
                 nNewSamples: number = wavData.length,
-                nSamples: number = nSamplesSoFar + nNewSamples,
+                nSamples: number = this.nWavFileSamples + nNewSamples,
                 subchunk2size: number = 2 * nSamples,
                 chunkSize: number = 36 + subchunk2size,
                 view: DataView = new DataView(new ArrayBuffer(4)),
@@ -518,6 +521,7 @@ export class AppFS {
                             );
                             FS.appendToFile(fileSystem, path, blob).subscribe(
                                 () => {
+                                    this.nWavFileSamples += wavData.length;
                                     observer.next();
                                     observer.complete();
                                 },
