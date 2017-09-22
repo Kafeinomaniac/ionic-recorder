@@ -199,6 +199,21 @@ export class AppFS {
         return source;
     }
 
+    public refreshDirectory(): Observable<void> {
+        let source: Observable<void> = Observable.create((observer) => {
+            this.switchDirectory(this.directoryEntry.fullPath).subscribe(
+                () => {
+                    observer.next();
+                    observer.complete();
+                },
+                (err: any) => {
+                    observer.error(err);
+                }
+            );
+        });
+        return source;
+    }
+
     /**
      * Wait until file system is ready for use, to emit observable.
      * @returns {Observable<FileSystem>} Observable that emits the file
