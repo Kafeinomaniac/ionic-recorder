@@ -244,6 +244,8 @@ export class FS {
         seekOffset: number = 0,
         bCreate: boolean = true
     ): Observable<void> {
+        console.log('FS.writeToFile(fs, ' + path +
+                    ', bCreate=' + bCreate + ')');
         let src: Observable<void> = Observable.create((observer) => {
             fs.root.getFile(
                 path,

@@ -4,6 +4,9 @@ import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { FS } from '../../models';
+// next two are for addDataToWavFile():
+import { AUDIO_CONTEXT } from '../../services/web-audio/common';
+import { makeWavBlobHeaderView } from '../../models/utils/wav';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 50;
@@ -450,40 +453,88 @@ export class AppFS {
         return source;
     }
 
-    public addDataToWavFile(
+    public createWavFile(
+        path: string,
+        wavData: Int16Array
+    ): Observable<void> {
+        console.log('AppFS.createWavFile(' + path + ')');
+        let source: Observable<void> = Observable.create((observer) => {
+            const nSamples: number = wavData.length,
+                  headerView: DataView = makeWavBlobHeaderView(
+                      nSamples,
+                      AUDIO_CONTEXT.sampleRate
+                  ),
+                  blob: Blob = new Blob(
+                      [ headerView, wavData ],
+                      { type: 'audio/wav' }
+                  );
+            FS.writeToFile(this.fileSystem, path, blob).subscribe(
+                () => {
+                    observer.next();
+                    observer.complete();
+                },
+                (err1: any) => {
+                    observer.error(err1);
+                }
+            );
+        });
+        return source;
+    }
+
+    public appendToWavFile(
         path: string,
         wavData: Int16Array,
-        bCreate: boolean = true
+        nSamplesSoFar: number
     ): Observable<void> {
+        console.log('AppFS.addDataToWavFile(' + path + ')');
         let source: Observable<void> = Observable.create((observer) => {
-            if (bCreate) {
-                console.log('creating wav file...');
-                /*
-                const dataLength = wavData.length,
-                      headerView = makeWavBlobHeaderView(
-                          dataLength,
-                          sampleRate
-                      ),
-                      
-                blob = new Blob(
-                    [
-                );
-                */
-                let blob: Blob = new Blob();
-                FS.writeToFile(this.fileSystem, path, blob).subscribe(
-                    () => {
-                        observer.next();
-                        observer.complete();
-                    },
-                    (err1: any) => {
-                        observer.error(err1);
-                    }
-                );
-            } // if (bCreate) { ..
-            else {
-                console.log('appending to wav file...');
-            } // if (bCreate) { .. } else { ..
+            // see http://soundfile.sapp.org/doc/WaveFormat/ for definitions
+            // of subchunk2size and chunkSize
+            let fileSystem: FileSystem = this.fileSystem,
+                nNewSamples: number = wavData.length,
+                nSamples: number = nSamplesSoFar + nNewSamples,
+                subchunk2size: number = 2 * nSamples,
+                chunkSize: number = 36 + subchunk2size,
+                view: DataView = new DataView(new ArrayBuffer(4)),
+                blob: Blob;
 
+            view.setUint32(0, chunkSize, true);
+            blob = new Blob(
+                [ view ],
+                { type: 'application/octet-stream' }
+            );
+            FS.writeToFile(fileSystem, path, blob, 4, false).subscribe(
+                () => {
+                    view.setUint32(0, subchunk2size, true);
+                    blob = new Blob(
+                        [ view ],
+                        { type: 'application/octet-stream' }
+                    );
+                    FS.writeToFile(fileSystem, path, blob, 40, false).subscribe(
+                        () => {
+                            blob = new Blob(
+                                [ wavData ],
+                                { type: 'application/octet-stream' }
+                            );
+                            FS.appendToFile(fileSystem, path, blob).subscribe(
+                                () => {
+                                    observer.next();
+                                    observer.complete();
+                                },
+                                (err1: any) => {
+                                    observer.error('err1 ' + err1);
+                                }
+                            );
+                        },
+                        (err2: any) => {
+                            observer.error('err2 ' + err2);
+                        }
+                    ); // FS.writeToFile(fileSystem, path, blob, 40, false) ..
+                },
+                (err3: any) => {
+                    observer.error('err3 ' + err3);
+                }
+            ); // FS.writeToFile(fileSystem, path, blob, 4, false).subscribe(
         });
         return source;
 

@@ -2,6 +2,7 @@
 
 import { AppFS } from '../../services';
 import { Storage } from '@ionic/storage';
+import { FS } from '../../models';
 
 const WAIT_MSEC: number = 1,
       KEY: string = 'testKey';
@@ -22,5 +23,56 @@ describe('When AppFS is ready ...', () => {
             },
             WAIT_MSEC);
     });
+
+    it('can create test.wav with 10 samples [1-10]', (done) => {
+        setTimeout(
+            () => {
+                let dataLength: number = 10,
+                    data: Int16Array = new Int16Array(dataLength),
+                    i: number;
+                for (i = 0; i < dataLength; i++) {
+                    data[i] = i + 1;
+                }
+                appFS.createWavFile('test.wav', data).subscribe(
+                    () => {
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
+
+    it('can add data (10 samples) to test.wav [11-20]', (done) => {
+        setTimeout(
+            () => {
+                let dataLength: number = 10,
+                    data: Int16Array = new Int16Array(dataLength),
+                    i: number;
+                for (i = 0; i < dataLength; i++) {
+                    data[i] = i + 11;
+                }
+                appFS.appendToWavFile('test.wav', data, 10).subscribe(
+                    () => {
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
+    /*
+    it('can clean up (remove test.wav)', (done) => {
+        setTimeout(
+            () => {
+                appFS.selectPath('test.wav');
+                appFS.deleteSelected().subscribe(
+                    () => {
+                        appFS.clearSelection();
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
+    */
 
 });
