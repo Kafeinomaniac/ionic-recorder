@@ -241,8 +241,8 @@ export class FS {
         fs: FileSystem,
         path: string,
         blob: Blob,
-        seekOffset: number = 0,
-        bCreate: boolean = true
+        seekOffset: number,
+        bCreate: boolean
     ): Observable<void> {
         console.log('FS.writeToFile(fs, ' + path +
                     ', bCreate=' + bCreate + ')');

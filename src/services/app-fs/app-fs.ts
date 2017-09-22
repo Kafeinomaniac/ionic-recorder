@@ -471,7 +471,7 @@ export class AppFS {
                       [ headerView, wavData ],
                       { type: 'audio/wav' }
                   );
-            FS.writeToFile(this.fileSystem, path, blob).subscribe(
+            FS.writeToFile(this.fileSystem, path, blob, 0, true).subscribe(
                 () => {
                     this.nWavFileSamples += wavData.length;
                     observer.next();

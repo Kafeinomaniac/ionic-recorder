@@ -117,7 +117,9 @@ describe('models/filesystem', () => {
         FS.writeToFile(
             FILE_SYSTEM,
             TEST_FILENAME,
-            new Blob([data], { type: 'text/plain' })
+            new Blob([data], { type: 'text/plain' }),
+            0,
+            true
         ).subscribe(() => {
             FS.readFromFile(FILE_SYSTEM, TEST_FILENAME)
                 .subscribe(
@@ -132,12 +134,14 @@ describe('models/filesystem', () => {
         });
     });
 
-    it('can create a file in root w/content B then read it', (done) => {
+    it('can write content B to same file then read it', (done) => {
         const data: string = 'B';
         FS.writeToFile(
             FILE_SYSTEM,
             TEST_FILENAME,
-            new Blob([data], { type: 'text/plain' })
+            new Blob([data], { type: 'text/plain' }),
+            0,
+            false
         ).subscribe(() => {
             FS.readFromFile(FILE_SYSTEM, TEST_FILENAME)
                 .subscribe(

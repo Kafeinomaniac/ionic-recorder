@@ -10,7 +10,7 @@ import { MasterClock } from '../master-clock/master-clock';
 import { MAX, MIN } from '../../models/utils/utils';
 
 import { AppFS } from '../../services';
-import { makeWavBlobHeaderView } from '../../models/utils/wav';
+
 // import { AUDIO_CONTEXT, WAV_MIME_TYPE, RecordingInfo } from './common';
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH
@@ -43,26 +43,27 @@ export class WebAudioRecordWav extends WebAudioRecord {
         this.appFS = appFS;
 
         this.setter = new DoubleBufferSetter(DB_CHUNK1, DB_CHUNK2, () => {
-            const wavBlob: Blob = new Blob(
-                [
-                    makeWavBlobHeaderView(
-                        this.setter.activeBuffer.length,
-                        AUDIO_CONTEXT.sampleRate
-                    ),
-                    this.setter.activeBuffer
-                ],
-                { type: WAV_MIME_TYPE }
-            );
-
-            this.appFS.appendToFile('/Unfiled/test.wav', wavBlob);
-
             this.idb.createChunk(this.setter.activeBuffer).subscribe(
                 (key: number) => {
+
+                    if (this.dbKeys.length === 0) {
+                        this.appFS.createWavFile(
+                            'test.wav',
+                            this.setter.activeBuffer
+                        ).subscribe();
+                    }
+                    else {
+                        this.appFS.appendToWavFile(
+                            'test.wav',
+                            this.setter.activeBuffer
+                        ).subscribe();
+                    }
+
                     // increment the buffers-saved counter
                     this.dbKeys.push(key);
                     console.log('saved chunk: ' + this.dbKeys.length +
-                        ', key: ' + key + 'buffer len: ' +
-                        this.setter.activeBuffer.length);
+                                ', key: ' + key + ', bufferLength: ' +
+                                this.setter.activeBuffer.length);
                 });
         });
 
@@ -86,37 +87,23 @@ export class WebAudioRecordWav extends WebAudioRecord {
             super.stop().subscribe(
                 (recordingInfo: RecordingInfo) => {
                     const lastChunk: Int16Array = this.setter.activeBuffer
-                        .subarray(0, this.setter.bufferIndex);
+                          .subarray(0, this.setter.bufferIndex);
 
                     this.idb.createChunk(lastChunk).subscribe(
                         (key: number) => {
 
-                            const wavBlob: Blob = new Blob(
-                                [
-                                    makeWavBlobHeaderView(
-                                        this.setter.activeBuffer.length,
-                                        AUDIO_CONTEXT.sampleRate
-                                    ),
-                                    this.setter.activeBuffer
-                                ],
-                                { type: WAV_MIME_TYPE }
-                            );
-
-                            this.appFS.appendToFile(
-                                '/Unfiled/test.wav',
-                                wavBlob
-                            ).subscribe(
-                                (fileEntry: FileEntry) => {
-                                    this.appFS.getMetadata(
-                                        '/Unfiled/test.wav'
-                                    ).subscribe(
-                                        (md: Metadata) => {
-                                            console.log('METADATA: ' + md);
-                                            console.dir(md);
-                                        }
-                                    );
-                                }
-                            );
+                            if (this.dbKeys.length === 0) {
+                                this.appFS.createWavFile(
+                                    'test.wav',
+                                    lastChunk
+                                ).subscribe();
+                            }
+                            else {
+                                this.appFS.appendToWavFile(
+                                    'test.wav',
+                                    lastChunk
+                                ).subscribe();
+                            }
 
                             this.dbKeys.push(key);
                             console.log('saved final chunk: ' +

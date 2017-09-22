@@ -1,3 +1,9 @@
+## 0.3.0-alpha
+* File System API (implemented/tested in Chrome) replaces the ol'
+  indexedDB home brewed file system and wav file appended recording
+  solution.
+* Move button works now
+
 ## 0.2.1-alpha
 * Resources for splash and icon regenerated correctly
 * Rename button in sliding item in library view works
@@ -5,7 +11,7 @@
 ## 0.2.0-alpha
 * Jumping to TrackPage from RecordPage after a recording, if desired
 
-# 0.1.0-alpha
+## 0.1.0-alpha
 * Update to ionic-angular 2.0.0
 * We are now making this beta
 
