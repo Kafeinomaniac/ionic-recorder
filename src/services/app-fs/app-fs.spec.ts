@@ -59,7 +59,7 @@ describe('When AppFS is ready ...', () => {
             },
             WAIT_MSEC);
     });
-    /*
+
     it('can clean up (remove test.wav)', (done) => {
         setTimeout(
             () => {
@@ -73,6 +73,5 @@ describe('When AppFS is ready ...', () => {
             },
             WAIT_MSEC);
     });
-    */
 
 });
