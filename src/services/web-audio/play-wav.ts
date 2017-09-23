@@ -3,10 +3,9 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { AUDIO_CONTEXT, WAV_MIME_TYPE, RecordingInfo } from './common';
-import { DB_CHUNK_LENGTH } from './record-wav';
+import { WAV_CHUNK_LENGTH } from './record-wav';
 import { WebAudioPlay } from './play';
 import { isOdd, formatTime } from '../../models/utils/utils';
-import { IdbAppData } from '../idb-app-data/idb-app-data';
 import { MasterClock } from '../master-clock/master-clock';
 import { makeWavBlobHeaderView } from '../../models/utils/wav';
 
@@ -17,10 +16,8 @@ import { makeWavBlobHeaderView } from '../../models/utils/wav';
  */
 @Injectable()
 export class WebAudioPlayWav extends WebAudioPlay {
-    private idb: IdbAppData;
     private recordingInfo: RecordingInfo;
     private chunkDuration: number;
-    private dbStartKey: number;
     private nSamples: number;
     private dbEndKey: number;
     private chunkStartTime: number;
@@ -28,31 +25,12 @@ export class WebAudioPlayWav extends WebAudioPlay {
     private evenKeyFileReader: FileReader;
     // private onEndeds: { [id: string]: number };
 
-    constructor(masterClock: MasterClock, idb: IdbAppData) {
+    constructor(masterClock: MasterClock) {
         super(masterClock);
         console.log('constructor():WebAudioPlayWav');
-        this.idb = idb;
-        if (!this.idb) {
-            throw Error('WebAudioPlayWav:constructor(): db unavailable.');
-        }
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
         // this.onEndeds = {};
-    }
-
-    public setRecordingInfo(recordingInfo: RecordingInfo): void {
-        this.recordingInfo = recordingInfo;
-        this.nSamples = this.recordingInfo.nSamples;
-        this.dbStartKey = this.recordingInfo.dbStartKey;
-        // this is how you set the total duration that will be displayed
-        this.duration =
-            this.nSamples / this.recordingInfo.sampleRate;
-        this.displayTime = formatTime(0, this.duration);
-        this.displayDuration = formatTime(this.duration, this.duration);
-        this.chunkDuration =
-            DB_CHUNK_LENGTH / this.recordingInfo.sampleRate;
-        this.dbEndKey =
-            this.dbStartKey + Math.floor(this.nSamples / DB_CHUNK_LENGTH);
     }
 
     private getFileReader(key: number): FileReader {
@@ -61,6 +39,12 @@ export class WebAudioPlayWav extends WebAudioPlay {
         return isOdd(key) ? this.oddKeyFileReader : this.evenKeyFileReader;
     }
 
+    /**
+     * Returns a callback function for what to do when you finished
+     * loading a chunk via loadAndDecodeChunk(). This callback calls
+     * loadAndDecodeChunk() recursively until we're on the last chunk.
+     * @returns{() => void}
+     */ 
     private getOnEndedCB(key: number): () => void {
         const nextKey: number = key + 2;
         // console.log('getOnEndedCB(' + key + '), scheduling key ' +
@@ -106,10 +90,7 @@ export class WebAudioPlayWav extends WebAudioPlay {
     }
 
     private getChunkWhenTime(key: number): number {
-        if (key > this.dbEndKey) {
-            throw Error('key > dbEndKey');
-        }
-        const deltaKey: number = key - this.dbStartKey;
+        const deltaKey: number = key;
         if (deltaKey === 0) {
             throw Error('Do not schedule the now for later!');
         }
@@ -127,9 +108,8 @@ export class WebAudioPlayWav extends WebAudioPlay {
         // console.log('loadAndDecodeChunk(' + key + ')');
         let obs: Observable<AudioBuffer> = Observable.create((observer) => {
             const fileReader: FileReader = this.getFileReader(key);
-            this.idb.readChunk(key).subscribe(
+            this.readChunk(key).subscribe(
                 (wavArray: Int16Array) => {
-                    // console.log('idb.readChunk(): got chunk ' + key);
 
                     fileReader.onerror = (error) => {
                         console.warn('FileReader error: ' + error);
@@ -154,10 +134,6 @@ export class WebAudioPlayWav extends WebAudioPlay {
                             });
                     };
 
-                    // console.log('READING FILE!');
-                    // fileReader.readAsArrayBuffer(
-                    //     int16ArrayToWavBlob(wavArray)
-                    // );
                     fileReader.readAsArrayBuffer(
                         new Blob(
                             [
@@ -178,29 +154,11 @@ export class WebAudioPlayWav extends WebAudioPlay {
         // this.stop(false);
         console.log('rel time seek .......................');
         this.stop(true);
-        const
-            absoluteSampleToSkipTo: number =
-            Math.floor(relativeTime * this.recordingInfo.nSamples),
-            chunkSampleToSkipTo: number =
-            absoluteSampleToSkipTo % DB_CHUNK_LENGTH,
-            startKey: number =
-            this.recordingInfo.dbStartKey +
-            Math.floor(absoluteSampleToSkipTo / DB_CHUNK_LENGTH),
-            startOffset: number =
-            (startKey - this.recordingInfo.dbStartKey) *
-            this.chunkDuration;
-        this.chunkStartTime =
-            chunkSampleToSkipTo * this.chunkDuration / DB_CHUNK_LENGTH;
-        console.log('relativeTimeSeek(' + relativeTime.toFixed(2) +
-            ') -- duration: ' + this.duration.toFixed(2) + ', ' +
-            'skip-to-sample: ' + absoluteSampleToSkipTo + ', ' +
-            '# samples: ' + this.recordingInfo.nSamples + ', ' +
-            'startKey: ' + startKey + ', ' +
-            'endKey: ' + this.dbEndKey);
-        this.loadAndDecodeChunk(startKey).subscribe(
+
+        this.loadAndDecodeChunk(relativeTime).subscribe(
             (audioBuffer1: AudioBuffer) => {
                 // console.log('loaded and decoded chunk 1 ... ');
-                const playFirstBuffer: () => void = () => {
+                const scheduleFirstBufferPlay: () => void = () => {
                     this.schedulePlay(
                         audioBuffer1,
                         0,
@@ -213,7 +171,7 @@ export class WebAudioPlayWav extends WebAudioPlay {
                     // play/schedule both 1st & 2nd buffers
                     this.loadAndDecodeChunk(startKey + 1).subscribe(
                         (audioBuffer2: AudioBuffer) => {
-                            playFirstBuffer();
+                            scheduleFirstBufferPlay();
                             this.schedulePlay(
                                 audioBuffer2,
                                 // this.startedAt + this.chunkDuration,
@@ -229,8 +187,9 @@ export class WebAudioPlayWav extends WebAudioPlay {
                     playFirstBuffer();
                 }
             }
-        );
-    } // public timeSeek(time: number): void {
+        ); // this.loadAndDecodeChunk(startKey).subscribe(
+        */
+    } // public relativeTimeSeek(relativeTime: number): void {
 
     public stop(stopMonitoring: boolean = true): void {
         super.stop(stopMonitoring);

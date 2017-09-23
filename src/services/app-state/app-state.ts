@@ -2,7 +2,6 @@
 
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { RecordingInfo } from '../web-audio/common';
 
 export interface GainState {
     factor: number;
@@ -12,14 +11,14 @@ export interface GainState {
 interface State {
     lastTabIndex: number;
     lastViewedFolderKey: number;
-    lastRecordingInfo: RecordingInfo;
+    lastRecordingPath: string;
     gain: GainState;
 }
 
 const DEFAULT_STATE: State = {
     lastTabIndex: 1,
     lastViewedFolderKey: 2,
-    lastRecordingInfo: null,
+    lastRecordingPath: '',
     gain: { factor: 1.0, maxFactor: 2.0 }
 };
 

@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { AUDIO_CONTEXT, RecordingInfo } from './common';
+import { AUDIO_CONTEXT } from './common';
 import { MasterClock } from '../master-clock/master-clock';
 import { ABS, formatTime } from '../../models/utils/utils';
 
@@ -58,7 +58,7 @@ interface AudioGainNode extends AudioNode {
  * @class WebAudioRecord
  */
 @Injectable()
-export class WebAudioRecord {
+export abstract class WebAudioRecord {
     private masterClock: MasterClock;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
@@ -66,10 +66,6 @@ export class WebAudioRecord {
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
     private nRecordedSamples: number;
-    // private startedAt: number;
-    // private pausedAt: number;
-
-    protected valueCB: (pcm: number) => any;
 
     public status: RecordStatus;
     public sampleRate: number;
@@ -81,6 +77,8 @@ export class WebAudioRecord {
     public currentTime: string;
     public maxVolumeSinceReset: number;
     public percentPeaksAtMax: string;
+
+    protected abstract valueCB(pcm: number): void;
 
     // this is how we signal
     constructor(masterClock: MasterClock) {
@@ -300,7 +298,8 @@ export class WebAudioRecord {
      */
     public startMonitoring(): void {
         console.log('startMonitoring()');
-        this.stopMonitoring();
+        // first removing anything if there may be noticably kinder on memory
+        this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
         this.masterClock.addFunction(
             RECORDER_CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
@@ -321,7 +320,7 @@ export class WebAudioRecord {
 
                 // update percentPeaksAtMax property
                 this.percentPeaksAtMax =
-                    (100 * this.nPeaksAtMax / this.nPeakMeasurements)
+                    (100.0 * this.nPeaksAtMax / this.nPeakMeasurements)
                     .toFixed(1);
             });
     }
@@ -366,8 +365,6 @@ export class WebAudioRecord {
         this.nRecordedSamples = 0;
         this.isRecording = true;
         this.isInactive = false;
-        // this.startedAt = AUDIO_CONTEXT.currentTime;
-        // this.pausedAt = 0;
     }
 
     /**
@@ -375,7 +372,6 @@ export class WebAudioRecord {
      */
     public pause(): void {
         this.isRecording = false;
-        // this.pausedAt = AUDIO_CONTEXT.currentTime - this.startedAt;
     }
 
     /**
@@ -386,42 +382,19 @@ export class WebAudioRecord {
     }
 
     /**
-     * Reset recording - just like this.stop() but does not  return anything.
+     * Stop recording, reset all for next recording.
      */
-    private reset(): void {
+    protected reset(): void {
         this.isRecording = false;
         this.isInactive = true;
-        // this.startedAt = 0;
-        // this.pausedAt = 0;
-    }
-
-    private getTime(): number {
-        /*
-        if (this.pausedAt) {
-            return this.pausedAt;
-        }
-        if (this.startedAt) {
-            return AUDIO_CONTEXT.currentTime - this.startedAt;
-        }
-        return 0;
-        */
-        return this.isInactive ? 0 : this.nRecordedSamples / this.sampleRate;
     }
 
     /**
-     * Stop recording
-     * @returns {Observable<RecordingInfo>}
+     * Returns recording time, in seconds.
+     * @returns {number}
      */
-    public stop(): Observable<RecordingInfo> {
-        console.log('WebAudioRecord:stop()');
-        this.reset();
-        return Observable.create((observer) => {
-            observer.next({
-                dateCreated: Date.now(),
-                sampleRate: this.sampleRate,
-                nSamples: this.nRecordedSamples
-            });
-            observer.complete();
-        });
+    private getTime(): number {
+        return this.isInactive ? 0 : this.nRecordedSamples / this.sampleRate;
     }
+
 }

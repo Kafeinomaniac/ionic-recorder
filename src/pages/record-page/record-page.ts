@@ -3,7 +3,6 @@
 import { AppState, GainState } from '../../services/app-state/app-state';
 import { Component, ViewChild } from '@angular/core';
 import { Content, NavController } from 'ionic-angular';
-import { RecordingInfo } from '../../services/web-audio/common';
 import { RecordStatus } from '../../services/web-audio/record';
 import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
 import { formatLocalTime, formatTime } from '../../models/utils/utils';
@@ -33,7 +32,6 @@ export class RecordPage {
     public maxGainFactor: number;
     public gainFactor: number;
     public decibels: string;
-    public recordingInfo: RecordingInfo;
 
     // gainRangeSliderValue referenced by template
     public gainRangeSliderValue: number;
@@ -42,6 +40,9 @@ export class RecordPage {
     // private gainSliderLeftIcon: string;
 
     private navController: NavController;
+
+    private lastRecordingPath: string;
+    private lastRecordingDuration: string;
 
     /**
      * @constructor
@@ -55,8 +56,9 @@ export class RecordPage {
         this.navController = navController;
         this.appState = appState;
         this.webAudioRecord = webAudioRecord;
-        this.recordingInfo = null;
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
+        this.lastRecordingPath = '';
+        this.lastRecordingDuration = '';
 
         // initialize with "remembered" gain values
         this.appState.get('gain').then(
@@ -81,14 +83,14 @@ export class RecordPage {
             }
         );
 
-        this.appState.get('lastRecordingInfo').then(
-            (recordingInfo: RecordingInfo) => {
-                console.log('RecordPage:lastRecordingInfo = ' + recordingInfo);
-                if (recordingInfo) {
-                    // we got a recordingInfo for last recording, but it is
-                    // possible that we have deleted the recording, so make
-                    // sure it is there *** TODO *** finish this ...
-                }
+        this.appState.get('lastRecordingPath').then(
+            (path: string) => {
+                this.lastRecordingPath = path;
+                this.appState.get('lastRecordingDuration').then(
+                    (duration: string) => {
+                        this.lastRecordingDuration = duration
+                    }
+                );
             }
         );
     }
@@ -104,7 +106,7 @@ export class RecordPage {
     }
 
     public onResetGain(): void {
-        console.log('onResetGain()');
+        console.log('RecordPage.onResetGain()');
 
         // 0.5 if progress-slider is used instead of ion-range:
         // this.gainRangeSliderValue = 0.5;
@@ -117,6 +119,8 @@ export class RecordPage {
         sliderValue: number,
         updateStorage: boolean = true
     ): void {
+        console.log('RecordPage.onGainChange()');
+
         // this.onGainChange(position);
         const position: number = sliderValue / MAX_GAIN_SLIDER_VALUE;
 
@@ -150,6 +154,8 @@ export class RecordPage {
      * Start/pause recording - template button click callback
      */
     public onClickStartPauseButton(): void {
+        console.log('RecordPage.onClickStartPauseButton()');
+
         // this.currentVolume += Math.abs(Math.random() * 10);
         if (this.webAudioRecord.isRecording) {
             // we're recording (when clicked, so pause recording)
@@ -174,45 +180,25 @@ export class RecordPage {
      * Stop button - template button click callback
      */
     public onClickStopButton(): void {
+        console.log('RecordPage.onClickStopButton()');
+
         this.recordButtonIcon = START_RESUME_ICON;
 
         this.webAudioRecord.stop().subscribe(
-            (recordingInfo: RecordingInfo) => {
-                // update other aspects of the track-page that are
-                // useful to store in db
-                recordingInfo.fileName =
-                    formatLocalTime(recordingInfo.dateCreated);
-                recordingInfo.duration = recordingInfo.nSamples /
-                    recordingInfo.sampleRate;
-                recordingInfo.displayDuration = formatTime(
-                    recordingInfo.duration,
-                    recordingInfo.duration
-                );
-                recordingInfo.displayDateCreated =
-                    formatLocalTime(recordingInfo.dateCreated);
-                recordingInfo.size = recordingInfo.nSamples * 2;
-                recordingInfo.fileSize = recordingInfo.size + 44;
-                recordingInfo.fileName = recordingInfo.displayDateCreated;
-                // new recordings always go into '/Unfiled':
-                recordingInfo.folderPath = '/Unfiiled';
-                // next line is for HTML template refs
-                this.recordingInfo = recordingInfo;
-                // create a new filesystem file with recordingInfo as data
-                // TODO: replace indexed-db code in this block
-            },
-            (err2: any) => {
-                throw new Error(err2);
+            null,
+            (err: any) => {
+                alert(err);
             }
         );
     }
 
     public onPlayLastRecording(): void {
-        console.log('onPlayLastRecording()');
+        console.log('RecordPage.onPlayLastRecording()');
         this.navController.push(TrackPage, this.recordingInfo.dbKey);
     }
 
     public ionViewDidEnter(): void {
-        console.log('RecordPage:ionViewDidEnter()');
+        console.log('RecordPage.ionViewDidEnter()');
         this.webAudioRecord.startMonitoring();
         // if we don't do this.content.resize() here then
         // the volume gauge does not show
@@ -220,7 +206,7 @@ export class RecordPage {
     }
 
     public ionViewDidLeave(): void {
-        console.log('RecordPage:ionViewDidLeave()');
+        console.log('RecordPage.ionViewDidLeave()');
         this.webAudioRecord.stopMonitoring();
     }
 }

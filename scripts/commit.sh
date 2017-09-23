@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/bash
 
 # this is the only way we will commit from now on!
 # it automatically increments version numbers and automatically
