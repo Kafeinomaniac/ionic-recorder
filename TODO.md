@@ -7,6 +7,19 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* refactoring / renaming:
+  * wav.ts - we need to put this somewhere else, together with other wav stuff
+  * write a class, near double-buffer.ts, called double-file-reader.ts, that
+    allows you to alternate file readers among two, every time you call it
+  * utils.ts ---> misc-utils.ts
+  * app-fs.ts ---> app-filesystem.ts
+  * app-state.ts ---> app-storage.ts
+  * filesystem.ts - no need to wrap with a class and make functions static,
+    just export them as functins. that's because the class has no constructor - 
+    it is a totally meaningless useless class
+    - put filesystem.ts under utils
+  
+
 * save file being recorded by using creation date - the time at which
   you clicked 'record' - as the filename
 * implement a limited memory player: chunked player, using slice()

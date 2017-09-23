@@ -57,7 +57,7 @@ export class MasterClock {
                 },
                 CLOCK_INTERVAL_MSEC);
             console.log('MasterClock:start() interval: ' +
-                this.intervalId['data']['handleId']);
+                        this.intervalId['data']['handleId']);
         });
         this.isRunning = true;
     }
@@ -72,7 +72,7 @@ export class MasterClock {
         this.isRunning = false;
         if (this.intervalId) {
             console.log('MasterClock:stop(): clearing interval: ' +
-                this.intervalId['data']['handleId']);
+                        this.intervalId['data']['handleId']);
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
@@ -90,7 +90,7 @@ export class MasterClock {
         }
         this.functions[id] = fun;
         console.log('MasterClock:addFunction(' + id + '), nFunctions: ' +
-            nFunctions);
+                    nFunctions);
     }
 
     /**
@@ -104,6 +104,6 @@ export class MasterClock {
             this.stop();
         }
         console.log('MasterClock:removeFunction(' + id + '), nFunctions: ' +
-            nFunctions);
+                    nFunctions);
     }
 }

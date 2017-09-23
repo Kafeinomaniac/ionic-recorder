@@ -133,6 +133,17 @@ export class WebAudioPlay {
         }
     }
 
+    /**
+     *
+     * @param {AudioBuffer} audioBuffer - the audio buffer we're
+     * scheduling to play. 
+     * @param {number} when - the 'when' argument of 
+     * AudioBufferSourceNode.start().
+     * @param {number} offset - the 'offset' argument of
+     * AudioBufferSourceNode.start().
+     * @param {number} startOffset - 
+     */
+
     public schedulePlay(
         audioBuffer: AudioBuffer,
         when: number = 0,
