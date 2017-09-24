@@ -18,7 +18,8 @@ anything written here, unless you wrote it.
     just export them as functins. that's because the class has no constructor - 
     it is a totally meaningless useless class
     - put filesystem.ts under utils
-  
+  * play-wav.ts ---> wav-player.ts
+  * play.ts ---> player.ts
 
 * save file being recorded by using creation date - the time at which
   you clicked 'record' - as the filename
