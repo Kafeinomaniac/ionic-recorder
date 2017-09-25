@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { AUDIO_CONTEXT } from './common';
+import { AUDIO_CONTEXT, SAMPLE_TEXT } from './common';
 import { MasterClock } from '../master-clock/master-clock';
 import { ABS, formatTime } from '../../models/utils/utils';
 
@@ -132,8 +132,7 @@ export abstract class WebAudioRecord {
      * Initialize audio, get it ready to record
      */
     private initAudio(): void {
-        this.sampleRate = AUDIO_CONTEXT.sampleRate;
-        console.log('SAMPLE RATE: ' + this.sampleRate);
+        console.log('SAMPLE RATE: ' + SAMPLE_RATE);
 
         const getUserMediaOptions: Object = {
             video: false,
@@ -394,7 +393,7 @@ export abstract class WebAudioRecord {
      * @returns {number}
      */
     private getTime(): number {
-        return this.isInactive ? 0 : this.nRecordedSamples / this.sampleRate;
+        return this.isInactive ? 0 : this.nRecordedSamples / SAMPLE_RATE;
     }
 
 }

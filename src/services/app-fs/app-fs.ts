@@ -102,22 +102,37 @@ export class AppFS {
         ); // FS.getFileSystem(true, REQUEST_SIZE).subscribe(
     } // constructor() {
 
+    /**
+     *
+     */
     public getMetadata(fullPath: string): Observable<Metadata> {
         return FS.getMetadata(this.fileSystem, fullPath);
     }
 
+    /**
+     *
+     */
     public appendToFile(fullPath: string, blob: Blob): Observable<FileEntry> {
         return FS.appendToFile(this.fileSystem, fullPath, blob);
     }
 
+    /**
+     *
+     */
     public getPath(): string {
         return this.getFullPath(this.directoryEntry);
     }
 
+    /**
+     *
+     */
     public getSelectedPathsArray(): string[] {
         return Object.keys(this.selectedPaths);
     }
 
+    /**
+     *
+     */
     public clearSelection(): void {
         for (let key in this.selectedPaths) {
             delete this.selectedPaths[key];
@@ -150,6 +165,9 @@ export class AppFS {
         return source;
     }
 
+    /**
+     *
+     */
     public getSelectedEntries(): Observable<Entry[]> {
         console.log('AppFS.getSelectedEntries()');
         let source: Observable<Entry[]> = Observable.create((observer) => {
@@ -177,6 +195,9 @@ export class AppFS {
         return source;
     }
 
+    /**
+     *
+     */
     public createDirectory(path: string): Observable<DirectoryEntry> {
         console.log('AppFS.createDirectory(' + path + ')');
         let source: Observable<DirectoryEntry> =
@@ -199,6 +220,9 @@ export class AppFS {
         return source;
     }
 
+    /**
+     *
+     */
     public refreshDirectory(): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
@@ -294,6 +318,9 @@ export class AppFS {
         return this.isPathSelected(this.getFullPath(entry));
     }
 
+    /**
+     *
+     */
     public selectPath(path: string): void {
         console.log('AppFS.selectPath(' + path + ')');
         const orderIndex: number = this.nSelected();
@@ -308,23 +335,35 @@ export class AppFS {
         this.selectPath(this.getFullPath(entry));
     }
 
+    /**
+     *
+     */
     public atHome(): boolean {
         // console.log('AppFS.atHome(): ' +
         //             (this.directoryEntry.fullPath === '/'));
         return this.directoryEntry.fullPath === '/';
     }
 
+    /**
+     *
+     */
     public nEntries(): number {
         // console.log('AppFS.nEntries(): ' + this.entries.length);
         return this.entries.length;
     }
 
+    /**
+     *
+     */
     public nSelected(): number {
         // console.log('AppFS.nSelected(isReady:' + this.isReady +
         //             '): ' + Object.keys(this.selectedPaths).length);
         return Object.keys(this.selectedPaths).length;
     }
 
+    /**
+     *
+     */
     public unselectPath(path: string): void {
         console.log('AppFS.unselectPath(' + path + ')');
         delete this.selectedPaths[path];
@@ -479,6 +518,9 @@ export class AppFS {
         return source;
     }
 
+    /**
+     *
+     */
     public createWavFile(
         path: string,
         wavData: Int16Array
@@ -509,6 +551,9 @@ export class AppFS {
         return source;
     }
 
+    /**
+     *
+     */
     public appendToWavFile(
         path: string,
         wavData: Int16Array

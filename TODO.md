@@ -20,6 +20,8 @@ anything written here, unless you wrote it.
     - put filesystem.ts under utils
   * play-wav.ts ---> wav-player.ts
   * play.ts ---> player.ts
+  * record.ts ---> recorder.ts
+  * record-wav.ts ---> wav-recorder.ts
 
 * save file being recorded by using creation date - the time at which
   you clicked 'record' - as the filename

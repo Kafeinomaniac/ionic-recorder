@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-/** @constant {AudioContext} */
+/** @constant {AudioContext} AUDIO_CONTEXT */
 export const AUDIO_CONTEXT: AudioContext =
     ((): AudioContext => {
         let context: AudioContext = null;
@@ -14,3 +14,6 @@ export const AUDIO_CONTEXT: AudioContext =
         }
         return context;
     })();
+
+/** @constant {number} SAMPLE_RATE */
+export const SAMPLE_RATE: number = AUDIO_CONTEXT.sampleRate;

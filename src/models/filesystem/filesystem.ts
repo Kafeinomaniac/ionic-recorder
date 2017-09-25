@@ -1,7 +1,9 @@
 import { Observable } from 'rxjs/Rx';
 
 export class FS {
-
+    /**
+     *
+     */
     public static getEntriesFromPaths(
         fileSystem: FileSystem,
         paths: string[]
@@ -29,6 +31,9 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static deleteEntries(
         fileSystem: FileSystem,
         paths: string[]
@@ -60,6 +65,9 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static moveEntries(
         fileSystem: FileSystem,
         paths: string[],
@@ -92,6 +100,9 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static moveEntry(
         entry: Entry,
         parent: DirectoryEntry
@@ -111,6 +122,9 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static deleteEntry(entry: Entry): Observable<void> {
         console.log('FS.deleteEntry(' + entry.fullPath + ')');
         let src: Observable<void> = Observable.create((observer) => {
@@ -146,6 +160,9 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static getPathEntry(
         fileSystem: FileSystem,
         path: string,
@@ -194,6 +211,9 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static getFileSystem(
         bPersistent: boolean = true,
         requestSize: number
@@ -237,6 +257,14 @@ export class FS {
         return src;
     }
 
+    /**
+     * Write data into a file, starting at a particular location.
+     * @param {string} path - the file to write to.
+     * @param {Blob} blob - the data to write.
+     * @param {number} seekOffset - the location (byte) to start writing from.
+     * @param {boolean} bCreate - whether to create the file first or not.
+     * @returns {Observable<void>}
+     */
     public static writeToFile(
         fs: FileSystem,
         path: string,
@@ -284,6 +312,9 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static appendToFile(
         fs: FileSystem,
         path: string,
@@ -328,6 +359,9 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static getMetadata(
         fs: FileSystem,
         path: string
@@ -360,11 +394,15 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static readFromFile(
         fs: FileSystem,
-        path: string
+        path: string,
+        startByte: number = undefined,
+        endByte: number = undefined
     ): Observable<any> {
-        console.log('FS.readFromFile(fs, ' + path + ')');
         let src: Observable<any> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
@@ -386,8 +424,21 @@ export class FS {
                                             err1);
                                 observer.error(err1);
                             };
-                            // fileReader.readAsArrayBuffer(file);
-                            fileReader.readAsBinaryString(file);
+
+                            if (startByte || endByte) {
+                                // >=1 of startByte nor endByte were specified,
+                                // read from startByte to endByte
+                                // this is where we call slice()
+                                const start: number = startByte || 0,
+                                      end: number = endByte || file.size,
+                                      blob: Blob = file.slice(start, end);
+                                fileReader.readAsBinaryString(blob);
+                            }
+                            else {
+                                // neither startByte nor endByte were specified,
+                                // read entire file
+                                fileReader.readAsBinaryString(file);
+                            }
                         },
                         (err2: any) => {
                             console.log('FS.readFromFile() failed err2: ' +
@@ -401,10 +452,14 @@ export class FS {
                     observer.error(err3);
                 }
             ); // fs.root.getFile(
+
         });
         return src;
     }
 
+    /**
+     *
+     */
     public static createDirectory(
         parentDirectoryEntry: DirectoryEntry,
         name: string
@@ -427,6 +482,9 @@ export class FS {
         return src;
     }
 
+    /**
+     *
+     */
     public static readDirectoryEntries(
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {

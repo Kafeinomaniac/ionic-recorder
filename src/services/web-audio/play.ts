@@ -134,14 +134,20 @@ export class WebAudioPlay {
     }
 
     /**
-     *
-     * @param {AudioBuffer} audioBuffer - the audio buffer we're
+     * Schedule the playback of a chunk of audio buffer data.
+     * @param {AudioBuffer} audioBuffer - the audio buffer data we're
      * scheduling to play. 
-     * @param {number} when - the 'when' argument of 
-     * AudioBufferSourceNode.start().
+     * @param {number} when - the 'when' (first) argument of 
+     * AudioBufferSourceNode.start(). Units: seconds. Designates when to
+     * start playing, a value of 0 meaning start playing immediately.
+
      * @param {number} offset - the 'offset' argument of
-     * AudioBufferSourceNode.start().
-     * @param {number} startOffset - 
+     * AudioBufferSourceNode.start(). Offset means: how far from the
+     * beginning playing will start. Units: seconds. This offset is
+     * the offset from chunk start.
+
+     * @param {number} startOffset - distance from the beginning
+     * of the entire track (not just this chunk) to this chunk starting point 
      */
 
     public schedulePlay(
@@ -183,8 +189,10 @@ export class WebAudioPlay {
             this.startedAt = AUDIO_CONTEXT.currentTime - this.startedAtOffset;
 
             console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
-                ', stopping at: ' + (this.startedAt + this.startedAtOffset +
-                    this.audioBuffer.duration).toFixed(2));
+                        ', stopping at: ' + (this.startedAt +
+                                             this.startedAtOffset +
+                                             this.audioBuffer.duration)
+                        .toFixed(2));
 
             sourceNode.stop(this.startedAt + this.startedAtOffset +
                 this.audioBuffer.duration);

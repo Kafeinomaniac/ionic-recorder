@@ -2,7 +2,7 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-import { AUDIO_CONTEXT, WAV_MIME_TYPE } from './common';
+import { AUDIO_CONTEXT, SAMPLE_RATE, WAV_MIME_TYPE } from './common';
 import { WAV_CHUNK_LENGTH } from './record-wav';
 import { WebAudioPlay } from './play';
 import { isOdd, formatTime } from '../../models/utils/utils';
@@ -10,7 +10,7 @@ import { MasterClock } from '../master-clock/master-clock';
 import { makeWavBlobHeaderView } from '../../models/utils/wav';
 import { AppFS } from '../../services';
 
-const AUDIO_BUFFER_SIZE: number = 128000.0;
+const AUDIO_BUFFER_SAMPLES: number = 128000;
 
 /**
  * Audio Play functions based on WebAudio, originally based on code
@@ -33,14 +33,22 @@ export class WebAudioWavPlayer extends WebAudioPlayer {
 
     public setFileName(fileName: string): void {
         console.log('WebAudioWavPlayer.setFileName()');
+        // load file
+        // grab nSamples
+        // grab sampleRate FROM FILE
+        // compute start byte and end byte (file-size)
     }
 
     public play(): void {
         // we play from this.pausedAt
-        const chunkDuration: number = AUDIO_BUFFER_SIZE / SAMPLE_RATE;
+        // const chunkDuration: number = AUDIO_BUFFER_SIZE / this.sampleRate
+        // N seconds * ( 44100 samples / s) = N * 44100 samples
+        const startByte: nu
 
 
-        const stopRead = -1;
+        const startSample: number = Math.floor(this.pausedAt / SAMPLE_RATE),
+              endSample: number = startSample + AUDIO_BUFFER_SAMPLES;
+
 
 
         this.appFS.loadAndDecodeChunk(this.pausedAt).subscribe(
