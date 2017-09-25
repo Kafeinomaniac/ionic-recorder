@@ -521,6 +521,42 @@ export class AppFS {
     /**
      *
      */
+    public readFromFile(
+        path: string,
+        startSample: number = undefined,
+        endSample: number = undefined
+    ): Observable<AudioBuffer> {
+        const startByte: number = 44 + 2 * startSample,
+              endByte: number = 44 + 2 * endSample;
+        let obs: Observable<AudioBuffer> = Observable.create((observer) => {
+            FS.readFromFile(
+                this.fileSystem,
+                path,
+                startByte,
+                endByte
+            ).subscribe(
+                (data: any) => {
+                    AUDIO_CONTEXT.decodeAudioData(
+                        data,
+                        (audioBuffer: AudioBuffer) => {
+                            observer.next(audioBuffer);
+                            observer.complete(audioBuffer);
+                        },
+                        (err1: any) => {
+                            observer.error(err1);
+                        });
+                },
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            );
+        });
+        return obs;
+    }
+
+    /**
+     *
+     */
     public createWavFile(
         path: string,
         wavData: Int16Array

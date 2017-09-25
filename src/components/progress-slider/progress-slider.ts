@@ -85,11 +85,13 @@ export class ProgressSlider {
             clickRelativeX: number = clientX - range.start;
 
         if (clickRelativeX < 0) {
-            clickRelativeX = 0;
+            // clickRelativeX = 0;
+            return 0.0;
         }
 
         if (clickRelativeX > rangeX) {
-            clickRelativeX = rangeX;
+            // clickRelativeX = rangeX;
+            return 1.0;
         }
         return clickRelativeX / rangeX;
     }

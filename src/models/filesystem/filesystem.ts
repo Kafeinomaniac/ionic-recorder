@@ -14,7 +14,7 @@ export class FS {
                 return FS.getPathEntry(fileSystem, path, false);
             }),
             result: Entry[] = [],
-            src: Observable<Entry[]> = Observable.create((observer) => {
+            obs: Observable<Entry[]> = Observable.create((observer) => {
                 Observable.from(entryObservableArray).concatAll().subscribe(
                     (entry: Entry) => {
                         result.push(entry);
@@ -28,7 +28,7 @@ export class FS {
                     }
                 );
             });
-        return src;
+        return obs;
     }
 
     /**
@@ -43,7 +43,7 @@ export class FS {
             paths.map((path: string) => {
                 return FS.getPathEntry(fileSystem, path, false);
             }),
-            src: Observable<void> = Observable.create((observer) => {
+            obs: Observable<void> = Observable.create((observer) => {
                 Observable.from(entryObservableArray).concatAll().subscribe(
                     (entry: Entry) => {
                         FS.deleteEntry(entry).subscribe(
@@ -62,7 +62,7 @@ export class FS {
                     }
                 );
             });
-        return src;
+        return obs;
     }
 
     /**
@@ -78,7 +78,7 @@ export class FS {
             paths.map((path: string) => {
                 return FS.getPathEntry(fileSystem, path, false);
             }),
-            src: Observable<void> = Observable.create((observer) => {
+            obs: Observable<void> = Observable.create((observer) => {
                 Observable.from(entryObservableArray).concatAll().subscribe(
                     (entry: Entry) => {
                         FS.moveEntry(entry, parent).subscribe(
@@ -97,7 +97,7 @@ export class FS {
                     }
                 );
             });
-        return src;
+        return obs;
     }
 
     /**
@@ -107,7 +107,7 @@ export class FS {
         entry: Entry,
         parent: DirectoryEntry
     ): Observable<void> {
-        let src: Observable<void> = Observable.create((observer) => {
+        let obs: Observable<void> = Observable.create((observer) => {
             const successCB: (ent: Entry) => void = (ent: Entry) => {
                 console.log('FS.moveEntry.successCB()');
                 observer.next();
@@ -119,7 +119,7 @@ export class FS {
             };
             entry.moveTo(parent, entry.name, successCB, errorCB);
         });
-        return src;
+        return obs;
     }
 
     /**
@@ -127,7 +127,7 @@ export class FS {
      */
     public static deleteEntry(entry: Entry): Observable<void> {
         console.log('FS.deleteEntry(' + entry.fullPath + ')');
-        let src: Observable<void> = Observable.create((observer) => {
+        let obs: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
                 entry.remove(
                     () => {
@@ -157,7 +157,7 @@ export class FS {
                 );
             }
         });
-        return src;
+        return obs;
     }
 
     /**
@@ -169,7 +169,7 @@ export class FS {
         bCreate: boolean = false
     ): Observable<Entry> {
         console.log('FS.getPathEntry(fs, ' + path + ', ' + bCreate + ')');
-        let src: Observable<Entry> = Observable.create((observer) => {
+        let obs: Observable<Entry> = Observable.create((observer) => {
             if (path === '/') {
                 observer.next(fileSystem.root);
                 observer.complete();
@@ -208,7 +208,7 @@ export class FS {
                 );
             } // if (path[path.length - 1] === '/') { .. else { ..}
         });
-        return src;
+        return obs;
     }
 
     /**
@@ -223,7 +223,7 @@ export class FS {
         const fsType: number = (
             bPersistent ? window.PERSISTENT :  window.TEMPORARY
         );
-        let src: Observable<FileSystem> = Observable.create((observer) => {
+        let obs: Observable<FileSystem> = Observable.create((observer) => {
             window['webkitStorageInfo'].requestQuota(
                 fsType,
                 requestSize,
@@ -254,7 +254,7 @@ export class FS {
                 }
             );
         });
-        return src;
+        return obs;
     }
 
     /**
@@ -274,7 +274,7 @@ export class FS {
     ): Observable<void> {
         console.log('FS.writeToFile(fs, ' + path +
                     ', bCreate=' + bCreate + ')');
-        let src: Observable<void> = Observable.create((observer) => {
+        let obs: Observable<void> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
                 { create: bCreate },
@@ -309,7 +309,7 @@ export class FS {
                 }
             ); // fs.root.getFile(
         });
-        return src;
+        return obs;
     }
 
     /**
@@ -321,7 +321,7 @@ export class FS {
         blob: Blob
     ): Observable<FileEntry> {
         console.log('FS.appendToFile(fs, ' + path + ', blob)');
-        let src: Observable<FileEntry> = Observable.create((observer) => {
+        let obs: Observable<FileEntry> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
                 { create: false },
@@ -356,7 +356,7 @@ export class FS {
                 }
             ); // fs.root.getFile(
         });
-        return src;
+        return obs;
     }
 
     /**
@@ -367,7 +367,7 @@ export class FS {
         path: string
     ): Observable<Metadata> {
         console.log('FS.getMetadata(fs, ' + path + ')');
-        let src: Observable<Metadata> = Observable.create((observer) => {
+        let obs: Observable<Metadata> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
                 {create: false},
@@ -391,7 +391,7 @@ export class FS {
                 }
             ); // fs.root.getFile(
         });
-        return src;
+        return obs;
     }
 
     /**
@@ -403,7 +403,7 @@ export class FS {
         startByte: number = undefined,
         endByte: number = undefined
     ): Observable<any> {
-        let src: Observable<any> = Observable.create((observer) => {
+        let obs: Observable<any> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
                 {create: false},
@@ -454,7 +454,7 @@ export class FS {
             ); // fs.root.getFile(
 
         });
-        return src;
+        return obs;
     }
 
     /**
@@ -466,7 +466,7 @@ export class FS {
     ): Observable<DirectoryEntry> {
         console.log('FS.createDirectory(' + parentDirectoryEntry.fullPath +
                     ', ' + name + ')');
-        let src: Observable<DirectoryEntry> = Observable.create((observer) => {
+        let obs: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
                 name,
                 { create: true },
@@ -479,7 +479,7 @@ export class FS {
                 }
             );
         });
-        return src;
+        return obs;
     }
 
     /**
@@ -489,7 +489,7 @@ export class FS {
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
         console.log('FS.readDirectoryEntries(' + directoryEntry.name + '/');
-        let src: Observable<Entry[]> = Observable.create((observer) => {
+        let obs: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],
                 readEntries: () => void = () => {
@@ -513,7 +513,7 @@ export class FS {
             // start reading dir entries
             readEntries();
         });
-        return src;
+        return obs;
     }
 
 }

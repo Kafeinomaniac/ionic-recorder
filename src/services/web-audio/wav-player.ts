@@ -2,7 +2,7 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-import { AUDIO_CONTEXT, WAV_MIME_TYPE } from './common';
+import { AUDIO_CONTEXT, SAMPLE_RATE, WAV_MIME_TYPE } from './common';
 import { WAV_CHUNK_LENGTH } from './record-wav';
 import { WebAudioPlay } from './play';
 import { isOdd, formatTime } from '../../models/utils/utils';
@@ -10,7 +10,7 @@ import { MasterClock } from '../master-clock/master-clock';
 import { makeWavBlobHeaderView } from '../../models/utils/wav';
 import { AppFS } from '../../services';
 
-const AUDIO_BUFFER_SIZE: number = 128000.0;
+const AUDIO_BUFFER_SAMPLES: number = 128000;
 
 /**
  * Audio Play functions based on WebAudio, originally based on code
@@ -31,23 +31,43 @@ export class WebAudioWavPlayer extends WebAudioPlayer {
         this.appFS = appFS;
     }
 
-    public setFileName(fileName: string): void {
+    public setSource(filePath: string): void {
         console.log('WebAudioWavPlayer.setFileName()');
+        // load file header for this
+        // set this.filePath
+        // set this.nSamples
+        // grab sampleRate FROM FILE
+        // compute start byte and end byte (file-size)
     }
 
-    public play(): void {
-        // we play from this.pausedAt
-        const chunkDuration: number = AUDIO_BUFFER_SIZE / SAMPLE_RATE;
+    public relativeTimeSeek(relativeTime: number): void {
+        // E.g. say AUDIO_BUFFER_SAMPLES is 10, then:
+        //     0,1,2,..,9,10,..,20,..
+        //     s          es    es
+        //    startSample2: number = endSample1,
+        //    endSample2: number = startSample2 + AUDIO_BUFFER_SAMPLES;
+        let startSample: number = Math.floor(relativeTime * this.nSamples),
+            endSample: number = startSample + AUDIO_BUFFER_SAMPLES;
+        if (endSample > this.nSamples) {
+            endSample = this.nSamples;
+        }
 
-
-        const stopRead = -1;
-
-
-        this.appFS.loadAndDecodeChunk(this.pausedAt).subscribe(
+        this.appFS.readFromFile(
+            this.filePath, 
+            startSample,
+            endSample
+        ).subscribe(
             (audioBuffer1: AudioBuffer) => {
-                const 
-                // if needed here: if we're not at the end
-                this.appFS.loadAndDecodeChunk(this.pausedAt).subscribe(
+                startSample = endSample;
+                endSample += AUDIO_BUFFER_SAMPLES;
+                if (endSample > this.nSamples) {
+                    endSample = this.nSamples;
+                }
+                this.appFS.readFromFile(
+                    this.filePath, 
+                    startSample,
+                    endSample
+                ).subscribe(
                     (audioBuffer2: AudioBuffer) => {
                     },
                     (err2: any) => {
