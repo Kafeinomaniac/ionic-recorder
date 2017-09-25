@@ -40,6 +40,9 @@ export class WebAudioWavPlayer extends WebAudioPlayer {
         // compute start byte and end byte (file-size)
     }
 
+    /**
+     * 
+     */
     public relativeTimeSeek(relativeTime: number): void {
         // E.g. say AUDIO_BUFFER_SAMPLES is 10, then:
         //     0,1,2,..,9,10,..,20,..
@@ -48,7 +51,14 @@ export class WebAudioWavPlayer extends WebAudioPlayer {
         //    endSample2: number = startSample2 + AUDIO_BUFFER_SAMPLES;
         let startSample: number = Math.floor(relativeTime * this.nSamples),
             endSample: number = startSample + AUDIO_BUFFER_SAMPLES;
+
+        if (startSample >= this.nSamples) {
+            console.log('WARNING: startSample >= this.nSamples');
+            return;
+        }
+
         if (endSample > this.nSamples) {
+            // we've reached the end at the first chunk
             endSample = this.nSamples;
         }
 
@@ -58,22 +68,27 @@ export class WebAudioWavPlayer extends WebAudioPlayer {
             endSample
         ).subscribe(
             (audioBuffer1: AudioBuffer) => {
+                // reuse startSample and endSample for the next chunk
                 startSample = endSample;
                 endSample += AUDIO_BUFFER_SAMPLES;
                 if (endSample > this.nSamples) {
                     endSample = this.nSamples;
                 }
-                this.appFS.readFromFile(
-                    this.filePath, 
-                    startSample,
-                    endSample
-                ).subscribe(
-                    (audioBuffer2: AudioBuffer) => {
-                    },
-                    (err2: any) => {
-                        alert(err2);
-                    }
-                );
+
+                if (startSample < this.nSamples) {
+                    // we haven't reached the end in chunk1 so go on to chunk2
+                    this.appFS.readFromFile(
+                        this.filePath, 
+                        startSample,
+                        endSample
+                    ).subscribe(
+                        (audioBuffer2: AudioBuffer) => {
+                        },
+                        (err2: any) => {
+                            alert(err2);
+                        }
+                    );
+                } // if (startSample < this.nSamples) {
             },
             (err1: any) => {
                 alert(err1);
