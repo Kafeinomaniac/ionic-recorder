@@ -7,35 +7,44 @@
         </button>
         <ion-title>Record</ion-title>
         <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
-            <button ion-button small (click)="webAudioRecord.resetPeaks()">
-            <ion-badge item-right button-on-dark-bg text-lowercase>
-                {{webAudioRecord.percentPeaksAtMax}}% peaks
-            </ion-badge>
-        </button>
+            <button ion-button small (click)="recorder.resetPeaks()">
+                <ion-badge item-right button-on-dark-bg text-lowercase>
+                    {{recorder.percentPeaksAtMax}}% peaks
+                </ion-badge>
+            </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <vu-gauge height="2.5em" nbars="55" [value]="webAudioRecord.currentVolume" [max]="webAudioRecord.maxVolumeSinceReset">
+    <vu-gauge height="2.5em" nbars="55"
+              [value]="recorder.currentVolume"
+              [max]="recorder.maxVolumeSinceReset">
     </vu-gauge>
     <p class="gain-item-label">
         Gain: {{percentGain}}% ({{decibels}})
         <button ion-button small text-uppercase (click)="onResetGain()">
             Reset Gain
         </button>
-        <ion-range color="light" [(ngModel)]="gainRangeSliderValue" (ionChange)="onGainChange($event.value)" debounce="50" [max]="maxGainSliderValue">
+        <ion-range color="light" debounce="50"
+                   [(ngModel)]="gainRangeSliderValue"
+                   (ionChange)="onGainChange($event.value)"
+                   [max]="maxGainSliderValue">
         </ion-range>
     </p>
     <div class="recording-time" *ngIf="recorderIsReady()">
-        {{webAudioRecord.currentTime}}
+        {{recorder.currentTime}}
     </div>
     <div class="recording-controls">
-        <button ion-button color="logo-red" [disabled]="!recorderIsReady()" (click)="onClickStartPauseButton()">
+        <button ion-button color="logo-red"
+                [disabled]="!recorderIsReady()"
+                (click)="onClickStartPauseButton()">
             <ion-icon [name]="recordButtonIcon">
             </ion-icon>
         </button>
-        <button ion-button color="logo-orange" [disabled]="!recorderIsReady() || webAudioRecord.isInactive" (click)="onClickStopButton()">
+        <button ion-button color="logo-orange"
+                [disabled]="!recorderIsReady() || recorder.isInactive"
+                (click)="onClickStopButton()">
             <ion-icon name="square">
             </ion-icon>
         </button>
