@@ -12,7 +12,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { AppFS } from '../../services';
+import { AppFilesystem } from '../../services';
 import { SelectionPage } from '../../pages';
 
 /**
@@ -25,7 +25,7 @@ import { SelectionPage } from '../../pages';
 })
 export class MoveToPage {
     @ViewChild(Content) public content: Content;
-    public appFS: AppFS;
+    public appFilesystem: AppFilesystem;
     private modalController: ModalController;
     private viewController: ViewController;
     private changeDetectorRef: ChangeDetectorRef;
@@ -33,21 +33,21 @@ export class MoveToPage {
 
     /**
      * @constructor
-     * @param {AppFS}
+     * @param {AppFilesystem}
      */
     constructor(
         changeDetectorRef: ChangeDetectorRef,
-        appFS: AppFS,
+        appFilesystem: AppFilesystem,
         modalController: ModalController,
         viewController: ViewController
     ) {
         console.log('MoveToPage.constructor()');
         this.changeDetectorRef = changeDetectorRef;
-        this.appFS = appFS;
+        this.appFilesystem = appFilesystem;
         this.modalController = modalController;
         this.viewController = viewController;
 
-        appFS.whenReady().subscribe(
+        appFilesystem.whenReady().subscribe(
             () => {
                 this.headerButtons = [
                     {
@@ -64,7 +64,7 @@ export class MoveToPage {
                             this.onClickHomeButton();
                         },
                         disabledCB: () => {
-                            return this.appFS.directoryEntry.fullPath === '/';
+                            return this.appFilesystem.directoryEntry.fullPath === '/';
                         }
                     },
                     {
@@ -75,7 +75,7 @@ export class MoveToPage {
                             this.onClickParentButton();
                         },
                         disabledCB: () => {
-                            return this.appFS.directoryEntry.fullPath === '/';
+                            return this.appFilesystem.directoryEntry.fullPath === '/';
                         }
                     }
                 ];
@@ -106,7 +106,7 @@ export class MoveToPage {
      */
     public onClickMoveHereButton(): void {
         console.log('onClickMoveHereButton()');
-        if (this.appFS.isPathSelected('/Unfiled/')) {
+        if (this.appFilesystem.isPathSelected('/Unfiled/')) {
             // TODO: do not allow /Unfiled folder to be
             // moved
         }
@@ -118,7 +118,7 @@ export class MoveToPage {
         // do a filter first to get rid of those paths
         // that are already going to be at the same place
         // as a result of the move
-        this.appFS.moveSelected().subscribe(
+        this.appFilesystem.moveSelected().subscribe(
             () => {
                 console.log('moved em');
                 this.detectChanges();
@@ -135,7 +135,7 @@ export class MoveToPage {
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
-        this.appFS.switchDirectory('/').subscribe(
+        this.appFilesystem.switchDirectory('/').subscribe(
             () => {
                 this.detectChanges();
             }
@@ -147,12 +147,12 @@ export class MoveToPage {
      */
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
-        const path: string = this.appFS.getPath(),
+        const path: string = this.appFilesystem.getPath(),
               pathParts: string[] = path.split('/').filter(
                   (str: string) => { return str !== ''; }),
               parentPath: string = '/' +
               pathParts.splice(0, pathParts.length - 1).join('/') + '/';
-        this.appFS.switchDirectory(parentPath).subscribe(
+        this.appFilesystem.switchDirectory(parentPath).subscribe(
             () => {
                 this.detectChanges();
             }
@@ -165,7 +165,7 @@ export class MoveToPage {
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
-            this.appFS.switchDirectory(this.appFS.getFullPath(entry))
+            this.appFilesystem.switchDirectory(this.appFilesystem.getFullPath(entry))
                 .subscribe(
                     () => {
                         this.detectChanges();

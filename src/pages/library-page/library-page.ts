@@ -13,7 +13,7 @@ import {
     Platform
 } from 'ionic-angular';
 
-import { AppFS } from '../../services';
+import { AppFilesystem } from '../../services';
 import { ButtonbarButton } from '../../components/';
 import { MoveToPage, SelectionPage } from '../../pages';
 
@@ -34,7 +34,7 @@ export class LibraryPage {
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
     private changeDetectorRef: ChangeDetectorRef;
-    private appFS: AppFS;
+    private appFilesystem: AppFilesystem;
 
     /**
      * @constructor
@@ -42,7 +42,7 @@ export class LibraryPage {
      * @param {AlertController}
      * @param {ActionSheetController}
      * @param {ChangeDetectorRef}
-     * @param {AppFS}
+     * @param {AppFilesystem}
      * @param {Platform}
      */
     constructor(
@@ -51,7 +51,7 @@ export class LibraryPage {
         alertController: AlertController,
         actionSheetController: ActionSheetController,
         changeDetectorRef: ChangeDetectorRef,
-        appFS: AppFS,
+        appFilesystem: AppFilesystem,
         platform: Platform
     ) {
 
@@ -61,7 +61,7 @@ export class LibraryPage {
         this.modalController = modalController;
         this.navController = navController;
         this.alertController = alertController;
-        this.appFS = appFS;
+        this.appFilesystem = appFilesystem;
         this.headerButtons = [
             {
                 text: 'Select...',
@@ -119,12 +119,12 @@ export class LibraryPage {
 
     public ionViewDidEnter(): void {
         console.log('LibraryPage.ionViewDidEnter()');
-        // refresh appFS directory in case we're entering this
+        // refresh appFilesystem directory in case we're entering this
         // view after a recording and we happen to be at the /Unfiled
         // folder. NOTE: this is kind of overkill. We could do
         // the refresh only when in /Unfiled as in:
-        // if (this.appFS.directoryEntry.fullPath === '/Unfiled') {
-        //     this.appFS.refreshDirectory().subscribe(
+        // if (this.appFilesystem.directoryEntry.fullPath === '/Unfiled') {
+        //     this.appFilesystem.refreshDirectory().subscribe(
         //         () => {
         //             this.detectChanges();
         //         }
@@ -133,7 +133,7 @@ export class LibraryPage {
         // else {
         //     this.detectChanges();
         // }
-        this.appFS.refreshDirectory().subscribe(
+        this.appFilesystem.refreshDirectory().subscribe(
             () => {
                 this.detectChanges();
             }
@@ -147,17 +147,17 @@ export class LibraryPage {
         console.log('onClickSelectButton()');
 
         let selectAlert: Alert = this.alertController.create();
-        selectAlert.setTitle('Select which, in ' + this.appFS.getPath());
+        selectAlert.setTitle('Select which, in ' + this.appFilesystem.getPath());
         selectAlert.addButton({
             text: 'All',
             handler: () => {
-                this.appFS.selectAllOrNone(true);
+                this.appFilesystem.selectAllOrNone(true);
             }
         });
         selectAlert.addButton({
             text: 'None',
             handler: () => {
-                this.appFS.selectAllOrNone(false);
+                this.appFilesystem.selectAllOrNone(false);
             }
         });
 
@@ -169,7 +169,7 @@ export class LibraryPage {
 
     public selectButtonDisabled(): boolean {
         // console.log('selectButtonDisabled()');
-        return this.appFS.nEntries() <= 1;
+        return this.appFilesystem.nEntries() <= 1;
     }
 
     /**
@@ -177,7 +177,7 @@ export class LibraryPage {
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
-        this.appFS.switchDirectory('/').subscribe(
+        this.appFilesystem.switchDirectory('/').subscribe(
             () => {
                 this.detectChanges();
             }
@@ -185,8 +185,8 @@ export class LibraryPage {
     }
 
     public atHome(): boolean {
-        // console.log('atHome(): ' + this.appFS.atHome());
-        return this.appFS.atHome();
+        // console.log('atHome(): ' + this.appFilesystem.atHome());
+        return this.appFilesystem.atHome();
     }
 
     /**
@@ -194,12 +194,12 @@ export class LibraryPage {
      */
     public onClickParentButton(): void {
         console.log('onClickParentButton()');
-        const path: string = this.appFS.getPath(),
+        const path: string = this.appFilesystem.getPath(),
               pathParts: string[] = path.split('/').filter(
                   (str: string) => { return str !== ''; }),
               parentPath: string = '/' +
               pathParts.splice(0, pathParts.length - 1).join('/') + '/';
-        this.appFS.switchDirectory(parentPath).subscribe(
+        this.appFilesystem.switchDirectory(parentPath).subscribe(
             () => {
                 this.detectChanges();
             }
@@ -212,7 +212,7 @@ export class LibraryPage {
     public onClickAddButton(): void {
         console.log('onClickAddButton()');
         let actionSheet: ActionSheet = this.actionSheetController.create({
-            title: 'Create new ... in ' + this.appFS.getPath(),
+            title: 'Create new ... in ' + this.appFilesystem.getPath(),
             buttons: [
                 {
                     text: 'Folder',
@@ -268,8 +268,8 @@ export class LibraryPage {
     public moveButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.appFS.nSelected() === 1 &&
-            this.appFS.isPathSelected('/Unfiled/')) {
+        if (this.appFilesystem.nSelected() === 1 &&
+            this.appFilesystem.isPathSelected('/Unfiled/')) {
             return true;
         }
         return false;
@@ -278,7 +278,7 @@ export class LibraryPage {
     /**
      */
     private confirmAndDeleteSelected(): void {
-        let nSelected: number = this.appFS.nSelected(),
+        let nSelected: number = this.appFilesystem.nSelected(),
             itemsStr: string = nSelected.toString() + ' item' +
             ((nSelected > 1) ? 's' : ''),
             deleteAlert: Alert = this.alertController.create();
@@ -290,10 +290,10 @@ export class LibraryPage {
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
-                this.appFS.deleteSelected().subscribe(
+                this.appFilesystem.deleteSelected().subscribe(
                     () => {
-                        this.appFS.switchDirectory(this.appFS.getFullPath(
-                            this.appFS.directoryEntry
+                        this.appFilesystem.switchDirectory(this.appFilesystem.getFullPath(
+                            this.appFilesystem.directoryEntry
                         )).subscribe(
                             () => {
                                 this.detectChanges();
@@ -312,7 +312,7 @@ export class LibraryPage {
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
 
-        if (this.appFS.isPathSelected('/Unfiled/')) {
+        if (this.appFilesystem.isPathSelected('/Unfiled/')) {
             const deleteAlert: Alert = this.alertController.create();
             deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
                                  '\'s selected. Automatically unselect it?');
@@ -320,7 +320,7 @@ export class LibraryPage {
             deleteAlert.addButton({
                 text: 'Yes',
                 handler: () => {
-                    this.appFS.unselectPath('/Unfiled/');
+                    this.appFilesystem.unselectPath('/Unfiled/');
                     this.confirmAndDeleteSelected();
                 }
             });
@@ -338,8 +338,8 @@ export class LibraryPage {
     public deleteButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
         // disable delete and move
-        if (this.appFS.nSelected() === 1 &&
-            this.appFS.isPathSelected('/Unfiled/')) {
+        if (this.appFilesystem.nSelected() === 1 &&
+            this.appFilesystem.isPathSelected('/Unfiled/')) {
             return true;
         }
         return false;
@@ -382,7 +382,7 @@ export class LibraryPage {
      */
     public onClickCheckbox(entry: Entry): void {
         console.log('onClickCheckbox()');
-        this.appFS.toggleSelectEntry(entry);
+        this.appFilesystem.toggleSelectEntry(entry);
         this.detectChanges();
     }
 
@@ -392,7 +392,7 @@ export class LibraryPage {
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
-            this.appFS.switchDirectory(this.appFS.getFullPath(entry))
+            this.appFilesystem.switchDirectory(this.appFilesystem.getFullPath(entry))
                 .subscribe(
                     () => {
                         this.detectChanges();
@@ -405,7 +405,7 @@ export class LibraryPage {
      * UI calls this when the new folder button is clicked
      */
     public addFolder(): void {
-        let parentPath: string = this.appFS.getPath(),
+        let parentPath: string = this.appFilesystem.getPath(),
             newFolderAlert: Alert = this.alertController.create({
                 title: 'Create a new folder in ' + parentPath,
                 inputs: [{
@@ -435,18 +435,18 @@ export class LibraryPage {
                                 fullPath += '/';
                             }
                             // create the folder via getPathEntry()
-                            this.appFS.createDirectory(fullPath).subscribe(
+                            this.appFilesystem.createDirectory(fullPath).subscribe(
                                 (directoryEntry: DirectoryEntry) => {
                                     // re-read parent
                                     // to load in new info
-                                    this.appFS.switchDirectory(parentPath)
+                                    this.appFilesystem.switchDirectory(parentPath)
                                         .subscribe(
                                             () => {
                                                 this.detectChanges();
                                             }
                                         );
                                 }
-                            ); // appFS.getPathEntry(fullPath, true).subscribe(
+                            ); // appFilesystem.getPathEntry(fullPath, true).subscribe(
                         } // handler: (data: any) => {
                     }
                 ] // buttons: [

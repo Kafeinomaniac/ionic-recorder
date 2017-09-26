@@ -1,4 +1,4 @@
-import { FS } from './filesystem';
+import { Filesystem } from './filesystem';
 
 const WAIT_MSEC: number = 60;
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
@@ -7,7 +7,7 @@ const TEST_FILENAME: string = 'test_file.txt';
 let FILE_SYSTEM: FileSystem = null;
 
 beforeEach((done: Function) => {
-    FS.getFileSystem(true, REQUEST_SIZE).subscribe(
+    Filesystem.getFileSystem(true, REQUEST_SIZE).subscribe(
         (fileSystem: FileSystem) => {
             FILE_SYSTEM = fileSystem;
             done();
@@ -29,7 +29,7 @@ describe('models/filesystem', () => {
     });
 
     it('can get the root dir entry', (done) => {
-        FS.getPathEntry(FILE_SYSTEM, '/', false).subscribe(
+        Filesystem.getPathEntry(FILE_SYSTEM, '/', false).subscribe(
             (entry: Entry) => {
                 expect(entry.name).toEqual('');
                 expect(entry.fullPath).toEqual('/');
@@ -41,7 +41,7 @@ describe('models/filesystem', () => {
     });
 
     it('can delete /Unfiled recursively', (done) => {
-        FS.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+        Filesystem.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
             () => {
                 done();
             }
@@ -49,7 +49,7 @@ describe('models/filesystem', () => {
     });
 
     it('can read the root directory contents to be empty', (done) => {
-        FS.readDirectoryEntries(FILE_SYSTEM.root).subscribe(
+        Filesystem.readDirectoryEntries(FILE_SYSTEM.root).subscribe(
             (entries: Entry[]) => {
                 console.dir(entries);
                 expect(entries.length).toEqual(0);
@@ -59,20 +59,20 @@ describe('models/filesystem', () => {
     });
 
     it('cannot delete /Unfiled recursively', (done) => {
-        FS.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+        Filesystem.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
             null,
             (err: any) => {
-                console.log('Expected Error in FS.deleteEntries: ' + err);
+                console.log('Expected Error in Filesystem.deleteEntries: ' + err);
                 done();
             }
         );
     });
 
     it('cannot read directory /Unfiled', (done) => {
-        FS.getPathEntry(FILE_SYSTEM, '/Unfiled/', false).subscribe(
+        Filesystem.getPathEntry(FILE_SYSTEM, '/Unfiled/', false).subscribe(
             null,
             (err: any) => {
-                console.log('Expected Error in FS.getPathEntry: ' + err);
+                console.log('Expected Error in Filesystem.getPathEntry: ' + err);
                 done();
             }
         );
@@ -81,7 +81,7 @@ describe('models/filesystem', () => {
     // system should allow us to create a directory that's already
     // been created, without error
     it('can create directory /Unfiled', (done) => {
-        FS.getPathEntry(FILE_SYSTEM, '/Unfiled/', true).subscribe(
+        Filesystem.getPathEntry(FILE_SYSTEM, '/Unfiled/', true).subscribe(
             (entry: Entry) => {
                 expect(entry.name).toEqual('Unfiled');
                 expect(entry.fullPath).toEqual('/Unfiled');
@@ -93,7 +93,11 @@ describe('models/filesystem', () => {
     });
 
     it('can create directory /Unfiled/tstsubdir', (done) => {
-        FS.getPathEntry(FILE_SYSTEM, '/Unfiled/tstsubdir/', true).subscribe(
+        Filesystem.getPathEntry(
+            FILE_SYSTEM,
+            '/Unfiled/tstsubdir/',
+            true
+        ).subscribe(
             (entry: Entry) => {
                 expect(entry.name).toEqual('tstsubdir');
                 expect(entry.fullPath).toEqual('/Unfiled/tstsubdir');
@@ -105,7 +109,7 @@ describe('models/filesystem', () => {
     });
 
     it('can delete /Unfiled recursively', (done) => {
-        FS.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+        Filesystem.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
             () => {
                 done();
             }
@@ -114,14 +118,14 @@ describe('models/filesystem', () => {
 
     it('can create a file in root w/content A & read it', (done) => {
         const data: string = 'A';
-        FS.writeToFile(
+        Filesystem.writeToFile(
             FILE_SYSTEM,
             TEST_FILENAME,
             new Blob([data], { type: 'text/plain' }),
             0,
             true
         ).subscribe(() => {
-            FS.readFromFile(FILE_SYSTEM, TEST_FILENAME)
+            Filesystem.readFromFile(FILE_SYSTEM, TEST_FILENAME)
                 .subscribe(
                     (blob: Blob) => {
                         console.log('READ BLOB!!! ' + blob);
@@ -136,14 +140,14 @@ describe('models/filesystem', () => {
 
     it('can write content B to same file then read it', (done) => {
         const data: string = 'B';
-        FS.writeToFile(
+        Filesystem.writeToFile(
             FILE_SYSTEM,
             TEST_FILENAME,
             new Blob([data], { type: 'text/plain' }),
             0,
             false
         ).subscribe(() => {
-            FS.readFromFile(FILE_SYSTEM, TEST_FILENAME)
+            Filesystem.readFromFile(FILE_SYSTEM, TEST_FILENAME)
                 .subscribe(
                     (blob: Blob) => {
                         console.log('READ BLOB!!! ' + blob);
@@ -157,9 +161,9 @@ describe('models/filesystem', () => {
     });
 
     it('can delete the file it just created', (done) => {
-        FS.getPathEntry(FILE_SYSTEM, TEST_FILENAME, true).subscribe(
+        Filesystem.getPathEntry(FILE_SYSTEM, TEST_FILENAME, true).subscribe(
             (entry: Entry) => {
-                FS.deleteEntry(entry).subscribe(
+                Filesystem.deleteEntry(entry).subscribe(
                     () => {
                         done();
                     }
@@ -169,7 +173,7 @@ describe('models/filesystem', () => {
     });
 
     it('can read the root directory contents to be empty', (done) => {
-        FS.readDirectoryEntries(FILE_SYSTEM.root).subscribe(
+        Filesystem.readDirectoryEntries(FILE_SYSTEM.root).subscribe(
             (entries: Entry[]) => {
                 expect(entries.length).toEqual(0);
                 done();

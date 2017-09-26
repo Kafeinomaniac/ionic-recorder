@@ -12,10 +12,10 @@ const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 50;
 
 /**
- * @class AppFS
+ * @class AppFileystem
  */
 @Injectable()
-export class AppFS {
+export class AppFilesystem {
     public isReady: boolean;
     public entries: Entry[];
     public directoryEntry: DirectoryEntry;
@@ -28,7 +28,7 @@ export class AppFS {
      * @constructor
      */
     constructor(storage: Storage) {
-        console.log('AppFS.constructor()');
+        console.log('AppFileystem.constructor()');
         this.storage = storage;
         this.isReady = false;
         this.entries = [];
@@ -37,12 +37,16 @@ export class AppFS {
         this.selectedPaths = {};
         this.nWavFileSamples = 0;
         // get the filesystem and remember it
-        FS.getFileSystem(true, REQUEST_SIZE).subscribe(
+        Filesystem.getFileSystem(true, REQUEST_SIZE).subscribe(
             (fileSystem: FileSystem) => {
                 // remember the filesystem you got
                 this.fileSystem = fileSystem;
                 // create the /Unfiled/ directory if not already there
-                FS.getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
+                Filesystem.getPathEntry(
+                    fileSystem,
+                    '/Unfiled/',
+                    true
+                ).subscribe(
                     (directoryEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/ (or already there)');
                         // grab remembered location from storage and go there
@@ -72,13 +76,7 @@ export class AppFS {
                                         }
                                         this.switchDirectory(directoryPath)
                                             .subscribe(
-                                                () => {
-                                                    this.isReady = true;
-                                                    console.log('AppFS.READY!');
-                                                    console.dir(
-                                                        this.selectedPaths
-                                                    );
-                                                },
+                                                () => { this.isReady = true; },
                                                 (err1: any) => {
                                                     alert('err1: ' + err1);
                                                 }
@@ -94,26 +92,26 @@ export class AppFS {
                     (err4: any) => {
                         alert('err4: ' + err4);
                     }
-                ); // FS.getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
+                ); // .getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
             }, // (fileSystem: FileSystem) => {
             (err5: any) => {
                 alert('err5: ' + err5);
             }
-        ); // FS.getFileSystem(true, REQUEST_SIZE).subscribe(
+        ); // Filesystem.getFileSystem(true, REQUEST_SIZE).subscribe(
     } // constructor() {
 
     /**
      *
      */
     public getMetadata(fullPath: string): Observable<Metadata> {
-        return FS.getMetadata(this.fileSystem, fullPath);
+        return Filesystem.getMetadata(this.fileSystem, fullPath);
     }
 
     /**
      *
      */
     public appendToFile(fullPath: string, blob: Blob): Observable<FileEntry> {
-        return FS.appendToFile(this.fileSystem, fullPath, blob);
+        return Filesystem.appendToFile(this.fileSystem, fullPath, blob);
     }
 
     /**
@@ -151,7 +149,7 @@ export class AppFS {
     public whenReady(): Observable<void> {
         let source: Observable<void> = Observable.create((observer) => {
             let repeat: () => void = () => {
-                console.log('AppFS.whenReady().repeat()');
+                console.log('AppFileystem.whenReady().repeat()');
                 if (this.isReady) {
                     observer.next();
                     observer.complete();
@@ -169,12 +167,12 @@ export class AppFS {
      *
      */
     public getSelectedEntries(): Observable<Entry[]> {
-        console.log('AppFS.getSelectedEntries()');
+        console.log('AppFileystem.getSelectedEntries()');
         let source: Observable<Entry[]> = Observable.create((observer) => {
             // get the file system
             this.whenReady().subscribe(
                 () => {
-                    FS.getEntriesFromPaths(
+                    Filesystem.getEntriesFromPaths(
                         this.fileSystem,
                         this.getSelectedPathsArray()
                     ).subscribe(
@@ -199,14 +197,18 @@ export class AppFS {
      *
      */
     public createDirectory(path: string): Observable<DirectoryEntry> {
-        console.log('AppFS.createDirectory(' + path + ')');
+        console.log('AppFileystem.createDirectory(' + path + ')');
         let source: Observable<DirectoryEntry> =
             Observable.create((observer) => {
                 if (path[path.length - 1] !== '/') {
                     observer.error('path must end with / for createDirectory');
                 }
                 else {
-                    FS.getPathEntry(this.fileSystem, path, true).subscribe(
+                    Filesystem.getPathEntry(
+                        this.fileSystem,
+                        path,
+                        true
+                    ).subscribe(
                         (directoryEntry: Entry) => {
                             observer.next(directoryEntry);
                             observer.complete();
@@ -253,17 +255,19 @@ export class AppFS {
      * system when it's ready for use.
      */
     public switchDirectory(path: string): Observable<Entry[]> {
-        console.log('AppFS.switchDirectory(' + path + ')');
+        console.log('AppFileystem.switchDirectory(' + path + ')');
         let source: Observable<Entry[]> = Observable.create((observer) => {
             // got file system, now get entry object for path
             // of directory we're switching to
-            FS.getPathEntry(this.fileSystem, path, false).subscribe(
+            Filesystem.getPathEntry(this.fileSystem, path, false).subscribe(
                 (entry: Entry) => {
                     this.directoryEntry = <DirectoryEntry>entry;
                     console.log('this.directoryEntry = ' +
                                 this.directoryEntry.fullPath);
                     // we got the directory entry, now read it
-                    FS.readDirectoryEntries(<DirectoryEntry>entry).subscribe(
+                    Filesystem.readDirectoryEntries(
+                            <DirectoryEntry>entry
+                    ).subscribe(
                         (entries: Entry[]) => {
                             this.entries = entries;
                             console.log('entries: .........................');
@@ -278,12 +282,12 @@ export class AppFS {
                         (err1: any) => {
                             observer.error(err1);
                         }
-                    ); // FS.readDirectoryEntries(directoryEntry).subscribe(
+                    ); // .readDirectoryEntries(directoryEntry).subscribe(
                 },
                 (err2: any) => {
                     observer.error(err2);
                 }
-            ); // FS.getPathEntry(fileSystem, path, false).subscribe(
+            ); // Filesystem.getPathEntry(fileSystem, path, false).subscribe(
         }); // let source: Observable<Entry[]> = Observable.create((observer)
         return source;
     }
@@ -322,7 +326,7 @@ export class AppFS {
      *
      */
     public selectPath(path: string): void {
-        console.log('AppFS.selectPath(' + path + ')');
+        console.log('AppFileystem.selectPath(' + path + ')');
         const orderIndex: number = this.nSelected();
         this.selectedPaths[path] = orderIndex;
         this.storage.set('filesystemSelected', this.selectedPaths);
@@ -339,7 +343,7 @@ export class AppFS {
      *
      */
     public atHome(): boolean {
-        // console.log('AppFS.atHome(): ' +
+        // console.log('AppFileystem.atHome(): ' +
         //             (this.directoryEntry.fullPath === '/'));
         return this.directoryEntry.fullPath === '/';
     }
@@ -348,7 +352,7 @@ export class AppFS {
      *
      */
     public nEntries(): number {
-        // console.log('AppFS.nEntries(): ' + this.entries.length);
+        // console.log('AppFileystem.nEntries(): ' + this.entries.length);
         return this.entries.length;
     }
 
@@ -356,7 +360,7 @@ export class AppFS {
      *
      */
     public nSelected(): number {
-        // console.log('AppFS.nSelected(isReady:' + this.isReady +
+        // console.log('AppFileystem.nSelected(isReady:' + this.isReady +
         //             '): ' + Object.keys(this.selectedPaths).length);
         return Object.keys(this.selectedPaths).length;
     }
@@ -365,7 +369,7 @@ export class AppFS {
      *
      */
     public unselectPath(path: string): void {
-        console.log('AppFS.unselectPath(' + path + ')');
+        console.log('AppFileystem.unselectPath(' + path + ')');
         delete this.selectedPaths[path];
 
         this.storage.set('filesystemSelected', this.selectedPaths);
@@ -383,7 +387,7 @@ export class AppFS {
      */
     public toggleSelectEntry(entry: Entry): void {
         const fullPath: string = this.getFullPath(entry);
-        console.log('AppFS.toggleSelectEntry(' + fullPath + ')');
+        console.log('AppFileystem.toggleSelectEntry(' + fullPath + ')');
         if (this.isPathSelected(fullPath)) {
             this.unselectPath(fullPath);
         }
@@ -397,7 +401,7 @@ export class AppFS {
      * @param {boolean} if true, select all, if false, select none
      */
     public selectAllOrNone(bSelectAll: boolean): void {
-        console.log('AppFS.selectAllOrNoneInFolder(' + bSelectAll + ')');
+        console.log('AppFileystem.selectAllOrNoneInFolder(' + bSelectAll + ')');
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
             const fullPath: string = this.getFullPath(entry),
@@ -421,11 +425,11 @@ export class AppFS {
      */
     public moveSelected(): Observable<void> {
         const paths: string[] = Object.keys(this.selectedPaths).sort();
-        console.log('AppFS.moveSelected(): ' + paths);
+        console.log('AppFileystem.moveSelected(): ' + paths);
         let source: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
-                    FS.moveEntries(
+                    Filesystem.moveEntries(
                         this.fileSystem,
                         paths,
                         this.directoryEntry
@@ -447,7 +451,7 @@ export class AppFS {
                         },
                         (err1: any) => {
                             observer.error(err1);
-                        } // FS.deleteEntries(this.fileSystem, paths).subscribe(
+                        } // .deleteEntries(this.fileSystem, paths).subscribe(
                     ); //
                 }, // () => {
                 (err2: any) => {
@@ -466,12 +470,12 @@ export class AppFS {
         const paths: string[] = Object.keys(this.selectedPaths).sort(),
               fullPath: string = this.getFullPath(this.directoryEntry),
               fullPathSize: number = fullPath.length;
-        console.log('AppFS.deleteSelected(): ' + paths);
+        console.log('AppFileystem.deleteSelected(): ' + paths);
         let source: Observable<void> = Observable.create((observer) => {
             // get the file system
             this.whenReady().subscribe(
                 () => {
-                    FS.deleteEntries(this.fileSystem, paths).subscribe(
+                    Filesystem.deleteEntries(this.fileSystem, paths).subscribe(
                         () => {
                             // unselect removed paths, also track:
                             // if removed path contains current directory,
@@ -507,7 +511,7 @@ export class AppFS {
                         },
                         (err1: any) => {
                             observer.error(err1);
-                        } // FS.deleteEntries(this.fileSystem, paths).subscribe(
+                        } // .deleteEntries(this.fileSystem, paths).subscribe(
                     ); //
                 }, // () => {
                 (err2: any) => {
@@ -529,7 +533,7 @@ export class AppFS {
         const startByte: number = 44 + 2 * startSample,
               endByte: number = 44 + 2 * endSample;
         let obs: Observable<AudioBuffer> = Observable.create((observer) => {
-            FS.readFromFile(
+            Filesystem.readFromFile(
                 this.fileSystem,
                 path,
                 startByte,
@@ -561,7 +565,7 @@ export class AppFS {
         path: string,
         wavData: Int16Array
     ): Observable<void> {
-        console.log('AppFS.createWavFile(' + path + ')');
+        console.log('AppFileystem.createWavFile(' + path + ')');
         this.nWavFileSamples = 0;
         let source: Observable<void> = Observable.create((observer) => {
             const nSamples: number = wavData.length,
@@ -573,7 +577,13 @@ export class AppFS {
                       [ headerView, wavData ],
                       { type: 'audio/wav' }
                   );
-            FS.writeToFile(this.fileSystem, path, blob, 0, true).subscribe(
+            Filesystem.writeToFile(
+                this.fileSystem,
+                path,
+                blob,
+                0,
+                true
+            ).subscribe(
                 () => {
                     this.nWavFileSamples += wavData.length;
                     observer.next();
@@ -594,7 +604,7 @@ export class AppFS {
         path: string,
         wavData: Int16Array
     ): Observable<void> {
-        console.log('AppFS.addDataToWavFile(' + path + ')');
+        console.log('AppFileystem.addDataToWavFile(' + path + ')');
         let source: Observable<void> = Observable.create((observer) => {
             // see http://soundfile.sapp.org/doc/WaveFormat/ for definitions
             // of subchunk2size and chunkSize
@@ -611,20 +621,30 @@ export class AppFS {
                 [ view ],
                 { type: 'application/octet-stream' }
             );
-            FS.writeToFile(fileSystem, path, blob, 4, false).subscribe(
+            Filesystem.writeToFile(fileSystem, path, blob, 4, false).subscribe(
                 () => {
                     view.setUint32(0, subchunk2size, true);
                     blob = new Blob(
                         [ view ],
                         { type: 'application/octet-stream' }
                     );
-                    FS.writeToFile(fileSystem, path, blob, 40, false).subscribe(
+                    Filesystem.writeToFile(
+                        fileSystem,
+                        path,
+                        blob,
+                        40,
+                        false
+                    ).subscribe(
                         () => {
                             blob = new Blob(
                                 [ wavData ],
                                 { type: 'application/octet-stream' }
                             );
-                            FS.appendToFile(fileSystem, path, blob).subscribe(
+                            Filesystem.appendToFile(
+                                fileSystem,
+                                path,
+                                blob
+                            ).subscribe(
                                 () => {
                                     this.nWavFileSamples += wavData.length;
                                     observer.next();
@@ -638,12 +658,12 @@ export class AppFS {
                         (err2: any) => {
                             observer.error('err2 ' + err2);
                         }
-                    ); // FS.writeToFile(fileSystem, path, blob, 40, false) ..
+                    ); // .writeToFile(fileSystem, path, blob, 40, false) ..
                 },
                 (err3: any) => {
                     observer.error('err3 ' + err3);
                 }
-            ); // FS.writeToFile(fileSystem, path, blob, 4, false).subscribe(
+            ); // .writeToFile(fileSystem, path, blob, 4, false).subscribe(
         });
         return source;
 

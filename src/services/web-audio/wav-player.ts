@@ -8,7 +8,7 @@ import { WebAudioPlay } from './play';
 import { isOdd, formatTime } from '../../models/utils/utils';
 import { MasterClock } from '../master-clock/master-clock';
 import { makeWavBlobHeaderView } from '../../models/utils/wav';
-import { AppFS } from '../../services';
+import { AppFilesystem } from '../../services';
 
 const AUDIO_BUFFER_SAMPLES: number = 128000;
 
@@ -21,14 +21,14 @@ const AUDIO_BUFFER_SAMPLES: number = 128000;
 export class WebAudioWavPlayer extends WebAudioPlayer {
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
-    private appFS: AppFS;
+    private appFilesystem: AppFilesystem;
 
-    constructor(masterClock: MasterClock, appFS: AppFS) {
+    constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
         console.log('WebAudioWavPlayer.constructor()');
         super(masterClock);
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
-        this.appFS = appFS;
+        this.appFilesystem = appFilesystem;
     }
 
     public setSourceFile(filePath: string): void {
@@ -81,7 +81,7 @@ export class WebAudioWavPlayer extends WebAudioPlayer {
             endSample1 = this.nSamples;
         }
 
-        this.appFS.readFromFile(
+        this.appFilesystem.readFromFile(
             this.filePath, 
             startSample1,
             endSample1
@@ -106,7 +106,7 @@ export class WebAudioWavPlayer extends WebAudioPlayer {
                         endSample2 = this.nSamples;
                     }
 
-                    this.appFS.readFromFile(
+                    this.appFilesystem.readFromFile(
                         this.filePath, 
                         startSample2,
                         endSample2

@@ -6,7 +6,7 @@ import { DoubleBufferSetter } from '../../models/utils/double-buffer';
 import { WebAudioRecord } from './record';
 import { MasterClock } from '../master-clock/master-clock';
 import { MAX, MIN } from '../../models/utils/utils';
-import { AppFS } from '../../services';
+import { AppFilesystem } from '../../services';
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH (from record.ts)
 export const WAV_CHUNK_LENGTH: number = 131072;
@@ -23,15 +23,15 @@ const WAV_CHUNK2: Int16Array = new Int16Array(WAV_CHUNK_LENGTH);
 export class WebAudioRecordWav extends WebAudioRecord {
     private setter: DoubleBufferSetter;
 
-    private appFS: AppFS;
+    private appFilesystem: AppFilesystem;
 
     // this is how we signal
-    constructor(masterClock: MasterClock, appFS: AppFS) {
+    constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
         super(masterClock);
         
         console.log('constructor():WebAudioRecordWav');
 
-        this.appFS = appFS;
+        this.appFilesystem = appFilesystem;
 
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {
             this.saveChunk(this.setter.activeBuffer).subscribe(
@@ -57,7 +57,7 @@ export class WebAudioRecordWav extends WebAudioRecord {
     private saveWavFileChunk(arr: Int16Array): Observable<void> {
         let obs: Observable<void> = Observable.create((observer) => {
             if (this.nChunks === 0) {
-                this.appFS.createWavFile(
+                this.appFilesystem.createWavFile(
                     'test.wav',
                     this.setter.activeBuffer
                 ).subscribe(
@@ -72,7 +72,7 @@ export class WebAudioRecordWav extends WebAudioRecord {
                 );
             }
             else {
-                this.appFS.appendToWavFile(
+                this.appFilesystem.appendToWavFile(
                     'test.wav',
                     this.setter.activeBuffer
                 ).subscribe(

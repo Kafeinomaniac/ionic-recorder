@@ -14,10 +14,10 @@ anything written here, unless you wrote it.
   * utils.ts ---> misc-utils.ts
   * app-fs.ts ---> app-filesystem.ts
   * app-state.ts ---> app-storage.ts
-  * filesystem.ts - no need to wrap with a class and make functions static,
-    just export them as functins. that's because the class has no constructor - 
-    it is a totally meaningless useless class
-    - put filesystem.ts under utils
+  * filesystem.ts - no need to wrap with a class and make functions
+    static, just export them as functions. that's because the class
+    has no constructor - it is a totally meaningless useless class -
+    put filesystem.ts under utils
   * play-wav.ts ---> wav-player.ts
   * play.ts ---> player.ts
   * record.ts ---> recorder.ts

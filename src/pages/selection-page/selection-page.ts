@@ -2,7 +2,7 @@
 
 import { Component } from '@angular/core';
 import { ViewController } from 'ionic-angular';
-import { AppFS } from '../../services';
+import { AppFilesystem } from '../../services';
 
 /**
  * Page to see or edit all currently selected items.
@@ -13,21 +13,21 @@ import { AppFS } from '../../services';
     templateUrl: 'selection-page.html'
 })
 export class SelectionPage {
-    public appFS: AppFS;
+    public appFilesystem: AppFilesystem;
     public selectedEntries: Entry[];
     private viewController: ViewController;
 
     /**
      * @constructor
-     * @param {AppFS} appFS -
+     * @param {AppFilesystem} appFilesystem -
      * @param {ViewController} viewController -
      */
-    constructor(appFS: AppFS, viewController: ViewController) {
+    constructor(appFilesystem: AppFilesystem, viewController: ViewController) {
         console.log('constructor():SelectionPage');
-        this.appFS = appFS;
+        this.appFilesystem = appFilesystem;
         this.viewController = viewController;
         this.selectedEntries = [];
-        appFS.getSelectedEntries().subscribe(
+        appFilesystem.getSelectedEntries().subscribe(
             (entries: Entry[]) => {
                 this.selectedEntries = entries;
             }

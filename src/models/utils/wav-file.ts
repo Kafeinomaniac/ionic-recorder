@@ -2,7 +2,6 @@
 
 const WAV_HEADER_SIZE: number = 44;
 
-
 export function sampleIndexToFileByte(
     sampleIndex: number,
     sampleRate: number
@@ -11,7 +10,6 @@ export function sampleIndexToFileByte(
     return WAV_HEADER_SIZE + sampleIndex * 2;
 }
 
-
 // see: http://soundfile.sapp.org/doc/WaveFormat/
 export function makeWavBlobHeaderView(
     nSamples: number,
@@ -19,15 +17,15 @@ export function makeWavBlobHeaderView(
 ): DataView {
     'use strict';
     const arrayByteLength: number = nSamples * 2,
-        headerView: DataView = new DataView(new ArrayBuffer(WAV_HEADER_SIZE)),
-        writeAscii:
-        (dataView: DataView, offset: number, text: string) => void =
-        (dataView: DataView, offset: number, text: string) => {
-            const len: number = text.length;
-            for (let i: number = 0; i < len; i++) {
-                dataView.setUint8(offset + i, text.charCodeAt(i));
-            }
-        };
+          headerView: DataView = new DataView(new ArrayBuffer(WAV_HEADER_SIZE)),
+          writeAscii:
+          (dataView: DataView, offset: number, text: string) => void =
+          (dataView: DataView, offset: number, text: string) => {
+              const len: number = text.length;
+              for (let i: number = 0; i < len; i++) {
+                  dataView.setUint8(offset + i, text.charCodeAt(i));
+              }
+          };
 
     //
     // NB: this is single-channel (mono)

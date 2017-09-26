@@ -23,17 +23,17 @@ const DEFAULT_STATE: State = {
 };
 
 /**
- * @class AppState
+ * @class AppStorage
  */
 @Injectable()
-export class AppState {
+export class AppStorage {
     private storage: Storage;
 
     /**
      * @constructor
      */
     constructor(storage: Storage) {
-        console.log('constructor():AppState');
+        console.log('constructor():AppStorage');
         this.storage = storage;
     }
 

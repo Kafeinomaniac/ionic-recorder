@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppState } from './app-state';
+import { AppStorage } from './app-state';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 import { Storage } from '@ionic/storage';
 
@@ -8,7 +8,7 @@ const WAIT_MSEC: number = 60,
       SOME_IDX: number = 9999;
 
 let storage: Storage = new Storage({}),
-    appState: AppState = new AppState(storage),
+    appState: AppStorage = new AppStorage(storage),
     savedTabIndex: number = -1;
 
 describe('When appState initialized', () => {

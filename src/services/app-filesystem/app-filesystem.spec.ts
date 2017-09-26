@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppFS } from '../../services';
+import { AppFileystem } from '../../services';
 import { Storage } from '@ionic/storage';
 import { FS } from '../../models';
 
@@ -8,17 +8,17 @@ const WAIT_MSEC: number = 1,
       KEY: string = 'testKey';
 
 let storage: Storage = new Storage({}),
-    appFS: AppFS = new AppFS(storage);
+    appFilesystem: AppFileystem = new AppFileystem(storage);
 
 describe('services/app-fs', () => {
-    it('AppFS instance is not falsy', (done) => {
+    it('AppFileystem instance is not falsy', (done) => {
         setTimeout(
             () => {
-                expect(appFS).not.toBeFalsy();
-                expect(appFS.isReady).toBeTruthy();
-                expect(appFS.selectedPaths).not.toBeFalsy();
-                expect(typeof appFS.selectedPaths).toEqual('object');
-                expect(appFS.nSelected()).toEqual(0);
+                expect(appFilesystem).not.toBeFalsy();
+                expect(appFilesystem.isReady).toBeTruthy();
+                expect(appFilesystem.selectedPaths).not.toBeFalsy();
+                expect(typeof appFilesystem.selectedPaths).toEqual('object');
+                expect(appFilesystem.nSelected()).toEqual(0);
                 done();
             },
             WAIT_MSEC);
@@ -33,7 +33,7 @@ describe('services/app-fs', () => {
                 for (i = 0; i < dataLength; i++) {
                     data[i] = i + 1;
                 }
-                appFS.createWavFile('test.wav', data).subscribe(
+                appFilesystem.createWavFile('test.wav', data).subscribe(
                     () => {
                         done();
                     }
@@ -51,7 +51,7 @@ describe('services/app-fs', () => {
                 for (i = 0; i < dataLength; i++) {
                     data[i] = i + 11;
                 }
-                appFS.appendToWavFile('test.wav', data).subscribe(
+                appFilesystem.appendToWavFile('test.wav', data).subscribe(
                     () => {
                         done();
                     }
@@ -63,10 +63,10 @@ describe('services/app-fs', () => {
     it('can clean up (remove test.wav)', (done) => {
         setTimeout(
             () => {
-                appFS.selectPath('test.wav');
-                appFS.deleteSelected().subscribe(
+                appFilesystem.selectPath('test.wav');
+                appFilesystem.deleteSelected().subscribe(
                     () => {
-                        appFS.clearSelection();
+                        appFilesystem.clearSelection();
                         done();
                     }
                 );

@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-export class AppStateMock {
+export class AppStorageMock {
     public get(key: string): Promise<any> {
         return new Promise((resolve, reject) => {
             resolve(null);

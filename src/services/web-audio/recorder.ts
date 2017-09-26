@@ -58,7 +58,7 @@ interface AudioGainNode extends AudioNode {
  * @class WebAudioRecord
  */
 @Injectable()
-export abstract class WebAudioRecord {
+export abstract class WebAudioRecorder {
     private masterClock: MasterClock;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;

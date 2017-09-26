@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 
-export class FS {
+export class Filesystem {
     /**
      *
      */
@@ -8,10 +8,10 @@ export class FS {
         fileSystem: FileSystem,
         paths: string[]
     ): Observable<Entry[]> {
-        console.log('FS.getEntriesFromPaths(fs, ' + paths + ')');
+        console.log('Filesystem.getEntriesFromPaths(fs, ' + paths + ')');
         let entryObservableArray: Observable<Entry>[] =
             paths.map((path: string) => {
-                return FS.getPathEntry(fileSystem, path, false);
+                return Filesystem.getPathEntry(fileSystem, path, false);
             }),
             result: Entry[] = [],
             obs: Observable<Entry[]> = Observable.create((observer) => {
@@ -38,15 +38,15 @@ export class FS {
         fileSystem: FileSystem,
         paths: string[]
     ): Observable<void> {
-        console.log('FS.deleteEntries(fs, ' + paths + ')');
+        console.log('Filesystem.deleteEntries(fs, ' + paths + ')');
         let entryObservableArray: Observable<Entry>[] =
             paths.map((path: string) => {
-                return FS.getPathEntry(fileSystem, path, false);
+                return Filesystem.getPathEntry(fileSystem, path, false);
             }),
             obs: Observable<void> = Observable.create((observer) => {
                 Observable.from(entryObservableArray).concatAll().subscribe(
                     (entry: Entry) => {
-                        FS.deleteEntry(entry).subscribe(
+                        Filesystem.deleteEntry(entry).subscribe(
                             null,
                             (err1: any) => {
                                 observer.error('err1: ' + err1);
@@ -73,15 +73,16 @@ export class FS {
         paths: string[],
         parent: DirectoryEntry
     ): Observable<void> {
-        console.log('FS.moveEntries(fs, ' + paths + ',' + parent.name + ')');
+        console.log('Filesystem.moveEntries(fs, ' + paths + ',' +
+                    parent.name + ')');
         let entryObservableArray: Observable<Entry>[] =
             paths.map((path: string) => {
-                return FS.getPathEntry(fileSystem, path, false);
+                return Filesystem.getPathEntry(fileSystem, path, false);
             }),
             obs: Observable<void> = Observable.create((observer) => {
                 Observable.from(entryObservableArray).concatAll().subscribe(
                     (entry: Entry) => {
-                        FS.moveEntry(entry, parent).subscribe(
+                        Filesystem.moveEntry(entry, parent).subscribe(
                             null,
                             (err1: any) => {
                                 observer.error('err1: ' + err1);
@@ -109,12 +110,12 @@ export class FS {
     ): Observable<void> {
         let obs: Observable<void> = Observable.create((observer) => {
             const successCB: (ent: Entry) => void = (ent: Entry) => {
-                console.log('FS.moveEntry.successCB()');
+                console.log('Filesystem.moveEntry.successCB()');
                 observer.next();
                 observer.complete();
             };
             const errorCB: (error: FileError) => void = (error: FileError) => {
-                console.log('FS.moveEntry.errorCB()');
+                console.log('Filesystem.moveEntry.errorCB()');
                 observer.error(error);
             };
             entry.moveTo(parent, entry.name, successCB, errorCB);
@@ -126,12 +127,12 @@ export class FS {
      *
      */
     public static deleteEntry(entry: Entry): Observable<void> {
-        console.log('FS.deleteEntry(' + entry.fullPath + ')');
+        console.log('Filesystem.deleteEntry(' + entry.fullPath + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
                 entry.remove(
                     () => {
-                        console.log('FS.deleteEntry(): Done removing ' +
+                        console.log('Filesystem.deleteEntry(): Done removing ' +
                                     entry.fullPath);
                         observer.next();
                         observer.complete();
@@ -145,7 +146,7 @@ export class FS {
             else if (entry.isDirectory) {
                 (<DirectoryEntry>entry).removeRecursively(
                     () => {
-                        console.log('FS.deleteEntry(): Done removing ' +
+                        console.log('Filesystem.deleteEntry(): Done removing ' +
                                     entry.fullPath);
                         observer.next();
                         observer.complete();
@@ -168,7 +169,8 @@ export class FS {
         path: string,
         bCreate: boolean = false
     ): Observable<Entry> {
-        console.log('FS.getPathEntry(fs, ' + path + ', ' + bCreate + ')');
+        console.log('Filesystem.getPathEntry(fs, ' + path + ', ' +
+                    bCreate + ')');
         let obs: Observable<Entry> = Observable.create((observer) => {
             if (path === '/') {
                 observer.next(fileSystem.root);
@@ -184,7 +186,7 @@ export class FS {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log('FS.getPathEntry(.., ' + path +
+                        console.log('Filesystem.getPathEntry(.., ' + path +
                                     ') error1: ' + err);
                         observer.error(err);
                     }
@@ -218,7 +220,7 @@ export class FS {
         bPersistent: boolean = true,
         requestSize: number
     ): Observable<FileSystem> {
-        console.log('FS.getFileSystem(bPersistent=' + bPersistent +
+        console.log('Filesystem.getFileSystem(bPersistent=' + bPersistent +
                     ', requestSize=' + requestSize);
         const fsType: number = (
             bPersistent ? window.PERSISTENT :  window.TEMPORARY
@@ -272,7 +274,7 @@ export class FS {
         seekOffset: number,
         bCreate: boolean
     ): Observable<void> {
-        console.log('FS.writeToFile(fs, ' + path +
+        console.log('Filesystem.writeToFile(fs, ' + path +
                     ', bCreate=' + bCreate + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             fs.root.getFile(
@@ -320,7 +322,7 @@ export class FS {
         path: string,
         blob: Blob
     ): Observable<FileEntry> {
-        console.log('FS.appendToFile(fs, ' + path + ', blob)');
+        console.log('Filesystem.appendToFile(fs, ' + path + ', blob)');
         let obs: Observable<FileEntry> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
@@ -366,7 +368,7 @@ export class FS {
         fs: FileSystem,
         path: string
     ): Observable<Metadata> {
-        console.log('FS.getMetadata(fs, ' + path + ')');
+        console.log('Filesystem.getMetadata(fs, ' + path + ')');
         let obs: Observable<Metadata> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
@@ -413,14 +415,14 @@ export class FS {
                             let fileReader: FileReader = new FileReader();
 
                             fileReader.onloadend = (event: ProgressEvent) => {
-                                console.log('FS.readFromFile() completed. ' +
+                                console.log('Filesystem.readFromFile() done. ' +
                                             event);
                                 observer.next(fileReader.result);
                                 observer.complete();
                             };
 
                             fileReader.onerror = (err1: any) => {
-                                console.log('FS.readFromFile() failed err1: ' +
+                                console.log('Filesystem.readFromFile() err1: ' +
                                             err1);
                                 observer.error(err1);
                             };
@@ -441,14 +443,14 @@ export class FS {
                             }
                         },
                         (err2: any) => {
-                            console.log('FS.readFromFile() failed err2: ' +
+                            console.log('Filesystem.readFromFile() err2: ' +
                                         err2);
                             observer.error(err2);
                         }
                     );
                 },
                 (err3: any) => {
-                    console.log('FS.readFromFile() failed err3: ' + err3);
+                    console.log('Filesystem.readFromFile() err3: ' + err3);
                     observer.error(err3);
                 }
             ); // fs.root.getFile(
@@ -464,8 +466,8 @@ export class FS {
         parentDirectoryEntry: DirectoryEntry,
         name: string
     ): Observable<DirectoryEntry> {
-        console.log('FS.createDirectory(' + parentDirectoryEntry.fullPath +
-                    ', ' + name + ')');
+        console.log('Filesystem.createDirectory(' +
+                    parentDirectoryEntry.fullPath + ', ' + name + ')');
         let obs: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
                 name,
@@ -488,7 +490,8 @@ export class FS {
     public static readDirectoryEntries(
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
-        console.log('FS.readDirectoryEntries(' + directoryEntry.name + '/');
+        console.log('Filesystem.readDirectoryEntries(' +
+                    directoryEntry.name + '/');
         let obs: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],

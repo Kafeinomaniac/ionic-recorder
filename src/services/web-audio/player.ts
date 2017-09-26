@@ -23,7 +23,7 @@ const CLOCK_FUNCTION_NAME: string = 'player';
  * @class WebAudioPlay
  */
 @Injectable()
-export class WebAudioPlay {
+export class WebAudioPlayer {
     private masterClock: MasterClock;
     private audioBuffer: AudioBuffer;
     protected sourceNode: AudioBufferSourceNode;
@@ -38,6 +38,9 @@ export class WebAudioPlay {
     public displayTime: string;
     public displayDuration: string;
 
+    /**
+     *
+     */
     constructor(masterClock: MasterClock) {
         console.log('constructor():WebAudioPlay');
 
@@ -56,6 +59,9 @@ export class WebAudioPlay {
         this.displayDuration = this.displayTime;
     }
 
+    /**
+     *
+     */
     private resetSourceNode(sourceNode: AudioBufferSourceNode): void {
         if (sourceNode) {
             sourceNode.stop();
@@ -67,6 +73,9 @@ export class WebAudioPlay {
         }
     }
 
+    /**
+     *
+     */
     public getTime(): number {
         if (this.pausedAt) {
             return this.pausedAt;
@@ -121,6 +130,9 @@ export class WebAudioPlay {
             });
     }
 
+    /**
+     *
+     */
     public getDuration(): number {
         if (this.duration) {
             return this.duration;
@@ -134,90 +146,7 @@ export class WebAudioPlay {
     }
 
     /**
-     * Schedule the playback of a chunk of audio buffer data.
-     * @param {AudioBuffer} audioBuffer - the audio buffer data we're
-     * scheduling to play. 
-     * @param {number} when - the 'when' (first) argument of 
-     * AudioBufferSourceNode.start(). Units: seconds. Designates when to
-     * start playing, a value of 0 meaning start playing immediately.
-
-     * @param {number} offset - the 'offset' argument of
-     * AudioBufferSourceNode.start(). Offset means: how far from the
-     * beginning playing will start. Units: seconds. This offset is
-     * the offset from chunk start.
-
-     * @param {number} startOffset - distance from the beginning
-     * of the entire track (not just this chunk) to this chunk starting point 
-     */
-
-    public schedulePlay(
-        audioBuffer: AudioBuffer,
-        when: number = 0,
-        offset: number = 0,
-        startOffset: number = 0,
-        onEnded?: () => void
-    ): void {
-        this.startMonitoring();
-        console.log('====> schedulePlay(when: ' +
-            (when - this.startedAt).toFixed(2) + ', offset: ' +
-            offset.toFixed(2) + ', s-offset: ' +
-            startOffset.toFixed(2) + ')');
-        this.audioBuffer = audioBuffer;
-
-        let sourceNode: AudioBufferSourceNode =
-            AUDIO_CONTEXT.createBufferSource();
-
-        sourceNode.connect(AUDIO_CONTEXT.destination);
-        sourceNode.buffer = audioBuffer;
-        if (onEnded) {
-            sourceNode.onended = onEnded;
-        }
-
-        if (when === 0) {
-            // start now
-            if (this.pausedAt) {
-                offset = this.pausedAt;
-                startOffset = 0;
-            }
-            this.startedAtOffset = offset + startOffset;
-            this.sourceNode = sourceNode;
-            // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
-            // console.log('this.starteAt: ' + this.startedAt);
-            // console.log('====> this.starteAt 0: ' +
-            //     (AUDIO_CONTEXT.currentTime - offset));
-            sourceNode.start(0, offset);
-            this.startedAt = AUDIO_CONTEXT.currentTime - this.startedAtOffset;
-
-            console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
-                        ', stopping at: ' + (this.startedAt +
-                                             this.startedAtOffset +
-                                             this.audioBuffer.duration)
-                        .toFixed(2));
-
-            sourceNode.stop(this.startedAt + this.startedAtOffset +
-                this.audioBuffer.duration);
-            this.pausedAt = 0;
-            this.isPlaying = true;
-            // only when you start do you start monitoring
-            // this.startMonitoring();
-        }
-        else {
-            // start later (when)
-            // sourceNode.start(when, offset);
-            sourceNode.start(when, 0);
-            // we save the scheduled source nodes in an array to avoid them
-            // being garbage collected while they wait to be played.
-            // TODO: this array needs to be cleaned up when used - in onended?
-            // this.scheduledSourceNodes.push(sourceNode);
-            this.scheduledSourceNodes = prependArray(
-                sourceNode,
-                this.scheduledSourceNodes
-            );
-        }
-    }
-
-    /**
-     * Pause
+     *
      */
     public pause(): void {
         let elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
@@ -239,9 +168,12 @@ export class WebAudioPlay {
         }
     }
 
+    /**
+     *
+     */
     public cancelScheduled(): void {
         console.log('*** resetting ' + this.scheduledSourceNodes.length +
-            ' scheduled ***');
+                    ' scheduled ***');
         let node: AudioBufferSourceNode = this.scheduledSourceNodes.pop();
         while (node) {
             console.log('.');

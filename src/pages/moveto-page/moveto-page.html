@@ -11,7 +11,7 @@
         <ion-buttons end>
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{appFS.nSelected()}} selected
+                    {{appFilesystem.nSelected()}} selected
                     &nbsp;
                     <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
@@ -19,8 +19,8 @@
         </ion-buttons>
     </ion-toolbar>
     <ion-toolbar>
-        <p *ngIf="appFS.directoryEntry" text-center>
-            {{appFS.getFullPath(appFS.directoryEntry)}}
+        <p *ngIf="appFilesystem.directoryEntry" text-center>
+            {{appFilesystem.getFullPath(appFilesystem.directoryEntry)}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>
@@ -29,15 +29,15 @@
 
 <ion-content>
     <ion-list>
-        <ion-item clear *ngFor="let entry of appFS.entries"
+        <ion-item clear *ngFor="let entry of appFilesystem.entries"
                   [hidden]="entry.isFile" class="moveto-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
-                <ion-icon [name]="appFS.entryIcon(entry)"></ion-icon>
+                <ion-icon [name]="appFilesystem.entryIcon(entry)"></ion-icon>
                 &nbsp;
                 {{entry.name}}
             </ion-label>
         </ion-item>
-        <ion-item *ngIf="!appFS.entries.length"
+        <ion-item *ngIf="!appFilesystem.entries.length"
                   class="moveto-page-empty-folder-message">
             <h2>Empty folder</h2>
         </ion-item>

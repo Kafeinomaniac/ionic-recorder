@@ -22,9 +22,10 @@ export function copyFromObject(src: Object, dest: Object): Object {
     return dest;
 }
 
-export function has(obj: any, prop: any): boolean {
+export function has(obj: any, key: any): boolean {
     'use strict';
-    return Object.prototype.hasOwnProperty.call(obj, prop);
+    // return Object.prototype.hasOwnProperty.call(obj, key);
+    return object ? hasOwnProperty.call(obj, key);
 }
 
 /**

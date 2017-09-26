@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
 
-<ion-header *ngIf="appFS.isReady">
+<ion-header *ngIf="appFilesystem.isReady">
     <ion-navbar>
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
@@ -8,10 +8,10 @@
         <ion-title>
             Library
         </ion-title>
-        <ion-buttons end *ngIf="appFS.nSelected() > 0">
+        <ion-buttons end *ngIf="appFilesystem.nSelected() > 0">
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
-                    {{appFS.nSelected()}} selected
+                    {{appFilesystem.nSelected()}} selected
                     &nbsp;
                     <ion-icon name="md-create"></ion-icon>
                 </ion-badge>
@@ -19,36 +19,36 @@
         </ion-buttons>
     </ion-navbar>
     <ion-toolbar>
-        <p *ngIf="appFS.directoryEntry" text-center>
-            {{appFS.getPath()}}
+        <p *ngIf="appFilesystem.directoryEntry" text-center>
+            {{appFilesystem.getPath()}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>
     </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="appFS.isReady">
-    <ion-list [reorder]="appFS.nEntries() > 1"
+<ion-content *ngIf="appFilesystem.isReady">
+    <ion-list [reorder]="appFilesystem.nEntries() > 1"
               (ionItemReorder)="reorderEntries($event)">
-        <ion-item clear *ngFor="let entry of appFS.entries"
+        <ion-item clear *ngFor="let entry of appFilesystem.entries"
                   class="library-page-item">
             <ion-label ion-button clear (click)="onClickEntry(entry)">
-                <ion-icon [name]="appFS.entryIcon(entry)"></ion-icon>
+                <ion-icon [name]="appFilesystem.entryIcon(entry)"></ion-icon>
                 &nbsp;
                 {{entry.name}}
             </ion-label>
-            <ion-checkbox [checked]="appFS.isEntrySelected(entry)"
+            <ion-checkbox [checked]="appFilesystem.isEntrySelected(entry)"
                           (click)="onClickCheckbox(entry)">
             </ion-checkbox>
         </ion-item>
-        <ion-item *ngIf="!appFS.entries.length"
+        <ion-item *ngIf="!appFilesystem.entries.length"
                   class="library-page-empty-folder-message">
             <h2>Empty folder</h2>
         </ion-item>
     </ion-list>
 </ion-content>
 
-<ion-footer [hidden]="!appFS.nSelected()">
+<ion-footer [hidden]="!appFilesystem.nSelected()">
     <ion-toolbar>
         <button-bar [buttons]="footerButtons">
         </button-bar>
