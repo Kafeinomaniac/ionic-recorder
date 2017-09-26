@@ -7,7 +7,8 @@ export const AUDIO_CONTEXT: AudioContext =
         window['AudioContext'] =
             window['AudioContext'] || window['webkitAudioContext'];
         try {
-            context = new AudioContext({ latencyHint: 'playback' });
+            // context = new AudioContext({ latencyHint: 'playback' });
+            context = new AudioContext();
         }
         catch (err) {
             alert('Web Audio API is not supported in this browser');

@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppStateMock } from '../services/app-state/app-state.mock';
+import { AppStorageMock } from '../services/app-storage/app-storage.mock';
 import { IonicRecorderApp } from './app.component';
 import { LoadingPage } from '../pages';
 import { MenuMock, PlatformMock, StatusBarMock } from 'ionic-mocks';
@@ -13,7 +13,7 @@ describe('IonicRecorderApp', () => {
             <any>PlatformMock.instance(),
             <any>MenuMock.instance(),
             <any>StatusBarMock.instance(),
-            <any>AppStateMock);
+            <any>AppStorageMock);
     });
 
     it('initialises with four possible pages', () => {

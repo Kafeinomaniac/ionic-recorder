@@ -3,7 +3,7 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { DoubleBufferSetter } from '../../models/utils/double-buffer';
-import { WebAudioRecord } from './record';
+import { WebAudioRecorder } from './recorder';
 import { MasterClock } from '../master-clock/master-clock';
 import { MAX, MIN } from '../../models/utils/utils';
 import { AppFilesystem } from '../../services';
@@ -17,24 +17,28 @@ const WAV_CHUNK2: Int16Array = new Int16Array(WAV_CHUNK_LENGTH);
 
 /**
  * Audio Record functions based on WebAudio.
- * @class WebAudioRecord
+ * @class WebAudioRecorder
  */
 @Injectable()
-export class WebAudioRecordWav extends WebAudioRecord {
+export class WavRecorder extends WebAudioRecorder {
     private setter: DoubleBufferSetter;
 
     private appFilesystem: AppFilesystem;
 
+    private nChunksSaved: number;
+
     // this is how we signal
     constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
         super(masterClock);
-        
-        console.log('constructor():WebAudioRecordWav');
+
+        this.nChunksSaved = 0;
+
+        console.log('constructor():WavRecorder');
 
         this.appFilesystem = appFilesystem;
 
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {
-            this.saveChunk(this.setter.activeBuffer).subscribe(
+            this.saveWavFileChunk(this.setter.activeBuffer).subscribe(
                 null,
                 (err: any) => {
                     alert('Error in RecordWav.setter(): ' + err);
@@ -49,20 +53,20 @@ export class WebAudioRecordWav extends WebAudioRecord {
         this.setter.setNext(
             clipped < 0 ? clipped * 0x8000 : clipped * 0x7fff);
     }
-    
+
     /**
      * Save the next wav file chunk
      * @returns {Observable<void>}
      */
     private saveWavFileChunk(arr: Int16Array): Observable<void> {
         let obs: Observable<void> = Observable.create((observer) => {
-            if (this.nChunks === 0) {
+            if (this.nChunksSaved === 0) {
                 this.appFilesystem.createWavFile(
                     'test.wav',
                     this.setter.activeBuffer
                 ).subscribe(
                     () => {
-                        this.nChunks++;
+                        this.nChunksSaved++;
                         observer.next();
                         observer.complete();
                     },
@@ -77,7 +81,7 @@ export class WebAudioRecordWav extends WebAudioRecord {
                     this.setter.activeBuffer
                 ).subscribe(
                     () => {
-                        this.nChunks++;
+                        this.nChunksSaved++;
                         observer.next();
                         observer.complete();
                     },
@@ -96,11 +100,23 @@ export class WebAudioRecordWav extends WebAudioRecord {
      * @returns {Observable<void>}
      */
     public stop(): Observable<void> {
-        console.log('WebAudioRecordWav:stop()');
+        console.log('WavRecorder:stop()');
         this.reset();
-        // return observable that emits after saving last chunk
-        return this.saveWavFileChunk(
-            this.setter.activeBuffer.subarray(0, this.setter.bufferIndex)
-        );
+        let obs: Observable<void> = Observable.create((observer) => {
+            this.saveWavFileChunk(
+                this.setter.activeBuffer.subarray(0, this.setter.bufferIndex)
+            ).subscribe(
+                () => {
+                    this.nChunksSaved = 0;
+                    observer.next();
+                    observer.complete();
+                },
+                (err: any) => {
+                    observer.error(err);
+                }
+            );
+        });
+
+        return obs;
     }
 }

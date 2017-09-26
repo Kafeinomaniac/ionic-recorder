@@ -4,11 +4,10 @@ import {
     AboutPage,
     LibraryPage,
     LoadingPage,
-    OrganizerPage,
     RecordPage,
     SettingsPage
 } from '../pages';
-import { AppState } from '../services/app-state/app-state';
+import { AppStorage } from '../services/app-storage/app-storage';
 import { Component, ViewChild } from '@angular/core';
 import {
     MenuController,
@@ -39,13 +38,13 @@ export class IonicRecorderApp {
 
     private platform: Platform;
     private menu: MenuController;
-    private appState: AppState;
+    private appState: AppStorage;
 
     constructor(
         platform: Platform,
         menu: MenuController,
         statusBar: StatusBar,
-        appState: AppState
+        appState: AppStorage
     ) {
         console.log('IonicRecorderApp.constructor()');
 

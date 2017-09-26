@@ -1,8 +1,8 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { ActionSheetController, NavParams, Content } from 'ionic-angular';
+import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 /**
  * @class TrackPage
@@ -12,9 +12,9 @@ import { Component, ViewChild } from '@angular/core';
     templateUrl: 'track-page.html'
 })
 export class TrackPage {
-    @ViewChild(Content) public content: Content;
     private actionSheetController: ActionSheetController;
     public footerButtons: ButtonbarButton[];
+    public filePath: string;
 
     /**
      * @constructor
@@ -28,7 +28,7 @@ export class TrackPage {
         console.log('TrackPage.constructor()');
 
         this.actionSheetController = actionSheetController;
-
+        this.filePath = '';
         this.footerButtons = [
             {
                 text: 'Stats',
@@ -109,14 +109,6 @@ export class TrackPage {
                 }
             ]
         }).present();
-    }
-
-    private resize(): void {
-        setTimeout(
-            () => {
-                this.content.resize();
-            },
-            20);
     }
 
     /**

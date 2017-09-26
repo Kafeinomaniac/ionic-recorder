@@ -1,11 +1,11 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppState, GainState } from '../../services/app-state/app-state';
+import { AppStorage, GainState } from '../../services/app-storage/app-storage';
 import { Component, ViewChild } from '@angular/core';
 import { Content, NavController } from 'ionic-angular';
-import { RecordStatus } from '../../services/web-audio/record';
-import { WebAudioRecordWav } from '../../services/web-audio/record-wav';
-import { formatLocalTime, formatTime } from '../../models/utils/utils';
+import { RecordStatus } from '../../services/web-audio/recorder';
+import { WavRecorder } from '../../services/web-audio/wav-recorder';
+// import { formatLocalTime, formatTime } from '../../models/utils/utils';
 import { TrackPage } from '../track-page/track-page';
 
 const START_RESUME_ICON: string = 'mic';
@@ -18,16 +18,16 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
  */
 @Component({
     selector: 'record-page',
-    providers: [WebAudioRecordWav],
+    providers: [WavRecorder],
     templateUrl: 'record-page.html'
 })
 export class RecordPage {
     @ViewChild(Content) public content: Content;
-    private appState: AppState;
+    private appState: AppStorage;
     // recordButtonIcon referenced by template
     public recordButtonIcon: string = START_RESUME_ICON;
     // template members
-    public webAudioRecord: WebAudioRecordWav;
+    public recorder: WavRecorder;
     public percentGain: string;
     public maxGainFactor: number;
     public gainFactor: number;
@@ -49,13 +49,13 @@ export class RecordPage {
      */
     constructor(
         navController: NavController,
-        appState: AppState,
-        webAudioRecord: WebAudioRecordWav
+        appState: AppStorage,
+        recorder: WavRecorder
     ) {
         console.log('constructor():RecordPage');
         this.navController = navController;
         this.appState = appState;
-        this.webAudioRecord = webAudioRecord;
+        this.recorder = recorder;
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
         this.lastRecordingPath = '';
         this.lastRecordingDuration = '';
@@ -74,10 +74,10 @@ export class RecordPage {
                 this.gainRangeSliderValue =
                     MAX_GAIN_SLIDER_VALUE * gain.factor / gain.maxFactor;
 
-                webAudioRecord.waitForWAA().subscribe(
+                recorder.waitForWAA().subscribe(
                     () => {
                         this.onGainChange(this.gainRangeSliderValue, false);
-                        webAudioRecord.resetPeaks();
+                        recorder.resetPeaks();
                     }
                 );
             }
@@ -88,7 +88,7 @@ export class RecordPage {
                 this.lastRecordingPath = path;
                 this.appState.get('lastRecordingDuration').then(
                     (duration: string) => {
-                        this.lastRecordingDuration = duration
+                        this.lastRecordingDuration = duration;
                     }
                 );
             }
@@ -97,12 +97,12 @@ export class RecordPage {
 
     /**
      * Used in template
-     * Returns whether this.webAudioRecord is fully initialized
+     * Returns whether this.recorder is fully initialized
      * @returns {boolean}
      */
     public recorderIsReady(): boolean {
-        return this.webAudioRecord &&
-            this.webAudioRecord.status === RecordStatus.READY_STATE;
+        return this.recorder &&
+            this.recorder.status === RecordStatus.READY_STATE;
     }
 
     public onResetGain(): void {
@@ -129,7 +129,7 @@ export class RecordPage {
 
         this.gainFactor = position * this.maxGainFactor;
 
-        this.webAudioRecord.setGainFactor(this.gainFactor);
+        this.recorder.setGainFactor(this.gainFactor);
 
         if (position === 0) {
             this.decibels = 'Muted';
@@ -157,20 +157,20 @@ export class RecordPage {
         console.log('RecordPage.onClickStartPauseButton()');
 
         // this.currentVolume += Math.abs(Math.random() * 10);
-        if (this.webAudioRecord.isRecording) {
+        if (this.recorder.isRecording) {
             // we're recording (when clicked, so pause recording)
-            this.webAudioRecord.pause();
+            this.recorder.pause();
             this.recordButtonIcon = START_RESUME_ICON;
         }
         else {
             // we're not recording (when clicked, so start/resume recording)
-            if (this.webAudioRecord.isInactive) {
+            if (this.recorder.isInactive) {
                 // inactive, we're stopped (rather than paused) so start
-                this.webAudioRecord.start();
+                this.recorder.start();
             }
             else {
                 // it's active, we're just paused, so resume
-                this.webAudioRecord.resume();
+                this.recorder.resume();
             }
             this.recordButtonIcon = PAUSE_ICON;
         }
@@ -184,7 +184,7 @@ export class RecordPage {
 
         this.recordButtonIcon = START_RESUME_ICON;
 
-        this.webAudioRecord.stop().subscribe(
+        this.recorder.stop().subscribe(
             null,
             (err: any) => {
                 alert(err);
@@ -194,12 +194,13 @@ export class RecordPage {
 
     public onPlayLastRecording(): void {
         console.log('RecordPage.onPlayLastRecording()');
-        this.navController.push(TrackPage, this.recordingInfo.dbKey);
+        // this.navController.push(TrackPage, this.recorder.getFilename());
+        // use formatTime(this.recorder.getTime()) here -DT
     }
 
     public ionViewDidEnter(): void {
         console.log('RecordPage.ionViewDidEnter()');
-        this.webAudioRecord.startMonitoring();
+        this.recorder.startMonitoring();
         // if we don't do this.content.resize() here then
         // the volume gauge does not show
         this.content.resize();
@@ -207,6 +208,6 @@ export class RecordPage {
 
     public ionViewDidLeave(): void {
         console.log('RecordPage.ionViewDidLeave()');
-        this.webAudioRecord.stopMonitoring();
+        this.recorder.stopMonitoring();
     }
 }

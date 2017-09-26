@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppStorage } from './app-state';
+import { AppStorage } from './app-storage';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 import { Storage } from '@ionic/storage';
 

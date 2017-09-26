@@ -6,7 +6,7 @@ import { Storage } from '@ionic/storage';
 import { Filesystem } from '../../models';
 // next two are for addDataToWavFile():
 import { AUDIO_CONTEXT } from '../../services/web-audio/common';
-import { makeWavBlobHeaderView } from '../../models/utils/wav';
+import { makeWavBlobHeaderView } from '../../models/utils/wav-file';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 50;

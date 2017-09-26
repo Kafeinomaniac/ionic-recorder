@@ -6,7 +6,7 @@
 
 | Name            | Content                                          |
 |-----------------|--------------------------------------------------|
-| audio-player    | Audio player widget wraps WebAudioPlay         |
+| audio-player    | Audio player widget wraps WebAudioPlayer         |
 | button-bar      | Row of buttons widget                            |
 | progress-slider | Clickable progress slider widget                 |
 | vu-gauge        | Colored LED volume monitoring widget             |

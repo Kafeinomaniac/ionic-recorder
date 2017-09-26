@@ -64,7 +64,7 @@ export class MoveToPage {
                             this.onClickHomeButton();
                         },
                         disabledCB: () => {
-                            return this.appFileSystem.atHome();
+                            return this.appFilesystem.atHome();
                         }
                     },
                     {
@@ -75,7 +75,7 @@ export class MoveToPage {
                             this.onClickParentButton();
                         },
                         disabledCB: () => {
-                            return this.appFileSystem.atHome();
+                            return this.appFilesystem.atHome();
                         }
                     }
                 ];
@@ -87,7 +87,7 @@ export class MoveToPage {
      * UI calls this when selected badge on top right is clicked
      */
     public onClickSelectedBadge(): void {
-        console.log('onClickSelectedBadge()');
+        console.log('MoveToPage.onClickSelectedBadge()');
         // only go to edit selections if at least one is selected
         // this.navController.push(SelectionPage);
         let modal: Modal = this.modalController.create(SelectionPage);
@@ -105,7 +105,7 @@ export class MoveToPage {
      * UI calls this when the 'Select...' button is clicked.
      */
     public onClickMoveHereButton(): void {
-        console.log('onClickMoveHereButton()');
+        console.log('MoveToPage.onClickMoveHereButton()');
         if (this.appFilesystem.isPathSelected('/Unfiled/')) {
             // TODO: do not allow /Unfiled folder to be
             // moved
@@ -134,7 +134,7 @@ export class MoveToPage {
      * UI calls this when the 'Go home' button is clicked.
      */
     public onClickHomeButton(): void {
-        console.log('onClickHomeButton()');
+        console.log('MoveToPage.onClickHomeButton()');
         this.appFilesystem.switchDirectory('/').subscribe(
             () => {
                 this.detectChanges();
@@ -146,7 +146,7 @@ export class MoveToPage {
      * UI calls this when the 'Go to parent' button is clicked.
      */
     public onClickParentButton(): void {
-        console.log('onClickParentButton()');
+        console.log('MoveToPage.onClickParentButton()');
         const path: string = this.appFilesystem.getPath(),
               pathParts: string[] = path.split('/').filter(
                   (str: string) => { return str !== ''; }),
@@ -163,7 +163,7 @@ export class MoveToPage {
      * UI calls this when the new folder button is clicked
      */
     public onClickEntry(entry: Entry): void {
-        console.log('onClickEntry()');
+        console.log('MoveToPage.onClickEntry()');
         if (entry.isDirectory) {
             this.appFilesystem.switchDirectory(
                 this.appFilesystem.getFullPath(entry)
@@ -178,7 +178,7 @@ export class MoveToPage {
     /**
      */
     private detectChanges(): void {
-        console.log('OrganizerPage.detectChanges()');
+        console.log('MoveToPage.detectChanges()');
         setTimeout(
             () => {
                 this.changeDetectorRef.detectChanges();

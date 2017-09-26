@@ -20,7 +20,7 @@ const CLOCK_FUNCTION_NAME: string = 'player';
 /**
  * Audio Play functions based on WebAudio. Originally based on
  * code by Ian McGregor: http://codepen.io/ianmcgregor/pen/EjdJZZ
- * @class WebAudioPlay
+ * @class WebAudioPlayer
  */
 @Injectable()
 export class WebAudioPlayer {
@@ -42,7 +42,7 @@ export class WebAudioPlayer {
      *
      */
     constructor(masterClock: MasterClock) {
-        console.log('constructor():WebAudioPlay');
+        console.log('constructor():WebAudioPlayer');
 
         this.masterClock = masterClock;
 
@@ -142,6 +142,74 @@ export class WebAudioPlayer {
         }
         else {
             return 0;
+        }
+    }
+
+    /**
+     *
+     */
+    public schedulePlay(
+        audioBuffer: AudioBuffer,
+        when: number = 0,
+        offset: number = 0,
+        startOffset: number = 0,
+        onEnded?: () => void
+    ): void {
+        this.startMonitoring();
+        console.log('====> schedulePlay(when: ' +
+                    (when - this.startedAt).toFixed(2) + ', offset: ' +
+                    offset.toFixed(2) + ', s-offset: ' +
+                    startOffset.toFixed(2) + ')');
+        this.audioBuffer = audioBuffer;
+
+        let sourceNode: AudioBufferSourceNode =
+            AUDIO_CONTEXT.createBufferSource();
+
+        sourceNode.connect(AUDIO_CONTEXT.destination);
+        sourceNode.buffer = audioBuffer;
+        if (onEnded) {
+            sourceNode.onended = onEnded;
+        }
+
+        if (when === 0) {
+            // start now
+            if (this.pausedAt) {
+                offset = this.pausedAt;
+                startOffset = 0;
+            }
+            this.startedAtOffset = offset + startOffset;
+            this.sourceNode = sourceNode;
+            // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
+            // console.log('this.starteAt: ' + this.startedAt);
+            // console.log('====> this.starteAt 0: ' +
+            //     (AUDIO_CONTEXT.currentTime - offset));
+            sourceNode.start(0, offset);
+            this.startedAt = AUDIO_CONTEXT.currentTime - this.startedAtOffset;
+
+            console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
+                        ', stopping at: ' +
+                        (this.startedAt + this.startedAtOffset +
+                         this.audioBuffer.duration).toFixed(2));
+
+            sourceNode.stop(this.startedAt + this.startedAtOffset +
+                            this.audioBuffer.duration);
+            this.pausedAt = 0;
+            this.isPlaying = true;
+            // only when you start do you start monitoring
+            // this.startMonitoring();
+        }
+        else {
+            // start later (when)
+            // sourceNode.start(when, offset);
+            sourceNode.start(when, 0);
+            // we save the scheduled source nodes in an array to avoid them
+            // being garbage collected while they wait to be played.
+            // TODO: this array needs to be cleaned up when used - in onended?
+            // this.scheduledSourceNodes.push(sourceNode);
+            this.scheduledSourceNodes = prependArray(
+                sourceNode,
+                this.scheduledSourceNodes
+            );
         }
     }
 

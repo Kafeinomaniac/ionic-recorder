@@ -2,7 +2,6 @@
 
 import {
     AboutPage,
-    EditSelectionPage,
     SelectionPage,
     LibraryPage,
     LoadingPage,
@@ -11,7 +10,7 @@ import {
     SettingsPage,
     TrackPage
 } from '../pages';
-import { AppState } from '../services/app-state/app-state';
+import { AppStorage } from '../services/app-storage/app-storage';
 import { AppFilesystem } from '../services';
 import { AudioPlay } from '../components/audio-player/audio-player';
 import { BrowserModule } from '@angular/platform-browser';
@@ -32,8 +31,6 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         AboutPage,
         LibraryPage,
         MoveToPage,
-        MoveToPage,
-        EditSelectionPage,
         SelectionPage,
         LoadingPage,
         RecordPage,
@@ -55,7 +52,6 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         AboutPage,
         LibraryPage,
         MoveToPage,
-        EditSelectionPage,
         SelectionPage,
         LoadingPage,
         RecordPage,
@@ -66,7 +62,7 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         SplashScreen,
         StatusBar,
         { provide: ErrorHandler, useClass: IonicErrorHandler },
-        AppState,
+        AppStorage,
         AppFilesystem,
         MasterClock
     ]

@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { AUDIO_CONTEXT, SAMPLE_TEXT } from './common';
+import { AUDIO_CONTEXT, SAMPLE_RATE } from './common';
 import { MasterClock } from '../master-clock/master-clock';
 import { ABS, formatTime } from '../../models/utils/utils';
 
@@ -55,7 +55,7 @@ interface AudioGainNode extends AudioNode {
 
 /**
  * Audio recording functions using Web Audio API
- * @class WebAudioRecord
+ * @class WebAudioRecorder
  */
 @Injectable()
 export abstract class WebAudioRecorder {
@@ -82,7 +82,7 @@ export abstract class WebAudioRecorder {
 
     // this is how we signal
     constructor(masterClock: MasterClock) {
-        console.log('constructor():WebAudioRecord');
+        console.log('constructor():WebAudioRecorder');
 
         this.masterClock = masterClock;
 

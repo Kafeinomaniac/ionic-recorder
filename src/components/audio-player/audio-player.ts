@@ -1,16 +1,12 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-// TODO: take care of RecordingInfo - it will change or disappear
-// note this.player.setRecordingInfo() needs changes
-
 import {
     Component,
     Input,
     OnChanges,
     SimpleChange
 } from '@angular/core';
-import { RecordingInfo } from '../../services/web-audio/common';
-import { WebAudioPlayWav } from '../../services/web-audio/play-wav';
+import { WavPlayer } from '../../services/web-audio/wav-player';
 
 /**
  * An toolbar-like (row on the screen) audio player for controlling
@@ -18,19 +14,19 @@ import { WebAudioPlayWav } from '../../services/web-audio/play-wav';
  * @class AudioPlay
  */
 @Component({
-    providers: [WebAudioPlayWav],
+    providers: [WavPlayer],
     selector: 'audio-player',
     templateUrl: 'audio-player.html'
 })
 export class AudioPlay implements OnChanges {
-    @Input() public recordingInfo: RecordingInfo;
-    public player: WebAudioPlayWav;
+    @Input() public filePath: string;
+    public player: WavPlayer;
 
     /**
      * @constructor
      */
-    constructor(player: WebAudioPlayWav) {
-        console.log('constructor():AudioPlay');
+    constructor(player: WavPlayer) {
+        console.log('AudioPlayer.constructor()');
         this.player = player;
     }
 
@@ -38,18 +34,17 @@ export class AudioPlay implements OnChanges {
      * Handle changes (play new song) when a new song (url) is loaded
      */
     public ngOnChanges(
-        changeRecord: {
-            [propertyName: string]: SimpleChange }
+        changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
-        if (changeRecord['recordingInfo'] && this.recordingInfo) {
-            // console.log('AudioPlay:ngOnChanges(): [recordingInfo]: ' +
-            //     this.recordingInfo);
-            this.player.setRecordingInfo(this.recordingInfo);
+        if (changeRecord['filePath'] && this.filePath) {
+            console.log('AudioPlayer:ngOnChanges(): [filePath]: ' +
+                        this.filePath);
+            this.player.setSourceFile(this.filePath);
         }
     }
 
     public ngOnInit(): void {
-        console.log('AudioPlay:ngOnInit()');
+        console.log('AudioPlayer:ngOnInit()');
         // TODO: this maintains monitoring throughout app, you
         // can do this better by stopping to monitor when going to
         // another page but then there will need to be communication
@@ -64,7 +59,7 @@ export class AudioPlay implements OnChanges {
     }
 
     public ngOnDestroy(): void {
-        console.log('AudioPlay:ngOnDestroy()');
+        console.log('AudioPlayer.ngOnDestroy()');
         this.player.stop(true);
         // this.player.stopMonitoring();
     }
