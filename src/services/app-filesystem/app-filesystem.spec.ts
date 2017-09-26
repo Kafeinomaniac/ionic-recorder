@@ -2,7 +2,7 @@
 
 import { AppFileystem } from '../../services';
 import { Storage } from '@ionic/storage';
-import { FS } from '../../models';
+import { Filesystem } from '../../models';
 
 const WAIT_MSEC: number = 1,
       KEY: string = 'testKey';

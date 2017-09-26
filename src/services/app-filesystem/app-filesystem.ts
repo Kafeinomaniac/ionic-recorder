@@ -3,7 +3,7 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { FS } from '../../models';
+import { Filesystem } from '../../models';
 // next two are for addDataToWavFile():
 import { AUDIO_CONTEXT } from '../../services/web-audio/common';
 import { makeWavBlobHeaderView } from '../../models/utils/wav';
