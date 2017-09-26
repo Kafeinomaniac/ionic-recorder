@@ -31,11 +31,12 @@ export class WebAudioWavPlayer extends WebAudioPlayer {
         this.appFS = appFS;
     }
 
-    public setSource(filePath: string): void {
+    public setSourceFile(filePath: string): void {
         console.log('WebAudioWavPlayer.setFileName()');
         // load file header for this
         // set this.filePath
         // set this.nSamples
+        // set this.duration
         // grab sampleRate FROM FILE
         // compute start byte and end byte (file-size)
     }
@@ -44,45 +45,83 @@ export class WebAudioWavPlayer extends WebAudioPlayer {
      * 
      */
     public relativeTimeSeek(relativeTime: number): void {
+        const startSample: number = Math.floor(relativeTime * this.nSamples),
+              startTime: number = startSample / this.sampleRate,
+              endSample: number = startSample + AUDIO_BUFFER_SAMPLES;
+
+        if (this.pausedAt) {
+            this.pausedAt = startTime;
+        }
+        else {
+            if (this.startedAt) {
+                // time: AUDIO_CONTEXT.currentTime - this.startedAt;
+            }
+            else {
+                return 0;
+            }
+
+
+
         // E.g. say AUDIO_BUFFER_SAMPLES is 10, then:
         //     0,1,2,..,9,10,..,20,..
         //     s          es    es
         //    startSample2: number = endSample1,
         //    endSample2: number = startSample2 + AUDIO_BUFFER_SAMPLES;
-        let startSample: number = Math.floor(relativeTime * this.nSamples),
-            endSample: number = startSample + AUDIO_BUFFER_SAMPLES;
+        let startSample1: number = Math.floor(relativeTime * this.nSamples),
+            startTime1: number = startSample / this.sampleRate,
+            endSample1: number = startSample + AUDIO_BUFFER_SAMPLES;
 
         if (startSample >= this.nSamples) {
             console.log('WARNING: startSample >= this.nSamples');
             return;
         }
 
-        if (endSample > this.nSamples) {
+        if (endSample1 > this.nSamples) {
             // we've reached the end at the first chunk
-            endSample = this.nSamples;
+            endSample1 = this.nSamples;
         }
 
         this.appFS.readFromFile(
             this.filePath, 
-            startSample,
-            endSample
+            startSample1,
+            endSample1
         ).subscribe(
             (audioBuffer1: AudioBuffer) => {
-                // reuse startSample and endSample for the next chunk
-                startSample = endSample;
-                endSample += AUDIO_BUFFER_SAMPLES;
-                if (endSample > this.nSamples) {
-                    endSample = this.nSamples;
-                }
 
-                if (startSample < this.nSamples) {
+                this.schedulePlay(
+                    audioBuffer1,
+                    0,
+                    0,
+                    startTime1,
+                    this.getOnEndedCB());
+
+                const startSample2: number = endSample1,
+                      startTime2: number = startSample2 / this.sampleRate,
+                      endSample2: number = startSample2 + AUDIO_BUFFER_SAMPLES;
+
+                if (startSample2 < this.nSamples) {
                     // we haven't reached the end in chunk1 so go on to chunk2
+
+                    if (endSample2 > this.nSamples) {
+                        endSample2 = this.nSamples;
+                    }
+
                     this.appFS.readFromFile(
                         this.filePath, 
-                        startSample,
-                        endSample
+                        startSample2,
+                        endSample2
                     ).subscribe(
                         (audioBuffer2: AudioBuffer) => {
+
+                            // schedule to play 2nd buffer at startTime2
+                            // the start
+                            this.schedulePlay(
+                                audioBuffer2,
+                                startTime2,,
+                                0,
+                                startTime2,
+                                this.getOnEndedCB());
+
                         },
                         (err2: any) => {
                             alert(err2);
