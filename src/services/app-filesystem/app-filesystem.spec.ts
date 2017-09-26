@@ -1,17 +1,17 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppFileystem } from '../../services';
 import { Storage } from '@ionic/storage';
 import { Filesystem } from '../../models';
+import { AppFilesystem } from '../../services';
 
 const WAIT_MSEC: number = 1,
       KEY: string = 'testKey';
 
 let storage: Storage = new Storage({}),
-    appFilesystem: AppFileystem = new AppFileystem(storage);
+    appFilesystem: AppFilesystem = new AppFilesystem(storage);
 
 describe('services/app-fs', () => {
-    it('AppFileystem instance is not falsy', (done) => {
+    it('AppFilesystem instance is not falsy', (done) => {
         setTimeout(
             () => {
                 expect(appFilesystem).not.toBeFalsy();
