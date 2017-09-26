@@ -64,7 +64,7 @@ export class MoveToPage {
                             this.onClickHomeButton();
                         },
                         disabledCB: () => {
-                            return this.appFilesystem.directoryEntry.fullPath === '/';
+                            return this.appFileSystem.atHome();
                         }
                     },
                     {
@@ -75,7 +75,7 @@ export class MoveToPage {
                             this.onClickParentButton();
                         },
                         disabledCB: () => {
-                            return this.appFilesystem.directoryEntry.fullPath === '/';
+                            return this.appFileSystem.atHome();
                         }
                     }
                 ];
@@ -165,12 +165,13 @@ export class MoveToPage {
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
-            this.appFilesystem.switchDirectory(this.appFilesystem.getFullPath(entry))
-                .subscribe(
-                    () => {
-                        this.detectChanges();
-                    }
-                );
+            this.appFilesystem.switchDirectory(
+                this.appFilesystem.getFullPath(entry)
+            ).subscribe(
+                () => {
+                    this.detectChanges();
+                }
+            );
         }
     }
 

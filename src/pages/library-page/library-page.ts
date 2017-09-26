@@ -147,7 +147,8 @@ export class LibraryPage {
         console.log('onClickSelectButton()');
 
         let selectAlert: Alert = this.alertController.create();
-        selectAlert.setTitle('Select which, in ' + this.appFilesystem.getPath());
+        selectAlert.setTitle('Select which, in ' +
+                             this.appFilesystem.getPath());
         selectAlert.addButton({
             text: 'All',
             handler: () => {
@@ -292,13 +293,14 @@ export class LibraryPage {
             handler: () => {
                 this.appFilesystem.deleteSelected().subscribe(
                     () => {
-                        this.appFilesystem.switchDirectory(this.appFilesystem.getFullPath(
-                            this.appFilesystem.directoryEntry
-                        )).subscribe(
-                            () => {
-                                this.detectChanges();
-                            }
-                        );
+                        this.appFilesystem.switchDirectory(
+                            this.appFilesystem.getFullPath(
+                                this.appFilesystem.directoryEntry
+                            )).subscribe(
+                                () => {
+                                    this.detectChanges();
+                                }
+                            );
                     });
             }
         });
@@ -392,8 +394,8 @@ export class LibraryPage {
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
-            this.appFilesystem.switchDirectory(this.appFilesystem.getFullPath(entry))
-                .subscribe(
+            this.appFilesystem.switchDirectory(
+                this.appFilesystem.getFullPath(entry)).subscribe(
                     () => {
                         this.detectChanges();
                     }
@@ -435,18 +437,21 @@ export class LibraryPage {
                                 fullPath += '/';
                             }
                             // create the folder via getPathEntry()
-                            this.appFilesystem.createDirectory(fullPath).subscribe(
+                            this.appFilesystem.createDirectory(
+                                fullPath
+                            ).subscribe(
                                 (directoryEntry: DirectoryEntry) => {
                                     // re-read parent
                                     // to load in new info
-                                    this.appFilesystem.switchDirectory(parentPath)
-                                        .subscribe(
-                                            () => {
-                                                this.detectChanges();
-                                            }
-                                        );
+                                    this.appFilesystem.switchDirectory(
+                                        parentPath
+                                    ).subscribe(
+                                        () => {
+                                            this.detectChanges();
+                                        }
+                                    );
                                 }
-                            ); // appFilesystem.getPathEntry(fullPath, true).subscribe(
+                            ); // .createDirectory().subscribe(
                         } // handler: (data: any) => {
                     }
                 ] // buttons: [

@@ -1,6 +1,5 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Observable } from 'rxjs/Rx';
 import { ActionSheetController, NavParams, Content } from 'ionic-angular';
 import { ButtonbarButton } from '../../components/button-bar/button-bar';
 import { Component, ViewChild } from '@angular/core';
@@ -29,8 +28,6 @@ export class TrackPage {
         console.log('TrackPage.constructor()');
 
         this.actionSheetController = actionSheetController;
-
-        const fullPath: number = navParams.data;
 
         this.footerButtons = [
             {
