@@ -3,6 +3,7 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { DoubleBufferSetter } from '../../models/utils/double-buffer';
+import { formatUnixTimestamp } from '../../models/utils/utils';
 import { WebAudioRecorder } from './recorder';
 import { MasterClock } from '../master-clock/master-clock';
 import { MAX, MIN } from '../../models/utils/utils';
@@ -22,21 +23,17 @@ const WAV_CHUNK2: Int16Array = new Int16Array(WAV_CHUNK_LENGTH);
 @Injectable()
 export class WavRecorder extends WebAudioRecorder {
     private setter: DoubleBufferSetter;
-
     private appFilesystem: AppFilesystem;
-
     private nChunksSaved: number;
+    private filePath: string;
 
     // this is how we signal
     constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
         super(masterClock);
 
-        this.nChunksSaved = 0;
-
         console.log('constructor():WavRecorder');
 
         this.appFilesystem = appFilesystem;
-
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {
             this.saveWavFileChunk(this.setter.activeBuffer).subscribe(
                 null,
@@ -45,6 +42,7 @@ export class WavRecorder extends WebAudioRecorder {
                 }
             );
         });
+        this.nChunksSaved = 0;
     }
 
     // see: https://github.com/dorontal/Recordjs/blob/master/dist/record.js
@@ -62,7 +60,7 @@ export class WavRecorder extends WebAudioRecorder {
         let obs: Observable<void> = Observable.create((observer) => {
             if (this.nChunksSaved === 0) {
                 this.appFilesystem.createWavFile(
-                    'test.wav',
+                    this.filePath,
                     this.setter.activeBuffer
                 ).subscribe(
                     () => {
@@ -77,7 +75,7 @@ export class WavRecorder extends WebAudioRecorder {
             }
             else {
                 this.appFilesystem.appendToWavFile(
-                    'test.wav',
+                    this.filePath,
                     this.setter.activeBuffer
                 ).subscribe(
                     () => {
@@ -92,6 +90,18 @@ export class WavRecorder extends WebAudioRecorder {
             }
         });
         return obs;
+    }
+
+    /**
+     * Start recording
+     */
+    public start(): void {
+        super.start();
+        const dateCreated: number = Date.now(),
+              displayDateCreated: string = formatUnixTimestamp(dateCreated),
+              filePath: string = '/Unfiled/' + displayDateCreated;
+        console.log('WavRecorder.start() - ' + filePath);
+        this.filePath = filePath;
     }
 
     /**

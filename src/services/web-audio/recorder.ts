@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from './common';
 import { MasterClock } from '../master-clock/master-clock';
-import { ABS, formatTime } from '../../models/utils/utils';
+import { ABS, formatSecondsTime } from '../../models/utils/utils';
 
 // the name of the function we give to master clock to run
 export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
@@ -304,7 +304,9 @@ export abstract class WebAudioRecorder {
             // the monitoring actions are in the following function:
             () => {
                 // update currentTime property
-                this.currentTime = formatTime(this.getTime(), Infinity);
+                // TODO: do the formatting outside this function, test heavily
+                // but it should significantly help efficiency
+                this.currentTime = formatSecondsTime(this.getTime(), Infinity);
 
                 // update currentVolume property
                 this.nPeakMeasurements += 1;

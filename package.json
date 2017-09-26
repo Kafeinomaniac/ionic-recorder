@@ -56,7 +56,7 @@
     "@types/node": "8.0.28",
     "codecov": "2.3.0",
     "connect": "3.6.3",
-    "ionic": "3.10.3",
+    "ionic": "3.12.0",
     "ionic-mocks": "1.0.1",
     "jasmine-core": "2.8.0",
     "jasmine-reporters": "2.2.1",

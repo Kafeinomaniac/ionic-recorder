@@ -4,8 +4,8 @@ import {
     isPositiveWholeNumber,
     objectInspector,
     prependArray,
-    formatTime,
-    formatLocalTime,
+    formatSecondsTime,
+    formatUnixTimestamp,
     copyFromObject,
     has,
     isFunction,
@@ -54,19 +54,19 @@ describe('utils/utils:isPositiveWholeNumber()', () => {
         expect(x[0]).toEqual(obj);
     });
 
-    it('can formatTime', () => {
-        let x: string = formatTime(0, 0);
+    it('can formatSecondsTime', () => {
+        let x: string = formatSecondsTime(0, 0);
         alert(x);
         expect(x).toEqual('00.00');
-        x = formatTime(0, Infinity);
+        x = formatSecondsTime(0, Infinity);
         expect(x).toEqual('0:00:00.00');
-        x = formatTime(555.12, 555.12);
+        x = formatSecondsTime(555.12, 555.12);
         expect(x).toEqual('09:15.12');
-        x = formatTime(55555.12, Infinity);
+        x = formatSecondsTime(55555.12, Infinity);
         expect(x).toEqual('15:25:55.12');
     });
 
-    it('can formatLocalTime', () => {
+    it('can formatUnixTimestamp', () => {
         let now: Date = new Date(),
             fmt1: string = [
                 now.getFullYear().toString(),
@@ -77,7 +77,7 @@ describe('utils/utils:isPositiveWholeNumber()', () => {
                 ' -- ',
                 now.toLocaleTimeString()
             ].join(''),
-            fmt2: string = formatLocalTime(now.valueOf());
+            fmt2: string = formatUnixTimestamp(now.valueOf());
         expect(fmt1).toBe(fmt2);
     });
 

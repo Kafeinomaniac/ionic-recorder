@@ -12,7 +12,7 @@ import { Injectable } from '@angular/core';
 import { AUDIO_CONTEXT } from './common';
 import { prependArray } from '../../models/utils/utils';
 import { MasterClock } from '../master-clock/master-clock';
-import { formatTime } from '../../models/utils/utils';
+import { formatSecondsTime } from '../../models/utils/utils';
 
 // the name of the function we give to master clock to run
 const CLOCK_FUNCTION_NAME: string = 'player';
@@ -55,7 +55,7 @@ export class WebAudioPlayer {
         this.time = 0;
         this.relativeTime = 0;
         this.duration = 0;
-        this.displayTime = formatTime(0, 0);
+        this.displayTime = formatSecondsTime(0, 0);
         this.displayDuration = this.displayTime;
     }
 
@@ -100,7 +100,7 @@ export class WebAudioPlayer {
                 if (this.duration !== duration) {
                     // change detected
                     this.duration = duration;
-                    this.displayDuration = formatTime(duration, duration);
+                    this.displayDuration = formatSecondsTime(duration, duration);
                 }
 
                 let time: number = this.getTime();
@@ -114,7 +114,7 @@ export class WebAudioPlayer {
                     // change detected
                     this.time = time;
                     this.relativeTime = time / this.duration;
-                    this.displayTime = formatTime(time, this.duration);
+                    this.displayTime = formatSecondsTime(time, this.duration);
                 }
                 // console.log(this.displayTime + '/' + this.displayDuration);
             });
