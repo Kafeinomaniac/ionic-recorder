@@ -1,10 +1,12 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import {
-    Component,
-    Input,
+/* tslint:disable */
     OnChanges,
-    SimpleChange
+    SimpleChange,
+/* tslint:enable */
+    Component,
+    Input
 } from '@angular/core';
 
 export interface ButtonbarButton {
@@ -32,7 +34,7 @@ export class ButtonBar implements OnChanges {
      * @constructor
      */
     constructor() {
-        console.log('constructor():ButtonBar');
+        console.log('ButtonBar.constructor()');
         // this.buttons = [];
     }
 

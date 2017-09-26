@@ -5,7 +5,7 @@ import { WebAudioPlayer } from './player';
 import { MasterClock } from '../master-clock/master-clock';
 import { AppFilesystem } from '../../services';
 
-const AUDIO_BUFFER_SAMPLES: number = 128000;
+// const AUDIO_BUFFER_SAMPLES: number = 128000;
 
 /**
  * Audio Play functions based on WebAudio, originally based on code
@@ -19,7 +19,7 @@ export class WavPlayer extends WebAudioPlayer {
     private appFilesystem: AppFilesystem;
 
     // current file info
-    private filePath: string;
+    // private filePath: string;
     private sampleRate: number;
     private nSamples: number;
     private chunkAudioBuffer: AudioBuffer;

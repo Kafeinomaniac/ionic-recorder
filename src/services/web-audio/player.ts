@@ -42,7 +42,7 @@ export class WebAudioPlayer {
      *
      */
     constructor(masterClock: MasterClock) {
-        console.log('constructor():WebAudioPlayer');
+        console.log('WebAudioPlayer.constructor()');
 
         this.masterClock = masterClock;
 
@@ -100,7 +100,8 @@ export class WebAudioPlayer {
                 if (this.duration !== duration) {
                     // change detected
                     this.duration = duration;
-                    this.displayDuration = formatSecondsTime(duration, duration);
+                    this.displayDuration =
+                        formatSecondsTime(duration, duration);
                 }
 
                 let time: number = this.getTime();

@@ -26,7 +26,7 @@ export class MasterClock {
      * constructor
      */
     constructor() {
-        console.log('constructor():MasterClock');
+        console.log('MasterClock.constructor()');
         this.isRunning = false;
         this.intervalId = null;
         this.ngZone = new NgZone({ enableLongStackTrace: false });

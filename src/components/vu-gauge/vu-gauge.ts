@@ -1,10 +1,12 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import {
-    Component,
-    Input,
+/* tslint:disable */
     OnChanges,
-    SimpleChange
+    SimpleChange,
+/* tslint:enable */
+    Component,
+    Input
 } from '@angular/core';
 
 /**
@@ -32,7 +34,7 @@ export class VuGauge implements OnChanges {
      * @constructor
      */
     constructor() {
-        console.log('constructor():VuGauge');
+        console.log('VuGauge.constructor()');
         this.leds = [];
         this.maxIndex = 0;
 

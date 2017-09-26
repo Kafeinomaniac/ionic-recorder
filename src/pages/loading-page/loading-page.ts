@@ -15,6 +15,6 @@ export class LoadingPage {
      * @constructor
      */
     constructor() {
-        console.log('constructor():LoadingPage');
+        console.log('LoadingPage.constructor()');
     }
 }

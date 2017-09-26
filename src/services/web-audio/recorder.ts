@@ -82,7 +82,7 @@ export abstract class WebAudioRecorder {
 
     // this is how we signal
     constructor(masterClock: MasterClock) {
-        console.log('constructor():WebAudioRecorder');
+        console.log('WebAudioRecorder.constructor()');
 
         this.masterClock = masterClock;
 

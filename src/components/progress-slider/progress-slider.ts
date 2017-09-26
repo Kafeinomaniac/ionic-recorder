@@ -2,11 +2,13 @@
 
 import {
     Component,
+/* tslint:disable */
     ElementRef,
+    Renderer,
+/* tslint:enable */
     EventEmitter,
     Input,
-    Output,
-    Renderer
+    Output
 } from '@angular/core';
 
 /**
@@ -32,7 +34,7 @@ export class ProgressSlider {
     private freeMouseMoveListener: Function;
 
     constructor(element: ElementRef, renderer: Renderer) {
-        console.log('constructor():ProgressSlider');
+        console.log('ProgressSlider.constructor()');
         this.element = element;
         this.renderer = renderer;
         this.progress = 0;

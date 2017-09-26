@@ -1,7 +1,9 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Injectable } from '@angular/core';
+/* tslint:disable */
 import { Storage } from '@ionic/storage';
+/* tslint:enable */
 
 export interface GainState {
     factor: number;
@@ -33,7 +35,7 @@ export class AppStorage {
      * @constructor
      */
     constructor(storage: Storage) {
-        console.log('constructor():AppStorage');
+        console.log('AppStorage.constructor()');
         this.storage = storage;
     }
 
@@ -47,16 +49,14 @@ export class AppStorage {
                 // TODO: if key is not stored yet then we want to store
                 // it in storage, as taken from DEFAULT_STATE
                 this.storage.get(key).then((value: any) => {
-                    // if (value === null) {
-                    if ((typeof value === 'undefined') || value === null) {
-                        console.log('get(' + key + ') VALUE NOT IN STORAGE!');
-                        console.dir(value);
-                        value = DEFAULT_STATE[key];
-                        this.set(key, value);
+                    if (value) {
+                        console.log('AppStorage.get(' + key + ')=' + value);
                     }
                     else {
-                        console.log('get(' + key +
-                                    ') VALUE IN STORAGE=' + value);
+                        // (typeof value === 'undefined') || (value === null)
+                        console.log('AppStorage.get(' + key + ') NOT FOUND!');
+                        value = DEFAULT_STATE[key];
+                        this.set(key, value);
                     }
                     resolve(value);
                 }); // this.storage.get(key).then((value: any) => {

@@ -2,7 +2,9 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
+/* tslint:disable */
 import { Storage } from '@ionic/storage';
+/* tslint:enable */
 import { Filesystem } from '../../models';
 // next two are for addDataToWavFile():
 import { AUDIO_CONTEXT } from '../../services/web-audio/common';

@@ -1,6 +1,12 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import {
+    /* tslint:disable */
+    ChangeDetectorRef,
+    /* tslint:enable */
+    Component,
+    ViewChild
+} from '@angular/core';
 import {
     ActionSheet,
     ActionSheetController,
@@ -55,7 +61,7 @@ export class LibraryPage {
         platform: Platform
     ) {
 
-        console.log('constructor():LibraryPage');
+        console.log('LibraryPage.constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.actionSheetController = actionSheetController;
         this.modalController = modalController;
@@ -436,7 +442,7 @@ export class LibraryPage {
                                 // slash at the end
                                 fullPath += '/';
                             }
-                            // create the folder via getPathEntry()
+                            // create the directory
                             this.appFilesystem.createDirectory(
                                 fullPath
                             ).subscribe(

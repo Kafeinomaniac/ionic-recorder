@@ -194,6 +194,8 @@ export class Filesystem {
             } // if (path[path.length - 1] === '/') {
             else {
                 // it's a file
+                console.log('fileSystem.root.getFile(' + path + ', ' +
+                            bCreate + ')');
                 fileSystem.root.getFile(
                     path,
                     { create: bCreate },
@@ -221,7 +223,7 @@ export class Filesystem {
         requestSize: number
     ): Observable<FileSystem> {
         console.log('Filesystem.getFileSystem(bPersistent=' + bPersistent +
-                    ', requestSize=' + requestSize);
+                    ', requestSize=' + requestSize + ')');
         const fsType: number = (
             bPersistent ? window.PERSISTENT :  window.TEMPORARY
         );
@@ -405,6 +407,8 @@ export class Filesystem {
         startByte: number = undefined,
         endByte: number = undefined
     ): Observable<any> {
+        console.log('Filesystem.readFromFile(fs, ' + path + ', ' +
+                    startByte + ', ' + endByte + ')');
         let obs: Observable<any> = Observable.create((observer) => {
             fs.root.getFile(
                 path,

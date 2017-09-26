@@ -1,10 +1,12 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import {
-    Component,
-    Input,
+/* tslint:disable */
     OnChanges,
-    SimpleChange
+    SimpleChange,
+/* tslint:enable */
+    Component,
+    Input
 } from '@angular/core';
 import { WavPlayer } from '../../services/web-audio/wav-player';
 

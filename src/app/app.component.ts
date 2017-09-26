@@ -84,7 +84,7 @@ export class IonicRecorderApp {
      */
     public onTabChange(selectedTab: Tab): void {
         const tabIndex: number = selectedTab.index;
-        console.log('onTabChange: ' + tabIndex);
+        console.log('IonicRecorderApp.onTabChange() - tabIndex=' + tabIndex);
         if (tabIndex === 0) {
             //
             // hide tab 0 dynamically because if we hide it in the

@@ -5,7 +5,6 @@ import { Component, ViewChild } from '@angular/core';
 import { Content, NavController } from 'ionic-angular';
 import { RecordStatus } from '../../services/web-audio/recorder';
 import { WavRecorder } from '../../services/web-audio/wav-recorder';
-// import { formatUnixTimestamp, formatSecondsTime } from '../../models/utils/utils';
 import { TrackPage } from '../track-page/track-page';
 
 const START_RESUME_ICON: string = 'mic';
@@ -52,7 +51,7 @@ export class RecordPage {
         appState: AppStorage,
         recorder: WavRecorder
     ) {
-        console.log('constructor():RecordPage');
+        console.log('RecordPage.constructor()');
         this.navController = navController;
         this.appState = appState;
         this.recorder = recorder;
@@ -194,8 +193,7 @@ export class RecordPage {
 
     public onPlayLastRecording(): void {
         console.log('RecordPage.onPlayLastRecording()');
-        // this.navController.push(TrackPage, this.recorder.getFilename());
-        // use formatSecondsTime(this.recorder.getTime()) here -DT
+        this.navController.push(TrackPage, this.recorder.getFilePath());
     }
 
     public ionViewDidEnter(): void {
