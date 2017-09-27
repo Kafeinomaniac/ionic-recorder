@@ -47,6 +47,7 @@ export class WavRecorder extends WebAudioRecorder {
 
     // see: https://github.com/dorontal/Recordjs/blob/master/dist/record.js
     protected valueCB(pcm: number): void {
+        console.log('valueCB()');
         const clipped: number = MAX(-1, MIN(1, pcm));
         this.setter.setNext(
             clipped < 0 ? clipped * 0x8000 : clipped * 0x7fff);

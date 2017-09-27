@@ -91,8 +91,6 @@ export abstract class WebAudioRecorder {
             return;
         }
 
-        this.valueCB = null;
-
         this.status = RecordStatus.UNINITIALIZED_STATE;
 
         // create nodes that do not require a stream in their constructor
@@ -192,6 +190,7 @@ export abstract class WebAudioRecorder {
     }
 
     private onAudioProcess(processingEvent: AudioProcessingEvent): void {
+        // console.log('onAudioProcess() ' + this.isRecording);
         let inputBuffer: AudioBuffer = processingEvent.inputBuffer,
             inputData: Float32Array = inputBuffer.getChannelData(0),
             i: number,
@@ -220,7 +219,8 @@ export abstract class WebAudioRecorder {
 
             // fill up double-buffer active buffer if recording (and
             // save every time a fill-up occurs)
-            if (this.valueCB && this.isRecording) {
+            // if (this.valueCB && this.isRecording) {
+            if (this.isRecording) {
                 this.valueCB(value);
                 this.nRecordedSamples++;
             }
@@ -295,10 +295,20 @@ export abstract class WebAudioRecorder {
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      */
-    public startMonitoring(): void {
-        console.log('startMonitoring()');
-        // first removing anything if there may be noticably kinder on memory
-        this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
+    public startMonitoring(bReplace: boolean = false): void {
+        console.log('WebAudioRecorder.startMonitoring()');
+
+        if (this.masterClock.has(RECORDER_CLOCK_FUNCTION_NAME)) {
+            if (bReplace) {
+                // remove anything already there if we're replacing
+                this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
+            }
+            else {
+                // not replacing but something there, do nothing
+                return;
+            }
+        }
+
         this.masterClock.addFunction(
             RECORDER_CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
@@ -307,7 +317,7 @@ export abstract class WebAudioRecorder {
                 // TODO: do the formatting outside this function, test heavily
                 // but it should significantly help efficiency
                 this.currentTime = formatSecondsTime(this.getTime(), Infinity);
-
+                // console.log(this.currentTime);
                 // update currentVolume property
                 this.nPeakMeasurements += 1;
                 if (this.currentVolume > this.maxVolumeSinceReset) {
@@ -330,7 +340,7 @@ export abstract class WebAudioRecorder {
      * Stops monitoring (stops change detection)
      */
     public stopMonitoring(): void {
-        console.log('stopMonitoring()');
+        console.log('WebAudioRecorder.stopMonitoring()');
         this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
     }
 

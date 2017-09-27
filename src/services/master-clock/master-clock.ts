@@ -33,6 +33,10 @@ export class MasterClock {
         this.functions = {};
     }
 
+    public has(key: string): boolean {
+        return Object.prototype.hasOwnProperty.call(this.functions, key);
+    }
+
     /**
      * Start the clock. We cannot call addFunction() until we've
      * started the clock by calling this. Call it to start the setInterval()
