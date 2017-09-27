@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { WebAudioPlayer } from './player';
 import { MasterClock } from '../master-clock/master-clock';
-import { AppFilesystem } from '../../services';
+import { AppFilesystem, WavInfo } from '../../services';
 
 // const AUDIO_BUFFER_SAMPLES: number = 128000;
 
@@ -35,7 +35,7 @@ export class WavPlayer extends WebAudioPlayer {
     public setSourceFile(filePath: string): void {
         console.log('WavPlayer.setSourceFile(' + filePath + ')');
         this.appFilesystem.readWavFileHeader(filePath).subscribe(
-            (wavHeaderInfo: Object) => {
+            (wavHeaderInfo: WavInfo) => {
                 this.filePath = filePath;
                 this.nSamples = wavHeaderInfo.nSamples;
                 this.sampleRate = wavHeaderInfo.sampleRate;

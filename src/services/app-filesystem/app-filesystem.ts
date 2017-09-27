@@ -6,12 +6,16 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 /* tslint:enable */
 import { Filesystem } from '../../models';
-// next two are for appendToWavFile():
 import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
 import {
     makeWavBlobHeaderView,
     wavSampleToByte
 } from '../../models/utils/wav-file';
+
+export interface WavInfo {
+    nSamples: number
+    sampleRate: number;
+}
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 50;
@@ -528,18 +532,18 @@ export class AppFilesystem {
         return source;
     }
 
-    public readWavFileHeader(path: string): Observable<any> {
+    public readWavFileHeader(path: string): Observable<WavInfo> {
         console.log('AppFileystem.readAudioFromWavFile(' + path + ')');
         let fs: FileSystem = this.fileSystem,
-            obs: Observable<any> = Observable.create((observer) => {
+            obs: Observable<WavInfo> = Observable.create((observer) => {
             Filesystem.readFromFile(fs, path, 24, 28).subscribe(
                 (data: any) => {
                     const view: DataView = new DataView(data),
-                          sampleRate: number = view.getUint32(0, 4, true);
+                          sampleRate: number = view.getUint32(0, true);
                     Filesystem.readFromFile(fs, path, 40, 44).subscribe(
                         (data: any) => {
                             const view: DataView = new DataView(data),
-                                  nSamples: number = view.getUint32(0, 4, true);
+                                  nSamples: number = view.getUint32(0, true);
                             observer.next({
                                 sampleRate: sampleRate,
                                 nSamples: nSamples

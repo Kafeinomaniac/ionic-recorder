@@ -125,16 +125,14 @@ describe('models/filesystem', () => {
             0,
             true
         ).subscribe(() => {
-            Filesystem.readFromFile(FILE_SYSTEM, TEST_FILENAME)
-                .subscribe(
-                    (blob: Blob) => {
-                        console.log('READ BLOB!!! ' + blob);
-                        console.log(typeof(blob));
-                        expect(typeof(blob)).toEqual('string');
-                        expect(blob.toString()).toEqual(data);
-                        done();
-                    }
-                );
+            Filesystem.readFromFile(FILE_SYSTEM, TEST_FILENAME).subscribe(
+                (buffer: ArrayBuffer) => {
+                    const view: DataView = new DataView(buffer);
+                    expect(String.fromCharCode(view.getUint8(0)))
+                        .toEqual(data);
+                    done();
+                }
+            );
         });
     });
 
@@ -147,16 +145,14 @@ describe('models/filesystem', () => {
             0,
             false
         ).subscribe(() => {
-            Filesystem.readFromFile(FILE_SYSTEM, TEST_FILENAME)
-                .subscribe(
-                    (blob: Blob) => {
-                        console.log('READ BLOB!!! ' + blob);
-                        console.log(typeof(blob));
-                        expect(typeof(blob)).toEqual('string');
-                        expect(blob.toString()).toEqual(data);
-                        done();
-                    }
-                );
+            Filesystem.readFromFile(FILE_SYSTEM, TEST_FILENAME).subscribe(
+                (buffer: ArrayBuffer) => {
+                    const view: DataView = new DataView(buffer);
+                    expect(String.fromCharCode(view.getUint8(0)))
+                        .toEqual(data);
+                    done();
+                }
+            );
         });
     });
 
