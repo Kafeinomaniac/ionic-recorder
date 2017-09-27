@@ -25,10 +25,12 @@ export class TrackPage {
         navParams: NavParams,
         actionSheetController: ActionSheetController
     ) {
-        console.log('TrackPage.constructor()');
+        console.log('TrackPage.constructor(): ' + navParams.data);
 
         this.actionSheetController = actionSheetController;
-        this.filePath = '';
+
+        this.filePath = navParams.data;
+
         this.footerButtons = [
             {
                 text: 'Stats',

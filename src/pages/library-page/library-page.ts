@@ -21,7 +21,7 @@ import {
 
 import { AppFilesystem } from '../../services';
 import { ButtonbarButton } from '../../components/';
-import { MoveToPage, SelectionPage } from '../../pages';
+import { MoveToPage, SelectionPage, TrackPage } from '../../pages';
 
 /**
  * Files/folders music library page.
@@ -406,6 +406,9 @@ export class LibraryPage {
                         this.detectChanges();
                     }
                 );
+        }
+        else {
+            this.navController.push(TrackPage, entry.fullPath);
         }
     }
 
