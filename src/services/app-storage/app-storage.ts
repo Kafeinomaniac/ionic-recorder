@@ -12,16 +12,16 @@ export interface GainState {
 
 interface State {
     lastTabIndex: number;
-    lastViewedFolderKey: number;
-    lastRecordingPath: string;
     gain: GainState;
+    lastRecordingPath: string;
+    lastRecordingDuration: string;
 }
 
 const DEFAULT_STATE: State = {
     lastTabIndex: 1,
-    lastViewedFolderKey: 2,
+    gain: { factor: 1.0, maxFactor: 2.0 },
     lastRecordingPath: '',
-    gain: { factor: 1.0, maxFactor: 2.0 }
+    lastRecordingDuration: ''
 };
 
 /**

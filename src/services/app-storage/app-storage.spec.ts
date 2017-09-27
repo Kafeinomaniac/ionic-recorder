@@ -8,14 +8,14 @@ const WAIT_MSEC: number = 60,
       SOME_IDX: number = 9999;
 
 let storage: Storage = new Storage({}),
-    appState: AppStorage = new AppStorage(storage),
+    appStorage: AppStorage = new AppStorage(storage),
     savedTabIndex: number = -1;
 
-describe('When appState initialized', () => {
-    it('appState is not falsy', (done) => {
+describe('When appStorage initialized', () => {
+    it('appStorage is not falsy', (done) => {
         setTimeout(
             () => {
-                expect(appState).not.toBeFalsy();
+                expect(appStorage).not.toBeFalsy();
                 done();
             },
             WAIT_MSEC);
@@ -24,7 +24,7 @@ describe('When appState initialized', () => {
     it('can read lastTabIndex', (done) => {
         setTimeout(
             () => {
-                appState.get('lastTabIndex').then(
+                appStorage.get('lastTabIndex').then(
                     (idx: number) => {
                         savedTabIndex = idx;
                         expect(isPositiveWholeNumber(idx)).toBe(true);
@@ -38,7 +38,7 @@ describe('When appState initialized', () => {
     it('can update lastTabIndex to ' + SOME_IDX, (done) => {
         setTimeout(
             () => {
-                appState.set('lastTabIndex', SOME_IDX);
+                appStorage.set('lastTabIndex', SOME_IDX);
                 done();
             },
             WAIT_MSEC);
@@ -47,7 +47,7 @@ describe('When appState initialized', () => {
     it('can get lastTabIndex as ' + SOME_IDX, (done) => {
         setTimeout(
             () => {
-                appState.get('lastTabIndex').then(
+                appStorage.get('lastTabIndex').then(
                     (prop: any) => {
                         expect(prop).toBe(SOME_IDX);
                         done();
@@ -59,7 +59,7 @@ describe('When appState initialized', () => {
     it('can update lastTabIndex back to what it was originally', (done) => {
         setTimeout(
             () => {
-                appState.set('lastTabIndex', savedTabIndex);
+                appStorage.set('lastTabIndex', savedTabIndex);
                 done();
             },
             WAIT_MSEC);
@@ -68,7 +68,7 @@ describe('When appState initialized', () => {
     it('can get lastTabIndex back to what it was originally', (done) => {
         setTimeout(
             () => {
-                appState.get('lastTabIndex').then(
+                appStorage.get('lastTabIndex').then(
                     (prop: any) => {
                         expect(prop).toBe(savedTabIndex);
                         done();

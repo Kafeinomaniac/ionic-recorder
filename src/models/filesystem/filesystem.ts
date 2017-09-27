@@ -498,7 +498,7 @@ export class Filesystem {
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
         console.log('Filesystem.readDirectoryEntries(' +
-                    directoryEntry.name + '/');
+                    directoryEntry.fullPath + '/');
         let obs: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],

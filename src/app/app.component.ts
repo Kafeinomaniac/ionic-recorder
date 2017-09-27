@@ -38,19 +38,19 @@ export class IonicRecorderApp {
 
     private platform: Platform;
     private menu: MenuController;
-    private appState: AppStorage;
+    private appStorage: AppStorage;
 
     constructor(
         platform: Platform,
         menu: MenuController,
         statusBar: StatusBar,
-        appState: AppStorage
+        appStorage: AppStorage
     ) {
         console.log('IonicRecorderApp.constructor()');
 
         this.platform = platform;
         this.menu = menu;
-        this.appState = appState;
+        this.appStorage = appStorage;
 
         // set root of the hidden (first, default) tab
         this.rootPage = LoadingPage;
@@ -71,7 +71,7 @@ export class IonicRecorderApp {
             // [ NOTE: cordova must be available for StatusBar ]
             statusBar.styleDefault();
             statusBar.backgroundColorByHexString('#000000');
-            this.appState.get('lastTabIndex').then(
+            this.appStorage.get('lastTabIndex').then(
                 (tabIndex: any) => {
                     this.goToPage(this.pages[tabIndex ? tabIndex - 1 : 0]);
                 }
@@ -99,7 +99,7 @@ export class IonicRecorderApp {
             // the app it starts with the last tab you've visited last
             // time you used it
             // console.log('updating tab index to be: ' + tabIndex);
-            this.appState.set('lastTabIndex', tabIndex);
+            this.appStorage.set('lastTabIndex', tabIndex);
         }
     }
 

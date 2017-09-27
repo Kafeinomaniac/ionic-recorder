@@ -12,6 +12,7 @@ import { makeWavBlobHeaderView } from '../../models/utils/wav-file';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 50;
+const DEFAULT_PATH: string = '/Unfiled/';
 
 /**
  * @class AppFileystem
@@ -52,17 +53,17 @@ export class AppFilesystem {
                     (directoryEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/ (or already there)');
                         // grab remembered location from storage and go there
-                        this.storage.get('filesystemPath').then(
+                        storage.get('filesystemPath').then(
                             (directoryPath: string) => {
                                 if (directoryPath === '//') {
                                     alert('dir path is //');
                                 }
                                 if (!directoryPath) {
-                                    // it was not in storage, go to root
-                                    directoryPath = '/';
+                                    // current path not in storage, use default
+                                    directoryPath = DEFAULT_PATH;
                                 }
                                 // grab selection from storage
-                                this.storage.get('filesystemSelected').then(
+                                storage.get('filesystemSelected').then(
                                     // (paths: Set<string>) => {
                                     (paths: {[path: string]: number}) => {
                                         if (paths === null ||
@@ -232,7 +233,7 @@ export class AppFilesystem {
             this.whenReady().subscribe(
                 () => {
                     this.switchDirectory(
-                        this.directoryEntry.fullPath
+                        this.getFullPath(this.directoryEntry)
                     ).subscribe(
                         () => {
                             observer.next();
@@ -264,8 +265,8 @@ export class AppFilesystem {
             Filesystem.getPathEntry(this.fileSystem, path, false).subscribe(
                 (entry: Entry) => {
                     this.directoryEntry = <DirectoryEntry>entry;
-                    console.log('this.directoryEntry = ' +
-                                this.directoryEntry.fullPath);
+                    // console.log('this.directoryEntry = ' +
+                    //             this.directoryEntry.fullPath);
                     // we got the directory entry, now read it
                     Filesystem.readDirectoryEntries(
                             <DirectoryEntry>entry

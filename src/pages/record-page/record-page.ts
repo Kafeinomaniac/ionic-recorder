@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppStorage, GainState } from '../../services/app-storage/app-storage';
+import { AppStorage, GainState } from '../../services';
 import { Component, ViewChild } from '@angular/core';
 import { Content, NavController } from 'ionic-angular';
 import { RecordStatus } from '../../services/web-audio/recorder';
@@ -22,7 +22,7 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
 })
 export class RecordPage {
     @ViewChild(Content) public content: Content;
-    private appState: AppStorage;
+    private appStorage: AppStorage;
     // recordButtonIcon referenced by template
     public recordButtonIcon: string = START_RESUME_ICON;
     // template members
@@ -48,19 +48,19 @@ export class RecordPage {
      */
     constructor(
         navController: NavController,
-        appState: AppStorage,
+        appStorage: AppStorage,
         recorder: WavRecorder
     ) {
         console.log('RecordPage.constructor()');
         this.navController = navController;
-        this.appState = appState;
+        this.appStorage = appStorage;
         this.recorder = recorder;
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
         this.lastRecordingPath = '';
         this.lastRecordingDuration = '';
 
         // initialize with "remembered" gain values
-        this.appState.get('gain').then(
+        this.appStorage.get('gain').then(
             (gain: GainState) => {
                 this.gainFactor = gain.factor;
                 this.maxGainFactor = gain.maxFactor;
@@ -82,10 +82,10 @@ export class RecordPage {
             }
         );
 
-        this.appState.get('lastRecordingPath').then(
+        this.appStorage.get('lastRecordingPath').then(
             (path: string) => {
                 this.lastRecordingPath = path;
-                this.appState.get('lastRecordingDuration').then(
+                this.appStorage.get('lastRecordingDuration').then(
                     (duration: string) => {
                         this.lastRecordingDuration = duration;
                     }
@@ -142,7 +142,7 @@ export class RecordPage {
         this.percentGain = (this.gainFactor * 100.0).toFixed(0);
 
         if (updateStorage) {
-            this.appState.set('gain', {
+            this.appStorage.set('gain', {
                 factor: this.gainFactor,
                 maxFactor: this.maxGainFactor
             });
