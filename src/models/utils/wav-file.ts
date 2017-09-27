@@ -2,10 +2,7 @@
 
 const WAV_HEADER_SIZE: number = 44;
 
-export function sampleIndexToFileByte(
-    sampleIndex: number,
-    sampleRate: number
-): number {
+export function wavSampleToByte(sampleIndex: number): number {
     'use strict';
     return WAV_HEADER_SIZE + sampleIndex * 2;
 }

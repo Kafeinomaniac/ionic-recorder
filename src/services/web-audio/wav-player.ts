@@ -19,13 +19,13 @@ export class WavPlayer extends WebAudioPlayer {
     private appFilesystem: AppFilesystem;
 
     // current file info
-    // private filePath: string;
+    private filePath: string;
     private sampleRate: number;
     private nSamples: number;
     private chunkAudioBuffer: AudioBuffer;
 
     constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
-        console.log('WebAudioWavPlayer.constructor()');
+        console.log('WavPlayer.constructor()');
         super(masterClock);
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
@@ -33,7 +33,15 @@ export class WavPlayer extends WebAudioPlayer {
     }
 
     public setSourceFile(filePath: string): void {
-        console.log('WebAudioWavPlayer.setFileName()');
+        console.log('WavPlayer.setSourceFile(' + filePath + ')');
+        this.appFilesystem.readWavFileHeader(filePath).subscribe(
+            (wavHeaderInfo: Object) => {
+                this.filePath = filePath;
+                this.nSamples = wavHeaderInfo.nSamples;
+                this.sampleRate = wavHeaderInfo.sampleRate;
+            }
+        );
+
         // load file header for this
         // set this.filePath
         // set this.nSamples

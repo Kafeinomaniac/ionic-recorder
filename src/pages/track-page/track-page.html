@@ -7,10 +7,8 @@
             Track
         </ion-title>
     </ion-navbar>
-    <ion-toolbar *ngIf="recordingInfo">
-        <p text-center>
-            {{recordingInfo.fileName}}
-        </p>
+    <ion-toolbar>
+        <p text-center>{{filePath}}</p>
         <audio-player [filePath]="filePath"></audio-player>
     </ion-toolbar>
 </ion-header>
@@ -20,7 +18,6 @@
 
 <ion-footer>
     <ion-toolbar border-top>
-        <button-bar [buttons]="footerButtons">
-        </button-bar>
+        <button-bar [buttons]="footerButtons"></button-bar>
     </ion-toolbar>
 </ion-footer>

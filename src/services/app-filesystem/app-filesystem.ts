@@ -7,8 +7,11 @@ import { Storage } from '@ionic/storage';
 /* tslint:enable */
 import { Filesystem } from '../../models';
 // next two are for appendToWavFile():
-import { AUDIO_CONTEXT } from '../../services/web-audio/common';
-import { makeWavBlobHeaderView } from '../../models/utils/wav-file';
+import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
+import {
+    makeWavBlobHeaderView,
+    wavSampleToByte
+} from '../../models/utils/wav-file';
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 50;
@@ -525,16 +528,49 @@ export class AppFilesystem {
         return source;
     }
 
+    public readWavFileHeader(path: string): Observable<any> {
+        console.log('AppFileystem.readAudioFromWavFile(' + path + ')');
+        let fs: FileSystem = this.fileSystem,
+            obs: Observable<any> = Observable.create((observer) => {
+            Filesystem.readFromFile(fs, path, 24, 28).subscribe(
+                (data: any) => {
+                    const view: DataView = new DataView(data),
+                          sampleRate: number = view.getUint32(0, 4, true);
+                    Filesystem.readFromFile(fs, path, 40, 44).subscribe(
+                        (data: any) => {
+                            const view: DataView = new DataView(data),
+                                  nSamples: number = view.getUint32(0, 4, true);
+                            observer.next({
+                                sampleRate: sampleRate,
+                                nSamples: nSamples
+                            });
+                            observer.complete();
+                        },
+                        (err1: any) => {
+                            observer.error(err1);
+                        }
+                    );
+                },
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            );
+        });
+        return obs;
+    }
+
     /**
      *
      */
-    public readFromFile(
+    public readAudioFromWavFile(
         path: string,
         startSample: number = undefined,
         endSample: number = undefined
     ): Observable<AudioBuffer> {
-        const startByte: number = 44 + 2 * startSample,
-              endByte: number = 44 + 2 * endSample;
+        console.log('AppFileystem.readAudioFromWavFile(' + path + ', ' +
+                    startSample + ', ' + endSample + ')');
+        const startByte: number = wavSampleToByte(startSample),
+              endByte: number = wavSampleToByte(endSample);
         let obs: Observable<AudioBuffer> = Observable.create((observer) => {
             Filesystem.readFromFile(
                 this.fileSystem,
@@ -542,7 +578,7 @@ export class AppFilesystem {
                 startByte,
                 endByte
             ).subscribe(
-                (data: any) => {
+                (data: ArrayBuffer) => {
                     AUDIO_CONTEXT.decodeAudioData(
                         data,
                         (audioBuffer: AudioBuffer) => {
@@ -574,28 +610,23 @@ export class AppFilesystem {
             const nSamples: number = wavData.length,
                   headerView: DataView = makeWavBlobHeaderView(
                       nSamples,
-                      AUDIO_CONTEXT.sampleRate
+                      SAMPLE_RATE
                   ),
                   blob: Blob = new Blob(
                       [ headerView, wavData ],
                       { type: 'audio/wav' }
                   );
-            Filesystem.writeToFile(
-                this.fileSystem,
-                path,
-                blob,
-                0,
-                true
-            ).subscribe(
-                () => {
-                    this.nWavFileSamples += wavData.length;
-                    observer.next();
-                    observer.complete();
-                },
-                (err1: any) => {
-                    observer.error(err1);
-                }
-            );
+            Filesystem.writeToFile(this.fileSystem, path, blob, 0, true)
+                .subscribe(
+                    () => {
+                        this.nWavFileSamples += wavData.length;
+                        observer.next();
+                        observer.complete();
+                    },
+                    (err1: any) => {
+                        observer.error(err1);
+                    }
+                );
         });
         return source;
     }
@@ -611,7 +642,7 @@ export class AppFilesystem {
         let source: Observable<void> = Observable.create((observer) => {
             // see http://soundfile.sapp.org/doc/WaveFormat/ for definitions
             // of subchunk2size and chunkSize
-            let fileSystem: FileSystem = this.fileSystem,
+            let fs: FileSystem = this.fileSystem,
                 nNewSamples: number = wavData.length,
                 nSamples: number = this.nWavFileSamples + nNewSamples,
                 subchunk2size: number = 2 * nSamples,
@@ -624,30 +655,20 @@ export class AppFilesystem {
                 [ view ],
                 { type: 'application/octet-stream' }
             );
-            Filesystem.writeToFile(fileSystem, path, blob, 4, false).subscribe(
+            Filesystem.writeToFile(fs, path, blob, 4, false).subscribe(
                 () => {
                     view.setUint32(0, subchunk2size, true);
                     blob = new Blob(
                         [ view ],
                         { type: 'application/octet-stream' }
                     );
-                    Filesystem.writeToFile(
-                        fileSystem,
-                        path,
-                        blob,
-                        40,
-                        false
-                    ).subscribe(
+                    Filesystem.writeToFile(fs, path, blob, 40, false).subscribe(
                         () => {
                             blob = new Blob(
                                 [ wavData ],
                                 { type: 'application/octet-stream' }
                             );
-                            Filesystem.appendToFile(
-                                fileSystem,
-                                path,
-                                blob
-                            ).subscribe(
+                            Filesystem.appendToFile(fs, path, blob).subscribe(
                                 () => {
                                     this.nWavFileSamples += wavData.length;
                                     observer.next();
@@ -661,12 +682,12 @@ export class AppFilesystem {
                         (err2: any) => {
                             observer.error('err2 ' + err2);
                         }
-                    ); // .writeToFile(fileSystem, path, blob, 40, false) ..
+                    ); // .writeToFile(fs, path, blob, 40, false) ..
                 },
                 (err3: any) => {
                     observer.error('err3 ' + err3);
                 }
-            ); // .writeToFile(fileSystem, path, blob, 4, false).subscribe(
+            ); // .writeToFile(fs, path, blob, 4, false).subscribe(
         });
         return source;
 

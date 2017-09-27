@@ -409,10 +409,10 @@ export class Filesystem {
         path: string,
         startByte: number = undefined,
         endByte: number = undefined
-    ): Observable<any> {
+    ): Observable<ArrayBuffer> {
         console.log('Filesystem.readFromFile(fs, ' + path + ', ' +
                     startByte + ', ' + endByte + ')');
-        let obs: Observable<any> = Observable.create((observer) => {
+        let obs: Observable<ArrayBuffer> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
                 {create: false},
@@ -441,12 +441,14 @@ export class Filesystem {
                                 const start: number = startByte || 0,
                                       end: number = endByte || file.size,
                                       blob: Blob = file.slice(start, end);
-                                fileReader.readAsBinaryString(blob);
+                                // fileReader.readAsBinaryString(blob);
+                                fileReader.readAsArrayBuffer(blob);
                             }
                             else {
                                 // neither startByte nor endByte were specified,
                                 // read entire file
-                                fileReader.readAsBinaryString(file);
+                                // fileReader.readAsBinaryString(file);
+                                fileReader.readAsArrayBuffer(file);
                             }
                         },
                         (err2: any) => {
