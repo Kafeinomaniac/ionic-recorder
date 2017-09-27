@@ -287,7 +287,9 @@ export class Filesystem {
                     fileEntry.createWriter(
                         (fileWriter: FileWriter) => {
                             fileWriter.onwriteend = (event: any) => {
-                                console.log('Write completed. ' + event);
+                                console.log('Filesystem.writeToFile() - ' +
+                                            'Wrote blob of size ' + blob.size +
+                                            ' @ pos ' + seekOffset);
                                 observer.next();
                                 observer.complete();
                             };
@@ -334,7 +336,10 @@ export class Filesystem {
                     fileEntry.createWriter(
                         (fileWriter: FileWriter) => {
                             fileWriter.onwriteend = (event: any) => {
-                                console.log('Write completed. ' + event);
+                                console.log('Filesystem.appendToFile() - ' +
+                                            'Wrote ' + blob.size + ' bytes. ' +
+                                            'Accum = ' + fileWriter.length +
+                                            ' bytes');
                                 observer.next(fileEntry);
                                 observer.complete();
                             };
@@ -343,8 +348,6 @@ export class Filesystem {
                                 observer.error(err1);
                             };
                             // see to end and write from there
-                            console.log('*********** writer.length: ' +
-                                        fileWriter.length + ' *************');
                             fileWriter.seek(fileWriter.length);
                             fileWriter.write(blob);
                         },

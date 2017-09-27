@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 /* tslint:enable */
 import { Filesystem } from '../../models';
-// next two are for addDataToWavFile():
+// next two are for appendToWavFile():
 import { AUDIO_CONTEXT } from '../../services/web-audio/common';
 import { makeWavBlobHeaderView } from '../../models/utils/wav-file';
 
@@ -606,7 +606,7 @@ export class AppFilesystem {
         path: string,
         wavData: Int16Array
     ): Observable<void> {
-        console.log('AppFileystem.addDataToWavFile(' + path + ')');
+        console.log('AppFileystem.appendToWavFile(' + path + ')');
         let source: Observable<void> = Observable.create((observer) => {
             // see http://soundfile.sapp.org/doc/WaveFormat/ for definitions
             // of subchunk2size and chunkSize

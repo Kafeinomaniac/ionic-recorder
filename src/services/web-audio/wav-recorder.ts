@@ -47,7 +47,7 @@ export class WavRecorder extends WebAudioRecorder {
 
     // see: https://github.com/dorontal/Recordjs/blob/master/dist/record.js
     protected valueCB(pcm: number): void {
-        console.log('valueCB()');
+        // console.log('valueCB()');
         const clipped: number = MAX(-1, MIN(1, pcm));
         this.setter.setNext(
             clipped < 0 ? clipped * 0x8000 : clipped * 0x7fff);
@@ -69,7 +69,7 @@ export class WavRecorder extends WebAudioRecorder {
             if (this.nChunksSaved === 0) {
                 this.appFilesystem.createWavFile(
                     this.filePath,
-                    this.setter.activeBuffer
+                    arr
                 ).subscribe(
                     () => {
                         this.nChunksSaved++;
@@ -84,7 +84,7 @@ export class WavRecorder extends WebAudioRecorder {
             else {
                 this.appFilesystem.appendToWavFile(
                     this.filePath,
-                    this.setter.activeBuffer
+                    arr
                 ).subscribe(
                     () => {
                         this.nChunksSaved++;
@@ -118,7 +118,7 @@ export class WavRecorder extends WebAudioRecorder {
      * @returns {Observable<void>}
      */
     public stop(): Observable<void> {
-        console.log('WavRecorder:stop()');
+        console.log('WavRecorder:stop() @ ' + this.setter.bufferIndex);
         this.reset();
         let obs: Observable<void> = Observable.create((observer) => {
             this.saveWavFileChunk(
