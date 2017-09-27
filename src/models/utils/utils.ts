@@ -22,6 +22,9 @@ export function copyFromObject(src: Object, dest: Object): Object {
     return dest;
 }
 
+/**
+ *
+ */
 export function has(obj: any, prop: any): boolean {
     'use strict';
     return Object.prototype.hasOwnProperty.call(obj, prop);
@@ -69,6 +72,9 @@ export function isPositiveWholeNumber(num: number): boolean {
     );
 }
 
+/**
+ *
+ */
 export function isOdd(num: number): boolean {
     'use strict';
     if (!isPositiveWholeNumber(num)) {
@@ -78,6 +84,9 @@ export function isOdd(num: number): boolean {
     return num % 2 === 1;
 }
 
+/**
+ *
+ */
 export function isEven(num: number): boolean {
     'use strict';
     return !isOdd(num);
@@ -146,11 +155,8 @@ export function formatUnixTimestamp(timestamp: number): string {
 }
 
 /**
- * objectInspector digs through a Javascript object
- * to display all its properties
- *
+ * Digs through a Javascript object to display all its properties.
  * @param object - a Javascript object to inspect
- *
  * @return result - the concatenated description of all object properties
  */
 export function objectInspector(object: Object): string {
@@ -173,6 +179,12 @@ export function objectInspector(object: Object): string {
     ].join('\n');
 }
 
+/**
+ * Adds a value to an array as its first element.
+ * @param {any} value - value to add to array.
+ * @param {any[]} arr - the array to add to.
+ * @return {any[]} - the appended-to array.
+ */
 export function prependArray(value: any, arr: any[]): any[] {
     'use strict';
     let newArray: any[] = arr.slice(0);
@@ -180,14 +192,16 @@ export function prependArray(value: any, arr: any[]): any[] {
     return newArray;
 }
 
-// NOTE: we cannot use the function below everywhere
-// (a) because some browsers don't support the url that's created
-//     the way it's created here as the href field;
-// (b) because chrome on android would not allow this - it considers
-//     it to be a cross origin request, so at this point we cannot
-//     download anyway on mobile...
 
-// save data into a local file
+/**
+ * Save blob into a local file.
+ * NOTE: we cannot use the function below everywhere
+ * (a) because some browsers don't support the url that's created
+ *     the way it's created here as the href field;
+ * (b) because chrome on android would not allow this - it considers
+ *     it to be a cross origin request, so at this point we cannot
+ *     download on mobile browsers.
+ */
 export function downloadBlob(blob: Blob, fileName: string): void {
     'use strict';
     const url: string = window.URL.createObjectURL(blob);

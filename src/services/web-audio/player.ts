@@ -10,16 +10,18 @@
 
 import { Injectable } from '@angular/core';
 import { AUDIO_CONTEXT } from './common';
-import { prependArray } from '../../models/utils/utils';
-import { MasterClock } from '../master-clock/master-clock';
-import { formatSecondsTime } from '../../models/utils/utils';
+import { MasterClock } from '../../services';
+import { prependArray, formatSecondsTime } from '../../models/utils';
 
 // the name of the function we give to master clock to run
 const CLOCK_FUNCTION_NAME: string = 'player';
 
 /**
- * Audio Play functions based on WebAudio. Originally based on
- * code by Ian McGregor: http://codepen.io/ianmcgregor/pen/EjdJZZ
+ * Audio playback from an AudioBuffer (not from file, for playback from file,
+ * see the classes that extend this one, e.g. wav-player.ts. Based on Web 
+ * Audio API. Originally this was based on code by Ian McGregor here:
+ * http://codepen.io/ianmcgregor/pen/EjdJZZ
+ *
  * @class WebAudioPlayer
  */
 @Injectable()
@@ -207,10 +209,8 @@ export class WebAudioPlayer {
             // being garbage collected while they wait to be played.
             // TODO: this array needs to be cleaned up when used - in onended?
             // this.scheduledSourceNodes.push(sourceNode);
-            this.scheduledSourceNodes = prependArray(
-                sourceNode,
-                this.scheduledSourceNodes
-            );
+            this.scheduledSourceNodes = 
+                prependArray(sourceNode, this.scheduledSourceNodes);
         }
     }
 

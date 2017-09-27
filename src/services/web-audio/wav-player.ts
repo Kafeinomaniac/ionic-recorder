@@ -5,8 +5,6 @@ import { WebAudioPlayer } from './player';
 import { MasterClock } from '../master-clock/master-clock';
 import { AppFilesystem, WavInfo } from '../../services';
 
-// const AUDIO_BUFFER_SAMPLES: number = 128000;
-
 /**
  * Audio Play functions based on WebAudio, originally based on code
  * of Ian McGregor here: http://codepen.io/ianmcgregor/pen/EjdJZZ
@@ -24,6 +22,9 @@ export class WavPlayer extends WebAudioPlayer {
     private nSamples: number;
     private chunkAudioBuffer: AudioBuffer;
 
+    /**
+     *
+     */
     constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
         console.log('WavPlayer.constructor()');
         super(masterClock);
@@ -32,22 +33,20 @@ export class WavPlayer extends WebAudioPlayer {
         this.appFilesystem = appFilesystem;
     }
 
+    /**
+     *
+     */
     public setSourceFile(filePath: string): void {
-        console.log('WavPlayer.setSourceFile(' + filePath + ')');
         this.appFilesystem.readWavFileHeader(filePath).subscribe(
             (wavHeaderInfo: WavInfo) => {
                 this.filePath = filePath;
                 this.nSamples = wavHeaderInfo.nSamples;
                 this.sampleRate = wavHeaderInfo.sampleRate;
+                console.log('WavPlayer.setSourceFile(' + filePath + 
+                            ') - Got: nSamples = ' + this.nSamples +
+                            ', sampleRate = ' + this.sampleRate);
             }
         );
-
-        // load file header for this
-        // set this.filePath
-        // set this.nSamples
-        // set this.duration
-        // grab sampleRate FROM FILE
-        // compute start byte and end byte (file-size)
     }
 
     /**
@@ -65,10 +64,9 @@ export class WavPlayer extends WebAudioPlayer {
         }
     }
 
-    public stop(stopMonitoring: boolean = true): void {
-        super.stop(stopMonitoring);
-    }
-
+    /**
+     *
+     */
     public togglePlayPause(): void {
         if (!this.isPlaying) {
             console.log('play from: ' + this.pausedAt);

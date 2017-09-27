@@ -422,8 +422,6 @@ export class Filesystem {
                             let fileReader: FileReader = new FileReader();
 
                             fileReader.onloadend = (event: ProgressEvent) => {
-                                console.log('Filesystem.readFromFile() done. ' +
-                                            event);
                                 observer.next(fileReader.result);
                                 observer.complete();
                             };
