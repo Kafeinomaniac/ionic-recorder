@@ -107,12 +107,18 @@ export class ProgressSlider {
     }
 
     public onSliderMouseDown(event: MouseEvent): void {
-        console.log('onSliderMouseDown ' + this.element.nativeElement);
+        // console.log('onSliderMouseDown ' + this.element.nativeElement);
 
         this.trackWidthRange = this.getTrackWidthRange();
 
         this.jumpToPosition(event.clientX, this.trackWidthRange);
 
+        // renderer.listenGlobal() returns a function to free up
+        // the listener it sets up. here we set up a listener on each
+        // mousedown and we free up the listener on the subsequent
+        // mouseup - this way a listener is only used when it really
+        // needs to listen but when it does not need to listen we free
+        // it up so that we do not have too many event listeners around.
         this.freeMouseUpListener =
             this.renderer.listenGlobal(
                 'document',
@@ -130,13 +136,13 @@ export class ProgressSlider {
     }
 
     public onMouseUp(event: MouseEvent): void {
-        console.log('onMouseeUp()');
         // free up the listening to mouse up from<body>now that it happened
         // until the next time we click on the progress-bar
         this.freeMouseUpListener();
         this.freeMouseMoveListener();
         this.progress =
             this.computeProgress(event.clientX, this.trackWidthRange);
+        console.log('onMouseUp(): Emit ChangeEnd w/progress: ' + this.progress);
         this.changeEnd.emit(this.progress);
     }
 
@@ -165,6 +171,6 @@ export class ProgressSlider {
         //         event.touches[0].clientX,
         //         this.trackWidthRange);
         // this.changeEnd.emit(this.progress);
-        console.log('onSliderTouchEnd(): ' + this.progress);
+        // console.log('onSliderTouchEnd(): ' + this.progress);
     }
 }
