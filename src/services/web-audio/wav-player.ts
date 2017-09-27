@@ -52,7 +52,7 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    public relativeTimeSeek(relativeTime: number): void {
+    public playFromRelativeTime(relativeTime: number): void {
         const startSample: number = Math.floor(relativeTime * this.nSamples),
               startTime: number = startSample / this.sampleRate;
 
@@ -68,9 +68,12 @@ export class WavPlayer extends WebAudioPlayer {
      *
      */
     public togglePlayPause(): void {
+        console.log('WavPlayer.togglePlayPause()');
         if (!this.isPlaying) {
-            console.log('play from: ' + this.pausedAt);
-            this.schedulePlay(this.chunkAudioBuffer);
+            const relativeTime: number = (this.pausedAt - this.startedAt) * 
+                  this.sampleRate / this.nSamples;
+            console.log('play from relative time : ' + relativeTime);
+            // this.playFromRelativeTime(relativeTime);
         }
         else {
             this.pause();
