@@ -1,10 +1,10 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import {
-/* tslint:disable */
+    /* tslint:disable */
     OnChanges,
     SimpleChange,
-/* tslint:enable */
+    /* tslint:enable */
     Component,
     Input
 } from '@angular/core';

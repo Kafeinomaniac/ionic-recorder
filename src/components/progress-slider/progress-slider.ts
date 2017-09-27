@@ -2,10 +2,10 @@
 
 import {
     Component,
-/* tslint:disable */
+    /* tslint:disable */
     ElementRef,
     Renderer,
-/* tslint:enable */
+    /* tslint:enable */
     EventEmitter,
     Input,
     Output
@@ -52,19 +52,19 @@ export class ProgressSlider {
 
     private getTrackWidthRange(): { start: number, end: number } {
         const
-            progressSliderContainerElement: Element =
-                document.getElementById('progress-slider-container'),
-            styleDeclaration: CSSStyleDeclaration =
-                getComputedStyle(progressSliderContainerElement, null),
-            offsetLeft: number = this.element.nativeElement.offsetLeft,
-            widthStyle: String =
-                styleDeclaration.getPropertyValue('width'),
-            paddingLeftStyle: string =
-                styleDeclaration.getPropertyValue('padding-left'),
-            width: number =
-                parseFloat(widthStyle.replace('px', '')),
-            paddingLeft: number =
-                parseFloat(paddingLeftStyle.replace('px', ''));
+        progressSliderContainerElement: Element =
+            document.getElementById('progress-slider-container'),
+        styleDeclaration: CSSStyleDeclaration =
+            getComputedStyle(progressSliderContainerElement, null),
+        offsetLeft: number = this.element.nativeElement.offsetLeft,
+        widthStyle: String =
+            styleDeclaration.getPropertyValue('width'),
+        paddingLeftStyle: string =
+            styleDeclaration.getPropertyValue('padding-left'),
+        width: number =
+            parseFloat(widthStyle.replace('px', '')),
+        paddingLeft: number =
+            parseFloat(paddingLeftStyle.replace('px', ''));
         return {
             start: offsetLeft + paddingLeft,
             end: offsetLeft + width - paddingLeft

@@ -7,9 +7,9 @@ import {
     ViewController
 } from 'ionic-angular';
 import {
-/* tslint:disable */
+    /* tslint:disable */
     ChangeDetectorRef,
-/* tslint:enable */
+    /* tslint:enable */
     Component,
     ViewChild
 } from '@angular/core';
