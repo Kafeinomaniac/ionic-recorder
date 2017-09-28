@@ -33,6 +33,9 @@ export class MasterClock {
         this.functions = {};
     }
 
+    /**
+     *
+     */
     public has(key: string): boolean {
         return Object.prototype.hasOwnProperty.call(this.functions, key);
     }
@@ -93,7 +96,7 @@ export class MasterClock {
             this.start();
         }
         this.functions[id] = fun;
-        console.log('MasterClock:addFunction(' + id + 
+        console.log('MasterClock:addFunction(' + id +
                     ') - number of functions now == ' +
                     Object.keys(this.functions).length);
     }
@@ -108,7 +111,7 @@ export class MasterClock {
         if (nFunctions === 0) {
             this.stop();
         }
-        console.log('MasterClock:removeFunction(' + id + 
+        console.log('MasterClock:removeFunction(' + id +
                     ') - number of functions now == ' +
                     Object.keys(this.functions).length);
     }

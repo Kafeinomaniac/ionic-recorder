@@ -1,6 +1,11 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Injectable } from '@angular/core';
+import {
+    /* tslint:disable */
+    ChangeDetectorRef,
+    /* tslint:enable */
+    Injectable
+} from '@angular/core';
 import { WebAudioPlayer } from './player';
 import { AppFilesystem, MasterClock, WavInfo } from '../../services';
 import { formatSecondsTime } from '../../models/utils';
@@ -15,23 +20,29 @@ export class WavPlayer extends WebAudioPlayer {
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
     private appFilesystem: AppFilesystem;
+    private changeDetectorRef: ChangeDetectorRef;
 
     // current file info
     private filePath: string;
     private sampleRate: number;
     private nSamples: number;
-    private chunkAudioBuffer: AudioBuffer;
+    // private chunkAudioBuffer: AudioBuffer;
 
     /**
      *
      */
-    constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
+    constructor(
+        masterClock: MasterClock,
+        appFilesystem: AppFilesystem,
+        changeDetectorRef: ChangeDetectorRef
+    ) {
         console.log('WavPlayer.constructor()');
         super(masterClock);
         this.relativeTime = 0;
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
         this.appFilesystem = appFilesystem;
+        this.changeDetectorRef = changeDetectorRef;
     }
 
     /**
@@ -61,7 +72,7 @@ export class WavPlayer extends WebAudioPlayer {
      */
     public statusIcon(): string {
         // console.log('statusIcon(): ' + (this.isPlaying ? "pause" : "play"));
-        return this.isPlaying ? "pause" : "play";
+        return this.isPlaying ? 'pause' : 'play';
     }
 
     /**
@@ -85,9 +96,10 @@ export class WavPlayer extends WebAudioPlayer {
         else {
             // we're either paused somewhere (this.pausedAt > 0) or
             // we haven't even started (this.pausedAt === 0)
-            console.log('PRE-JUMP PAUSED AT: ' + this.pausedAt);
+            // console.log('PRE-JUMP PAUSED AT: ' + this.pausedAt);
             this.pausedAt = startTime;
-            console.log('POST-JUMP PAUSED AT: ' + this.pausedAt);
+            // console.log('POST-JUMP PAUSED AT: ' + this.pausedAt);
+            this.detectChanges();
         }
     }
 
@@ -101,11 +113,21 @@ export class WavPlayer extends WebAudioPlayer {
     public togglePlayPause(): void {
         console.log('WavPlayer.togglePlayPause()');
         if (!this.isPlaying) {
-            this.play();
+            // this.play();
         }
         else {
             this.pause();
             console.log('pause at: ' + this.pausedAt);
         }
     }
+
+    private detectChanges(): void {
+        setTimeout(
+            () => {
+                this.changeDetectorRef.detectChanges();
+            },
+            0
+        );
+    }
+
 }

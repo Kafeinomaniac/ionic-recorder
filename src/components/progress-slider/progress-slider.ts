@@ -3,6 +3,7 @@
 import {
     Component,
     /* tslint:disable */
+    ChangeDetectorRef,
     ElementRef,
     Renderer,
     /* tslint:enable */
@@ -26,6 +27,7 @@ export class ProgressSlider {
     @Output() public change: EventEmitter<any>;
     @Output() public changeEnd: EventEmitter<any>;
 
+    private changeDetectorRef: ChangeDetectorRef;
     private element: ElementRef;
     private renderer: Renderer;
 
@@ -33,13 +35,32 @@ export class ProgressSlider {
     private freeMouseUpListener: Function;
     private freeMouseMoveListener: Function;
 
-    constructor(element: ElementRef, renderer: Renderer) {
+    constructor(
+        changeDetectorRef: ChangeDetectorRef,
+        element: ElementRef,
+        renderer: Renderer
+    ) {
         console.log('ProgressSlider.constructor()');
+        this.changeDetectorRef = changeDetectorRef;
         this.element = element;
         this.renderer = renderer;
         this.progress = 0;
         this.change = new EventEmitter();
         this.changeEnd = new EventEmitter();
+    }
+
+    /**
+     * Force Angular change detection to happen. NB: It is unfortunte
+     * that we need to call this function. I was hoping change
+     * detection would be completely automatic -DT.
+     */
+    private detectChanges(): void {
+        setTimeout(
+            () => {
+                this.changeDetectorRef.detectChanges();
+            },
+            0
+        );
     }
 
     public progressPercent(): string {
@@ -57,14 +78,11 @@ export class ProgressSlider {
         styleDeclaration: CSSStyleDeclaration =
             getComputedStyle(progressSliderContainerElement, null),
         offsetLeft: number = this.element.nativeElement.offsetLeft,
-        widthStyle: String =
-            styleDeclaration.getPropertyValue('width'),
+        widthStyle: String = styleDeclaration.getPropertyValue('width'),
         paddingLeftStyle: string =
             styleDeclaration.getPropertyValue('padding-left'),
-        width: number =
-            parseFloat(widthStyle.replace('px', '')),
-        paddingLeft: number =
-            parseFloat(paddingLeftStyle.replace('px', ''));
+        width: number = parseFloat(widthStyle.replace('px', '')),
+        paddingLeft: number = parseFloat(paddingLeftStyle.replace('px', ''));
         return {
             start: offsetLeft + paddingLeft,
             end: offsetLeft + width - paddingLeft
@@ -103,11 +121,16 @@ export class ProgressSlider {
         range: { start: number, end: number }
     ): void {
         this.progress = this.computeProgress(clientX, this.trackWidthRange);
+        // console.log('JUMP TO POSITION: ' + this.progress);
+        // console.log('JUMP TO POSITION: ' + clientX);
+        // console.log('JUMP TO POSITION: ' + this.trackWidthRange);
         this.change.emit(this.progress);
+
+        this.detectChanges();
     }
 
     public onSliderMouseDown(event: MouseEvent): void {
-        // console.log('onSliderMouseDown ' + this.element.nativeElement);
+        console.log('onSliderMouseDown ' + event.clientX);
 
         this.trackWidthRange = this.getTrackWidthRange();
 
@@ -119,6 +142,7 @@ export class ProgressSlider {
         // mouseup - this way a listener is only used when it really
         // needs to listen but when it does not need to listen we free
         // it up so that we do not have too many event listeners around.
+
         this.freeMouseUpListener =
             this.renderer.listenGlobal(
                 'document',
@@ -126,6 +150,7 @@ export class ProgressSlider {
                 (mouseEvent: MouseEvent) => {
                     this.onMouseUp(mouseEvent);
                 });
+
         this.freeMouseMoveListener =
             this.renderer.listenGlobal(
                 'document',
@@ -144,18 +169,29 @@ export class ProgressSlider {
             this.computeProgress(event.clientX, this.trackWidthRange);
         console.log('onMouseUp(): Emit ChangeEnd w/progress: ' + this.progress);
         this.changeEnd.emit(this.progress);
+        this.detectChanges();
     }
 
     public onMouseMove(event: MouseEvent): void {
         this.jumpToPosition(event.clientX, this.trackWidthRange);
-    }
+     }
 
     public onSliderTouchMove(event: TouchEvent): void {
         this.jumpToPosition(event.touches[0].clientX, this.trackWidthRange);
+        // console.log('T moving: '+ event.touches[0].clientX);
     }
 
     public onSliderTouchStart(event: TouchEvent): void {
         this.trackWidthRange = this.getTrackWidthRange();
+
+        // this.jumpToPosition(event.clientX, this.trackWidthRange);
+        // console.log('ON SLIDER TOUCH START ---------------------------<' +
+        //             event.clientX);
+        // console.dir(event);
+
+        this.jumpToPosition(event.touches[0].clientX, this.trackWidthRange);
+        console.log('ON SLIDER TOUCH START ---------------------------<' +
+                    event.touches[0].clientX);
     }
 
     public onSliderTouchEnd(event: TouchEvent): void {
@@ -170,7 +206,11 @@ export class ProgressSlider {
         //     this.computeProgress(
         //         event.touches[0].clientX,
         //         this.trackWidthRange);
-        // this.changeEnd.emit(this.progress);
-        // console.log('onSliderTouchEnd(): ' + this.progress);
+        // console.log('onSliderTouchEnd(): Emit ChangeEnd w/progress: ' +
+        //      this.progress);
+        this.changeEnd.emit(this.progress);
+        this.detectChanges();
+        console.log('onSliderTouchEnd(): ' + this.progress);
+        // alert('onSliderTouchEnd(): ' + this.progress);
     }
 }

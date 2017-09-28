@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 /* tslint:disable */
 import { Storage } from '@ionic/storage';
 /* tslint:enable */
-import { Filesystem } from '../../models';
+import { Filesystem, has } from '../../models';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
 import {
     makeWavBlobHeaderView,
@@ -13,7 +13,7 @@ import {
 } from '../../models/utils/wav-file';
 
 export interface WavInfo {
-    nSamples: number
+    nSamples: number;
     sampleRate: number;
 }
 
@@ -322,7 +322,8 @@ export class AppFilesystem {
      * @param {string} path
      */
     public isPathSelected(path: string): boolean {
-        return this.selectedPaths.hasOwnProperty(path);
+        // return this.selectedPaths.hasOwnProperty(path);
+        return has(this.selectedPaths, path);
     }
 
     /**
@@ -537,13 +538,13 @@ export class AppFilesystem {
         let fs: FileSystem = this.fileSystem,
             obs: Observable<WavInfo> = Observable.create((observer) => {
             Filesystem.readFromFile(fs, path, 24, 28).subscribe(
-                (data: any) => {
-                    const view: DataView = new DataView(data),
-                          sampleRate: number = view.getUint32(0, true);
+                (data1: any) => {
+                    const view1: DataView = new DataView(data1),
+                          sampleRate: number = view1.getUint32(0, true);
                     Filesystem.readFromFile(fs, path, 40, 44).subscribe(
-                        (data: any) => {
-                            const view: DataView = new DataView(data),
-                                  nSamples: number = view.getUint32(0, true);
+                        (data2: any) => {
+                            const view2: DataView = new DataView(data2),
+                                  nSamples: number = view2.getUint32(0, true);
                             observer.next({
                                 sampleRate: sampleRate,
                                 nSamples: nSamples
@@ -582,9 +583,9 @@ export class AppFilesystem {
                 startByte,
                 endByte
             ).subscribe(
-                (data: ArrayBuffer) => {
+                (arrayBuffer: ArrayBuffer) => {
                     AUDIO_CONTEXT.decodeAudioData(
-                        data,
+                        arrayBuffer,
                         (audioBuffer: AudioBuffer) => {
                             observer.next(audioBuffer);
                             observer.complete(audioBuffer);

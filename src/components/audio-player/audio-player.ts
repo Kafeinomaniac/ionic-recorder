@@ -58,7 +58,6 @@ export class AudioPlay implements OnChanges {
         // to delay the stop monitoring command?)
         this.player.startMonitoring();
 
-
         // NB: this next line is what starts player playing right away
         // this.player.togglePlayPause();
     }

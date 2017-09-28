@@ -18,7 +18,7 @@ const CLOCK_FUNCTION_NAME: string = 'player';
 
 /**
  * Audio playback from an AudioBuffer (not from file, for playback from file,
- * see the classes that extend this one, e.g. wav-player.ts. Based on Web 
+ * see the classes that extend this one, e.g. wav-player.ts. Based on Web
  * Audio API. Originally this was based on code by Ian McGregor here:
  * http://codepen.io/ianmcgregor/pen/EjdJZZ
  *
@@ -114,6 +114,7 @@ export class WebAudioPlayer {
                     alert('We stopped when we need not have done so! Why?');
                 }
 
+                this.time = this.relativeTime * this.duration;
                 if (this.time !== time) {
                     // change detected
                     console.log('Change detected!!! this.time (' +
@@ -213,7 +214,7 @@ export class WebAudioPlayer {
             // being garbage collected while they wait to be played.
             // TODO: this array needs to be cleaned up when used - in onended?
             // this.scheduledSourceNodes.push(sourceNode);
-            this.scheduledSourceNodes = 
+            this.scheduledSourceNodes =
                 prependArray(sourceNode, this.scheduledSourceNodes);
         }
     }

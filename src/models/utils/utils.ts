@@ -192,7 +192,6 @@ export function prependArray(value: any, arr: any[]): any[] {
     return newArray;
 }
 
-
 /**
  * Save blob into a local file.
  * NOTE: we cannot use the function below everywhere
