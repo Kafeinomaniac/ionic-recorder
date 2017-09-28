@@ -26,9 +26,9 @@
         <button ion-button small text-uppercase (click)="onResetGain()">
             Reset Gain
         </button>
-        <ion-range color="light" debounce="50"
+        <ion-range color="light" debounce="15"
                    [(ngModel)]="gainRangeSliderValue"
-                   (ionChange)="onGainChange($event.value)"
+                   (ionChange)="onGainChange($event.value, true)"
                    [max]="maxGainSliderValue">
         </ion-range>
     </p>

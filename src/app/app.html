@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
 
-<ion-menu [content]="navTabs">
+<ion-menu [content]="navTabs" swipeEnabled="false">
     <ion-header>
         <ion-toolbar>
             <ion-title>Go to ...</ion-title>
@@ -8,14 +8,18 @@
     </ion-header>
     <ion-content>
         <ion-list>
-            <button menuClose ion-item *ngFor="let p of pages" (click)="goToPage(p)">
+            <button menuClose ion-item
+                    *ngFor="let p of pages"
+                    (click)="goToPage(p)">
                 {{p.title}}
             </button>
         </ion-list>
     </ion-content>
 </ion-menu>
 
-<ion-tabs #navTabs preloadTabs="false" (ionChange)="onTabChange($event)" [selectedIndex]="0">
+<ion-tabs #navTabs preloadTabs="false"
+          (ionChange)="onTabChange($event)"
+          [selectedIndex]="0">
     <ion-tab [root]="rootPage"></ion-tab>
     <ion-tab *ngFor="let p of pages" [root]="p.component">
         {{p.title}}

@@ -2,8 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { WebAudioPlayer } from './player';
-import { MasterClock } from '../master-clock/master-clock';
-import { AppFilesystem, WavInfo } from '../../services';
+import { AppFilesystem, MasterClock, WavInfo } from '../../services';
+import { formatSecondsTime } from '../../models/utils';
 
 /**
  * Audio Play functions based on WebAudio, originally based on code
@@ -28,6 +28,7 @@ export class WavPlayer extends WebAudioPlayer {
     constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
         console.log('WavPlayer.constructor()');
         super(masterClock);
+        this.relativeTime = 0;
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
         this.appFilesystem = appFilesystem;
@@ -42,38 +43,65 @@ export class WavPlayer extends WebAudioPlayer {
                 this.filePath = filePath;
                 this.nSamples = wavHeaderInfo.nSamples;
                 this.sampleRate = wavHeaderInfo.sampleRate;
-                console.log('WavPlayer.setSourceFile(' + filePath + 
+                this.duration = this.nSamples / this.sampleRate;
+                this.displayDuration = formatSecondsTime(this.duration,
+                                                         this.duration);
+
+                console.log('WavPlayer.setSourceFile(' + filePath +
                             ') - Got: nSamples = ' + this.nSamples +
-                            ', sampleRate = ' + this.sampleRate);
+                            ', sampleRate = ' + this.sampleRate +
+                            ', duration = ' + this.duration);
             }
         );
     }
 
     /**
-     *
+     * Return the Ionicons icon name for visualizing current play status.
+     * @return {string} - the Ionicons icon name to show current play status
      */
-    public playFromRelativeTime(relativeTime: number): void {
-        const startSample: number = Math.floor(relativeTime * this.nSamples),
-              startTime: number = startSample / this.sampleRate;
-
-        if (this.pausedAt) {
-            this.pausedAt = startTime;
-        }
-        else if (this.startedAt) {
-            // time: AUDIO_CONTEXT.currentTime - this.startedAt;
-        }
+    public statusIcon(): string {
+        // console.log('statusIcon(): ' + (this.isPlaying ? "pause" : "play"));
+        return this.isPlaying ? "pause" : "play";
     }
 
     /**
      *
      */
+    public jumpTo(relativeTime: number): void {
+        console.log('WavPlayer.jumpTo(' + relativeTime + ')');
+        if (!this.nSamples || !this.sampleRate) {
+            alert('WavPlayer.jumpTo(): !this.nSamples || !this.sampleRate');
+        }
+        const startSample: number = Math.floor(relativeTime * this.nSamples),
+              startTime: number = startSample / this.sampleRate;
+
+        console.log('WavPlayer.relativeTimeSeek(' + relativeTime +
+                    '): startSample: ' + startSample + ', startTime: ' +
+                    startTime);
+
+        if (this.startedAt) {
+            // we're in the midst of playing
+        }
+        else {
+            // we're either paused somewhere (this.pausedAt > 0) or
+            // we haven't even started (this.pausedAt === 0)
+            console.log('PRE-JUMP PAUSED AT: ' + this.pausedAt);
+            this.pausedAt = startTime;
+            console.log('POST-JUMP PAUSED AT: ' + this.pausedAt);
+        }
+    }
+
+    // this.relativeTime = (this.pausedAt - this.startedAt) *
+    //     this.sampleRate / this.nSamples;
+    // this.relativeTimeSeek(this.relativeTime);
+
+    /**
+     * Change play status. If not playing, play. Otherwise, pause.
+     */
     public togglePlayPause(): void {
         console.log('WavPlayer.togglePlayPause()');
         if (!this.isPlaying) {
-            const relativeTime: number = (this.pausedAt - this.startedAt) * 
-                  this.sampleRate / this.nSamples;
-            console.log('play from relative time : ' + relativeTime);
-            // this.playFromRelativeTime(relativeTime);
+            this.play();
         }
         else {
             this.pause();

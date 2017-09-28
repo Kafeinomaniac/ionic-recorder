@@ -97,24 +97,27 @@ export class WebAudioPlayer {
             CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
-                const duration: number = this.getDuration();
+                // const duration: number = this.getDuration();
                 // console.log('dur: ' + duration);
-                if (this.duration !== duration) {
-                    // change detected
-                    this.duration = duration;
-                    this.displayDuration =
-                        formatSecondsTime(duration, duration);
-                }
+                // if (this.duration !== duration) {
+                //     // change detected
+                //     this.duration = duration;
+                //     this.displayDuration =
+                //         formatSecondsTime(duration, duration);
+                // }
 
                 let time: number = this.getTime();
 
                 if (time > this.duration) {
                     time = this.duration;
                     this.stop();
+                    alert('We stopped when we need not have done so! Why?');
                 }
 
                 if (this.time !== time) {
                     // change detected
+                    console.log('Change detected!!! this.time (' +
+                                this.time + ') !== time (' + time + ')');
                     this.time = time;
                     this.relativeTime = time / this.duration;
                     this.displayTime = formatSecondsTime(time, this.duration);
@@ -137,15 +140,16 @@ export class WebAudioPlayer {
      *
      */
     public getDuration(): number {
-        if (this.duration) {
-            return this.duration;
-        }
-        else if (this.audioBuffer) {
-            return this.audioBuffer.duration;
-        }
-        else {
-            return 0;
-        }
+        // if (this.duration) {
+        //     return this.duration;
+        // }
+        // else if (this.audioBuffer) {
+        //     return this.audioBuffer.duration;
+        // }
+        // else {
+        //     return 0;
+        // }
+        return this.duration;
     }
 
     /**

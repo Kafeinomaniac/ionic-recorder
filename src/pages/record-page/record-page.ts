@@ -106,12 +106,10 @@ export class RecordPage {
 
     public onResetGain(): void {
         console.log('RecordPage.onResetGain()');
-
         // 0.5 if progress-slider is used instead of ion-range:
         // this.gainRangeSliderValue = 0.5;
         this.gainRangeSliderValue = 0.5 * MAX_GAIN_SLIDER_VALUE;
-
-        this.onGainChange(this.gainRangeSliderValue);
+        this.onGainChange(this.gainRangeSliderValue, true);
     }
 
     public onGainChange(

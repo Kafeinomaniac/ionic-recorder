@@ -39,14 +39,14 @@ export class AudioPlay implements OnChanges {
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
-            console.log('AudioPlayer:ngOnChanges(): [filePath]: ' +
+            console.log('AudioPlayer.ngOnChanges(): [filePath]: ' +
                         this.filePath);
             this.player.setSourceFile(this.filePath);
         }
     }
 
     public ngOnInit(): void {
-        console.log('AudioPlayer:ngOnInit()');
+        console.log('AudioPlayer.ngOnInit()');
         // TODO: this maintains monitoring throughout app, you
         // can do this better by stopping to monitor when going to
         // another page but then there will need to be communication
@@ -56,7 +56,7 @@ export class AudioPlay implements OnChanges {
         // player.pause() or player.stop() - but right now that does
         // not work due to race conditions (perhaps add a setTimeout()
         // to delay the stop monitoring command?)
-        // this.player.startMonitoring();
+        this.player.startMonitoring();
 
 
         // NB: this next line is what starts player playing right away
@@ -66,6 +66,6 @@ export class AudioPlay implements OnChanges {
     public ngOnDestroy(): void {
         console.log('AudioPlayer.ngOnDestroy()');
         this.player.stop(true);
-        // this.player.stopMonitoring();
+        this.player.stopMonitoring();
     }
 }
