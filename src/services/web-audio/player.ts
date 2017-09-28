@@ -114,6 +114,8 @@ export class WebAudioPlayer {
                     alert('We stopped when we need not have done so! Why?');
                 }
 
+                console.log(this.relativeTime);
+
                 this.time = this.relativeTime * this.duration;
                 if (this.time !== time) {
                     // change detected

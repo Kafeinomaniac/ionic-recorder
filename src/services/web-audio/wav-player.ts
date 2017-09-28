@@ -38,11 +38,11 @@ export class WavPlayer extends WebAudioPlayer {
     ) {
         console.log('WavPlayer.constructor()');
         super(masterClock);
+        this.appFilesystem = appFilesystem;
+        this.changeDetectorRef = changeDetectorRef;
         this.relativeTime = 0;
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
-        this.appFilesystem = appFilesystem;
-        this.changeDetectorRef = changeDetectorRef;
     }
 
     /**

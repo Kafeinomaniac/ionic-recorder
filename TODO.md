@@ -7,6 +7,18 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* problem with time keeping:
+  1) audio-player.html, we use progress-slider and link it with 
+     player.relativeTime ---- this updates the progress bar and vice versa
+     (two-directional).
+     - so when you change progress bar by touch/mouse, relativeTime changes
+     - or when relativeTime changes via other internal logic, the progress
+       bar moves
+  2) to display the time in audio player, we use displayTime, which is
+     derived from 'time' - it is computed by looking at this.pausedAt and
+     this.startedAt and AUDIO_CONTEXT.currentTime  -- those are changed by
+     the audio player and they also change relativeTime
+
 * refactoring / renaming:
   * wav.ts - we need to put this somewhere else, together with other wav stuff
   * write a class, near double-buffer.ts, called double-file-reader.ts, that

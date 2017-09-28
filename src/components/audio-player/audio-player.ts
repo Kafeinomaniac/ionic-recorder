@@ -39,8 +39,7 @@ export class AudioPlay implements OnChanges {
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
-            console.log('AudioPlayer.ngOnChanges(): [filePath]: ' +
-                        this.filePath);
+            console.log('AudioPlayer.ngOnChanges(): filePath=' + this.filePath);
             this.player.setSourceFile(this.filePath);
         }
     }

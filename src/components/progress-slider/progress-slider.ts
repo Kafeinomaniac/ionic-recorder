@@ -52,7 +52,7 @@ export class ProgressSlider {
     /**
      * Force Angular change detection to happen. NB: It is unfortunte
      * that we need to call this function. I was hoping change
-     * detection would be completely automatic -DT.
+     * detection would be completely automatic -DT. Calling this is a hack.
      */
     private detectChanges(): void {
         setTimeout(
@@ -121,11 +121,10 @@ export class ProgressSlider {
         range: { start: number, end: number }
     ): void {
         this.progress = this.computeProgress(clientX, this.trackWidthRange);
-        // console.log('JUMP TO POSITION: ' + this.progress);
+        console.log('JUMP TO POSITION: ' + this.progress);
         // console.log('JUMP TO POSITION: ' + clientX);
         // console.log('JUMP TO POSITION: ' + this.trackWidthRange);
         this.change.emit(this.progress);
-
         this.detectChanges();
     }
 
