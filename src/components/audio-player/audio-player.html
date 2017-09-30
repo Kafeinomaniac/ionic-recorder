@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
 
-<progress-slider [progress]="player.relativeTime"
+<progress-slider [progress]="player.getProgress()"
                  (changeEnd)="player.jumpTo($event)">
 </progress-slider>
 <button ion-button clear (click)="player.togglePlayPause()">

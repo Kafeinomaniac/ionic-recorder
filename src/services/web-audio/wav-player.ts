@@ -40,7 +40,7 @@ export class WavPlayer extends WebAudioPlayer {
         super(masterClock);
         this.appFilesystem = appFilesystem;
         this.changeDetectorRef = changeDetectorRef;
-        this.relativeTime = 0;
+        // this.relativeTime = 0;
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
     }
@@ -78,17 +78,16 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    public jumpTo(relativeTime: number): void {
-        console.log('WavPlayer.jumpTo(' + relativeTime + ')');
+    public jumpTo(progress: number): void {
+        console.log('WavPlayer.jumpTo(' + progress + ')');
         if (!this.nSamples || !this.sampleRate) {
             alert('WavPlayer.jumpTo(): !this.nSamples || !this.sampleRate');
         }
-        const startSample: number = Math.floor(relativeTime * this.nSamples),
+        const startSample: number = Math.floor(progress * this.nSamples),
               startTime: number = startSample / this.sampleRate;
 
-        console.log('WavPlayer.relativeTimeSeek(' + relativeTime +
-                    '): startSample: ' + startSample + ', startTime: ' +
-                    startTime);
+        console.log('WavPlayer.jumpTo(' + progress + '): startSample: '
+                    + startSample + ', startTime: ' + startTime);
 
         if (this.startedAt) {
             // we're in the midst of playing
