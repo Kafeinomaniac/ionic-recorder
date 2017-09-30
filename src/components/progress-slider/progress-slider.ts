@@ -166,14 +166,17 @@ export class ProgressSlider {
         this.freeMouseMoveListener();
         this.progress =
             this.computeProgress(event.clientX, this.trackWidthRange);
-        console.log('onMouseUp(): Emit ChangeEnd w/progress: ' + this.progress);
-        this.changeEnd.emit(this.progress);
+        // we comment out the emit below because touchEnd happens in
+        // desktop browsers so we get a double firing of this event.
+        // we'll keep the one there (touchEnd), comment out the one here.
+        // this.changeEnd.emit(this.progress);
+        // console.log('onMouseUp(): changeEnd.emit(' + this.progress + ')');
         this.detectChanges();
     }
 
     public onMouseMove(event: MouseEvent): void {
         this.jumpToPosition(event.clientX, this.trackWidthRange);
-     }
+    }
 
     public onSliderTouchMove(event: TouchEvent): void {
         this.jumpToPosition(event.touches[0].clientX, this.trackWidthRange);
@@ -208,6 +211,8 @@ export class ProgressSlider {
         // console.log('onSliderTouchEnd(): Emit ChangeEnd w/progress: ' +
         //      this.progress);
         this.changeEnd.emit(this.progress);
+        console.log('onSliderTouchEnd(): changeEnd.emit(' +
+                    this.progress + ')');
         this.detectChanges();
         console.log('onSliderTouchEnd(): ' + this.progress);
         // alert('onSliderTouchEnd(): ' + this.progress);

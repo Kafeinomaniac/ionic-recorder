@@ -7,6 +7,15 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* player.ts - eliminate use of member variables (everywhere, actually, but
+  start in player.ts for now only). use getter and setter methods to get and
+  set member variables.  
+* player.ts - get rid of relativeTime and make it a computed entity
+* audio-player.html - update here and everywhere else that uses player
+  (record-page.ts)
+* create a mock player that moves time along and pretends to be playing
+  audio
+
 * problem with time keeping:
   1) audio-player.html, we use progress-slider and link it with 
      player.relativeTime ---- this updates the progress bar and vice versa
