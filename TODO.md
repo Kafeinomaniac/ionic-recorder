@@ -7,6 +7,17 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* get rid of master clock in player.ts - no longer needed?
+
+* audio-player.ts - when there's a change in filename, get the duration,
+  set it only then, never need to change it again, communicate it to the
+  template via a variable. forget getters or a method - no need.
+  then, in the get position (change) event method onProgressChange(),
+  you just divide by this.duration or this. player.duration.
+* refactor: audio-player / progress-slider / player / wav-player
+* player.ts and wav-player.ts -- no displayTime and no displayDuration:
+  you can do those when needed
+
 * player.ts - eliminate use of member variables (everywhere, actually, but
   start in player.ts for now only). use getter and setter methods to get and
   set member variables.  

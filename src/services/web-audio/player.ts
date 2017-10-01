@@ -11,7 +11,7 @@
 import { Injectable } from '@angular/core';
 import { AUDIO_CONTEXT } from './common';
 import { MasterClock } from '../../services';
-import { prependArray, formatSecondsTime } from '../../models/utils';
+import { prependArray } from '../../models/utils';
 
 // the name of the function we give to master clock to run
 const CLOCK_FUNCTION_NAME: string = 'player';
@@ -37,8 +37,8 @@ export class WebAudioPlayer {
     public time: number;
     // public relativeTime: number;
     public duration: number;
-    public displayTime: string;
-    public displayDuration: string;
+    // public displayTime: string;
+    // public displayDuration: string;
 
     /**
      *
@@ -57,8 +57,8 @@ export class WebAudioPlayer {
         this.time = 0;
         // this.relativeTime = 0;
         this.duration = 0;
-        this.displayTime = formatSecondsTime(0, 0);
-        this.displayDuration = this.displayTime;
+        // this.displayTime = formatSecondsTime(0, 0);
+        // this.displayDuration = this.displayTime;
     }
 
     /**
@@ -106,6 +106,9 @@ export class WebAudioPlayer {
                 //         formatSecondsTime(duration, duration);
                 // }
 
+                // if (this.duration <= 0) {
+                //     alert('zero or negative duration!');
+                // }
                 let time: number = this.getTime();
 
                 if (time > this.duration) {
@@ -115,21 +118,17 @@ export class WebAudioPlayer {
                 }
 
                 // this.time = this.relativeTime * this.duration;
-//                if (time !== this.time) {
+                if (time !== this.time) {
                     // change detected
                     console.log('Change detected!!! this.time (' +
                                 this.time + ') !== time (' + time + ')');
                     this.time = time;
                     // this.relativeTime = time / this.duration;
-                    this.displayTime = formatSecondsTime(time, this.duration);
-//                }
+                    // this.displayTime = formatSecondsTime(time,
+                    //                                      this.duration);
+                }
                 // console.log(this.displayTime + '/' + this.displayDuration);
             });
-    }
-
-    public getDisplayTime(): string {
-        console.log('getDisplayTime(): ' + this.time + ', ' + this.duration);
-        return formatSecondsTime(this.time, this.duration);
     }
 
     public getProgress(): number {

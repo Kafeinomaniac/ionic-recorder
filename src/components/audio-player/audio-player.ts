@@ -2,6 +2,7 @@
 
 import {
     /* tslint:disable */
+    ChangeDetectorRef,
     OnChanges,
     SimpleChange,
     /* tslint:enable */
@@ -9,6 +10,7 @@ import {
     Input
 } from '@angular/core';
 import { WavPlayer } from '../../services/web-audio/wav-player';
+import { formatSecondsTime } from '../../models';
 
 /**
  * An toolbar-like (row on the screen) audio player for controlling
@@ -24,12 +26,64 @@ export class AudioPlay implements OnChanges {
     @Input() public filePath: string;
     public player: WavPlayer;
 
+    // when progress is < 0, we are not moving the progress bar but when
+    // we are moving the progress bar it is zero
+    private progress: number;
+
+    private changeDetectorRef: ChangeDetectorRef;
+
     /**
      * @constructor
      */
-    constructor(player: WavPlayer) {
+    constructor(
+        player: WavPlayer,
+        changeDetectorRef: ChangeDetectorRef
+    ) {
         console.log('AudioPlayer.constructor()');
         this.player = player;
+        this.progress = -1;
+        this.changeDetectorRef = changeDetectorRef;
+    }
+
+    /**
+     */
+    private detectChanges(): void {
+        console.log('LibraryPage.detectChanges()');
+        setTimeout(
+            () => {
+                this.changeDetectorRef.detectChanges();
+            },
+            0
+        );
+    }
+
+    /**
+     * This function is a way to drive a time change in the player from
+     * the outside.  This is essentially a skip().
+     * Called every time the progress is moving via a touch gesture on a
+     * mobile phone or the mouse on a laptop / desktop. This is called during
+     * the move when the change event of ProgressSlider is emmited. At the end
+     * of each sequence of such events there will be one changeEnd event.
+     */
+    public onProgressChange(progress: number): void {
+        // if (this.progress < 0) {
+        //     // we are just beginning to move now
+        //     console.log('onProgressChange(): starting to move at: ' + progress);
+        // }
+        // else {
+        //     console.log('onProgressChange(): ' + progress);
+        // }
+        this.progress = progress;
+        this.detectChanges();
+        // this.time = progress * this.player.duration;
+        // this.displayTime =
+        //     formatSecondsTime(this.time, this.player.duration);
+    }
+
+    public onProgressChangeEnd(progress: number): void {
+        console.log('onProgressChangeEnd(): stopping to move at' + progress);
+        this.player.jumpTo(progress);
+        this.progress = -1;
     }
 
     /**
@@ -41,6 +95,26 @@ export class AudioPlay implements OnChanges {
         if (changeRecord['filePath'] && this.filePath) {
             console.log('AudioPlayer.ngOnChanges(): filePath=' + this.filePath);
             this.player.setSourceFile(this.filePath);
+        }
+    }
+
+    public getDisplayDuration(): string {
+        // console.log('getDisplayDuration(): ' + this.displayDuration);
+        // return this.displayDuration;
+        const duration: number = this.player.duration;
+        return  formatSecondsTime(duration, duration);
+    }
+
+    public getDisplayTime(): string {
+        console.log('t: ' + this.progress);
+        if (this.progress >= 0) {
+            return formatSecondsTime(
+                this.progress * this.player.duration,
+                this.player.duration
+            );
+        }
+        else {
+            return formatSecondsTime(this.player.time, this.player.duration);
         }
     }
 

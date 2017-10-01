@@ -1,11 +1,12 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
 
 <progress-slider [progress]="player.getProgress()"
-                 (changeEnd)="player.jumpTo($event)">
+                 (change)="onProgressChange($event)"
+                 (changeEnd)="onProgressChangeEnd($event)">
 </progress-slider>
 <button ion-button clear (click)="player.togglePlayPause()">
     <ion-icon [name]="player.statusIcon()"></ion-icon>
 </button>
 <button ion-button clear>
-    {{player.displayTime}} / {{player.displayDuration}}
+    {{getDisplayTime()}} / {{getDisplayDuration()}}
 </button>

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { WebAudioPlayer } from './player';
 import { AppFilesystem, MasterClock, WavInfo } from '../../services';
-import { formatSecondsTime } from '../../models/utils';
+// import { formatSecondsTime } from '../../models/utils';
 
 /**
  * Audio Play functions based on WebAudio, originally based on code
@@ -55,9 +55,6 @@ export class WavPlayer extends WebAudioPlayer {
                 this.nSamples = wavHeaderInfo.nSamples;
                 this.sampleRate = wavHeaderInfo.sampleRate;
                 this.duration = this.nSamples / this.sampleRate;
-                this.displayDuration = formatSecondsTime(this.duration,
-                                                         this.duration);
-
                 console.log('WavPlayer.setSourceFile(' + filePath +
                             ') - Got: nSamples = ' + this.nSamples +
                             ', sampleRate = ' + this.sampleRate +
@@ -93,6 +90,7 @@ export class WavPlayer extends WebAudioPlayer {
             // we're in the midst of playing
         }
         else {
+            console.log('NOT STARTED-AT!!!!!!!!!!!!!!!!!!!!!!!');
             // we're either paused somewhere (this.pausedAt > 0) or
             // we haven't even started (this.pausedAt === 0)
             // console.log('PRE-JUMP PAUSED AT: ' + this.pausedAt);

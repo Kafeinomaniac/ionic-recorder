@@ -121,7 +121,7 @@ export class ProgressSlider {
         range: { start: number, end: number }
     ): void {
         this.progress = this.computeProgress(clientX, this.trackWidthRange);
-        console.log('JUMP TO POSITION: ' + this.progress);
+        // console.log('JUMP TO POSITION: ' + this.progress);
         // console.log('JUMP TO POSITION: ' + clientX);
         // console.log('JUMP TO POSITION: ' + this.trackWidthRange);
         this.change.emit(this.progress);
