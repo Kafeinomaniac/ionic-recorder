@@ -29,7 +29,7 @@ export class WebAudioPlayer {
     private startedAtOffset: number;
     protected pausedAt: number;
     public isPlaying: boolean;
-    public duration: number;
+    private duration: number;
 
     /**
      *
@@ -45,7 +45,10 @@ export class WebAudioPlayer {
     }
 
     /**
-     *
+     * Ensure source node stops playback. This does the reset part (stopping
+     * playback) only as far as AudioBufferSourceNode is concerned, not fully
+     * resetting everything in this function, for that see this.stop(), which
+     * calls this function.
      */
     private resetSourceNode(sourceNode: AudioBufferSourceNode): void {
         if (sourceNode) {
@@ -59,7 +62,7 @@ export class WebAudioPlayer {
     }
 
     /**
-     *
+     * Get the current playback (or paused-at) time.
      */
     public getTime(): number {
         if (this.pausedAt) {
@@ -72,21 +75,16 @@ export class WebAudioPlayer {
     }
 
     /**
-     *
+     * Returns duration of the current file we're playing from - even if 
+     * the played back file is chunked, we want this to be the total duration,
+     * of all chunks.
      */
     public getDuration(): number {
         return this.duration;
     }
 
     /**
-     *
-     */
-    public getProgress(): number {
-        return this.getTime() / this.duration;
-    }
-
-    /**
-     *
+     * Play (now or later) an audio buffer.
      */
     public schedulePlay(
         audioBuffer: AudioBuffer,
@@ -118,11 +116,9 @@ export class WebAudioPlayer {
             }
             this.startedAtOffset = offset + startOffset;
             this.sourceNode = sourceNode;
-            // this.startedAt = AUDIO_CONTEXT.currentTime - offset;
-            // console.log('this.starteAt: ' + this.startedAt);
-            // console.log('====> this.starteAt 0: ' +
-            //     (AUDIO_CONTEXT.currentTime - offset));
+
             sourceNode.start(0, offset);
+
             this.startedAt = AUDIO_CONTEXT.currentTime - this.startedAtOffset;
 
             console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
@@ -134,24 +130,19 @@ export class WebAudioPlayer {
                             this.audioBuffer.duration);
             this.pausedAt = 0;
             this.isPlaying = true;
-            // only when you start do you start monitoring
-            // this.startMonitoring();
         }
         else {
             // start later (when)
-            // sourceNode.start(when, offset);
             sourceNode.start(when, 0);
             // we save the scheduled source nodes in an array to avoid them
             // being garbage collected while they wait to be played.
-            // TODO: this array needs to be cleaned up when used - in onended?
-            // this.scheduledSourceNodes.push(sourceNode);
             this.scheduledSourceNodes =
                 prependArray(sourceNode, this.scheduledSourceNodes);
         }
     }
 
     /**
-     *
+     * Pause playback - assumes we are playing.
      */
     public pause(): void {
         let elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
@@ -173,7 +164,8 @@ export class WebAudioPlayer {
     }
 
     /**
-     *
+     * If any audio buffer source nodes are in the scheduling queue to be 
+     * played, cancel them all.
      */
     public cancelScheduled(): void {
         console.log('*** resetting ' + this.scheduledSourceNodes.length +

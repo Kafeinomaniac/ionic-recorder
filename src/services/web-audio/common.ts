@@ -1,5 +1,8 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+/** @constant {string} WAV_MIME_TYPE */
+export const WAV_MIME_TYPE: string = 'audio/wav';
+
 /** @constant {AudioContext} AUDIO_CONTEXT */
 export const AUDIO_CONTEXT: AudioContext =
     ((): AudioContext => {

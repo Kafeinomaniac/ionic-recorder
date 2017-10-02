@@ -26,35 +26,29 @@ export class AudioPlay implements OnChanges {
     @Input() public filePath: string;
     public player: WavPlayer;
 
+    private changeDetectorRef: ChangeDetectorRef;
     // when progress is < 0, we are not moving the progress bar but when
     // we are moving the progress bar it is zero
     private progress: number;
 
-    private changeDetectorRef: ChangeDetectorRef;
-
     /**
      * @constructor
      */
-    constructor(
-        player: WavPlayer,
-        changeDetectorRef: ChangeDetectorRef
-    ) {
-        console.log('AudioPlayer.constructor()');
+    constructor(player: WavPlayer, changeDetectorRef: ChangeDetectorRef) {
+        console.log('constructor()');
+        this.changeDetectorRef = changeDetectorRef;
         this.player = player;
         this.progress = -1;
-        this.changeDetectorRef = changeDetectorRef;
     }
 
     /**
+     * Return the Ionicons icon name for visualizing current play status.
+     * @return {string} - the Ionicons icon name to show current play status
      */
-    private detectChanges(): void {
-        console.log('AudioPlayer.detectChanges()');
-        setTimeout(
-            () => {
-                this.changeDetectorRef.detectChanges();
-            },
-            0
-        );
+    
+    public getPlayerStatusIcon(): string {
+        // console.log('statusIcon(): ' + (this.isPlaying ? "pause" : "play"));
+        return this.player.isPlaying ? 'pause' : 'play';
     }
 
     /**
@@ -70,9 +64,16 @@ export class AudioPlay implements OnChanges {
         this.detectChanges();
     }
 
+    /**
+     * Handle the one event that happens when you're done with manual sliding
+     * around of the progress bar.
+     */
     public onProgressChangeEnd(progress: number): void {
-        console.log('onProgressChangeEnd(): stopping to move at' + progress);
+        console.log('onProgressChangeEnd(): stopping to move at ' + progress);
         this.player.jumpTo(progress);
+        // restore this.progress to being negative so as to tell this player
+        // that we are now no longer moving the progress slider manually but
+        // are driving it via the player class
         this.progress = -1;
     }
 
@@ -83,9 +84,16 @@ export class AudioPlay implements OnChanges {
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
-            console.log('AudioPlayer.ngOnChanges(): filePath=' + this.filePath);
+            console.log('ngOnChanges(): filePath=' + this.filePath);
             this.player.setSourceFile(this.filePath);
         }
+    }
+
+    /**
+     *
+     */
+    public getProgress(): number {
+        return this.player.getTime() / this.player.duration;
     }
 
     public getDisplayDuration(): string {
@@ -96,7 +104,7 @@ export class AudioPlay implements OnChanges {
     }
 
     public getDisplayTime(): string {
-        console.log('t: ' + this.progress);
+        // console.log('t: ' + this.progress);
         const duration: number = this.player.getDuration();
         if (this.progress >= 0) {
             return formatSecondsTime(this.progress * duration, duration);
@@ -107,7 +115,7 @@ export class AudioPlay implements OnChanges {
     }
 
     public ngOnInit(): void {
-        console.log('AudioPlayer.ngOnInit()');
+        console.log('ngOnInit()');
         // TODO: this maintains monitoring throughout app, you
         // can do this better by stopping to monitor when going to
         // another page but then there will need to be communication
@@ -124,7 +132,21 @@ export class AudioPlay implements OnChanges {
     }
 
     public ngOnDestroy(): void {
-        console.log('AudioPlayer.ngOnDestroy()');
+        console.log('ngOnDestroy()');
         this.player.stop();
     }
+
+    /**
+     *
+     */
+    private detectChanges(): void {
+        // console.log('detectChanges()');
+        setTimeout(
+            () => {
+                this.changeDetectorRef.detectChanges();
+            },
+            0
+        );
+    }
+
 }

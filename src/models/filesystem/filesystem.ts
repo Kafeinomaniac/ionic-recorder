@@ -232,9 +232,8 @@ export class Filesystem {
                 fsType,
                 requestSize,
                 (grantedBytes: number) => {
-                    (
-                        window.requestFileSystem ||
-                            window['webkitRequestFileSystem']
+                    ( window.requestFileSystem ||
+                      window['webkitRequestFileSystem']
                     )(
                         fsType,
                         grantedBytes,
@@ -377,7 +376,7 @@ export class Filesystem {
         let obs: Observable<Metadata> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
-                {create: false},
+                { create: false },
                 (fileEntry: FileEntry) => {
                     fileEntry.getMetadata(
                         (metadata: Metadata) => {
@@ -415,7 +414,7 @@ export class Filesystem {
         let obs: Observable<ArrayBuffer> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
-                {create: false},
+                { create: false },
                 (fileEntry: FileEntry) => {
                     fileEntry.file(
                         (file: File) => {
@@ -432,6 +431,11 @@ export class Filesystem {
                                 observer.error(err1);
                             };
 
+                            // try line to see if decodeAudioData can work on
+                            // the entire file - currently it does not work on
+                            // chunks and seems to work on files
+                            // fileReader.readAsArrayBuffer(file);
+
                             if (startByte || endByte) {
                                 // >=1 of startByte nor endByte were specified,
                                 // read from startByte to endByte
@@ -439,6 +443,11 @@ export class Filesystem {
                                 const start: number = startByte || 0,
                                       end: number = endByte || file.size,
                                       blob: Blob = file.slice(start, end);
+
+                                // we may need to give the blob (a) a header,
+                                // (b) a mime type and then the chunks may be
+                                // decoded - try that next.
+
                                 // fileReader.readAsBinaryString(blob);
                                 fileReader.readAsArrayBuffer(blob);
                             }

@@ -3,7 +3,6 @@
 import {
     Component,
     /* tslint:disable */
-    ChangeDetectorRef,
     ElementRef,
     Renderer,
     /* tslint:enable */
@@ -27,7 +26,6 @@ export class ProgressSlider {
     @Output() public change: EventEmitter<any>;
     @Output() public changeEnd: EventEmitter<any>;
 
-    private changeDetectorRef: ChangeDetectorRef;
     private element: ElementRef;
     private renderer: Renderer;
 
@@ -36,31 +34,15 @@ export class ProgressSlider {
     private freeMouseMoveListener: Function;
 
     constructor(
-        changeDetectorRef: ChangeDetectorRef,
         element: ElementRef,
         renderer: Renderer
     ) {
         console.log('ProgressSlider.constructor()');
-        this.changeDetectorRef = changeDetectorRef;
         this.element = element;
         this.renderer = renderer;
         this.progress = 0;
         this.change = new EventEmitter();
         this.changeEnd = new EventEmitter();
-    }
-
-    /**
-     * Force Angular change detection to happen. NB: It is unfortunte
-     * that we need to call this function. I was hoping change
-     * detection would be completely automatic -DT. Calling this is a hack.
-     */
-    private detectChanges(): void {
-        setTimeout(
-            () => {
-                this.changeDetectorRef.detectChanges();
-            },
-            0
-        );
     }
 
     public progressPercent(): string {
@@ -101,8 +83,8 @@ export class ProgressSlider {
             return 0;
         }
 
-        let rangeX: number = range.end - range.start,
-            clickRelativeX: number = clientX - range.start;
+        const rangeX: number = range.end - range.start,
+              clickRelativeX: number = clientX - range.start;
 
         if (clickRelativeX < 0) {
             // clickRelativeX = 0;
@@ -125,7 +107,7 @@ export class ProgressSlider {
         // console.log('JUMP TO POSITION: ' + clientX);
         // console.log('JUMP TO POSITION: ' + this.trackWidthRange);
         this.change.emit(this.progress);
-        this.detectChanges();
+        // this.detectChanges();
     }
 
     public onSliderMouseDown(event: MouseEvent): void {
@@ -171,7 +153,7 @@ export class ProgressSlider {
         // we'll keep the one there (touchEnd), comment out the one here.
         // this.changeEnd.emit(this.progress);
         // console.log('onMouseUp(): changeEnd.emit(' + this.progress + ')');
-        this.detectChanges();
+        // this.detectChanges();
     }
 
     public onMouseMove(event: MouseEvent): void {
@@ -192,11 +174,12 @@ export class ProgressSlider {
         // console.dir(event);
 
         this.jumpToPosition(event.touches[0].clientX, this.trackWidthRange);
-        console.log('ON SLIDER TOUCH START ---------------------------<' +
-                    event.touches[0].clientX);
+        console.log('ON SLIDER TOUCH START ---------------------------');
     }
 
     public onSliderTouchEnd(event: TouchEvent): void {
+        console.log('onSliderTouchEnd(): changeEnd.emit(' +
+                    this.progress + ')');
         // If we uncomment this block below, then in the browser we get
         // double-calls to the changeEnd event on mouseUp and touchEnd -
         // both get called... not sure if we need touchEnd at all,
@@ -211,10 +194,6 @@ export class ProgressSlider {
         // console.log('onSliderTouchEnd(): Emit ChangeEnd w/progress: ' +
         //      this.progress);
         this.changeEnd.emit(this.progress);
-        console.log('onSliderTouchEnd(): changeEnd.emit(' +
-                    this.progress + ')');
-        this.detectChanges();
-        console.log('onSliderTouchEnd(): ' + this.progress);
-        // alert('onSliderTouchEnd(): ' + this.progress);
+        // this.detectChanges();
     }
 }

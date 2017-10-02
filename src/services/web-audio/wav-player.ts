@@ -3,7 +3,9 @@
 import { Injectable } from '@angular/core';
 import { WebAudioPlayer } from './player';
 import { AppFilesystem, WavInfo } from '../../services';
-// import { formatSecondsTime } from '../../models/utils';
+
+/** @constant {number} */
+const N_BUFFER_SAMPLES: number = 44100;
 
 /**
  * Audio Play functions based on WebAudio, originally based on code
@@ -20,16 +22,14 @@ export class WavPlayer extends WebAudioPlayer {
     private filePath: string;
     private sampleRate: number;
     private nSamples: number;
-    // private chunkAudioBuffer: AudioBuffer;
 
     /**
      *
      */
     constructor(appFilesystem: AppFilesystem) {
-        console.log('WavPlayer.constructor()');
+        console.log('constructor()');
         super();
         this.appFilesystem = appFilesystem;
-        // this.relativeTime = 0;
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
     }
@@ -44,7 +44,7 @@ export class WavPlayer extends WebAudioPlayer {
                 this.nSamples = wavHeaderInfo.nSamples;
                 this.sampleRate = wavHeaderInfo.sampleRate;
                 this.duration = this.nSamples / this.sampleRate;
-                console.log('WavPlayer.setSourceFile(' + filePath +
+                console.log('setSourceFile(' + filePath +
                             ') - Got: nSamples = ' + this.nSamples +
                             ', sampleRate = ' + this.sampleRate +
                             ', duration = ' + this.duration);
@@ -53,56 +53,44 @@ export class WavPlayer extends WebAudioPlayer {
     }
 
     /**
-     * Return the Ionicons icon name for visualizing current play status.
-     * @return {string} - the Ionicons icon name to show current play status
-     */
-    public statusIcon(): string {
-        // console.log('statusIcon(): ' + (this.isPlaying ? "pause" : "play"));
-        return this.isPlaying ? 'pause' : 'play';
-    }
-
-    /**
      *
      */
     public jumpTo(progress: number): void {
-        console.log('WavPlayer.jumpTo(' + progress + ')');
         if (!this.nSamples || !this.sampleRate) {
-            alert('WavPlayer.jumpTo(): !this.nSamples || !this.sampleRate');
+            alert('jumpTo(): !this.nSamples || !this.sampleRate');
         }
         const startSample: number = Math.floor(progress * this.nSamples),
+              tmp: number = startSample + N_BUFFER_SAMPLES,
+              endSample: number = tmp > this.nSamples ? this.nSamples : tmp,
               startTime: number = startSample / this.sampleRate;
 
-        console.log('WavPlayer.jumpTo(' + progress + '): startSample: '
-                    + startSample + ', startTime: ' + startTime);
+        console.log('jumpTo(' + progress + '): startSample: ' +
+                    startSample + ', endSample: ' + endSample +
+                    ', startTime: ' + startTime);
 
         if (this.startedAt) {
             // we're in the midst of playing
         }
         else {
-            console.log('NOT STARTED-AT!!!!!!!!!!!!!!!!!!!!!!!');
             // we're either paused somewhere (this.pausedAt > 0) or
             // we haven't even started (this.pausedAt === 0)
             // console.log('PRE-JUMP PAUSED AT: ' + this.pausedAt);
             this.pausedAt = startTime;
             // console.log('POST-JUMP PAUSED AT: ' + this.pausedAt);
-        }
-    }
 
-    // this.relativeTime = (this.pausedAt - this.startedAt) *
-    //     this.sampleRate / this.nSamples;
-    // this.relativeTimeSeek(this.relativeTime);
-
-    /**
-     * Change play status. If not playing, play. Otherwise, pause.
-     */
-    public togglePlayPause(): void {
-        console.log('WavPlayer.togglePlayPause()');
-        if (!this.isPlaying) {
-            // this.play();
-        }
-        else {
-            this.pause();
-            console.log('pause at: ' + this.pausedAt);
+            this.appFilesystem.readWavFileAudio(
+                this.filePath,
+                startSample,
+                endSample
+            ).subscribe(
+                (audioBuffer: AudioBuffer) => {
+                    console.log('Just read wav file audio successfully!!!');
+                },
+                (err: any) => {
+                    alert('Error: ' + err);
+                    console.dir(err);
+                }
+            ); // this.appFilesystem.readWavFileAudio(..).subscribe(
         }
     }
 
