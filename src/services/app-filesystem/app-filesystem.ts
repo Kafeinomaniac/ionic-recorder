@@ -551,7 +551,8 @@ export class AppFilesystem {
                         Filesystem.readFromFile(fs, path, 40, 44).subscribe(
                             (data2: any) => {
                                 const view2: DataView = new DataView(data2),
-                                      nSamples: number = view2.getUint32(0, true);
+                                      nSamples: number = view2.getUint32(0,
+                                                                         true);
                                 observer.next({
                                     sampleRate: sampleRate,
                                     nSamples: nSamples
@@ -684,7 +685,8 @@ export class AppFilesystem {
                         () => {
                             blob = new Blob(
                                 [ wavData ],
-                                { type: 'application/octet-stream' }
+                                // { type: 'application/octet-stream' }
+                                { type: WAV_MIME_TYPE }
                             );
                             Filesystem.appendToFile(fs, path, blob).subscribe(
                                 () => {

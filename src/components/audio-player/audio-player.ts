@@ -93,7 +93,7 @@ export class AudioPlay implements OnChanges {
      *
      */
     public getProgress(): number {
-        return this.player.getTime() / this.player.duration;
+        return this.player.getTime() / this.player.getDuration();
     }
 
     public getDisplayDuration(): string {

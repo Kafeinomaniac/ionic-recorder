@@ -29,7 +29,7 @@ export class WebAudioPlayer {
     private startedAtOffset: number;
     protected pausedAt: number;
     public isPlaying: boolean;
-    private duration: number;
+    protected duration: number;
 
     /**
      *

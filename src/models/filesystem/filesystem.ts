@@ -1,4 +1,6 @@
 import { Observable } from 'rxjs/Rx';
+import { SAMPLE_RATE, WAV_MIME_TYPE } from '../../services/web-audio/common';
+import { makeWavBlobHeaderView } from '../../models/utils/wav-file';
 
 export class Filesystem {
     /**
@@ -444,12 +446,38 @@ export class Filesystem {
                                       end: number = endByte || file.size,
                                       blob: Blob = file.slice(start, end);
 
+                                const blob2: Blob = new Blob(
+                                    [
+                                        makeWavBlobHeaderView(
+                                            (end-start)/2,
+                                            SAMPLE_RATE
+                                        ),
+                                        // blob
+                                        file.slice(start, end)
+                                    ],
+                                    { type: WAV_MIME_TYPE }
+                                );
+
+                                console.log('/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/');
+                                console.log('1) ' + (end-start)/2);
+                                console.log('2) ' + blob2.size);
+                                console.log('3) ' + blob.size);
+                                console.log('4) ' + file.slice(start, end));
+                                console.log('5) ' +
+                                            file.slice(start, end).size);
+                                console.log('6) ' + file.size);
+                                console.log('7) ' + startByte);
+                                console.log('8) ' + endByte);
+                                console.dir('9) ' + blob2);
+                                console.dir('10) ' + file.);
+                                console.log('/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/');
+
                                 // we may need to give the blob (a) a header,
                                 // (b) a mime type and then the chunks may be
                                 // decoded - try that next.
 
-                                // fileReader.readAsBinaryString(blob);
-                                fileReader.readAsArrayBuffer(blob);
+                                // fileReader.readAsArrayBuffer(blob);
+                                fileReader.readAsArrayBuffer(blob2);
                             }
                             else {
                                 // neither startByte nor endByte were specified,
