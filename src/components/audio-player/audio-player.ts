@@ -34,42 +34,20 @@ export class AudioPlay implements OnChanges {
     /**
      * @constructor
      */
-<<<<<<< HEAD
-    constructor(
-        player: WavPlayer,
-        changeDetectorRef: ChangeDetectorRef
-    ) {
-        console.log('constructor()');
-=======
     constructor(player: WavPlayer, changeDetectorRef: ChangeDetectorRef) {
         console.log('constructor()');
         this.changeDetectorRef = changeDetectorRef;
->>>>>>> 833668ddd774c35b85a8ba368024f9663ce73f7a
         this.player = player;
         this.progress = -1;
     }
 
     /**
-<<<<<<< HEAD
-     *
-     */
-    private detectChanges(): void {
-        console.log('detectChanges()');
-        setTimeout(
-            () => {
-                this.changeDetectorRef.detectChanges();
-            },
-            0
-        );
-=======
      * Return the Ionicons icon name for visualizing current play status.
      * @return {string} - the Ionicons icon name to show current play status
      */
-    
     public getPlayerStatusIcon(): string {
         // console.log('statusIcon(): ' + (this.isPlaying ? "pause" : "play"));
         return this.player.isPlaying ? 'pause' : 'play';
->>>>>>> 833668ddd774c35b85a8ba368024f9663ce73f7a
     }
 
     /**
