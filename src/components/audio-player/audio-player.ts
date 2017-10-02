@@ -48,7 +48,7 @@ export class AudioPlay implements OnChanges {
     /**
      */
     private detectChanges(): void {
-        console.log('LibraryPage.detectChanges()');
+        console.log('AudioPlayer.detectChanges()');
         setTimeout(
             () => {
                 this.changeDetectorRef.detectChanges();
@@ -66,18 +66,8 @@ export class AudioPlay implements OnChanges {
      * of each sequence of such events there will be one changeEnd event.
      */
     public onProgressChange(progress: number): void {
-        // if (this.progress < 0) {
-        //     // we are just beginning to move now
-        //     console.log('onProgressChange(): starting to move at: ' + progress);
-        // }
-        // else {
-        //     console.log('onProgressChange(): ' + progress);
-        // }
         this.progress = progress;
         this.detectChanges();
-        // this.time = progress * this.player.duration;
-        // this.displayTime =
-        //     formatSecondsTime(this.time, this.player.duration);
     }
 
     public onProgressChangeEnd(progress: number): void {
@@ -101,20 +91,18 @@ export class AudioPlay implements OnChanges {
     public getDisplayDuration(): string {
         // console.log('getDisplayDuration(): ' + this.displayDuration);
         // return this.displayDuration;
-        const duration: number = this.player.duration;
+        const duration: number = this.player.getDuration();
         return  formatSecondsTime(duration, duration);
     }
 
     public getDisplayTime(): string {
         console.log('t: ' + this.progress);
+        const duration: number = this.player.getDuration();
         if (this.progress >= 0) {
-            return formatSecondsTime(
-                this.progress * this.player.duration,
-                this.player.duration
-            );
+            return formatSecondsTime(this.progress * duration, duration);
         }
         else {
-            return formatSecondsTime(this.player.time, this.player.duration);
+            return formatSecondsTime(this.player.getTime(), duration);
         }
     }
 
@@ -129,7 +117,7 @@ export class AudioPlay implements OnChanges {
         // player.pause() or player.stop() - but right now that does
         // not work due to race conditions (perhaps add a setTimeout()
         // to delay the stop monitoring command?)
-        this.player.startMonitoring();
+        // this.player.startMonitoring();
 
         // NB: this next line is what starts player playing right away
         // this.player.togglePlayPause();
@@ -137,7 +125,6 @@ export class AudioPlay implements OnChanges {
 
     public ngOnDestroy(): void {
         console.log('AudioPlayer.ngOnDestroy()');
-        this.player.stop(true);
-        this.player.stopMonitoring();
+        this.player.stop();
     }
 }

@@ -10,11 +10,7 @@
 
 import { Injectable } from '@angular/core';
 import { AUDIO_CONTEXT } from './common';
-import { MasterClock } from '../../services';
 import { prependArray } from '../../models/utils';
-
-// the name of the function we give to master clock to run
-const CLOCK_FUNCTION_NAME: string = 'player';
 
 /**
  * Audio playback from an AudioBuffer (not from file, for playback from file,
@@ -26,7 +22,6 @@ const CLOCK_FUNCTION_NAME: string = 'player';
  */
 @Injectable()
 export class WebAudioPlayer {
-    private masterClock: MasterClock;
     private audioBuffer: AudioBuffer;
     protected sourceNode: AudioBufferSourceNode;
     private scheduledSourceNodes: AudioBufferSourceNode[];
@@ -34,31 +29,19 @@ export class WebAudioPlayer {
     private startedAtOffset: number;
     protected pausedAt: number;
     public isPlaying: boolean;
-    public time: number;
-    // public relativeTime: number;
     public duration: number;
-    // public displayTime: string;
-    // public displayDuration: string;
 
     /**
      *
      */
-    constructor(masterClock: MasterClock) {
+    constructor() {
         console.log('WebAudioPlayer.constructor()');
-
-        this.masterClock = masterClock;
-
         this.startedAt = 0;
         this.startedAtOffset = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
         this.scheduledSourceNodes = [];
-
-        this.time = 0;
-        // this.relativeTime = 0;
         this.duration = 0;
-        // this.displayTime = formatSecondsTime(0, 0);
-        // this.displayDuration = this.displayTime;
     }
 
     /**
@@ -89,76 +72,17 @@ export class WebAudioPlayer {
     }
 
     /**
-     * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
+     *
      */
-    public startMonitoring(): void {
-        // console.log('PLAYER: startMonitoring()');
-        this.masterClock.addFunction(
-            CLOCK_FUNCTION_NAME,
-            // the monitoring actions are in the following function:
-            () => {
-                // const duration: number = this.getDuration();
-                // console.log('dur: ' + duration);
-                // if (this.duration !== duration) {
-                //     // change detected
-                //     this.duration = duration;
-                //     this.displayDuration =
-                //         formatSecondsTime(duration, duration);
-                // }
-
-                // if (this.duration <= 0) {
-                //     alert('zero or negative duration!');
-                // }
-                let time: number = this.getTime();
-
-                if (time > this.duration) {
-                    time = this.duration;
-                    this.stop();
-                    alert('We stopped when we need not have done so! Why?');
-                }
-
-                // this.time = this.relativeTime * this.duration;
-                if (time !== this.time) {
-                    // change detected
-                    console.log('Change detected!!! this.time (' +
-                                this.time + ') !== time (' + time + ')');
-                    this.time = time;
-                    // this.relativeTime = time / this.duration;
-                    // this.displayTime = formatSecondsTime(time,
-                    //                                      this.duration);
-                }
-                // console.log(this.displayTime + '/' + this.displayDuration);
-            });
-    }
-
-    public getProgress(): number {
-        return this.getTime() / this.duration;
-    }
-
-    /**
-     * Stops monitoring (stops change detection)
-     */
-    public stopMonitoring(): void {
-        setTimeout(
-            () => {
-                this.masterClock.removeFunction(CLOCK_FUNCTION_NAME);
-            });
+    public getDuration(): number {
+        return this.duration;
     }
 
     /**
      *
      */
-    public getDuration(): number {
-        // if (this.duration) {
-        //     return this.duration;
-        // }
-        // else if (this.audioBuffer) {
-        //     return this.audioBuffer.duration;
-        // }
-        // else {
-        //     return 0;
-        // }
-        return this.duration;
+    public getProgress(): number {
+        return this.getTime() / this.duration;
     }
 
     /**
@@ -171,7 +95,6 @@ export class WebAudioPlayer {
         startOffset: number = 0,
         onEnded?: () => void
     ): void {
-        this.startMonitoring();
         console.log('====> schedulePlay(when: ' +
                     (when - this.startedAt).toFixed(2) + ', offset: ' +
                     offset.toFixed(2) + ', s-offset: ' +
@@ -234,7 +157,6 @@ export class WebAudioPlayer {
         let elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
         this.stop();
         this.pausedAt = elapsed;
-        this.stopMonitoring();
     }
 
     /**
@@ -267,15 +189,12 @@ export class WebAudioPlayer {
     /**
      * Stop playback.
      */
-    public stop(stopMonitoring: boolean = true): void {
+    public stop(): void {
         console.log('stop()');
         this.resetSourceNode(this.sourceNode);
         this.cancelScheduled();
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
-        if (stopMonitoring) {
-            this.stopMonitoring();
-        }
     }
 }

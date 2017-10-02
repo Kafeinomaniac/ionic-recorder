@@ -33,11 +33,6 @@ export class TrackPage {
 
         this.footerButtons = [
             {
-                text: 'Stats',
-                leftIcon: 'information-circle',
-                clickCB: () => { this.onClickStatsButton(); }
-            },
-            {
                 text: 'Rename',
                 leftIcon: 'create',
                 clickCB: () => { this.onClickRenameButton(); }

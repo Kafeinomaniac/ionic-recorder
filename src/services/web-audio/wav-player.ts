@@ -1,13 +1,8 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import {
-    /* tslint:disable */
-    ChangeDetectorRef,
-    /* tslint:enable */
-    Injectable
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { WebAudioPlayer } from './player';
-import { AppFilesystem, MasterClock, WavInfo } from '../../services';
+import { AppFilesystem, WavInfo } from '../../services';
 // import { formatSecondsTime } from '../../models/utils';
 
 /**
@@ -20,7 +15,6 @@ export class WavPlayer extends WebAudioPlayer {
     private oddKeyFileReader: FileReader;
     private evenKeyFileReader: FileReader;
     private appFilesystem: AppFilesystem;
-    private changeDetectorRef: ChangeDetectorRef;
 
     // current file info
     private filePath: string;
@@ -31,15 +25,10 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    constructor(
-        masterClock: MasterClock,
-        appFilesystem: AppFilesystem,
-        changeDetectorRef: ChangeDetectorRef
-    ) {
+    constructor(appFilesystem: AppFilesystem) {
         console.log('WavPlayer.constructor()');
-        super(masterClock);
+        super();
         this.appFilesystem = appFilesystem;
-        this.changeDetectorRef = changeDetectorRef;
         // this.relativeTime = 0;
         this.oddKeyFileReader = new FileReader();
         this.evenKeyFileReader = new FileReader();
@@ -96,7 +85,6 @@ export class WavPlayer extends WebAudioPlayer {
             // console.log('PRE-JUMP PAUSED AT: ' + this.pausedAt);
             this.pausedAt = startTime;
             // console.log('POST-JUMP PAUSED AT: ' + this.pausedAt);
-            this.detectChanges();
         }
     }
 
@@ -116,15 +104,6 @@ export class WavPlayer extends WebAudioPlayer {
             this.pause();
             console.log('pause at: ' + this.pausedAt);
         }
-    }
-
-    private detectChanges(): void {
-        setTimeout(
-            () => {
-                this.changeDetectorRef.detectChanges();
-            },
-            0
-        );
     }
 
 }
