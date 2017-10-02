@@ -449,7 +449,7 @@ export class Filesystem {
                                 const blob2: Blob = new Blob(
                                     [
                                         makeWavBlobHeaderView(
-                                            (end-start)/2,
+                                            (end - start) / 2,
                                             SAMPLE_RATE
                                         ),
                                         // blob
@@ -459,7 +459,7 @@ export class Filesystem {
                                 );
 
                                 console.log('/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/');
-                                console.log('1) ' + (end-start)/2);
+                                console.log('1) ' + (end - start) / 2);
                                 console.log('2) ' + blob2.size);
                                 console.log('3) ' + blob.size);
                                 console.log('4) ' + file.slice(start, end));

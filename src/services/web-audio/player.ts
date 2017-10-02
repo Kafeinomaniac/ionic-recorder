@@ -75,7 +75,7 @@ export class WebAudioPlayer {
     }
 
     /**
-     * Returns duration of the current file we're playing from - even if 
+     * Returns duration of the current file we're playing from - even if
      * the played back file is chunked, we want this to be the total duration,
      * of all chunks.
      */
@@ -164,7 +164,7 @@ export class WebAudioPlayer {
     }
 
     /**
-     * If any audio buffer source nodes are in the scheduling queue to be 
+     * If any audio buffer source nodes are in the scheduling queue to be
      * played, cancel them all.
      */
     public cancelScheduled(): void {

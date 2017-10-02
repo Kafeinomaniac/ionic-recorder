@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 /* tslint:enable */
 import { Filesystem, has } from '../../models';
-import { 
+import {
     AUDIO_CONTEXT,
     SAMPLE_RATE,
     WAV_MIME_TYPE
