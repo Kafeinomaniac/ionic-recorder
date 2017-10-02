@@ -6,7 +6,11 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 /* tslint:enable */
 import { Filesystem, has } from '../../models';
-import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
+import { 
+    AUDIO_CONTEXT,
+    SAMPLE_RATE,
+    WAV_MIME_TYPE
+} from '../../services/web-audio/common';
 import {
     makeWavBlobHeaderView,
     wavSampleToByte
@@ -38,7 +42,7 @@ export class AppFilesystem {
      * @constructor
      */
     constructor(storage: Storage) {
-        console.log('AppFileystem.constructor()');
+        console.log('constructor()');
         this.storage = storage;
         this.isReady = false;
         this.entries = [];
@@ -157,9 +161,9 @@ export class AppFilesystem {
      * system when it's ready for use.
      */
     public whenReady(): Observable<void> {
-        let source: Observable<void> = Observable.create((observer) => {
+        let obs: Observable<void> = Observable.create((observer) => {
             let repeat: () => void = () => {
-                console.log('AppFileystem.whenReady().repeat()');
+                console.log('whenReady().repeat()');
                 if (this.isReady) {
                     observer.next();
                     observer.complete();
@@ -170,15 +174,15 @@ export class AppFilesystem {
             };
             repeat();
         });
-        return source;
+        return obs;
     }
 
     /**
      *
      */
     public getSelectedEntries(): Observable<Entry[]> {
-        console.log('AppFileystem.getSelectedEntries()');
-        let source: Observable<Entry[]> = Observable.create((observer) => {
+        console.log('getSelectedEntries()');
+        let obs: Observable<Entry[]> = Observable.create((observer) => {
             // get the file system
             this.whenReady().subscribe(
                 () => {
@@ -200,15 +204,15 @@ export class AppFilesystem {
                 }
             );
         });
-        return source;
+        return obs;
     }
 
     /**
      *
      */
     public createDirectory(path: string): Observable<DirectoryEntry> {
-        console.log('AppFileystem.createDirectory(' + path + ')');
-        let source: Observable<DirectoryEntry> =
+        console.log('createDirectory(' + path + ')');
+        let obs: Observable<DirectoryEntry> =
             Observable.create((observer) => {
                 if (path[path.length - 1] !== '/') {
                     observer.error('path must end with / for createDirectory');
@@ -229,14 +233,14 @@ export class AppFilesystem {
                     );
                 }
             });
-        return source;
+        return obs;
     }
 
     /**
      *
      */
     public refreshDirectory(): Observable<void> {
-        let source: Observable<void> = Observable.create((observer) => {
+        let obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
                     this.switchDirectory(
@@ -256,7 +260,7 @@ export class AppFilesystem {
                 }
             );
         });
-        return source;
+        return obs;
     }
 
     /**
@@ -265,8 +269,8 @@ export class AppFilesystem {
      * system when it's ready for use.
      */
     public switchDirectory(path: string): Observable<Entry[]> {
-        console.log('AppFileystem.switchDirectory(' + path + ')');
-        let source: Observable<Entry[]> = Observable.create((observer) => {
+        console.log('switchDirectory(' + path + ')');
+        let obs: Observable<Entry[]> = Observable.create((observer) => {
             // got file system, now get entry object for path
             // of directory we're switching to
             Filesystem.getPathEntry(this.fileSystem, path, false).subscribe(
@@ -298,8 +302,8 @@ export class AppFilesystem {
                     observer.error(err2);
                 }
             ); // Filesystem.getPathEntry(fileSystem, path, false).subscribe(
-        }); // let source: Observable<Entry[]> = Observable.create((observer)
-        return source;
+        }); // let obs: Observable<Entry[]> = Observable.create((observer)
+        return obs;
     }
 
     /**
@@ -337,7 +341,7 @@ export class AppFilesystem {
      *
      */
     public selectPath(path: string): void {
-        console.log('AppFileystem.selectPath(' + path + ')');
+        console.log('selectPath(' + path + ')');
         const orderIndex: number = this.nSelected();
         this.selectedPaths[path] = orderIndex;
         this.storage.set('filesystemSelected', this.selectedPaths);
@@ -354,7 +358,7 @@ export class AppFilesystem {
      *
      */
     public atHome(): boolean {
-        // console.log('AppFileystem.atHome(): ' +
+        // console.log('atHome(): ' +
         //             (this.directoryEntry.fullPath === '/'));
         return this.directoryEntry.fullPath === '/';
     }
@@ -363,7 +367,7 @@ export class AppFilesystem {
      *
      */
     public nEntries(): number {
-        // console.log('AppFileystem.nEntries(): ' + this.entries.length);
+        // console.log('nEntries(): ' + this.entries.length);
         return this.entries.length;
     }
 
@@ -371,7 +375,7 @@ export class AppFilesystem {
      *
      */
     public nSelected(): number {
-        // console.log('AppFileystem.nSelected(isReady:' + this.isReady +
+        // console.log('nSelected(isReady:' + this.isReady +
         //             '): ' + Object.keys(this.selectedPaths).length);
         return Object.keys(this.selectedPaths).length;
     }
@@ -380,7 +384,7 @@ export class AppFilesystem {
      *
      */
     public unselectPath(path: string): void {
-        console.log('AppFileystem.unselectPath(' + path + ')');
+        console.log('unselectPath(' + path + ')');
         delete this.selectedPaths[path];
 
         this.storage.set('filesystemSelected', this.selectedPaths);
@@ -398,7 +402,7 @@ export class AppFilesystem {
      */
     public toggleSelectEntry(entry: Entry): void {
         const fullPath: string = this.getFullPath(entry);
-        console.log('AppFileystem.toggleSelectEntry(' + fullPath + ')');
+        console.log('toggleSelectEntry(' + fullPath + ')');
         if (this.isPathSelected(fullPath)) {
             this.unselectPath(fullPath);
         }
@@ -412,7 +416,7 @@ export class AppFilesystem {
      * @param {boolean} if true, select all, if false, select none
      */
     public selectAllOrNone(bSelectAll: boolean): void {
-        console.log('AppFileystem.selectAllOrNoneInFolder(' + bSelectAll + ')');
+        console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
             const fullPath: string = this.getFullPath(entry),
@@ -436,8 +440,8 @@ export class AppFilesystem {
      */
     public moveSelected(): Observable<void> {
         const paths: string[] = Object.keys(this.selectedPaths).sort();
-        console.log('AppFileystem.moveSelected(): ' + paths);
-        let source: Observable<void> = Observable.create((observer) => {
+        console.log('moveSelected(): ' + paths);
+        let obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
                     Filesystem.moveEntries(
@@ -470,7 +474,7 @@ export class AppFilesystem {
                 }
             ); // this.whenReady().subscribe(
         });
-        return source;
+        return obs;
     }
 
     /**
@@ -481,8 +485,8 @@ export class AppFilesystem {
         const paths: string[] = Object.keys(this.selectedPaths).sort(),
               fullPath: string = this.getFullPath(this.directoryEntry),
               fullPathSize: number = fullPath.length;
-        console.log('AppFileystem.deleteSelected(): ' + paths);
-        let source: Observable<void> = Observable.create((observer) => {
+        console.log('deleteSelected(): ' + paths);
+        let obs: Observable<void> = Observable.create((observer) => {
             // get the file system
             this.whenReady().subscribe(
                 () => {
@@ -530,49 +534,53 @@ export class AppFilesystem {
                 }
             ); // this.whenReady().subscribe(
         });
-        return source;
-    }
-
-    public readWavFileHeader(path: string): Observable<WavInfo> {
-        console.log('AppFileystem.readAudioFromWavFile(' + path + ')');
-        let fs: FileSystem = this.fileSystem,
-            obs: Observable<WavInfo> = Observable.create((observer) => {
-            Filesystem.readFromFile(fs, path, 24, 28).subscribe(
-                (data1: any) => {
-                    const view1: DataView = new DataView(data1),
-                          sampleRate: number = view1.getUint32(0, true);
-                    Filesystem.readFromFile(fs, path, 40, 44).subscribe(
-                        (data2: any) => {
-                            const view2: DataView = new DataView(data2),
-                                  nSamples: number = view2.getUint32(0, true);
-                            observer.next({
-                                sampleRate: sampleRate,
-                                nSamples: nSamples
-                            });
-                            observer.complete();
-                        },
-                        (err1: any) => {
-                            observer.error(err1);
-                        }
-                    );
-                },
-                (err2: any) => {
-                    observer.error(err2);
-                }
-            );
-        });
         return obs;
     }
 
     /**
      *
      */
-    public readAudioFromWavFile(
+    public readWavFileHeader(path: string): Observable<WavInfo> {
+        console.log('readAudioFromWavFile(' + path + ')');
+        let fs: FileSystem = this.fileSystem,
+            obs: Observable<WavInfo> = Observable.create((observer) => {
+                Filesystem.readFromFile(fs, path, 24, 28).subscribe(
+                    (data1: any) => {
+                        const view1: DataView = new DataView(data1),
+                              sampleRate: number = view1.getUint32(0, true);
+                        Filesystem.readFromFile(fs, path, 40, 44).subscribe(
+                            (data2: any) => {
+                                const view2: DataView = new DataView(data2),
+                                      nSamples: number = view2.getUint32(0,
+                                                                         true);
+                                observer.next({
+                                    sampleRate: sampleRate,
+                                    nSamples: nSamples
+                                });
+                                observer.complete();
+                            },
+                            (err1: any) => {
+                                observer.error(err1);
+                            }
+                        );
+                    },
+                    (err2: any) => {
+                        observer.error(err2);
+                    }
+                );
+            });
+        return obs;
+    }
+
+    /**
+     *
+     */
+    public readWavFileAudio(
         path: string,
         startSample: number = undefined,
         endSample: number = undefined
     ): Observable<AudioBuffer> {
-        console.log('AppFileystem.readAudioFromWavFile(' + path + ', ' +
+        console.log('readWavFileAudio(' + path + ', ' +
                     startSample + ', ' + endSample + ')');
         const startByte: number = wavSampleToByte(startSample),
               endByte: number = wavSampleToByte(endSample);
@@ -584,6 +592,12 @@ export class AppFilesystem {
                 endByte
             ).subscribe(
                 (arrayBuffer: ArrayBuffer) => {
+                    console.log('array buffer: ' + arrayBuffer);
+                    console.log(arrayBuffer.byteLength);
+                    console.dir(arrayBuffer);
+                    // if decodeAudioData errs on arrayBuffer, see
+                    // https://stackoverflow.com/questions/10365335...
+                    //     .../decodeaudiodata-returning-a-null-error
                     AUDIO_CONTEXT.decodeAudioData(
                         arrayBuffer,
                         (audioBuffer: AudioBuffer) => {
@@ -609,9 +623,9 @@ export class AppFilesystem {
         path: string,
         wavData: Int16Array
     ): Observable<void> {
-        console.log('AppFileystem.createWavFile(' + path + ')');
+        console.log('createWavFile(' + path + ')');
         this.nWavFileSamples = 0;
-        let source: Observable<void> = Observable.create((observer) => {
+        let obs: Observable<void> = Observable.create((observer) => {
             const nSamples: number = wavData.length,
                   headerView: DataView = makeWavBlobHeaderView(
                       nSamples,
@@ -619,7 +633,7 @@ export class AppFilesystem {
                   ),
                   blob: Blob = new Blob(
                       [ headerView, wavData ],
-                      { type: 'audio/wav' }
+                      { type: WAV_MIME_TYPE }
                   );
             Filesystem.writeToFile(this.fileSystem, path, blob, 0, true)
                 .subscribe(
@@ -633,7 +647,7 @@ export class AppFilesystem {
                     }
                 );
         });
-        return source;
+        return obs;
     }
 
     /**
@@ -643,8 +657,8 @@ export class AppFilesystem {
         path: string,
         wavData: Int16Array
     ): Observable<void> {
-        console.log('AppFileystem.appendToWavFile(' + path + ')');
-        let source: Observable<void> = Observable.create((observer) => {
+        console.log('appendToWavFile(' + path + ')');
+        let obs: Observable<void> = Observable.create((observer) => {
             // see http://soundfile.sapp.org/doc/WaveFormat/ for definitions
             // of subchunk2size and chunkSize
             let fs: FileSystem = this.fileSystem,
@@ -671,7 +685,8 @@ export class AppFilesystem {
                         () => {
                             blob = new Blob(
                                 [ wavData ],
-                                { type: 'application/octet-stream' }
+                                // { type: 'application/octet-stream' }
+                                { type: WAV_MIME_TYPE }
                             );
                             Filesystem.appendToFile(fs, path, blob).subscribe(
                                 () => {
@@ -694,7 +709,7 @@ export class AppFilesystem {
                 }
             ); // .writeToFile(fs, path, blob, 4, false).subscribe(
         });
-        return source;
+        return obs;
 
     }
 
