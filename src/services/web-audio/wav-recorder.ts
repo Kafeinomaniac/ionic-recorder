@@ -31,7 +31,7 @@ export class WavRecorder extends WebAudioRecorder {
     constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
         super(masterClock);
 
-        console.log('WavRecorder.constructor()');
+        console.log('constructor()');
 
         this.appFilesystem = appFilesystem;
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {
@@ -108,7 +108,7 @@ export class WavRecorder extends WebAudioRecorder {
         const dateCreated: number = Date.now(),
               displayDateCreated: string = formatUnixTimestamp(dateCreated),
               filePath: string = '/Unfiled/' + displayDateCreated;
-        console.log('WavRecorder.start() - ' + filePath);
+        console.log('start() - ' + filePath);
         this.filePath = filePath;
     }
 

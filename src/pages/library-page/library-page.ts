@@ -61,7 +61,7 @@ export class LibraryPage {
         platform: Platform
     ) {
 
-        console.log('LibraryPage.constructor()');
+        console.log('constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.actionSheetController = actionSheetController;
         this.modalController = modalController;
@@ -124,7 +124,7 @@ export class LibraryPage {
     }
 
     public ionViewDidEnter(): void {
-        console.log('LibraryPage.ionViewDidEnter()');
+        console.log('ionViewDidEnter()');
         // refresh appFilesystem directory in case we're entering this
         // view after a recording and we happen to be at the /Unfiled
         // folder. NOTE: this is kind of overkill. We could do
@@ -375,7 +375,7 @@ export class LibraryPage {
     /**
      */
     private detectChanges(): void {
-        console.log('LibraryPage.detectChanges()');
+        console.log('detectChanges()');
         setTimeout(
             () => {
                 this.changeDetectorRef.detectChanges();

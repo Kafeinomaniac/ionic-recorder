@@ -22,7 +22,7 @@ export interface WavInfo {
 }
 
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
-const WAIT_MSEC: number = 50;
+const WAIT_MSEC: number = 60;
 const DEFAULT_PATH: string = '/Unfiled/';
 
 /**
@@ -284,8 +284,6 @@ export class AppFilesystem {
                     ).subscribe(
                         (entries: Entry[]) => {
                             this.entries = entries;
-                            console.log('entries: .........................');
-                            console.dir(entries);
                             // store path as last visited too
                             this.storage.set('filesystemPath', path);
 

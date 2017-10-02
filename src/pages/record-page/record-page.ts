@@ -51,7 +51,7 @@ export class RecordPage {
         appStorage: AppStorage,
         recorder: WavRecorder
     ) {
-        console.log('RecordPage.constructor()');
+        console.log('constructor()');
         this.navController = navController;
         this.appStorage = appStorage;
         this.recorder = recorder;
@@ -105,7 +105,7 @@ export class RecordPage {
     }
 
     public onResetGain(): void {
-        console.log('RecordPage.onResetGain()');
+        console.log('onResetGain()');
         // 0.5 if progress-slider is used instead of ion-range:
         // this.gainRangeSliderValue = 0.5;
         this.gainRangeSliderValue = 0.5 * MAX_GAIN_SLIDER_VALUE;
@@ -116,7 +116,7 @@ export class RecordPage {
         sliderValue: number,
         updateStorage: boolean = true
     ): void {
-        console.log('RecordPage.onGainChange()');
+        console.log('onGainChange()');
 
         // this.onGainChange(position);
         const position: number = sliderValue / MAX_GAIN_SLIDER_VALUE;
@@ -151,7 +151,7 @@ export class RecordPage {
      * Start/pause recording - template button click callback
      */
     public onClickStartPauseButton(): void {
-        console.log('RecordPage.onClickStartPauseButton()');
+        console.log('onClickStartPauseButton()');
 
         // this.currentVolume += Math.abs(Math.random() * 10);
         if (this.recorder.isRecording) {
@@ -177,7 +177,7 @@ export class RecordPage {
      * Stop button - template button click callback
      */
     public onClickStopButton(): void {
-        console.log('RecordPage.onClickStopButton()');
+        console.log('onClickStopButton()');
 
         this.recordButtonIcon = START_RESUME_ICON;
 
@@ -190,12 +190,12 @@ export class RecordPage {
     }
 
     public onPlayLastRecording(): void {
-        console.log('RecordPage.onPlayLastRecording()');
+        console.log('onPlayLastRecording()');
         this.navController.push(TrackPage, this.recorder.getFilePath());
     }
 
     public ionViewDidEnter(): void {
-        console.log('RecordPage.ionViewDidEnter()');
+        console.log('ionViewDidEnter()');
         this.recorder.startMonitoring();
         // if we don't do this.content.resize() here then
         // the volume gauge does not show
@@ -203,7 +203,7 @@ export class RecordPage {
     }
 
     public ionViewDidLeave(): void {
-        console.log('RecordPage.ionViewDidLeave()');
+        console.log('ionViewDidLeave()');
         this.recorder.stopMonitoring();
     }
 }

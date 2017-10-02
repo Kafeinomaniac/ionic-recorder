@@ -82,7 +82,7 @@ export abstract class WebAudioRecorder {
 
     // this is how we signal
     constructor(masterClock: MasterClock) {
-        console.log('WebAudioRecorder.constructor()');
+        console.log('constructor()');
 
         this.masterClock = masterClock;
 
@@ -296,7 +296,7 @@ export abstract class WebAudioRecorder {
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      */
     public startMonitoring(bReplace: boolean = false): void {
-        console.log('WebAudioRecorder.startMonitoring()');
+        console.log('startMonitoring()');
 
         if (this.masterClock.has(RECORDER_CLOCK_FUNCTION_NAME)) {
             if (bReplace) {
@@ -340,7 +340,7 @@ export abstract class WebAudioRecorder {
      * Stops monitoring (stops change detection)
      */
     public stopMonitoring(): void {
-        console.log('WebAudioRecorder.stopMonitoring()');
+        console.log('stopMonitoring()');
         this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
     }
 

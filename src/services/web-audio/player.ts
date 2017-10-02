@@ -35,7 +35,7 @@ export class WebAudioPlayer {
      *
      */
     constructor() {
-        console.log('WebAudioPlayer.constructor()');
+        console.log('constructor()');
         this.startedAt = 0;
         this.startedAtOffset = 0;
         this.pausedAt = 0;

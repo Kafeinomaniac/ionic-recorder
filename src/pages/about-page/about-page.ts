@@ -19,7 +19,7 @@ export class AboutPage {
      * AboutPage modal constructor
      */
     constructor() {
-        console.log('AboutPage.constructor()');
+        console.log('constructor()');
         this.version = APP_VERSION;
     }
 

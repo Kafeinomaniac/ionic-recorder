@@ -23,7 +23,7 @@ export class SelectionPage {
      * @param {ViewController} viewController -
      */
     constructor(appFilesystem: AppFilesystem, viewController: ViewController) {
-        console.log('SelectionPage.constructor()');
+        console.log('constructor()');
         this.appFilesystem = appFilesystem;
         this.viewController = viewController;
         this.selectedEntries = [];

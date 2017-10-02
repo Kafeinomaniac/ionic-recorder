@@ -468,8 +468,6 @@ export class Filesystem {
                                 console.log('6) ' + file.size);
                                 console.log('7) ' + startByte);
                                 console.log('8) ' + endByte);
-                                console.dir('9) ' + blob2);
-                                console.dir('10) ' + file.);
                                 console.log('/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/');
 
                                 // we may need to give the blob (a) a header,
@@ -535,7 +533,7 @@ export class Filesystem {
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
         console.log('Filesystem.readDirectoryEntries(' +
-                    directoryEntry.fullPath + '/');
+                    directoryEntry.fullPath + '/)');
         let obs: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],

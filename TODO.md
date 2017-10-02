@@ -7,6 +7,10 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* In debugging wav-player, go back to original plan and first do the step
+  where we show the track page track info - let's make sure we can read the
+  states properly first - they may reveal something...
+
 * get rid of master clock in player.ts - no longer needed?
 
 * audio-player.ts - when there's a change in filename, get the duration,

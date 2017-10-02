@@ -11,4 +11,8 @@ import { Component } from '@angular/core';
     templateUrl: 'settings-page.html'
 })
 export class SettingsPage {
+    constructor() {
+        console.log('constructor()');
+    }
+
 }

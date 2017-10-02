@@ -35,7 +35,7 @@ export class AppStorage {
      * @constructor
      */
     constructor(storage: Storage) {
-        console.log('AppStorage.constructor()');
+        console.log('constructor()');
         this.storage = storage;
     }
 
@@ -50,11 +50,11 @@ export class AppStorage {
                 // it in storage, as taken from DEFAULT_STATE
                 this.storage.get(key).then((value: any) => {
                     if (value) {
-                        console.log('AppStorage.get(' + key + ')=' + value);
+                        console.log('get(' + key + '): ' + value);
                     }
                     else {
                         // (typeof value === 'undefined') || (value === null)
-                        console.log('AppStorage.get(' + key + ') NOT FOUND!');
+                        console.log('get(' + key + ') NOT FOUND!');
                         value = DEFAULT_STATE[key];
                         this.set(key, value);
                     }
