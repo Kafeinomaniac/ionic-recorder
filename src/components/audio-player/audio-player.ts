@@ -39,16 +39,17 @@ export class AudioPlay implements OnChanges {
         player: WavPlayer,
         changeDetectorRef: ChangeDetectorRef
     ) {
-        console.log('AudioPlayer.constructor()');
+        console.log('constructor()');
         this.player = player;
         this.progress = -1;
         this.changeDetectorRef = changeDetectorRef;
     }
 
     /**
+     *
      */
     private detectChanges(): void {
-        console.log('AudioPlayer.detectChanges()');
+        console.log('detectChanges()');
         setTimeout(
             () => {
                 this.changeDetectorRef.detectChanges();
@@ -83,7 +84,7 @@ export class AudioPlay implements OnChanges {
         changeRecord: { [propertyName: string]: SimpleChange }
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
-            console.log('AudioPlayer.ngOnChanges(): filePath=' + this.filePath);
+            console.log('ngOnChanges(): filePath=' + this.filePath);
             this.player.setSourceFile(this.filePath);
         }
     }
@@ -107,7 +108,7 @@ export class AudioPlay implements OnChanges {
     }
 
     public ngOnInit(): void {
-        console.log('AudioPlayer.ngOnInit()');
+        console.log('ngOnInit()');
         // TODO: this maintains monitoring throughout app, you
         // can do this better by stopping to monitor when going to
         // another page but then there will need to be communication
@@ -124,7 +125,7 @@ export class AudioPlay implements OnChanges {
     }
 
     public ngOnDestroy(): void {
-        console.log('AudioPlayer.ngOnDestroy()');
+        console.log('ngOnDestroy()');
         this.player.stop();
     }
 }

@@ -40,7 +40,7 @@ export class ProgressSlider {
         element: ElementRef,
         renderer: Renderer
     ) {
-        console.log('ProgressSlider.constructor()');
+        console.log('constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.element = element;
         this.renderer = renderer;
