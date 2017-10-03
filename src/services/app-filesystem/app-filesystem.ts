@@ -549,22 +549,23 @@ export class AppFilesystem {
     /**
      *
      */
-    public readWavFileHeader(path: string): Observable<WavInfo> {
-        console.log('readAudioFromWavFile(' + path + ')');
+    public readWavFileHeader(filePath: string): Observable<WavInfo> {
+        console.log('readWavFileHeader(' + filePath + ')');
         let fs: FileSystem = this.fileSystem,
             obs: Observable<WavInfo> = Observable.create((observer) => {
-                Filesystem.readFromFile(fs, path, 24, 28).subscribe(
+                Filesystem.readFromFile(fs, filePath, 24, 28).subscribe(
                     (data1: any) => {
                         const view1: DataView = new DataView(data1),
                               sampleRate: number = view1.getUint32(0, true);
-                        Filesystem.readFromFile(fs, path, 40, 44).subscribe(
+                        Filesystem.readFromFile(fs, filePath, 40, 44).subscribe(
                             (data2: any) => {
                                 const view2: DataView = new DataView(data2),
-                                      nSamples: number = view2.getUint32(0,
-                                                                         true);
+                                      subchunk2Size: number = 
+                                      view2.getUint32(0, true),
+                                      nSamples: number = subchunk2Size / 2;
                                 observer.next({
-                                    sampleRate: sampleRate,
-                                    nSamples: nSamples
+                                    nSamples: nSamples,
+                                    sampleRate: sampleRate
                                 });
                                 observer.complete();
                             },
@@ -607,15 +608,11 @@ export class AppFilesystem {
                     // if decodeAudioData errs on arrayBuffer, see
                     // https://stackoverflow.com/questions/10365335...
                     //     .../decodeaudiodata-returning-a-null-error
-                    AUDIO_CONTEXT.decodeAudioData(
-                        arrayBuffer,
+                    AUDIO_CONTEXT.decodeAudioData(arrayBuffer).then(
                         (audioBuffer: AudioBuffer) => {
                             observer.next(audioBuffer);
                             observer.complete(audioBuffer);
-                        },
-                        (err1: any) => {
-                            observer.error(err1);
-                        });
+                        }).catch((err1: any) => { observer.error(err1); });;
                 },
                 (err2: any) => {
                     observer.error(err2);
@@ -648,6 +645,8 @@ export class AppFilesystem {
                 .subscribe(
                     () => {
                         this.nWavFileSamples += wavData.length;
+                        console.log('writeToFile(' + path + '): nSamples = ' + 
+                                    this.nWavFileSamples);
                         observer.next();
                         observer.complete();
                     },

@@ -7,6 +7,8 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Something is failing in wav read/write
+
 * In debugging wav-player, go back to original plan and first do the step
   where we show the track page track info - let's make sure we can read the
   states properly first - they may reveal something...

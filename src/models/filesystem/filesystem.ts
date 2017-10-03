@@ -10,7 +10,7 @@ export class Filesystem {
         fileSystem: FileSystem,
         paths: string[]
     ): Observable<Entry[]> {
-        console.log('Filesystem.getEntriesFromPaths(fs, ' + paths + ')');
+        console.log('getEntriesFromPaths(fs, ' + paths + ')');
         let entryObservableArray: Observable<Entry>[] =
             paths.map((path: string) => {
                 return Filesystem.getPathEntry(fileSystem, path, false);
@@ -40,7 +40,7 @@ export class Filesystem {
         fileSystem: FileSystem,
         paths: string[]
     ): Observable<void> {
-        console.log('Filesystem.deleteEntries(fs, ' + paths + ')');
+        console.log('deleteEntries(fs, ' + paths + ')');
         let entryObservableArray: Observable<Entry>[] =
             paths.map((path: string) => {
                 return Filesystem.getPathEntry(fileSystem, path, false);
@@ -75,7 +75,7 @@ export class Filesystem {
         paths: string[],
         parent: DirectoryEntry
     ): Observable<void> {
-        console.log('Filesystem.moveEntries(fs, ' + paths + ',' +
+        console.log('moveEntries(fs, ' + paths + ',' +
                     parent.name + ')');
         let entryObservableArray: Observable<Entry>[] =
             paths.map((path: string) => {
@@ -112,12 +112,12 @@ export class Filesystem {
     ): Observable<void> {
         let obs: Observable<void> = Observable.create((observer) => {
             const successCB: (ent: Entry) => void = (ent: Entry) => {
-                console.log('Filesystem.moveEntry.successCB()');
+                console.log('moveEntry.successCB()');
                 observer.next();
                 observer.complete();
             };
             const errorCB: (error: FileError) => void = (error: FileError) => {
-                console.log('Filesystem.moveEntry.errorCB()');
+                console.log('moveEntry.errorCB()');
                 observer.error(error);
             };
             entry.moveTo(parent, entry.name, successCB, errorCB);
@@ -129,12 +129,12 @@ export class Filesystem {
      *
      */
     public static deleteEntry(entry: Entry): Observable<void> {
-        console.log('Filesystem.deleteEntry(' + entry.fullPath + ')');
+        console.log('deleteEntry(' + entry.fullPath + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
                 entry.remove(
                     () => {
-                        console.log('Filesystem.deleteEntry(): Done removing ' +
+                        console.log('deleteEntry(): Done removing ' +
                                     entry.fullPath);
                         observer.next();
                         observer.complete();
@@ -148,7 +148,7 @@ export class Filesystem {
             else if (entry.isDirectory) {
                 (<DirectoryEntry>entry).removeRecursively(
                     () => {
-                        console.log('Filesystem.deleteEntry(): Done removing ' +
+                        console.log('deleteEntry(): Done removing ' +
                                     entry.fullPath);
                         observer.next();
                         observer.complete();
@@ -171,7 +171,7 @@ export class Filesystem {
         path: string,
         bCreate: boolean = false
     ): Observable<Entry> {
-        console.log('Filesystem.getPathEntry(fs, ' + path + ', ' +
+        console.log('getPathEntry(fs, ' + path + ', ' +
                     bCreate + ')');
         let obs: Observable<Entry> = Observable.create((observer) => {
             if (path === '/') {
@@ -188,7 +188,7 @@ export class Filesystem {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log('Filesystem.getPathEntry(.., ' + path +
+                        console.log('getPathEntry(.., ' + path +
                                     ') error1: ' + err);
                         observer.error(err);
                     }
@@ -224,7 +224,7 @@ export class Filesystem {
         bPersistent: boolean = true,
         requestSize: number
     ): Observable<FileSystem> {
-        console.log('Filesystem.getFileSystem(bPersistent=' + bPersistent +
+        console.log('getFileSystem(bPersistent=' + bPersistent +
                     ', requestSize=' + requestSize + ')');
         const fsType: number = (
             bPersistent ? window.PERSISTENT :  window.TEMPORARY
@@ -277,7 +277,7 @@ export class Filesystem {
         seekOffset: number,
         bCreate: boolean
     ): Observable<void> {
-        console.log('Filesystem.writeToFile(fs, ' + path +
+        console.log('writeToFile(fs, ' + path +
                     ', bCreate=' + bCreate + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             fs.root.getFile(
@@ -288,7 +288,7 @@ export class Filesystem {
                     fileEntry.createWriter(
                         (fileWriter: FileWriter) => {
                             fileWriter.onwriteend = (event: any) => {
-                                console.log('Filesystem.writeToFile() - ' +
+                                console.log('writeToFile() - ' +
                                             'Wrote blob of size ' + blob.size +
                                             ' @ pos ' + seekOffset);
                                 observer.next();
@@ -327,7 +327,7 @@ export class Filesystem {
         path: string,
         blob: Blob
     ): Observable<FileEntry> {
-        console.log('Filesystem.appendToFile(fs, ' + path + ', blob)');
+        console.log('appendToFile(fs, ' + path + ', blob)');
         let obs: Observable<FileEntry> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
@@ -337,7 +337,7 @@ export class Filesystem {
                     fileEntry.createWriter(
                         (fileWriter: FileWriter) => {
                             fileWriter.onwriteend = (event: any) => {
-                                console.log('Filesystem.appendToFile() - ' +
+                                console.log('appendToFile() - ' +
                                             'Wrote ' + blob.size + ' bytes. ' +
                                             'Accum = ' + fileWriter.length +
                                             ' bytes');
@@ -374,7 +374,7 @@ export class Filesystem {
         fs: FileSystem,
         path: string
     ): Observable<Metadata> {
-        console.log('Filesystem.getMetadata(fs, ' + path + ')');
+        console.log('getMetadata(fs, ' + path + ')');
         let obs: Observable<Metadata> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
@@ -411,7 +411,7 @@ export class Filesystem {
         startByte: number = undefined,
         endByte: number = undefined
     ): Observable<ArrayBuffer> {
-        console.log('Filesystem.readFromFile(fs, ' + path + ', ' +
+        console.log('readFromFile(fs, ' + path + ', ' +
                     startByte + ', ' + endByte + ')');
         let obs: Observable<ArrayBuffer> = Observable.create((observer) => {
             fs.root.getFile(
@@ -428,15 +428,10 @@ export class Filesystem {
                             };
 
                             fileReader.onerror = (err1: any) => {
-                                console.log('Filesystem.readFromFile() err1: ' +
+                                console.log('readFromFile() err1: ' +
                                             err1);
                                 observer.error(err1);
                             };
-
-                            // try line to see if decodeAudioData can work on
-                            // the entire file - currently it does not work on
-                            // chunks and seems to work on files
-                            // fileReader.readAsArrayBuffer(file);
 
                             if (startByte || endByte) {
                                 // >=1 of startByte nor endByte were specified,
@@ -445,54 +440,25 @@ export class Filesystem {
                                 const start: number = startByte || 0,
                                       end: number = endByte || file.size,
                                       blob: Blob = file.slice(start, end);
-
-                                const blob2: Blob = new Blob(
-                                    [
-                                        makeWavBlobHeaderView(
-                                            (end - start) / 2,
-                                            SAMPLE_RATE
-                                        ),
-                                        // blob
-                                        file.slice(start, end)
-                                    ],
-                                    { type: WAV_MIME_TYPE }
-                                );
-
-                                console.log('/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/');
-                                console.log('1) ' + (end - start) / 2);
-                                console.log('2) ' + blob2.size);
-                                console.log('3) ' + blob.size);
-                                console.log('4) ' + file.slice(start, end));
-                                console.log('5) ' +
-                                            file.slice(start, end).size);
-                                console.log('6) ' + file.size);
-                                console.log('7) ' + startByte);
-                                console.log('8) ' + endByte);
-                                console.log('/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/');
-
                                 // we may need to give the blob (a) a header,
                                 // (b) a mime type and then the chunks may be
                                 // decoded - try that next.
-
-                                // fileReader.readAsArrayBuffer(blob);
-                                fileReader.readAsArrayBuffer(blob2);
+                                fileReader.readAsArrayBuffer(blob);
                             }
                             else {
                                 // neither startByte nor endByte were specified,
                                 // read entire file
-                                // fileReader.readAsBinaryString(file);
                                 fileReader.readAsArrayBuffer(file);
                             }
                         },
                         (err2: any) => {
-                            console.log('Filesystem.readFromFile() err2: ' +
-                                        err2);
+                            console.log('readFromFile() err2: ' + err2);
                             observer.error(err2);
                         }
                     );
                 },
                 (err3: any) => {
-                    console.log('Filesystem.readFromFile() err3: ' + err3);
+                    console.log('readFromFile() err3: ' + err3);
                     observer.error(err3);
                 }
             ); // fs.root.getFile(
@@ -508,7 +474,7 @@ export class Filesystem {
         parentDirectoryEntry: DirectoryEntry,
         name: string
     ): Observable<DirectoryEntry> {
-        console.log('Filesystem.createDirectory(' +
+        console.log('createDirectory(' +
                     parentDirectoryEntry.fullPath + ', ' + name + ')');
         let obs: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
@@ -532,8 +498,7 @@ export class Filesystem {
     public static readDirectoryEntries(
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
-        console.log('Filesystem.readDirectoryEntries(' +
-                    directoryEntry.fullPath + '/)');
+        console.log('readDirectoryEntries(' + directoryEntry.fullPath + '/)');
         let obs: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],
