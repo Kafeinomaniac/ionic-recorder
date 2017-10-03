@@ -30,12 +30,13 @@ const DEFAULT_PATH: string = '/Unfiled/';
  */
 @Injectable()
 export class AppFilesystem {
+    private storage: Storage;
+
     public isReady: boolean;
     public entries: Entry[];
     public directoryEntry: DirectoryEntry;
     public selectedPaths: {[path: string]: number};
     private fileSystem: FileSystem;
-    private storage: Storage;
     private nWavFileSamples: number;
 
     /**
@@ -43,13 +44,23 @@ export class AppFilesystem {
      */
     constructor(storage: Storage) {
         console.log('constructor()');
+
         this.storage = storage;
+
         this.isReady = false;
         this.entries = [];
-        this.fileSystem = null;
         this.directoryEntry = null;
         this.selectedPaths = {};
+        this.fileSystem = null;
         this.nWavFileSamples = 0;
+
+        this.setUpFileSystem();
+    }
+
+    /**
+     *
+     */
+    private setUpFileSystem(): void {
         // get the filesystem and remember it
         Filesystem.getFileSystem(true, REQUEST_SIZE).subscribe(
             (fileSystem: FileSystem) => {
@@ -64,7 +75,7 @@ export class AppFilesystem {
                     (directoryEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/ (or already there)');
                         // grab remembered location from storage and go there
-                        storage.get('filesystemPath').then(
+                        this.storage.get('filesystemPath').then(
                             (directoryPath: string) => {
                                 if (directoryPath === '//') {
                                     alert('dir path is //');
@@ -74,7 +85,7 @@ export class AppFilesystem {
                                     directoryPath = DEFAULT_PATH;
                                 }
                                 // grab selection from storage
-                                storage.get('filesystemSelected').then(
+                                this.storage.get('filesystemSelected').then(
                                     // (paths: Set<string>) => {
                                     (paths: {[path: string]: number}) => {
                                         if (paths === null ||
@@ -688,6 +699,8 @@ export class AppFilesystem {
                             );
                             Filesystem.appendToFile(fs, path, blob).subscribe(
                                 () => {
+                                    console.log('wavData.length = ' +
+                                                wavData.length);
                                     this.nWavFileSamples += wavData.length;
                                     observer.next();
                                     observer.complete();
