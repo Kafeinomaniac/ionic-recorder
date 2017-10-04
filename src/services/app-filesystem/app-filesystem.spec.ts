@@ -20,26 +20,26 @@ let storage: Storage = new Storage({}),
 
 function fillUpDataA(): void {
     for (let i: number = 0; i < dataLengthA; i++) {
-            dataA[i] = i + 1;
-            console.log('...A..... ' + dataA[i]);
+        dataA[i] = i + 1;
+        console.log('...A..... ' + dataA[i]);
     }    
 }
 
 function fillUpDataB(): void {
     for (let i: number = 0; i < dataLengthA; i++) {
-            dataB[i] = i + 11;
-            console.log('...B..... ' + dataA[i]);
+        dataB[i] = i + 11;
+        // console.log('...B..... ' + dataA[i]);
     }
 }
 
 function fillUpDataAB(): void {
     for (let i: number = 0; i < dataLengthA; i++) {
         dataAB[i] = i + 1;
-        console.log('...AB..... ' + dataAB[i]);
+        // console.log('...AB..... ' + dataAB[i]);
     }    
     for (let j: number = 0; j < dataLengthB; j++) {
         dataAB[j + 10] = j + 11;
-        console.log('...AB..... ' + dataAB[j + 10]);
+        // console.log('...AB..... ' + dataAB[j + 10]);
     }    
 }
 
@@ -131,8 +131,8 @@ describe('services/app-filesystem', () => {
                 appFilesystem.readWavFileAudio('test.wav').subscribe(
                     (audioBuffer: AudioBuffer) => {
                         // expect(audioBuffer).toEqual(audioBufferAB);
-                        console.dir(audioBuffer);
-                        console.dir(audioBuffer.getChannelData(0));
+                        // console.dir(audioBuffer);
+                        // console.dir(audioBuffer.getChannelData(0));
                         audioBufferAB = audioBuffer;
                         done();
                     }
@@ -169,14 +169,14 @@ describe('services/app-filesystem', () => {
             WAIT_MSEC);
     });
 
-    it('can verify the wav file audio', (done) => {
+    it('can verify the wav file audio against previously created', (done) => {
         setTimeout(
             () => {
                 appFilesystem.readWavFileAudio('test.wav').subscribe(
                     (audioBuffer: AudioBuffer) => {
                         // expect(audioBuffer).toEqual(audioBufferAB);
-                        console.dir(audioBuffer);
-                        console.dir(audioBuffer.getChannelData(0));
+                        // console.dir(audioBuffer);
+                        // console.dir(audioBuffer.getChannelData(0));
                         expect(audioBuffer).toEqual(audioBufferAB);
                         expect(audioBuffer.getChannelData(0))
                             .toEqual(audioBufferAB.getChannelData(0));
