@@ -629,7 +629,8 @@ export class AppFilesystem {
         path: string,
         wavData: Int16Array
     ): Observable<void> {
-        console.log('createWavFile(' + path + ')');
+        console.log('createWavFile(' + path + ') - nSamples: ' +
+                    wavData.length);
         this.nWavFileSamples = 0;
         let obs: Observable<void> = Observable.create((observer) => {
             const nSamples: number = wavData.length,
