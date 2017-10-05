@@ -560,7 +560,7 @@ export class AppFilesystem {
                         Filesystem.readFromFile(fs, filePath, 40, 44).subscribe(
                             (data2: any) => {
                                 const view2: DataView = new DataView(data2),
-                                      subchunk2Size: number = 
+                                      subchunk2Size: number =
                                       view2.getUint32(0, true),
                                       nSamples: number = subchunk2Size / 2;
                                 observer.next({
@@ -608,20 +608,20 @@ export class AppFilesystem {
                     let bufferToDecode: ArrayBuffer = null;
                     if (startByte) {
                         // this is a chunk that does not contain a header
-                        // we have to create a blob with a wav header, read 
+                        // we have to create a blob with a wav header, read
                         // the blob with filereader, then decode the result
                         console.log('array buffer: ' + arrayBuffer +
                         ', byte length: ' + arrayBuffer.byteLength +
                         ', startByte: ' + startByte + ', endByte: ' + endByte);
                         // console.log(arrayBuffer.byteLength);
                         // console.dir(arrayBuffer);
-                        
+
                         const fileReader: FileReader = new FileReader();
-                        
+
                         fileReader.onerror = (err1: any) => {
                             observer.error(err1);
                         };
-                        
+
                         fileReader.onload = () => {
                             // For decodeAudioData errs on arrayBuffer, see
                             // https://stackoverflow.com/questions/10365335...
@@ -634,7 +634,7 @@ export class AppFilesystem {
                                     observer.complete(audioBuffer);
                                 }).catch((err2: any) => { observer.error(err2); });
                         };
-                        
+
                         fileReader.readAsArrayBuffer(
                             new Blob(
                                 [
@@ -690,7 +690,7 @@ export class AppFilesystem {
                 .subscribe(
                     () => {
                         this.nWavFileSamples += wavData.length;
-                        console.log('writeToFile(' + path + '): nSamples = ' + 
+                        console.log('writeToFile(' + path + '): nSamples = ' +
                                     this.nWavFileSamples);
                         observer.next();
                         observer.complete();

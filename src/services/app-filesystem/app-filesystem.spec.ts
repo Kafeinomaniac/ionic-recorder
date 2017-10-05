@@ -24,7 +24,7 @@ function fillUpDataA(): void {
     for (let i: number = 0; i < dataLengthA; i++) {
         dataA[i] = i + 1;
         // console.log('...A..... ' + dataA[i]);
-    }    
+    }
 }
 
 function fillUpDataB(): void {
@@ -38,11 +38,11 @@ function fillUpDataAB(): void {
     for (let i: number = 0; i < dataLengthA; i++) {
         dataAB[i] = i + 1;
         // console.log('...AB..... ' + dataAB[i]);
-    }    
+    }
     for (let j: number = 0; j < dataLengthB; j++) {
         dataAB[j + 10] = j + 11;
         // console.log('...AB..... ' + dataAB[j + 10]);
-    }    
+    }
 }
 
 describe('services/app-filesystem', () => {
