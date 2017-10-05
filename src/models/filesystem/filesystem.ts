@@ -1,6 +1,6 @@
+// Copyright (c) 2017 Tracktunes Inc
+
 import { Observable } from 'rxjs/Rx';
-import { SAMPLE_RATE, WAV_MIME_TYPE } from '../../services/web-audio/common';
-import { makeWavBlobHeaderView } from '../../models/utils/wav-file';
 
 export class Filesystem {
     /**

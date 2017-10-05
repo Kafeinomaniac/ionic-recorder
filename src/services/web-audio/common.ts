@@ -18,6 +18,3 @@ export const AUDIO_CONTEXT: AudioContext =
 
 /** @constant {number} SAMPLE_RATE */
 export const SAMPLE_RATE: number = AUDIO_CONTEXT.sampleRate;
-
-/** @constant {string} WAV_MIME_TYPE */
-export const WAV_MIME_TYPE: string = 'audio/wav';

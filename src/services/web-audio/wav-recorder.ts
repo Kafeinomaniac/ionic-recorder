@@ -7,7 +7,7 @@ import { formatUnixTimestamp } from '../../models/utils/utils';
 import { WebAudioRecorder } from './recorder';
 import { MasterClock } from '../master-clock/master-clock';
 import { MAX, MIN } from '../../models/utils/utils';
-import { AppFilesystem } from '../../services';
+import { WavFile } from '../../models';
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH (from record.ts)
 export const WAV_CHUNK_LENGTH: number = 131072;
@@ -23,17 +23,15 @@ const WAV_CHUNK2: Int16Array = new Int16Array(WAV_CHUNK_LENGTH);
 @Injectable()
 export class WavRecorder extends WebAudioRecorder {
     private setter: DoubleBufferSetter;
-    private appFilesystem: AppFilesystem;
     private nChunksSaved: number;
     private filePath: string;
 
     // this is how we signal
-    constructor(masterClock: MasterClock, appFilesystem: AppFilesystem) {
+    constructor(masterClock: MasterClock) {
         super(masterClock);
 
         console.log('constructor()');
 
-        this.appFilesystem = appFilesystem;
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {
             this.saveWavFileChunk(this.setter.activeBuffer).subscribe(
                 null,
@@ -65,10 +63,10 @@ export class WavRecorder extends WebAudioRecorder {
      * @returns {Observable<void>}
      */
     private saveWavFileChunk(arr: Int16Array): Observable<void> {
-        console.log('saveWavFileChunk(arr.size=' + arr.length +')');
+        console.log('saveWavFileChunk(arr.size=' + arr.length + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             if (this.nChunksSaved === 0) {
-                this.appFilesystem.createWavFile(
+                WavFile.createWavFile(
                     this.filePath,
                     arr
                 ).subscribe(
@@ -83,7 +81,7 @@ export class WavRecorder extends WebAudioRecorder {
                 );
             }
             else {
-                this.appFilesystem.appendToWavFile(
+                WavFile.appendToWavFile(
                     this.filePath,
                     arr
                 ).subscribe(
