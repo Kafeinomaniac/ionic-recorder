@@ -25,7 +25,7 @@ beforeEach(() => {
     setter = new DoubleBufferSetter(buffer1, buffer2, preSetCB);
 });
 
-describe('utils/double-buffer:DoubleBufferGetter/Setter', () => {
+describe('utils/double-buffer', () => {
 
     it('wrap around as expected', () => {
         // fill up buffer1 to be [1,2,3], buffer2 to be [4,5,6]

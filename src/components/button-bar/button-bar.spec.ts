@@ -43,7 +43,7 @@ const BUTTONS: ButtonbarButton[] = [{
     }
 ];
 
-describe('ButtonBar', () => {
+describe('components/button-bar', () => {
 
     beforeEach(async(() => TestUtils.beforeEachCompiler([ButtonBar])
         .then(compiled => {

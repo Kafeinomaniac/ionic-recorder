@@ -11,7 +11,7 @@ let storage: Storage = new Storage({}),
     appStorage: AppStorage = new AppStorage(storage),
     savedTabIndex: number = -1;
 
-describe('When appStorage initialized', () => {
+describe('services/app-storage', () => {
     it('appStorage is not falsy', (done) => {
         setTimeout(
             () => {

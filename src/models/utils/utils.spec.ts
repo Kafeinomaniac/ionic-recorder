@@ -13,7 +13,7 @@ import {
     isString
 } from './utils';
 
-describe('utils/utils:isPositiveWholeNumber()', () => {
+describe('utils/utils', () => {
     it('isX() functions work as expected', () => {
         expect(isFunction(isPositiveWholeNumber)).toBe(true);
         expect(isFunction(null)).toBe(false);
