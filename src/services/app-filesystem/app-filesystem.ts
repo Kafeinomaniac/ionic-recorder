@@ -590,8 +590,8 @@ export class AppFilesystem {
         startSample: number = undefined,
         endSample: number = undefined
     ): Observable<AudioBuffer> {
-        console.log('readWavFileAudio(' + path + ', ' +
-                    startSample + ', ' + endSample + ')');
+        console.log('readWavFileAudio(' + path + ', startSample: ' +
+                    startSample + ', endSample: ' + endSample + ')');
         const startByte: number = wavSampleToByte(startSample),
               endByte: number = wavSampleToByte(endSample);
         let obs: Observable<AudioBuffer> = Observable.create((observer) => {
@@ -605,14 +605,58 @@ export class AppFilesystem {
                     console.log('array buffer: ' + arrayBuffer);
                     console.log(arrayBuffer.byteLength);
                     console.dir(arrayBuffer);
-                    // if decodeAudioData errs on arrayBuffer, see
-                    // https://stackoverflow.com/questions/10365335...
-                    //     .../decodeaudiodata-returning-a-null-error
-                    AUDIO_CONTEXT.decodeAudioData(arrayBuffer).then(
-                        (audioBuffer: AudioBuffer) => {
-                            observer.next(audioBuffer);
-                            observer.complete(audioBuffer);
-                        }).catch((err1: any) => { observer.error(err1); });;
+                    let bufferToDecode: ArrayBuffer = null;
+                    if (startByte) {
+                        // this is a chunk that does not contain a header
+                        // we have to create a blob with a wav header, read 
+                        // the blob with filereader, then decode the result
+                        console.log('array buffer: ' + arrayBuffer +
+                        ', byte length: ' + arrayBuffer.byteLength +
+                        ', startByte: ' + startByte + ', endByte: ' + endByte);
+                        // console.log(arrayBuffer.byteLength);
+                        // console.dir(arrayBuffer);
+                        
+                        const fileReader: FileReader = new FileReader();
+                        
+                        fileReader.onerror = (err1: any) => {
+                            observer.error(err1);
+                        };
+                        
+                        fileReader.onload = () => {
+                            // For decodeAudioData errs on arrayBuffer, see
+                            // https://stackoverflow.com/questions/10365335...
+                            //     .../decodeaudiodata-returning-a-null-error
+                            AUDIO_CONTEXT.decodeAudioData(
+                                fileReader.result
+                            ).then(
+                                (audioBuffer: AudioBuffer) => {
+                                    observer.next(audioBuffer);
+                                    observer.complete(audioBuffer);
+                                }).catch((err2: any) => { observer.error(err2); });
+                        };
+                        
+                        fileReader.readAsArrayBuffer(
+                            new Blob(
+                                [
+                                    makeWavBlobHeaderView(
+                                        arrayBuffer.byteLength / 2,
+                                        SAMPLE_RATE
+                                    ),
+                                    arrayBuffer
+                                ],
+                                { type: WAV_MIME_TYPE }
+                            )
+                        ); // fileReader.readAsArrayBuffer(
+                    }
+                    else {
+                        // this is the entire file, so it has a header,
+                        // just decode it
+                        AUDIO_CONTEXT.decodeAudioData(arrayBuffer).then(
+                            (audioBuffer: AudioBuffer) => {
+                                observer.next(audioBuffer);
+                                observer.complete(audioBuffer);
+                            }).catch((err1: any) => { observer.error(err1); });;
+                    }
                 },
                 (err2: any) => {
                     observer.error(err2);

@@ -16,12 +16,14 @@ let storage: Storage = new Storage({}),
     dataA: Int16Array = new Int16Array(dataLengthA),
     dataB: Int16Array = new Int16Array(dataLengthB),
     dataAB: Int16Array = new Int16Array(dataLengthAB),
+    // audioBufferAB is remembered in one test and it is used
+    // after the test in another test's' expect().toEqual()
     audioBufferAB: AudioBuffer;
 
 function fillUpDataA(): void {
     for (let i: number = 0; i < dataLengthA; i++) {
         dataA[i] = i + 1;
-        console.log('...A..... ' + dataA[i]);
+        // console.log('...A..... ' + dataA[i]);
     }    
 }
 
@@ -174,12 +176,23 @@ describe('services/app-filesystem', () => {
             () => {
                 appFilesystem.readWavFileAudio('test.wav').subscribe(
                     (audioBuffer: AudioBuffer) => {
-                        // expect(audioBuffer).toEqual(audioBufferAB);
-                        // console.dir(audioBuffer);
-                        // console.dir(audioBuffer.getChannelData(0));
                         expect(audioBuffer).toEqual(audioBufferAB);
                         expect(audioBuffer.getChannelData(0))
                             .toEqual(audioBufferAB.getChannelData(0));
+                        done();
+                    }
+                );
+            },
+            WAIT_MSEC);
+    });
+
+    it('can read and verify a wav file data chunk', (done) => {
+        setTimeout(
+            () => {
+                appFilesystem.readWavFileAudio('test.wav', 10, 20).subscribe(
+                    (audioBuffer: AudioBuffer) => {
+                        expect(audioBuffer.getChannelData(0))
+                            .toEqual(audioBufferAB.getChannelData(0).slice(10, 20));
                         done();
                     }
                 );

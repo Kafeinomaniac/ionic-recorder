@@ -7,6 +7,11 @@ export function wavSampleToByte(sampleIndex: number): number {
     return WAV_HEADER_SIZE + sampleIndex * 2;
 }
 
+export function byteToWavSample(byteIndex: number): number {
+    'use strict';
+    return byteIndex / 2 - WAV_HEADER_SIZE;
+}
+
 // see: http://soundfile.sapp.org/doc/WaveFormat/
 export function makeWavBlobHeaderView(
     nSamples: number,
