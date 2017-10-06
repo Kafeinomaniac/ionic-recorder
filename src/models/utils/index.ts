@@ -2,4 +2,3 @@
 
 export * from './double-buffer';
 export * from './utils';
-export * from './wav-file';

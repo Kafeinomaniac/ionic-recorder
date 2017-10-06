@@ -9,125 +9,145 @@ export interface WavInfo {
     sampleRate: number;
 }
 
-export class WavFile {
+// internal constants and functions
 
-    public static nHeaderBytes: number = 44;
+const WAV_MIME_TYPE: string = 'audio/wav';
+const NUMBER_MIME_TYPE: string = 'application/octet-stream';
+const CHUNKSIZE_START_BYTE: number = 4;
+const SAMPLE_RATE_START_BYTE: number = 24;
+const SAMPLE_RATE_END_BYTE: number = SAMPLE_RATE_START_BYTE + 4;
+const SUBCHUNK2SIZE_START_BYTE: number = 40;
+const SUBCHUNK2SIZE_END_BYTE: number = SUBCHUNK2SIZE_END_BYTE + 4;
+const N_HEADER_BYTES: number = 44;
 
-    public static mimeType: string = 'audio/wav';
+function sampleToByte(iSample: number): number {
+    'use strict';
+    return N_HEADER_BYTES + 2 * iSample;
+}
 
-    public static sampleToByte(iSample: number): number {
-        return WavFile.nHeaderBytes + 2 * iSample;
-    }
+// function byteToSample(iByte: number): number {
+//     'use strict';
+//     return iByte / 2 - N_HEADER_BYTES;
+// }
 
-    public static byteToSample(iByte: number): number {
-        return iByte / 2 - WavFile.nHeaderBytes;
-    }
-
+function makeWavBlobHeaderView(
+    nSamples: number,
+    sampleRate: number
+): DataView {
+    'use strict';
     // see: http://soundfile.sapp.org/doc/WaveFormat/
-    public static makeWavBlobHeaderView(
-        nSamples: number,
-        sampleRate: number
-    ): DataView {
-        const arrayByteLength: number = 2 * nSamples,
-              arrayBuffer: ArrayBuffer = new ArrayBuffer(WavFile.nHeaderBytes),
-              headerView: DataView = new DataView(arrayBuffer),
-              writeAscii:
-              (dataView: DataView, offset: number, text: string) => void =
-              (dataView: DataView, offset: number, text: string) => {
-                  const len: number = text.length;
-                  for (let i: number = 0; i < len; i++) {
-                      dataView.setUint8(offset + i, text.charCodeAt(i));
-                  }
-              };
+    const arrayByteLength: number = 2 * nSamples,
+          arrayBuffer: ArrayBuffer = new ArrayBuffer(WavFile.nHeaderBytes),
+          headerView: DataView = new DataView(arrayBuffer),
+          writeAscii:
+          (dataView: DataView, offset: number, text: string) => void =
+          (dataView: DataView, offset: number, text: string) => {
+              const len: number = text.length;
+              for (let i: number = 0; i < len; i++) {
+                  dataView.setUint8(offset + i, text.charCodeAt(i));
+              }
+          };
 
-        //
-        // NB: this is single-channel (mono)
-        //
+    //
+    // NB: this is single-channel (mono)
+    //
 
-        //   0-4: ChunkId
-        writeAscii(headerView, 0, 'RIFF');
-        //   4-8: ChunkSize
-        headerView.setUint32(4, 36 + arrayByteLength, true);
-        //  8-12: Format
-        writeAscii(headerView, 8, 'WAVE');
-        // 12-16: Subchunk1ID
-        writeAscii(headerView, 12, 'fmt ');
-        // 16-20: Subchunk1Size
-        headerView.setUint32(16, 16, true);
-        // 20-22: AudioFormat
-        headerView.setUint16(20, 1, true);
-        // 22-24: NumChannels
-        headerView.setUint16(22, 1, true);
-        // 24-28: SampleRate
-        headerView.setUint32(24, sampleRate, true);
-        // 28-32: ByteRate
-        headerView.setUint32(28, sampleRate * 2, true);
-        // 32-34: BlockAlign
-        headerView.setUint16(32, 2, true);
-        // 34-36: BitsPerSample
-        headerView.setUint16(34, 16, true);
-        // 36-40: Subchunk2ID
-        writeAscii(headerView, 36, 'data');
-        // 40-44: Subchunk2Size
-        headerView.setUint32(40, arrayByteLength, true);
+    //   0-4: ChunkId
+    writeAscii(headerView, 0, 'RIFF');
+    //   4-8: ChunkSize
+    headerView.setUint32(4, 36 + arrayByteLength, true);
+    //  8-12: Format
+    writeAscii(headerView, 8, 'WAVE');
+    // 12-16: Subchunk1ID
+    writeAscii(headerView, 12, 'fmt ');
+    // 16-20: Subchunk1Size
+    headerView.setUint32(16, 16, true);
+    // 20-22: AudioFormat
+    headerView.setUint16(20, 1, true);
+    // 22-24: NumChannels
+    headerView.setUint16(22, 1, true);
+    // 24-28: SampleRate
+    headerView.setUint32(24, sampleRate, true);
+    // 28-32: ByteRate
+    headerView.setUint32(28, sampleRate * 2, true);
+    // 32-34: BlockAlign
+    headerView.setUint16(32, 2, true);
+    // 34-36: BitsPerSample
+    headerView.setUint16(34, 16, true);
+    // 36-40: Subchunk2ID
+    writeAscii(headerView, 36, 'data');
+    // 40-44: Subchunk2Size
+    headerView.setUint32(40, arrayByteLength, true);
 
-        return headerView;
-    }
+    return headerView;
+} // public static makeWavBlobHeaderView(
 
+export class WavFile {
     /**
      *
      */
     public static readWavFileHeader(
+        fileSystem: FileSystem,
         filePath: string
     ): Observable<WavInfo> {
         console.log('readWavFileHeader(' + filePath + ')');
-        let fs: FileSystem = this.fileSystem,
-            obs: Observable<WavInfo> = Observable.create((observer) => {
-                Filesystem.readFromFile(fs, filePath, 24, 28).subscribe(
-                    (data1: any) => {
-                        const view1: DataView = new DataView(data1),
-                              sampleRate: number = view1.getUint32(0, true);
-                        Filesystem.readFromFile(fs, filePath, 40, 44).subscribe(
-                            (data2: any) => {
-                                const view2: DataView = new DataView(data2),
-                                      subchunk2Size: number =
-                                      view2.getUint32(0, true),
-                                      nSamples: number = subchunk2Size / 2;
-                                observer.next({
-                                    nSamples: nSamples,
-                                    sampleRate: sampleRate
-                                });
-                                observer.complete();
-                            },
-                            (err1: any) => {
-                                observer.error(err1);
-                            }
-                        );
-                    },
-                    (err2: any) => {
-                        observer.error(err2);
-                    }
-                );
-            });
+        let obs: Observable<WavInfo> = Observable.create((observer) => {
+            Filesystem.readFromFile(
+                fileSystem,
+                filePath,
+                SAMPLE_RATE_START_BYTE,
+                SAMPLE_RATE_END_BYTE,
+            ).subscribe(
+                (data1: any) => {
+                    const view1: DataView = new DataView(data1),
+                          sampleRate: number = view1.getUint32(0, true);
+                    Filesystem.readFromFile(
+                        fileSystem,
+                        filePath,
+                        SUBCHUNK2SIZE_START_BYTE,
+                        SUBCHUNK2SIZE_END_BYTE
+                    ).subscribe(
+                        (data2: any) => {
+                            const view2: DataView = new DataView(data2),
+                                  subchunk2Size: number =
+                                  view2.getUint32(0, true),
+                                  nSamples: number = subchunk2Size / 2;
+                            observer.next({
+                                nSamples: nSamples,
+                                sampleRate: sampleRate
+                            });
+                            observer.complete();
+                        },
+                        (err1: any) => {
+                            observer.error(err1);
+                        }
+                    );
+                },
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            );
+        });
         return obs;
-    }
+    } // public static readWavFileHeader(
 
     /**
      *
      */
     public static readWavFileAudio(
-        path: string,
+        fileSystem: FileSystem,
+        filePath: string,
         startSample: number = undefined,
         endSample: number = undefined
     ): Observable<AudioBuffer> {
-        console.log('readWavFileAudio(' + path + ', startSample: ' +
+        console.log('readWavFileAudio(' + filePath + ', startSample: ' +
                     startSample + ', endSample: ' + endSample + ')');
         const startByte: number = sampleToByte(startSample),
               endByte: number = sampleToByte(endSample);
         let obs: Observable<AudioBuffer> = Observable.create((observer) => {
             Filesystem.readFromFile(
-                this.fileSystem,
-                path,
+                fileSystem,
+                filePath,
                 startByte,
                 endByte
             ).subscribe(
@@ -139,10 +159,11 @@ export class WavFile {
                         // this is a chunk that does not contain a header
                         // we have to create a blob with a wav header, read
                         // the blob with filereader, then decode the result
-                        console.log('array buffer: ' + arrayBuffer +
-                                    ', byte length: ' + arrayBuffer.byteLength +
-                                    ', startByte: ' + startByte +
-                                    ', endByte: ' + endByte);
+                        // console.log('array buffer: ' + arrayBuffer +
+                        //             ', byte length: ' +
+                        //             arrayBuffer.byteLength +
+                        //             ', startByte: ' + startByte +
+                        //             ', endByte: ' + endByte);
                         // console.log(arrayBuffer.byteLength);
                         // console.dir(arrayBuffer);
 
@@ -198,18 +219,18 @@ export class WavFile {
             );
         });
         return obs;
-    }
+    } // public static readWavFileAudio(
 
     /**
      *
      */
     public static createWavFile(
-        path: string,
+        fileSystem: FileSystem,
+        filePath: string,
         wavData: Int16Array
     ): Observable<void> {
-        console.log('createWavFile(' + path + ') - nSamples: ' +
+        console.log('createWavFile(' + filePath + ') - nSamples: ' +
                     wavData.length);
-        this.nWavFileSamples = 0;
         let obs: Observable<void> = Observable.create((observer) => {
             const nSamples: number = wavData.length,
                   headerView: DataView = makeWavBlobHeaderView(
@@ -220,12 +241,9 @@ export class WavFile {
                       [ headerView, wavData ],
                       { type: WAV_MIME_TYPE }
                   );
-            Filesystem.writeToFile(this.fileSystem, path, blob, 0, true)
+            Filesystem.writeToFile(fileSystem, filePath, blob, 0, true)
                 .subscribe(
                     () => {
-                        this.nWavFileSamples += wavData.length;
-                        console.log('writeToFile(' + path + '): nSamples = ' +
-                                    this.nWavFileSamples);
                         observer.next();
                         observer.complete();
                     },
@@ -235,51 +253,50 @@ export class WavFile {
                 );
         });
         return obs;
-    }
+    } // public static createWavFile(
 
     /**
      *
      */
     public static appendToWavFile(
-        path: string,
-        wavData: Int16Array
+        fileSystem: FileSystem,
+        filePath: string,
+        wavData: Int16Array,
+        nPreAppendSamples: number
     ): Observable<void> {
-        console.log('appendToWavFile(' + path + ')');
+        console.log('appendToWavFile(' + filePath + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             // see http://soundfile.sapp.org/doc/WaveFormat/ for definitions
             // of subchunk2size and chunkSize
-            let fs: FileSystem = this.fileSystem,
-                nNewSamples: number = wavData.length,
-                nSamples: number = this.nWavFileSamples + nNewSamples,
-                subchunk2size: number = 2 * nSamples,
-                chunkSize: number = 36 + subchunk2size,
-                view: DataView = new DataView(new ArrayBuffer(4)),
-                blob: Blob;
+            const nSamples: number = nPreAppendSamples + wavData.length,
+                  subchunk2size: number = 2 * nSamples,
+                  chunkSize: number = 36 + subchunk2size;
+            let view: DataView = new DataView(new ArrayBuffer(4));
 
             view.setUint32(0, chunkSize, true);
-            blob = new Blob(
-                [ view ],
-                { type: 'application/octet-stream' }
-            );
-            Filesystem.writeToFile(fs, path, blob, 4, false).subscribe(
+            Filesystem.writeToFile(
+                fileSystem,
+                filePath,
+                new Blob([ view ], { type: NUMBER_MIME_TYPE }),
+                CHUNKSIZE_START_BYTE,
+                false
+            ).subscribe(
                 () => {
                     view.setUint32(0, subchunk2size, true);
-                    blob = new Blob(
-                        [ view ],
-                        { type: 'application/octet-stream' }
-                    );
-                    Filesystem.writeToFile(fs, path, blob, 40, false).subscribe(
+                    Filesystem.writeToFile(
+                        fileSystem,
+                        filePath,
+                        new Blob([ view ], { type: NUMBER_MIME_TYPE }),
+                        SUBCHUNK2SIZE_START_BYTE,
+                        false
+                    ).subscribe(
                         () => {
-                            blob = new Blob(
-                                [ wavData ],
-                                // { type: 'application/octet-stream' }
-                                { type: WAV_MIME_TYPE }
-                            );
-                            Filesystem.appendToFile(fs, path, blob).subscribe(
+                            Filesystem.appendToFile(
+                                fileSystem,
+                                filePath,
+                                new Blob([ wavData ], { type: WAV_MIME_TYPE })
+                            ).subscribe(
                                 () => {
-                                    console.log('wavData.length = ' +
-                                                wavData.length);
-                                    this.nWavFileSamples += wavData.length;
                                     observer.next();
                                     observer.complete();
                                 },
@@ -299,6 +316,5 @@ export class WavFile {
             ); // .writeToFile(fs, path, blob, 4, false).subscribe(
         });
         return obs;
-
-    }
+    } // public static appendToWavFile(
 }
