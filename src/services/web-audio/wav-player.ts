@@ -19,6 +19,7 @@ export class WavPlayer extends WebAudioPlayer {
 
     // current file info
     private filePath: string;
+    private fileSystem: FileSystem;
     private sampleRate: number;
     private nSamples: number;
 
@@ -35,10 +36,11 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    public setSourceFile(filePath: string): void {
-        WavFile.readWavFileHeader(filePath).subscribe(
+    public setSourceFile(fileSystem: FileSystem, filePath: string): void {
+        WavFile.readWavFileHeader(fileSystem, filePath).subscribe(
             (wavInfo: WavInfo) => {
                 this.filePath = filePath;
+                this.fileSystem = fileSystem;
                 this.nSamples = wavInfo.nSamples;
                 this.sampleRate = wavInfo.sampleRate;
                 this.duration = this.nSamples / this.sampleRate;
@@ -78,6 +80,7 @@ export class WavPlayer extends WebAudioPlayer {
             console.log('POST-JUMP PAUSED AT: ' + this.pausedAt);
 
             WavFile.readWavFileAudio(
+                this.fileSystem,
                 this.filePath,
                 startSample,
                 endSample
@@ -92,7 +95,7 @@ export class WavPlayer extends WebAudioPlayer {
                     alert('Error: ' + err);
                     console.dir(err);
                 }
-            ); // WavFile.readWavFileAudio(..).subscribe(
+            ); // WavFile.readWavFileAduio(..).subscribe(
         }
     }
 

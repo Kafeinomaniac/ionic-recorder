@@ -7,7 +7,6 @@ import { Storage } from '@ionic/storage';
 /* tslint:enable */
 import { Filesystem, has } from '../../models';
 
-const REQUEST_SIZE: number = 1024 * 1024 * 1024;
 const WAIT_MSEC: number = 60;
 const DEFAULT_PATH: string = '/Unfiled/';
 
@@ -17,11 +16,10 @@ const DEFAULT_PATH: string = '/Unfiled/';
 @Injectable()
 export class AppFilesystem {
     private storage: Storage;
-
     public isReady: boolean;
     public entries: Entry[];
     public directoryEntry: DirectoryEntry;
-    public selectedPaths: {[path: string]: number};
+    public selectedPaths: { [path: string]: number };
     private fileSystem: FileSystem;
     private nWavFileSamples: number;
 
@@ -48,16 +46,12 @@ export class AppFilesystem {
      */
     private setUpFileSystem(): void {
         // get the filesystem and remember it
-        Filesystem.getFileSystem(true, REQUEST_SIZE).subscribe(
-            (fileSystem: FileSystem) => {
+        Filesystem.getFileSystem(true).subscribe(
+            (fs: FileSystem) => {
                 // remember the filesystem you got
-                this.fileSystem = fileSystem;
+                this.fileSystem = fs;
                 // create the /Unfiled/ directory if not already there
-                Filesystem.getPathEntry(
-                    fileSystem,
-                    '/Unfiled/',
-                    true
-                ).subscribe(
+                Filesystem.getPathEntry(fs, '/Unfiled/', true).subscribe(
                     (directoryEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/ (or already there)');
                         // grab remembered location from storage and go there
@@ -73,43 +67,54 @@ export class AppFilesystem {
                                 // grab selection from storage
                                 this.storage.get('filesystemSelected').then(
                                     // (paths: Set<string>) => {
-                                    (paths: {[path: string]: number}) => {
-                                        if (paths === null ||
-                                            typeof paths === 'undefined') {
-                                            this.selectedPaths = {};
-                                            this.storage.set(
-                                                'filesystemSelected',
-                                                this.selectedPaths
-                                            );
+                                    (paths: {
+                                        [path: string]: number }) => {
+                                            if (paths === null ||
+                                                typeof paths === 'undefined') {
+                                                this.selectedPaths = {};
+                                                this.storage.set(
+                                                    'filesystemSelected',
+                                                    this.selectedPaths
+                                                );
+                                            }
+                                            else {
+                                                this.selectedPaths = paths;
+                                            }
+                                            this.switchDirectory(directoryPath)
+                                                .subscribe(
+                                                    () => {
+                                                        this.isReady = true;
+                                                    },
+                                                    (err1: any) => {
+                                                        alert('err1: ' + err1);
+                                                    }
+                                                ); // this.switchDirectory(
                                         }
-                                        else {
-                                            this.selectedPaths = paths;
-                                        }
-                                        this.switchDirectory(directoryPath)
-                                            .subscribe(
-                                                () => { this.isReady = true; },
-                                                (err1: any) => {
-                                                    alert('err1: ' + err1);
-                                                }
-                                            ); // this.switchDirectory(
-                                    }).catch((err2: any) => {
-                                        alert('err2: ' + err2);
-                                    }); // ).catch((err1: any) => {
+                                ).catch((err2: any) => {
+                                    alert('err2: ' + err2);
+                                }); // .then(..).catch((err2: any) => {..
                             } // (directoryPath: string) => {
                         ).catch((err3: any) => {
                             alert('err3: ' + err3);
-                        }); // ).catch((err3: any) => {
+                        }); // .then(..).catch((err3: any) => {
                     }, // (directoryEntry: DirectoryEntry) => {
                     (err4: any) => {
                         alert('err4: ' + err4);
                     }
-                ); // .getPathEntry(fileSystem, '/Unfiled/', true).subscribe(
-            }, // (fileSystem: FileSystem) => {
+                ); // getPathEntry(fileSystem, '/Unfiled/', true).subs..
+            },
             (err5: any) => {
                 alert('err5: ' + err5);
             }
-        ); // Filesystem.getFileSystem(true, REQUEST_SIZE).subscribe(
-    } // constructor() {
+        );
+    }
+
+    /**
+     *
+     */
+    public getFilesystem(): FileSystem {
+        return this.fileSystem;
+    }
 
     /**
      *
@@ -177,9 +182,9 @@ export class AppFilesystem {
     /**
      *
      */
-    public getSelectedEntries(): Observable<Entry[]> {
+    public getSelectedEntries(): Observable < Entry[] > {
         console.log('getSelectedEntries()');
-        let obs: Observable<Entry[]> = Observable.create((observer) => {
+        let obs: Observable < Entry[] > = Observable.create((observer) => {
             // get the file system
             this.whenReady().subscribe(
                 () => {
@@ -265,9 +270,9 @@ export class AppFilesystem {
      * @returns {Observable<FileSystem>} Observable that emits the file
      * system when it's ready for use.
      */
-    public switchDirectory(path: string): Observable<Entry[]> {
+    public switchDirectory(path: string): Observable < Entry[] > {
         console.log('switchDirectory(' + path + ')');
-        let obs: Observable<Entry[]> = Observable.create((observer) => {
+        let obs: Observable < Entry[] > = Observable.create((observer) => {
             // got file system, now get entry object for path
             // of directory we're switching to
             Filesystem.getPathEntry(this.fileSystem, path, false).subscribe(

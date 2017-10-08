@@ -27,7 +27,9 @@ export class WavRecorder extends WebAudioRecorder {
     private filePath: string;
 
     // this is how we signal
-    constructor(masterClock: MasterClock) {
+    constructor(
+        masterClock: MasterClock
+    ) {
         super(masterClock);
 
         console.log('constructor()');
@@ -48,7 +50,8 @@ export class WavRecorder extends WebAudioRecorder {
         // console.log('valueCB()');
         const clipped: number = MAX(-1, MIN(1, pcm));
         this.setter.setNext(
-            clipped < 0 ? clipped * 0x8000 : clipped * 0x7fff);
+            clipped < 0 ? clipped * 0x8000 : clipped * 0x7fff
+        );
     }
 
     /**
@@ -62,11 +65,15 @@ export class WavRecorder extends WebAudioRecorder {
      * Save the next wav file chunk
      * @returns {Observable<void>}
      */
-    private saveWavFileChunk(arr: Int16Array): Observable<void> {
+    private saveWavFileChunk(
+        fileSystem: FileSystem,
+        arr: Int16Array
+    ): Observable<void> {
         console.log('saveWavFileChunk(arr.size=' + arr.length + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             if (this.nChunksSaved === 0) {
                 WavFile.createWavFile(
+                    fileSystem,
                     this.filePath,
                     arr
                 ).subscribe(
@@ -82,6 +89,7 @@ export class WavRecorder extends WebAudioRecorder {
             }
             else {
                 WavFile.appendToWavFile(
+                    fileSystem,
                     this.filePath,
                     arr
                 ).subscribe(

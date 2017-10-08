@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { WavPlayer } from '../../services/web-audio/wav-player';
 import { formatSecondsTime } from '../../models';
+import { AppFilesystem } from '../../services';
 
 /**
  * An toolbar-like (row on the screen) audio player for controlling
@@ -18,7 +19,7 @@ import { formatSecondsTime } from '../../models';
  * @class AudioPlay
  */
 @Component({
-    providers: [WavPlayer],
+    providers: [ WavPlayer, AppFilesystem ],
     selector: 'audio-player',
     templateUrl: 'audio-player.html'
 })
@@ -27,6 +28,9 @@ export class AudioPlay implements OnChanges {
     public player: WavPlayer;
 
     private changeDetectorRef: ChangeDetectorRef;
+    // private appFileSystem: AppFilesystem;
+    private fileSystem: FileSystem;
+
     // when progress is < 0, we are not moving the progress bar but when
     // we are moving the progress bar it is zero
     private progress: number;
@@ -34,9 +38,14 @@ export class AudioPlay implements OnChanges {
     /**
      * @constructor
      */
-    constructor(player: WavPlayer, changeDetectorRef: ChangeDetectorRef) {
+    constructor(
+        player: WavPlayer,
+        changeDetectorRef: ChangeDetectorRef,
+        appFilesystem: AppFilesystem
+) {
         console.log('constructor()');
         this.changeDetectorRef = changeDetectorRef;
+        this.fileSystem = appFilesystem.getFilesystem();
         this.player = player;
         this.progress = -1;
     }
@@ -84,7 +93,7 @@ export class AudioPlay implements OnChanges {
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
             console.log('ngOnChanges(): filePath=' + this.filePath);
-            this.player.setSourceFile(this.filePath);
+            this.player.setSourceFile(this.fileSystem, this.filePath);
         }
     }
 
@@ -95,6 +104,9 @@ export class AudioPlay implements OnChanges {
         return this.player.getTime() / this.player.getDuration();
     }
 
+    /**
+     *
+     */
     public getDisplayDuration(): string {
         // console.log('getDisplayDuration(): ' + this.displayDuration);
         // return this.displayDuration;
@@ -102,6 +114,9 @@ export class AudioPlay implements OnChanges {
         return  formatSecondsTime(duration, duration);
     }
 
+    /**
+     *
+     */
     public getDisplayTime(): string {
         // console.log('t: ' + this.progress);
         const duration: number = this.player.getDuration();
@@ -113,6 +128,9 @@ export class AudioPlay implements OnChanges {
         }
     }
 
+    /**
+     *
+     */
     public ngOnInit(): void {
         console.log('ngOnInit()');
         // TODO: this maintains monitoring throughout app, you
@@ -130,6 +148,9 @@ export class AudioPlay implements OnChanges {
         // this.player.togglePlayPause();
     }
 
+    /**
+     *
+     */
     public ngOnDestroy(): void {
         console.log('ngOnDestroy()');
         this.player.stop();

@@ -2,6 +2,9 @@
 
 import { Observable } from 'rxjs/Rx';
 
+/** @constant {number} */
+export const DEFAULT_REQUEST_SIZE: number = 1024 * 1024 * 1024;
+
 export class Filesystem {
     /**
      *
@@ -222,7 +225,7 @@ export class Filesystem {
      */
     public static getFileSystem(
         bPersistent: boolean = true,
-        requestSize: number
+        requestSize: number = DEFAULT_REQUEST_SIZE
     ): Observable<FileSystem> {
         console.log('getFileSystem(bPersistent=' + bPersistent +
                     ', requestSize=' + requestSize + ')');

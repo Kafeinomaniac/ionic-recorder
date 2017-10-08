@@ -1,5 +1,5 @@
 // Copyright (c) 2017 Tracktunes Inc
-
+/*
 import { Storage } from '@ionic/storage';
 import { Filesystem } from '../../models';
 import { AppFilesystem, WavInfo } from '../../services';
@@ -143,7 +143,7 @@ describe('services/app-filesystem', () => {
             WAIT_MSEC);
     });
 
-    it('can create test.wav with 20 samples - same data as appended one', (done) => {
+    it('can create same final test.wav with 20 samples all at once', (done) => {
         setTimeout(
             () => {
                 fillUpDataAB();
@@ -192,7 +192,8 @@ describe('services/app-filesystem', () => {
                 appFilesystem.readWavFileAudio('test.wav', 10, 20).subscribe(
                     (audioBuffer: AudioBuffer) => {
                         expect(audioBuffer.getChannelData(0))
-                            .toEqual(audioBufferAB.getChannelData(0).slice(10, 20));
+                            .toEqual(audioBufferAB.getChannelData(0)
+                            .slice(10, 20));
                         done();
                     }
                 );
@@ -214,3 +215,4 @@ describe('services/app-filesystem', () => {
             WAIT_MSEC);
     });
 });
+*/

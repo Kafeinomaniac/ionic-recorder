@@ -4,6 +4,9 @@ import { Observable } from 'rxjs/Rx';
 import { Filesystem } from '../../models';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
 
+/**
+ *
+ */
 export interface WavInfo {
     nSamples: number;
     sampleRate: number;
@@ -17,9 +20,12 @@ const CHUNKSIZE_START_BYTE: number = 4;
 const SAMPLE_RATE_START_BYTE: number = 24;
 const SAMPLE_RATE_END_BYTE: number = SAMPLE_RATE_START_BYTE + 4;
 const SUBCHUNK2SIZE_START_BYTE: number = 40;
-const SUBCHUNK2SIZE_END_BYTE: number = SUBCHUNK2SIZE_END_BYTE + 4;
+const SUBCHUNK2SIZE_END_BYTE: number = SUBCHUNK2SIZE_START_BYTE + 4;
 const N_HEADER_BYTES: number = 44;
 
+/**
+ *
+ */
 function sampleToByte(iSample: number): number {
     'use strict';
     return N_HEADER_BYTES + 2 * iSample;
@@ -30,6 +36,9 @@ function sampleToByte(iSample: number): number {
 //     return iByte / 2 - N_HEADER_BYTES;
 // }
 
+/**
+ *
+ */
 function makeWavBlobHeaderView(
     nSamples: number,
     sampleRate: number
@@ -37,7 +46,7 @@ function makeWavBlobHeaderView(
     'use strict';
     // see: http://soundfile.sapp.org/doc/WaveFormat/
     const arrayByteLength: number = 2 * nSamples,
-          arrayBuffer: ArrayBuffer = new ArrayBuffer(WavFile.nHeaderBytes),
+          arrayBuffer: ArrayBuffer = new ArrayBuffer(N_HEADER_BYTES),
           headerView: DataView = new DataView(arrayBuffer),
           writeAscii:
           (dataView: DataView, offset: number, text: string) => void =
@@ -82,6 +91,9 @@ function makeWavBlobHeaderView(
     return headerView;
 } // public static makeWavBlobHeaderView(
 
+/**
+ *
+ */
 export class WavFile {
     /**
      *
@@ -96,7 +108,7 @@ export class WavFile {
                 fileSystem,
                 filePath,
                 SAMPLE_RATE_START_BYTE,
-                SAMPLE_RATE_END_BYTE,
+                SAMPLE_RATE_END_BYTE
             ).subscribe(
                 (data1: any) => {
                     const view1: DataView = new DataView(data1),
