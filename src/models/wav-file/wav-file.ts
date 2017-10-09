@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { Filesystem } from '../../models';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
 
-const WAIT_MSEC: number = 20;
+const WAIT_MSEC: number = 2;
 
 /**
  *

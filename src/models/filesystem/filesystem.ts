@@ -528,4 +528,35 @@ export class Filesystem {
         return obs;
     }
 
+    /**
+     *
+     */
+    public static eraseEverything(fileSystem: FileSystem): Observable<void> {
+        let obs: Observable<void> = Observable.create((observer) => {
+            Filesystem.readDirectoryEntries(fileSystem.root).subscribe(
+                (entries: Entry[]) => {
+                    const paths: string[] = entries.map(
+                        (entry: Entry): string => {
+                            return entry.fullPath
+                        }
+                    );
+                    Filesystem.deleteEntries(fileSystem, paths).subscribe(
+                        () => {
+                            observer.next();
+                            observer.complete();
+                        },
+                        (err1: any) => {
+                            observer.error(err1);
+                        }
+                    );
+                },
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            );
+        });
+        return obs;
+    }
+
+
 }

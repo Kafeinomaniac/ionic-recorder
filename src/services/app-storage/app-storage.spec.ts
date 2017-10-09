@@ -1,8 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { AppStorage } from './app-storage';
-
-import { isPositiveWholeNumber } from '../../models/utils/utils';
+import { isPositiveWholeNumber } from '../../models';
 
 const WAIT_MSEC: number = 5,
       SOME_IDX: number = 9999;
@@ -14,14 +13,11 @@ describe('services/app-storage', () => {
 
     beforeEach(() => {
         appStorage = new AppStorage();
-        spyOn(appStorage['storage'], 'get');
-        spyOn(appStorage['storage'], 'set');
     });
 
     it('initializes', () => {
         expect(appStorage).not.toBeNull();
     });
-/*
 
     it('can read lastTabIndex or get default value', (done) => {
         setTimeout(
@@ -78,5 +74,5 @@ describe('services/app-storage', () => {
             },
             WAIT_MSEC);
     });
-*/
+
 });

@@ -1,5 +1,5 @@
 // Copyright (c) 2017 Tracktunes Inc
-
+/*
 import { Storage } from '@ionic/storage';
 import { AppFilesystem } from '../../services';
 import { WavFile, WavInfo } from '../../models';
@@ -151,3 +151,4 @@ describe('models/wav-file', () => {
     });
 
 });
+*/

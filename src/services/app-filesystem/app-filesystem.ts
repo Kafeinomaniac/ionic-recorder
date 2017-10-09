@@ -95,7 +95,7 @@ export class AppFilesystem {
                                 }); // .then(..).catch((err2: any) => {..
                             } // (directoryPath: string) => {
                         ).catch((err3: any) => {
-                            alert('err3: ' + err3);
+                            alert('* err3: ' + err3);
                         }); // .then(..).catch((err3: any) => {
                     }, // (directoryEntry: DirectoryEntry) => {
                     (err4: any) => {
@@ -165,7 +165,7 @@ export class AppFilesystem {
     public whenReady(): Observable<void> {
         let obs: Observable<void> = Observable.create((observer) => {
             let repeat: () => void = () => {
-                console.log('whenReady().repeat()');
+                console.log('repeat()');
                 if (this.isReady) {
                     observer.next();
                     observer.complete();

@@ -39,9 +39,17 @@ describe('models/filesystem', () => {
             }
         );
     });
-
+    /*
     it('can delete /Unfiled recursively', (done) => {
         Filesystem.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
+            () => {
+                done();
+            }
+        );
+    });
+    */
+    it('can erase everything', (done) => {
+        Filesystem.eraseEverything(FILE_SYSTEM).subscribe(
             () => {
                 done();
             }
