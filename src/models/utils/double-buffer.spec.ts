@@ -29,7 +29,7 @@ describe('utils/double-buffer', () => {
 
     it ('initializes', () => {
         expect(getter).not.toBeNull();
-        expect(setter).not.toBeNull();        
+        expect(setter).not.toBeNull();
     });
 
     it('wraps around as expected', () => {

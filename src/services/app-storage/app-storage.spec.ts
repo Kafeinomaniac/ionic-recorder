@@ -20,59 +20,39 @@ describe('services/app-storage', () => {
     });
 
     it('can read lastTabIndex or get default value', (done) => {
-        setTimeout(
-            () => {
-                appStorage.get('lastTabIndex').then(
-                    (idx: number) => {
-                        savedTabIndex = idx;
-                        expect(isPositiveWholeNumber(idx)).toBe(true);
-                        done();
-                    }
-                );
-            },
-            WAIT_MSEC);
+        appStorage.get('lastTabIndex').then(
+            (idx: number) => {
+                savedTabIndex = idx;
+                expect(isPositiveWholeNumber(idx)).toBe(true);
+                done();
+            }
+        );
     });
 
     it('can update lastTabIndex to ' + SOME_IDX, (done) => {
-        setTimeout(
-            () => {
-                appStorage.set('lastTabIndex', SOME_IDX);
-                done();
-            },
-            WAIT_MSEC);
+        appStorage.set('lastTabIndex', SOME_IDX);
+        done();
     });
 
     it('can get lastTabIndex as ' + SOME_IDX, (done) => {
-        setTimeout(
-            () => {
-                appStorage.get('lastTabIndex').then(
-                    (prop: any) => {
-                        expect(prop).toBe(SOME_IDX);
-                        done();
-                    });
-            },
-            WAIT_MSEC);
+        appStorage.get('lastTabIndex').then(
+            (prop: any) => {
+                expect(prop).toBe(SOME_IDX);
+                done();
+            });
     });
 
     it('can update lastTabIndex back to what it was originally', (done) => {
-        setTimeout(
-            () => {
-                appStorage.set('lastTabIndex', savedTabIndex);
-                done();
-            },
-            WAIT_MSEC);
+        appStorage.set('lastTabIndex', savedTabIndex);
+        done();
     });
 
     it('can get lastTabIndex back to what it was originally', (done) => {
-        setTimeout(
-            () => {
-                appStorage.get('lastTabIndex').then(
-                    (prop: any) => {
-                        expect(prop).toBe(savedTabIndex);
-                        done();
-                    });
-            },
-            WAIT_MSEC);
+        appStorage.get('lastTabIndex').then(
+            (prop: any) => {
+                expect(prop).toBe(savedTabIndex);
+                done();
+            });
     });
 
 });

@@ -4,8 +4,6 @@ import { Observable } from 'rxjs/Rx';
 import { Filesystem } from '../../models';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
 
-const WAIT_MSEC: number = 2;
-
 /**
  *
  */
@@ -33,10 +31,12 @@ function sampleToByte(iSample: number): number {
     return N_HEADER_BYTES + 2 * iSample;
 }
 
-// function byteToSample(iByte: number): number {
-//     'use strict';
-//     return iByte / 2 - N_HEADER_BYTES;
-// }
+/*
+function byteToSample(iByte: number): number {
+    'use strict';
+    return iByte / 2 - N_HEADER_BYTES;
+}
+*/
 
 /**
  *
@@ -97,39 +97,6 @@ function makeWavBlobHeaderView(
  *
  */
 export class WavFile {
-    /**
-     * Wait until file system is ready for use, to emit observable.
-     * @returns {Observable<FileSystem>} Observable that emits the file
-     * system when it's ready for use.
-     */
-    public static whenReady(): Observable<FileSystem> {
-        let fileSystem: FileSystem = null,
-            src: Observable<FileSystem> = Observable.create((observer) => {
-
-                Filesystem.getFileSystem(true).subscribe(
-                    (fs: FileSystem) => {
-                        fileSystem = fs;
-                    },
-                    (err: any) => {
-                        observer.error(err);
-                        alert(err);
-                    }
-                );
-
-                let repeat: () => void = () => {
-                    console.log('whenReady()');
-                    if (fileSystem) {
-                        observer.next(fileSystem);
-                        observer.complete();
-                    }
-                    else {
-                        setTimeout(repeat, WAIT_MSEC);
-                    }
-                };
-                repeat();
-            });
-        return src;
-    }
 
     /**
      *
@@ -137,7 +104,7 @@ export class WavFile {
     public static readWavFileHeader(filePath: string): Observable<WavInfo> {
         console.log('readWavFileHeader(' + filePath + ')');
         let src: Observable<WavInfo> = Observable.create((observer) => {
-            this.whenReady().subscribe(
+            Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
                     Filesystem.readFromFile(
                         fileSystem,
@@ -195,7 +162,7 @@ export class WavFile {
         const startByte: number = sampleToByte(startSample),
               endByte: number = sampleToByte(endSample);
         let src: Observable<AudioBuffer> = Observable.create((obs) => {
-            this.whenReady().subscribe(
+            Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
                     Filesystem.readFromFile(
                         fileSystem,
@@ -287,11 +254,12 @@ export class WavFile {
         filePath: string,
         wavData: Int16Array
     ): Observable<void> {
-        console.log('createWavFile(' + filePath + ') - nSamples: ' +
+        console.log('createWavFile(' + filePath + ') - nSamples=' +
                     wavData.length);
         let src: Observable<void> = Observable.create((observer) => {
-            this.whenReady().subscribe(
+            Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
+                    console.log('GOT IT');
                     const nSamples: number = wavData.length,
                           headerView: DataView = makeWavBlobHeaderView(
                               nSamples,
@@ -318,7 +286,7 @@ export class WavFile {
                     );
                 },
                 (err3: any) => {
-                    observer.error(err3);
+                    observer.error('* err3 * ' + err3);
                 }
             );
         });
@@ -335,7 +303,7 @@ export class WavFile {
     ): Observable<void> {
         console.log('appendToWavFile(' + filePath + ')');
         let src: Observable<void> = Observable.create((observer) => {
-            this.whenReady().subscribe(
+            Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
                     // see http://soundfile.sapp.org/doc/WaveFormat/
                     // for definitions of subchunk2size and chunkSize
@@ -374,7 +342,9 @@ export class WavFile {
                                             observer.complete();
                                         },
                                         (err1: any) => {
-                                            observer.error('err1 ' + err1);
+                                            observer.error('* err1 * ' +
+                                                           wavData.length +
+                                                           ' - ' + err1);
                                         }
                                     );
                                 },

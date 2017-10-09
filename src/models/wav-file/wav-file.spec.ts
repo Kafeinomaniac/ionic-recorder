@@ -4,148 +4,130 @@ import { AppFilesystem } from '../../services';
 import { WavFile, WavInfo } from '../../models';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
 
-const WAIT_MSEC: number = 1;
-const TEST_FILENAME: string = 'test.wav';
+const TEST_FILE_PATH: string = '/test.wav';
+const TEST_FILE_PATH2: string = '/test2.wav';
 
 let appFilesystem: AppFilesystem = new AppFilesystem(),
-    dataLengthA: number = 10,
-    dataLengthB: number = 10,
-    dataLengthAB: number = dataLengthA + dataLengthB,
-    dataA: Int16Array = new Int16Array(dataLengthA),
-    dataB: Int16Array = new Int16Array(dataLengthB),
-    dataAB: Int16Array = new Int16Array(dataLengthAB),
-    // audioBufferAB is remembered in one test and it is used
-    // after the test in another test's' expect().toEqual()
-    audioBufferAB: AudioBuffer;
-
-function fillUpDataA(): void {
-    for (let i: number = 0; i < dataLengthA; i++) {
-        dataA[i] = i + 1;
-        // console.log('...A..... ' + dataA[i]);
-    }
-}
-
-function fillUpDataB(): void {
-    for (let i: number = 0; i < dataLengthA; i++) {
-        dataB[i] = i + 11;
-        // console.log('...B..... ' + dataA[i]);
-    }
-}
-
-function fillUpDataAB(): void {
-    for (let i: number = 0; i < dataLengthA; i++) {
-        dataAB[i] = i + 1;
-        // console.log('...AB..... ' + dataAB[i]);
-    }
-    for (let j: number = 0; j < dataLengthB; j++) {
-        dataAB[j + 10] = j + 11;
-        // console.log('...AB..... ' + dataAB[j + 10]);
-    }
-}
+    dataA: Int16Array = Int16Array.from([1, 2, 3, 4, 5, 6, 7 ]),
+    dataB: Int16Array = Int16Array.from([8, 9, 10, 11]),
+    dataAB: Int16Array = Int16Array.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+    lengthA: number = dataA.length,
+    lengthB: number = dataB.length,
+    lengthAB: number = dataAB.length,
+    audioBufferAB: AudioBuffer = null;
 
 describe('models/wav-file', () => {
 
-    it('can create test.wav with 10 samples [1-10]', () => {
-        fillUpDataA();
-        // console.log('DATA_A.LENGTH: ' + dataA.length);
-        WavFile.createWavFile(TEST_FILENAME, dataA).subscribe(
+    it('can create ' + TEST_FILE_PATH + 'w/' + lengthA + ' samples', (done) => {
+        WavFile.createWavFile(TEST_FILE_PATH, dataA).subscribe(
             () => {
-                expect(true).toBe(true);
+                done();
             }
         );
     });
 
-    it('can read and verify the wav file header', () => {
-        WavFile.readWavFileHeader(TEST_FILENAME).subscribe(
+    it('can read and verify wav file header', (done) => {
+        WavFile.readWavFileHeader(TEST_FILE_PATH).subscribe(
             (wavHeaderInfo: WavInfo) => {
-                expect(wavHeaderInfo.nSamples).toEqual(10);
+                expect(wavHeaderInfo.nSamples).toEqual(lengthA);
                 expect(wavHeaderInfo.sampleRate).toEqual(SAMPLE_RATE);
+                done();
             }
         );
     });
 
-    it('can read and verify the wav file audio', () => {
-        WavFile.readWavFileAudio(TEST_FILENAME).subscribe(
+    it('can read and verify the wav file audio', (done) => {
+        WavFile.readWavFileAudio(TEST_FILE_PATH).subscribe(
             (audioBuffer: AudioBuffer) => {
-                expect(true).toBe(true);
+                done();
             }
         );
     });
 
-    it('can add data (10 samples) to test.wav [11-20]', () => {
-        fillUpDataB();
-        console.log('DATA_B.LENGTH: ' + dataB.length);
-        WavFile.appendToWavFile(TEST_FILENAME, dataB, 10).subscribe(
-            () => {
-                expect(true).toBe(true);
-            }
-        );
+    it('can add ' + lengthB + ' samples to ' + TEST_FILE_PATH, (done) => {
+        WavFile.appendToWavFile(TEST_FILE_PATH, dataB, lengthA)
+            .subscribe(
+                () => {
+                    done();
+                }
+            );
     });
 
-    it('can read and verify the wav file header', () => {
-        WavFile.readWavFileHeader(TEST_FILENAME).subscribe(
+    it('can read and verify the wav file header', (done) => {
+        WavFile.readWavFileHeader(TEST_FILE_PATH).subscribe(
             (wavHeaderInfo: WavInfo) => {
-                expect(wavHeaderInfo.nSamples).toEqual(20);
+                expect(wavHeaderInfo.nSamples).toEqual(lengthAB);
                 expect(wavHeaderInfo.sampleRate).toEqual(SAMPLE_RATE);
+                done();
             }
         );
     });
 
-    it('can read (not yet verify) the wav file audio', () => {
-        WavFile.readWavFileAudio(TEST_FILENAME).subscribe(
+    it('can read (and save, for later comparison) wav file audio', (done) => {
+        WavFile.readWavFileAudio(TEST_FILE_PATH).subscribe(
             (audioBuffer: AudioBuffer) => {
-                // expect(audioBuffer).toEqual(audioBufferAB);
-                // console.dir(audioBuffer);
-                // console.dir(audioBuffer.getChannelData(0));
                 audioBufferAB = audioBuffer;
-                expect(true).toBe(true);
+                expect(audioBufferAB).not.toBeNull();
+                done();
             }
         );
     });
 
-    it('can create test.wav w/20 samples (same as appended file above)', () => {
-        fillUpDataAB();
-        // console.log('DATA_AB.LENGTH: ' + dataAB.length);
-        WavFile.createWavFile(TEST_FILENAME, dataAB).subscribe(
+    it('can remove the file it just created', (done) => {
+        appFilesystem.selectPath(TEST_FILE_PATH);
+        appFilesystem.deleteSelected().subscribe(
             () => {
-                expect(true).toBe(true);
+                appFilesystem.clearSelection();
+                done();
+            });
+    });
+
+    it('can recreate in ' + TEST_FILE_PATH2 + ' all at once', (done) => {
+        WavFile.createWavFile(TEST_FILE_PATH2, dataAB).subscribe(
+            () => {
+                done();
             }
         );
     });
 
-    it('can read and verify the wav file header', () => {
-        WavFile.readWavFileHeader(TEST_FILENAME).subscribe(
+    it('can read and verify the wav file header', (done) => {
+        WavFile.readWavFileHeader(TEST_FILE_PATH2).subscribe(
             (wavHeaderInfo: WavInfo) => {
-                expect(wavHeaderInfo.nSamples).toEqual(20);
+                expect(wavHeaderInfo.nSamples).toEqual(lengthAB);
                 expect(wavHeaderInfo.sampleRate).toEqual(SAMPLE_RATE);
+                done();
             }
         );
     });
 
-    it('can verify the wav file audio against previously created', () => {
-        WavFile.readWavFileAudio(TEST_FILENAME).subscribe(
+    it('can verify the wav file audio against previously created', (done) => {
+        WavFile.readWavFileAudio(TEST_FILE_PATH2).subscribe(
             (audioBuffer: AudioBuffer) => {
                 expect(audioBuffer).toEqual(audioBufferAB);
                 expect(audioBuffer.getChannelData(0))
                     .toEqual(audioBufferAB.getChannelData(0));
+                done();
             }
         );
     });
 
-    it('can read and verify a wav file data chunk', () => {
-        WavFile.readWavFileAudio(TEST_FILENAME, 10, 20).subscribe(
+    it('can read verify a wav file decoded chunk', (done) => {
+        WavFile.readWavFileAudio(TEST_FILE_PATH2, lengthA, lengthAB).subscribe(
             (audioBuffer: AudioBuffer) => {
                 expect(audioBuffer.getChannelData(0))
-                    .toEqual(audioBufferAB.getChannelData(0).slice(10, 20));
+                    .toEqual(audioBufferAB.getChannelData(0)
+                             .slice(lengthA, lengthAB));
+                done();
             }
         );
     });
 
-    it('can clean up', () => {
-        appFilesystem.selectPath(TEST_FILENAME);
+    it('can clean up', (done) => {
+        appFilesystem.selectPath(TEST_FILE_PATH2);
         appFilesystem.deleteSelected().subscribe(
             () => {
                 appFilesystem.clearSelection();
+                done();
             });
     });
 

@@ -387,10 +387,9 @@ export class AppFilesystem {
     /**
      *
      */
-    public unselectPath(path: string): void {
-        console.log('unselectPath(' + path + ')');
-        delete this.selectedPaths[path];
-
+    public unselectPath(fullPath: string): void {
+        console.log('unselectPath(' + fullPath + ')');
+        delete this.selectedPaths[fullPath];
         this.storage.set('filesystemSelected', this.selectedPaths);
     }
 

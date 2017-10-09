@@ -43,7 +43,7 @@ export class Filesystem {
         fileSystem: FileSystem,
         paths: string[]
     ): Observable<void> {
-        console.log('deleteEntries(fs, ' + paths + ')');
+        console.log('deleteEntries(fs, [' + paths.join(', ') + '])');
         let entryObservableArray: Observable<Entry>[] =
             paths.map((path: string) => {
                 return Filesystem.getPathEntry(fileSystem, path, false);
@@ -132,13 +132,12 @@ export class Filesystem {
      *
      */
     public static deleteEntry(entry: Entry): Observable<void> {
-        console.log('deleteEntry(' + entry.fullPath + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             if (entry.isFile) {
                 entry.remove(
                     () => {
-                        console.log('deleteEntry(): Done removing ' +
-                                    entry.fullPath);
+                        console.log('deleteEntry(' + entry.fullPath +
+                                    '): Done!');
                         observer.next();
                         observer.complete();
                     },
@@ -151,8 +150,8 @@ export class Filesystem {
             else if (entry.isDirectory) {
                 (<DirectoryEntry>entry).removeRecursively(
                     () => {
-                        console.log('deleteEntry(): Done removing ' +
-                                    entry.fullPath);
+                        console.log('deleteEntry(' + entry.fullPath +
+                                    '/): Done!');
                         observer.next();
                         observer.complete();
                     },
@@ -251,14 +250,14 @@ export class Filesystem {
                             observer.complete();
                         },
                         (err: any) => {
-                            console.log('onFsError():err.code: ' + err.code);
+                            console.log('gFS():err1 ' + err);
                             console.dir(err);
                             observer.error(err);
                         }
                     );
                 },
                 (err: any) => {
-                    observer.error(err);
+                    observer.error('gFS():err2 ' + err);
                 }
             );
         });
@@ -299,7 +298,9 @@ export class Filesystem {
                             };
 
                             fileWriter.onerror = (err1: any) => {
-                                console.log('Write failed err1: ' + err1);
+                                console.log('Write failed blob of size ' +
+                                            blob.size + ' @ pos ' +
+                                            seekOffset + ', err1: ' + err1 );
                                 observer.error(err1);
                             };
                             if (seekOffset > 0) {
@@ -308,13 +309,17 @@ export class Filesystem {
                             fileWriter.write(blob);
                         },
                         (err2: any) => {
-                            console.log('Write failed err2: ' + err2);
+                            console.log('Write failed blob of size ' +
+                                        blob.size + ' @ pos ' +
+                                        seekOffset + ', err2: ' + err2 );
                             observer.error(err2);
                         }
                     );
                 },
                 (err3: any) => {
-                    console.log('Write failed err3: ' + err3);
+                    console.log('Write failed blob of size ' +
+                                blob.size + ' @ pos ' +
+                                seekOffset + ', err3: ' + err3 );
                     observer.error(err3);
                 }
             ); // fs.root.getFile(
@@ -500,7 +505,7 @@ export class Filesystem {
     public static readDirectoryEntries(
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
-        console.log('readDirectoryEntries(' + directoryEntry.fullPath + '/)');
+        console.log('readDirectoryEntries(' + directoryEntry.fullPath + ')');
         let obs: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],
