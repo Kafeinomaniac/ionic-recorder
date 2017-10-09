@@ -540,7 +540,6 @@ export class Filesystem {
                             return entry.fullPath + (entry.isFile ? '' : '/');
                         }
                     );
-                    console.log
                     Filesystem.deleteEntries(fileSystem, paths).subscribe(
                         () => {
                             observer.next();
@@ -558,6 +557,5 @@ export class Filesystem {
         });
         return obs;
     }
-
 
 }

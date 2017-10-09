@@ -65,7 +65,7 @@ export class WavRecorder extends WebAudioRecorder {
     private saveWavFileChunk(
         arr: Int16Array
     ): Observable<void> {
-        console.log('saveWavFileChunk(arr.size=' + arr.length + 
+        console.log('saveWavFileChunk(arr.size=' + arr.length +
                     ', nSamples: ' + this.nRecordedSamples + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             if (this.nChunksSaved === 0) {

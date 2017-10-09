@@ -17,13 +17,13 @@ import {
     SettingsPage,
     TrackPage
 } from '../pages';
-import { 
+import {
     AudioPlay,
     ButtonBar,
     VuGauge,
     ProgressSlider
 } from '../components';
-import { 
+import {
     AppFilesystem,
     AppStorage,
     MasterClock,

@@ -37,8 +37,8 @@ export class AudioPlay implements OnChanges {
      */
     constructor(
         player: WavPlayer,
-        changeDetectorRef: ChangeDetectorRef,
-) {
+        changeDetectorRef: ChangeDetectorRef
+    ) {
         console.log('AudioPlayer:constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.player = player;
