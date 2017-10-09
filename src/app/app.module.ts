@@ -9,19 +9,19 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import {
     AboutPage,
-    SelectionPage,
     LibraryPage,
     LoadingPage,
     MoveToPage,
     RecordPage,
+    SelectionPage,
     SettingsPage,
     TrackPage
 } from '../pages';
 import {
-    AudioPlay,
+    AudioPlayer,
     ButtonBar,
-    VuGauge,
-    ProgressSlider
+    ProgressSlider,
+    VuGauge
 } from '../components';
 import {
     AppFilesystem,
@@ -35,6 +35,7 @@ import { IonicRecorderApp } from './app.component';
 @NgModule({
     declarations: [
         IonicRecorderApp,
+        ProgressSlider,
         AboutPage,
         LibraryPage,
         MoveToPage,
@@ -43,9 +44,8 @@ import { IonicRecorderApp } from './app.component';
         RecordPage,
         SettingsPage,
         TrackPage,
-        AudioPlay,
+        AudioPlayer,
         ButtonBar,
-        ProgressSlider,
         VuGauge
     ],
     imports: [

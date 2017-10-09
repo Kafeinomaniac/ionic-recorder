@@ -15,14 +15,14 @@ import { formatSecondsTime } from '../../models';
 /**
  * An toolbar-like (row on the screen) audio player for controlling
  * blob playback.
- * @class AudioPlay
+ * @class AudioPlayer
  */
 @Component({
     providers: [ WavPlayer ],
     selector: 'audio-player',
     templateUrl: 'audio-player.html'
 })
-export class AudioPlay implements OnChanges {
+export class AudioPlayer implements OnChanges {
     @Input() public filePath: string;
     public player: WavPlayer;
 

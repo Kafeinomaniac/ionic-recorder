@@ -22,14 +22,16 @@ import { prependArray } from '../../models/utils';
  */
 @Injectable()
 export class WebAudioPlayer {
-    private audioBuffer: AudioBuffer;
-    protected sourceNode: AudioBufferSourceNode;
-    private scheduledSourceNodes: AudioBufferSourceNode[];
-    protected startedAt: number;
-    private startedAtOffset: number;
-    protected pausedAt: number;
     public isPlaying: boolean;
+
+    protected sourceNode: AudioBufferSourceNode;
+    protected startedAt: number;
+    protected pausedAt: number;
     protected duration: number;
+
+    private audioBuffer: AudioBuffer;
+    private scheduledSourceNodes: AudioBufferSourceNode[];
+    private startedAtOffset: number;
 
     /**
      *
