@@ -18,7 +18,7 @@ let appFilesystem: AppFilesystem = new AppFilesystem(),
 
 describe('models/wav-file', () => {
 
-    it('can create ' + TEST_FILE_PATH + 'w/' + lengthA + ' samples', (done) => {
+    it('can create ' + TEST_FILE_PATH + ' nSamples = ' + lengthA, (done) => {
         WavFile.createWavFile(TEST_FILE_PATH, dataA).subscribe(
             () => {
                 done();
