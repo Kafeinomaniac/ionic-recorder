@@ -61,7 +61,7 @@ export class LibraryPage {
         platform: Platform
     ) {
 
-        console.log('constructor()');
+        console.log('LibraryPage:constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.actionSheetController = actionSheetController;
         this.modalController = modalController;

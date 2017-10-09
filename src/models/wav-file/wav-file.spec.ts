@@ -1,9 +1,15 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { WavFile } from '../../models';
+import { Storage } from '@ionic/storage';
+import { AppFilesystem } from '../../services';
+import { WavFile, WavInfo } from '../../models';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
 
-let dataLengthA: number = 10,
+const WAIT_MSEC: number = 1;
+
+let storage: Storage = new Storage({}),
+    appFilesystem: AppFilesystem = new AppFilesystem(storage),
+    dataLengthA: number = 10,
     dataLengthB: number = 10,
     dataLengthAB: number = dataLengthA + dataLengthB,
     dataA: Int16Array = new Int16Array(dataLengthA),
@@ -69,7 +75,7 @@ describe('models/wav-file', () => {
     it('can add data (10 samples) to test.wav [11-20]', () => {
         fillUpDataB();
         console.log('DATA_B.LENGTH: ' + dataB.length);
-        WavFile.appendToWavFile('test.wav', dataB).subscribe(
+        WavFile.appendToWavFile('test.wav', dataB, 10).subscribe(
             () => {
                 expect(true).toBe(true);
             }
@@ -92,6 +98,7 @@ describe('models/wav-file', () => {
                 // console.dir(audioBuffer);
                 // console.dir(audioBuffer.getChannelData(0));
                 audioBufferAB = audioBuffer;
+                expect(true).toBe(true);
             }
         );
     });
@@ -134,19 +141,12 @@ describe('models/wav-file', () => {
         );
     });
 
-    /*
-      it('can clean up (remove test.wav)', () => {
-      setTimeout(
-      () => {
-      WavFile.selectPath('test.wav');
-      WavFile.deleteSelected().subscribe(
-      () => {
-      WavFile.clearSelection();
-      done();
-      }
-      );
-      },
-      WAIT_MSEC);
-      });
-    */
+    it('can clean up (remove test.wav)', () => {
+        appFilesystem.selectPath('test.wav');
+        appFilesystem.deleteSelected().subscribe(
+            () => {
+                appFilesystem.clearSelection();
+            });
+    });
+
 });

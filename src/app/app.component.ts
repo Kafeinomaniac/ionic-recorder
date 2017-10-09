@@ -7,7 +7,7 @@ import {
     RecordPage,
     SettingsPage
 } from '../pages';
-import { AppStorage } from '../services/app-storage/app-storage';
+import { AppStorage } from '../services';
 import { Component, ViewChild } from '@angular/core';
 import {
     MenuController,
@@ -31,11 +31,8 @@ export class IonicRecorderApp {
     // Use one of these @ViewChild declarations (both work):
     // @ViewChild(Tabs) private tabs: Tabs;
     @ViewChild('navTabs') public tabs: Tabs;
-
-    // public rootPage: Component;
     public rootPage: any;
     public pages: TabPage[];
-
     private platform: Platform;
     private menu: MenuController;
     private appStorage: AppStorage;
@@ -46,7 +43,7 @@ export class IonicRecorderApp {
         statusBar: StatusBar,
         appStorage: AppStorage
     ) {
-        console.log('constructor()');
+        console.log('IonicRecorderApp:constructor()');
 
         this.platform = platform;
         this.menu = menu;
@@ -71,11 +68,11 @@ export class IonicRecorderApp {
             // [ NOTE: cordova must be available for StatusBar ]
             statusBar.styleDefault();
             statusBar.backgroundColorByHexString('#000000');
-            this.appStorage.get('lastTabIndex').then(
-                (tabIndex: any) => {
-                    this.goToPage(this.pages[tabIndex ? tabIndex - 1 : 0]);
-                }
-            );
+            // this.appStorage.get('lastTabIndex').then(
+            //     (tabIndex: any) => {
+            //         this.goToPage(this.pages[tabIndex ? tabIndex - 1 : 0]);
+            //     }
+            // );
         });
     }
 

@@ -32,7 +32,7 @@ export class WavRecorder extends WebAudioRecorder {
     ) {
         super(masterClock);
 
-        console.log('constructor()');
+        console.log('WavRecorder:constructor()');
 
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {
             this.saveWavFileChunk(this.setter.activeBuffer).subscribe(
@@ -66,17 +66,13 @@ export class WavRecorder extends WebAudioRecorder {
      * @returns {Observable<void>}
      */
     private saveWavFileChunk(
-        fileSystem: FileSystem,
         arr: Int16Array
     ): Observable<void> {
-        console.log('saveWavFileChunk(arr.size=' + arr.length + ')');
+        console.log('saveWavFileChunk(arr.size=' + arr.length + 
+                    ', nSamples: ' + this.nRecordedSamples + ')');
         let obs: Observable<void> = Observable.create((observer) => {
             if (this.nChunksSaved === 0) {
-                WavFile.createWavFile(
-                    fileSystem,
-                    this.filePath,
-                    arr
-                ).subscribe(
+                WavFile.createWavFile(this.filePath, arr).subscribe(
                     () => {
                         this.nChunksSaved++;
                         observer.next();
@@ -89,9 +85,9 @@ export class WavRecorder extends WebAudioRecorder {
             }
             else {
                 WavFile.appendToWavFile(
-                    fileSystem,
                     this.filePath,
-                    arr
+                    arr,
+                    this.nRecordedSamples
                 ).subscribe(
                     () => {
                         this.nChunksSaved++;

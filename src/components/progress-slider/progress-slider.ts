@@ -37,7 +37,7 @@ export class ProgressSlider {
         element: ElementRef,
         renderer: Renderer
     ) {
-        console.log('constructor()');
+        console.log('ProgressSlider:constructor()');
         this.element = element;
         this.renderer = renderer;
         this.progress = 0;

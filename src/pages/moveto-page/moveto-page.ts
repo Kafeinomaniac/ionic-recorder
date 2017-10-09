@@ -43,7 +43,7 @@ export class MoveToPage {
         modalController: ModalController,
         viewController: ViewController
     ) {
-        console.log('constructor()');
+        console.log('MoveTo:constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.appFilesystem = appFilesystem;
         this.modalController = modalController;

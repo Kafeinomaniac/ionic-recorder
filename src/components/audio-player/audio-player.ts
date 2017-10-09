@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { WavPlayer } from '../../services/web-audio/wav-player';
 import { formatSecondsTime } from '../../models';
-import { AppFilesystem } from '../../services';
 
 /**
  * An toolbar-like (row on the screen) audio player for controlling
@@ -19,7 +18,7 @@ import { AppFilesystem } from '../../services';
  * @class AudioPlay
  */
 @Component({
-    providers: [ WavPlayer, AppFilesystem ],
+    providers: [ WavPlayer ],
     selector: 'audio-player',
     templateUrl: 'audio-player.html'
 })
@@ -28,8 +27,6 @@ export class AudioPlay implements OnChanges {
     public player: WavPlayer;
 
     private changeDetectorRef: ChangeDetectorRef;
-    // private appFileSystem: AppFilesystem;
-    private fileSystem: FileSystem;
 
     // when progress is < 0, we are not moving the progress bar but when
     // we are moving the progress bar it is zero
@@ -41,11 +38,9 @@ export class AudioPlay implements OnChanges {
     constructor(
         player: WavPlayer,
         changeDetectorRef: ChangeDetectorRef,
-        appFilesystem: AppFilesystem
 ) {
-        console.log('constructor()');
+        console.log('AudioPlayer:constructor()');
         this.changeDetectorRef = changeDetectorRef;
-        this.fileSystem = appFilesystem.getFilesystem();
         this.player = player;
         this.progress = -1;
     }
@@ -93,7 +88,7 @@ export class AudioPlay implements OnChanges {
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
             console.log('ngOnChanges(): filePath=' + this.filePath);
-            this.player.setSourceFile(this.fileSystem, this.filePath);
+            this.player.setSourceFile(this.filePath);
         }
     }
 

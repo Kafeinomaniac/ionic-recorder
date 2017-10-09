@@ -25,7 +25,7 @@ export class TrackPage {
         navParams: NavParams,
         actionSheetController: ActionSheetController
     ) {
-        console.log('constructor(' + navParams.data + ')');
+        console.log('TrackPage:constructor(' + navParams.data + ')');
 
         this.actionSheetController = actionSheetController;
 

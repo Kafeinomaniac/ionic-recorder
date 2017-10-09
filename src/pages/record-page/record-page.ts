@@ -51,7 +51,7 @@ export class RecordPage {
         appStorage: AppStorage,
         recorder: WavRecorder
     ) {
-        console.log('constructor()');
+        console.log('RecordPage:constructor()');
         this.navController = navController;
         this.appStorage = appStorage;
         this.recorder = recorder;

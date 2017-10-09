@@ -27,7 +27,7 @@ export class AppFilesystem {
      * @constructor
      */
     constructor(storage: Storage) {
-        console.log('constructor()');
+        console.log('AppFilesystem:constructor()');
 
         this.storage = storage;
 

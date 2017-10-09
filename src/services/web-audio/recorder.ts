@@ -65,7 +65,7 @@ export abstract class WebAudioRecorder {
     private scriptProcessorNode: ScriptProcessorNode;
     private nPeaksAtMax: number;
     private nPeakMeasurements: number;
-    private nRecordedSamples: number;
+    protected nRecordedSamples: number;
 
     public status: RecordStatus;
     public sampleRate: number;
@@ -82,7 +82,7 @@ export abstract class WebAudioRecorder {
 
     // this is how we signal
     constructor(masterClock: MasterClock) {
-        console.log('constructor()');
+        console.log('WebAudioRecorder:constructor()');
 
         this.masterClock = masterClock;
 

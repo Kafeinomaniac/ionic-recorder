@@ -35,7 +35,7 @@ export class AppStorage {
      * @constructor
      */
     constructor(storage: Storage) {
-        console.log('constructor()');
+        console.log('AppStorage:constructor()');
         this.storage = storage;
     }
 

@@ -4,7 +4,7 @@ import { AppStorage } from './app-storage';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
 import { Storage } from '@ionic/storage';
 
-const WAIT_MSEC: number = 60,
+const WAIT_MSEC: number = 500,
       SOME_IDX: number = 9999;
 
 let storage: Storage = new Storage({}),

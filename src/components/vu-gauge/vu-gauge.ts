@@ -34,7 +34,7 @@ export class VuGauge implements OnChanges {
      * @constructor
      */
     constructor() {
-        console.log('constructor()');
+        console.log('VuGauge:constructor()');
         this.leds = [];
         this.maxIndex = 0;
 
