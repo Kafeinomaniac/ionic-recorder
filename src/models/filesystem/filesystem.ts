@@ -431,8 +431,7 @@ export class Filesystem {
                             };
 
                             fileReader.onerror = (err1: any) => {
-                                console.log('readFromFile() err1: ' +
-                                            err1);
+                                console.log(err1);
                                 observer.error(err1);
                             };
 
@@ -455,13 +454,13 @@ export class Filesystem {
                             }
                         },
                         (err2: any) => {
-                            console.log('readFromFile() err2: ' + err2);
+                            console.log(err2);
                             observer.error(err2);
                         }
                     );
                 },
                 (err3: any) => {
-                    console.log('readFromFile() err3: ' + err3);
+                    console.log(err3);
                     observer.error(err3);
                 }
             ); // fs.root.getFile(

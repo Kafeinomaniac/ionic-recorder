@@ -7,7 +7,7 @@ import { MenuMock, PlatformMock, StatusBarMock } from 'ionic-mocks';
 
 let instance: IonicRecorderApp = null;
 
-describe('IonicRecorderApp', () => {
+describe('app/app', () => {
     beforeEach(() => {
         instance = new IonicRecorderApp(
             <any>PlatformMock.instance(),

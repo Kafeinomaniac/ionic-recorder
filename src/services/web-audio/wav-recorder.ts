@@ -27,11 +27,8 @@ export class WavRecorder extends WebAudioRecorder {
     private filePath: string;
 
     // this is how we signal
-    constructor(
-        masterClock: MasterClock
-    ) {
+    constructor(masterClock: MasterClock) {
         super(masterClock);
-
         console.log('WavRecorder:constructor()');
 
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {

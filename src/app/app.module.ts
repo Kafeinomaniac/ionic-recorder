@@ -1,5 +1,12 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+import { BrowserModule } from '@angular/platform-browser';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { IonicStorageModule } from '@ionic/storage';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+
 import {
     AboutPage,
     SelectionPage,
@@ -10,20 +17,20 @@ import {
     SettingsPage,
     TrackPage
 } from '../pages';
-import { AppStorage } from '../services/app-storage/app-storage';
-import { AppFilesystem } from '../services';
-import { AudioPlay } from '../components/audio-player/audio-player';
-import { BrowserModule } from '@angular/platform-browser';
-import { ButtonBar } from '../components/button-bar/button-bar';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { 
+    AudioPlay,
+    ButtonBar,
+    VuGauge,
+    ProgressSlider
+} from '../components';
+import { 
+    AppFilesystem,
+    AppStorage,
+    MasterClock,
+    WavPlayer,
+    WavRecorder
+} from '../services';
 import { IonicRecorderApp } from './app.component';
-import { IonicStorageModule } from '@ionic/storage';
-import { MasterClock } from '../services/master-clock/master-clock';
-import { ProgressSlider } from '../components/progress-slider/progress-slider';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
-import { VuGauge } from '../components/vu-gauge/vu-gauge';
 
 @NgModule({
     declarations: [
@@ -48,6 +55,7 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
     ],
     bootstrap: [IonicApp],
     entryComponents: [
+        ProgressSlider,
         IonicRecorderApp,
         AboutPage,
         LibraryPage,
@@ -64,6 +72,8 @@ import { VuGauge } from '../components/vu-gauge/vu-gauge';
         { provide: ErrorHandler, useClass: IonicErrorHandler },
         AppStorage,
         AppFilesystem,
+        WavPlayer,
+        WavRecorder,
         MasterClock
     ]
 })

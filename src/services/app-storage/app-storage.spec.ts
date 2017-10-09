@@ -1,27 +1,26 @@
 // Copyright (c) 2017 Tracktunes Inc
-
+/*
 import { AppStorage } from './app-storage';
 import { isPositiveWholeNumber } from '../../models/utils/utils';
-import { Storage } from '@ionic/storage';
 
-const WAIT_MSEC: number = 500,
+const WAIT_MSEC: number = 5,
       SOME_IDX: number = 9999;
 
-let storage: Storage = new Storage({}),
-    appStorage: AppStorage = new AppStorage(storage),
+let appStorage: AppStorage = null,
     savedTabIndex: number = -1;
 
 describe('services/app-storage', () => {
-    it('appStorage is not falsy', (done) => {
-        setTimeout(
-            () => {
-                expect(appStorage).not.toBeFalsy();
-                done();
-            },
-            WAIT_MSEC);
+
+    beforeEach(() => {
+        appStorage = new AppStorage();
     });
 
-    it('can read lastTabIndex', (done) => {
+    it('initializes', () => {
+        expect(appStorage).not.toBeNull();
+    });
+
+
+    it('can read lastTabIndex or get default value', (done) => {
         setTimeout(
             () => {
                 appStorage.get('lastTabIndex').then(
@@ -78,3 +77,4 @@ describe('services/app-storage', () => {
     });
 
 });
+*/
