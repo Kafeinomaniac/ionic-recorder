@@ -2,12 +2,12 @@
 
 import { DoubleBufferGetter, DoubleBufferSetter } from './double-buffer';
 
-let buffer1: Int16Array,
-    buffer2: Int16Array,
-    getter: DoubleBufferGetter,
-    setter: DoubleBufferSetter,
-    preGetCBCounter: number,
-    preSetCBCounter: number,
+let buffer1: Int16Array = null,
+    buffer2: Int16Array = null,
+    getter: DoubleBufferGetter = null,
+    setter: DoubleBufferSetter = null,
+    preGetCBCounter: number = null,
+    preSetCBCounter: number = null,
     preGetCB: () => void = () => {
         preGetCBCounter++;
     },
@@ -27,7 +27,12 @@ beforeEach(() => {
 
 describe('utils/double-buffer', () => {
 
-    it('wrap around as expected', () => {
+    it ('initializes', () => {
+        expect(getter).not.toBeNull();
+        expect(setter).not.toBeNull();        
+    });
+
+    it('wraps around as expected', () => {
         // fill up buffer1 to be [1,2,3], buffer2 to be [4,5,6]
         setter.setNext(1);
         expect(preSetCBCounter).toEqual(0);
