@@ -26,11 +26,12 @@ export class AppFilesystem {
     /**
      * @constructor
      */
-    constructor(storage: Storage) {
+    // constructor(storage: Storage) {
+    constructor() {
         console.log('AppFilesystem:constructor()');
 
-        this.storage = storage;
-
+        // this.storage = storage;
+        this.storage = new Storage({});
         this.isReady = false;
         this.entries = [];
         this.directoryEntry = null;
@@ -55,6 +56,9 @@ export class AppFilesystem {
                     (directoryEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/ (or already there)');
                         // grab remembered location from storage and go there
+                        if (!this.storage) {
+                            alert('!this.storage');
+                        }
                         this.storage.get('filesystemPath').then(
                             (directoryPath: string) => {
                                 if (directoryPath === '//') {

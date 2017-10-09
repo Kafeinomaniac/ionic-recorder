@@ -537,9 +537,10 @@ export class Filesystem {
                 (entries: Entry[]) => {
                     const paths: string[] = entries.map(
                         (entry: Entry): string => {
-                            return entry.fullPath
+                            return entry.fullPath + (entry.isFile ? '' : '/');
                         }
                     );
+                    console.log
                     Filesystem.deleteEntries(fileSystem, paths).subscribe(
                         () => {
                             observer.next();

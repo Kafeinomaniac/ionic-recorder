@@ -1,14 +1,13 @@
 // Copyright (c) 2017 Tracktunes Inc
-/*
-import { Storage } from '@ionic/storage';
+
 import { AppFilesystem } from '../../services';
 import { WavFile, WavInfo } from '../../models';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
 
 const WAIT_MSEC: number = 1;
+const TEST_FILENAME: string = 'test.wav';
 
-let storage: Storage = new Storage({}),
-    appFilesystem: AppFilesystem = new AppFilesystem(storage),
+let appFilesystem: AppFilesystem = new AppFilesystem(),
     dataLengthA: number = 10,
     dataLengthB: number = 10,
     dataLengthAB: number = dataLengthA + dataLengthB,
@@ -49,7 +48,7 @@ describe('models/wav-file', () => {
     it('can create test.wav with 10 samples [1-10]', () => {
         fillUpDataA();
         // console.log('DATA_A.LENGTH: ' + dataA.length);
-        WavFile.createWavFile('test.wav', dataA).subscribe(
+        WavFile.createWavFile(TEST_FILENAME, dataA).subscribe(
             () => {
                 expect(true).toBe(true);
             }
@@ -57,7 +56,7 @@ describe('models/wav-file', () => {
     });
 
     it('can read and verify the wav file header', () => {
-        WavFile.readWavFileHeader('test.wav').subscribe(
+        WavFile.readWavFileHeader(TEST_FILENAME).subscribe(
             (wavHeaderInfo: WavInfo) => {
                 expect(wavHeaderInfo.nSamples).toEqual(10);
                 expect(wavHeaderInfo.sampleRate).toEqual(SAMPLE_RATE);
@@ -66,7 +65,7 @@ describe('models/wav-file', () => {
     });
 
     it('can read and verify the wav file audio', () => {
-        WavFile.readWavFileAudio('test.wav').subscribe(
+        WavFile.readWavFileAudio(TEST_FILENAME).subscribe(
             (audioBuffer: AudioBuffer) => {
                 expect(true).toBe(true);
             }
@@ -76,7 +75,7 @@ describe('models/wav-file', () => {
     it('can add data (10 samples) to test.wav [11-20]', () => {
         fillUpDataB();
         console.log('DATA_B.LENGTH: ' + dataB.length);
-        WavFile.appendToWavFile('test.wav', dataB, 10).subscribe(
+        WavFile.appendToWavFile(TEST_FILENAME, dataB, 10).subscribe(
             () => {
                 expect(true).toBe(true);
             }
@@ -84,7 +83,7 @@ describe('models/wav-file', () => {
     });
 
     it('can read and verify the wav file header', () => {
-        WavFile.readWavFileHeader('test.wav').subscribe(
+        WavFile.readWavFileHeader(TEST_FILENAME).subscribe(
             (wavHeaderInfo: WavInfo) => {
                 expect(wavHeaderInfo.nSamples).toEqual(20);
                 expect(wavHeaderInfo.sampleRate).toEqual(SAMPLE_RATE);
@@ -93,7 +92,7 @@ describe('models/wav-file', () => {
     });
 
     it('can read (not yet verify) the wav file audio', () => {
-        WavFile.readWavFileAudio('test.wav').subscribe(
+        WavFile.readWavFileAudio(TEST_FILENAME).subscribe(
             (audioBuffer: AudioBuffer) => {
                 // expect(audioBuffer).toEqual(audioBufferAB);
                 // console.dir(audioBuffer);
@@ -107,7 +106,7 @@ describe('models/wav-file', () => {
     it('can create test.wav w/20 samples (same as appended file above)', () => {
         fillUpDataAB();
         // console.log('DATA_AB.LENGTH: ' + dataAB.length);
-        WavFile.createWavFile('test.wav', dataAB).subscribe(
+        WavFile.createWavFile(TEST_FILENAME, dataAB).subscribe(
             () => {
                 expect(true).toBe(true);
             }
@@ -115,7 +114,7 @@ describe('models/wav-file', () => {
     });
 
     it('can read and verify the wav file header', () => {
-        WavFile.readWavFileHeader('test.wav').subscribe(
+        WavFile.readWavFileHeader(TEST_FILENAME).subscribe(
             (wavHeaderInfo: WavInfo) => {
                 expect(wavHeaderInfo.nSamples).toEqual(20);
                 expect(wavHeaderInfo.sampleRate).toEqual(SAMPLE_RATE);
@@ -124,7 +123,7 @@ describe('models/wav-file', () => {
     });
 
     it('can verify the wav file audio against previously created', () => {
-        WavFile.readWavFileAudio('test.wav').subscribe(
+        WavFile.readWavFileAudio(TEST_FILENAME).subscribe(
             (audioBuffer: AudioBuffer) => {
                 expect(audioBuffer).toEqual(audioBufferAB);
                 expect(audioBuffer.getChannelData(0))
@@ -134,7 +133,7 @@ describe('models/wav-file', () => {
     });
 
     it('can read and verify a wav file data chunk', () => {
-        WavFile.readWavFileAudio('test.wav', 10, 20).subscribe(
+        WavFile.readWavFileAudio(TEST_FILENAME, 10, 20).subscribe(
             (audioBuffer: AudioBuffer) => {
                 expect(audioBuffer.getChannelData(0))
                     .toEqual(audioBufferAB.getChannelData(0).slice(10, 20));
@@ -142,8 +141,8 @@ describe('models/wav-file', () => {
         );
     });
 
-    it('can clean up (remove test.wav)', () => {
-        appFilesystem.selectPath('test.wav');
+    it('can clean up', () => {
+        appFilesystem.selectPath(TEST_FILENAME);
         appFilesystem.deleteSelected().subscribe(
             () => {
                 appFilesystem.clearSelection();
@@ -151,4 +150,4 @@ describe('models/wav-file', () => {
     });
 
 });
-*/
+
