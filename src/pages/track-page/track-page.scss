@@ -3,7 +3,7 @@
 track-page {
     ion-toolbar {
         p {
-            font-size: $audio-player-font-size;
+            // font-size: $audio-player-font-size;
             margin-top: 0.1em;
             margin-bottom: 0.8em;
             color: color($colors, primary, base);
@@ -11,7 +11,7 @@ track-page {
     }
     ion-content {
         // we need to redefine ion-content to inherit from whatever is
-        // the parent element on the tab page. if we don't do this, then
+        // the parent element on the tab page. if we do not do this, then
         // if we come to this page after visiting the record page, we
         // would have the record page background-color continue to show
         // up here

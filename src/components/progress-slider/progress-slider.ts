@@ -179,7 +179,7 @@ export class ProgressSlider {
 
     public onSliderTouchEnd(event: TouchEvent): void {
         console.log('onSliderTouchEnd(): changeEnd.emit(' +
-                    this.progress + ')');
+                    this.progress.toFixed(2) + ')');
         // If we uncomment this block below, then in the browser we get
         // double-calls to the changeEnd event on mouseUp and touchEnd -
         // both get called... not sure if we need touchEnd at all,
