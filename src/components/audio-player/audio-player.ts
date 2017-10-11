@@ -72,7 +72,7 @@ export class AudioPlayer implements OnChanges {
      * around of the progress bar.
      */
     public onProgressChangeEnd(progress: number): void {
-        console.log('onProgressChangeEnd(): stopping to move at ' + 
+        console.log('onProgressChangeEnd(): stopping to move at ' +
                     progress.toFixed(2));
         this.player.jumpToRatio(progress);
         // restore this.progress to being negative so as to tell this player

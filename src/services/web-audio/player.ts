@@ -93,9 +93,9 @@ export class WebAudioPlayer {
         startOffset: number = 0,
         onEnded?: () => void
     ): void {
-        console.log('====> schedulePlay(when: ' + when.toFixed(2) + 
-                    ', offset: ' + offset.toFixed(2) + 
-                    ', startOffset: ' + startOffset.toFixed(2) + 
+        console.log('====> schedulePlay(when: ' + when.toFixed(2) +
+                    ', offset: ' + offset.toFixed(2) +
+                    ', startOffset: ' + startOffset.toFixed(2) +
                     ', startedAt: ' + this.startedAt.toFixed(2) + ')');
 
         this.audioBuffer = audioBuffer;

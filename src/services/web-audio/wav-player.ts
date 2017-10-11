@@ -67,12 +67,12 @@ export class WavPlayer extends WebAudioPlayer {
 
         console.log('jumpTo(' + ratio.toFixed(2) +
                     '): startSample1: ' + startSample1.toFixed(2) +
-                    ', endSample1: ' + endSample1.toFixed(2) + 
-                    ', startSample2: ' + startSample2.toFixed(2) + 
+                    ', endSample1: ' + endSample1.toFixed(2) +
+                    ', startSample2: ' + startSample2.toFixed(2) +
                     ', endSample2: ' + endSample2.toFixed(2) +
-                    ', startTime1: ' + startTime1.toFixed(2) + 
+                    ', startTime1: ' + startTime1.toFixed(2) +
                     ', startTime2: ' + startTime2.toFixed(2));
-        
+
         if (this.startedAt) {
             // we're in the midst of playing
             alert('already started, playing now...');
