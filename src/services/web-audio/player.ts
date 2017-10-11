@@ -9,9 +9,9 @@
 // these extension classes use this base class for single buffer operations.
 
 import { Injectable } from '@angular/core';
-import { AUDIO_CONTEXT } from './common';
+// import { AUDIO_CONTEXT } from './common';
 import { formatTime, prependArray } from '../../models';
-import { MasterClock } from '../../services';
+import { AUDIO_CONTEXT, MasterClock } from '../../services';
 
 /** @const {string} The name of the function we give to master clock to run */
 const PLAYER_CLOCK_FUNCTION_NAME: string = 'player';
