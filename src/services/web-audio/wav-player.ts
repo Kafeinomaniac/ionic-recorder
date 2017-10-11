@@ -5,8 +5,9 @@ import { WebAudioPlayer } from './player';
 import { formatTime, WavFile, WavInfo } from '../../models';
 import { MasterClock } from '../../services';
 
-/** @constant {number} */
-const N_BUFFER_SAMPLES: number = 44100;
+/** @constant {number} Number of samples in the playback memory buffer. */
+// const N_BUFFER_SAMPLES: number = 44100;
+const N_BUFFER_SAMPLES: number = 88200;
 
 /**
  * Audio Play functions based on WebAudio, originally based on code

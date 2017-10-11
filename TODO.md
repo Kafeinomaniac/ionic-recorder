@@ -7,6 +7,14 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* next goal: completely stop previously played 
+
+* the goal, right now, is to get a single chunk to play right - that
+  means (a) we should have clicked 'play' button first and only then
+  jumped to a point in the middle of the track; (b) we should be
+  seeing time advance by 1 second, or the duration of the chunk.
+  let's make the duration of the chunk 2 seconds.  
+
 * wav-player.ts - issues...
   - if we're paused you don't want to start playing.
   - just deal with that later.  you'd still need jumpToRelativeTime()

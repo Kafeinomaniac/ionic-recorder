@@ -75,17 +75,30 @@ export class WebAudioPlayer {
             () => {
                 let time: number = this.getTime();
 
+                if (this.duration <= 0) {
+                    alert('this.duration <= 0');
+                }
+
+                // console.log(time + ', ' + this.duration);
                 if (time > this.duration) {
                     time = this.duration;
                     this.stop();
-                    alert('time > this.duration!!!!!!!!!!!!!');
                 }
+                    // alert('time > duration\n' + time + '\n    >\n' +
+                    //       this.duration + '\n' + 
+                    //       (time - this.duration)*1000000000);
+                // }
 
                 if (this.time !== time) {
+                    // console.log('this.time !== time\n' + this.time + '\n' +
+                    //      time);
                     // change detected
                     this.time = time;
                     this.progress = time / this.duration;
                     this.displayTime = formatTime(time, this.duration);
+                    // console.log(this.progress);
+                    // console.log('this.time !== time\n' + this.time + '\n' +
+                    //             time + '\n' + this.displayTime);
                 }
             }
         );
