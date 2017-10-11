@@ -98,7 +98,7 @@ export function isEven(num: number): boolean {
  * @param {number} - maximum time, determines final string length/components
  * @return {string} - the time string representation
  */
-export function formatSecondsTime(
+export function formatTime(
     timeInSeconds: number,
     maxTimeInSeconds: number
 ): string {

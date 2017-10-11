@@ -10,7 +10,7 @@ import {
     Input
 } from '@angular/core';
 import { WavPlayer } from '../../services/web-audio/wav-player';
-import { formatSecondsTime } from '../../models';
+import { formatTime } from '../../models';
 
 /**
  * An toolbar-like (row on the screen) audio player for controlling
@@ -72,9 +72,13 @@ export class AudioPlayer implements OnChanges {
      * around of the progress bar.
      */
     public onProgressChangeEnd(progress: number): void {
-        console.log('onProgressChangeEnd(): stopping to move at ' +
-                    progress.toFixed(2));
-        this.player.jumpToRatio(progress);
+        console.log('onProgressChangeEnd(): At ' + progress.toFixed(2));
+        // if (this.player.isPlaying) {
+        //     this.player.playFromRelativeTime(progress);
+        // }
+        this.player.playFromRelativeTime(progress);
+
+        // TODO: check if next line (this.progress = -1;) is necessary.
         // restore this.progress to being negative so as to tell this player
         // that we are now no longer moving the progress slider manually but
         // are driving it via the player class
@@ -97,30 +101,30 @@ export class AudioPlayer implements OnChanges {
      *
      */
     public getProgress(): number {
-        return this.player.getTime() / this.player.getDuration();
+        return this.player.getTime() / this.player.duration;
     }
 
     /**
      *
      */
-    public getDisplayDuration(): string {
-        // console.log('getDisplayDuration(): ' + this.displayDuration);
-        // return this.displayDuration;
-        const duration: number = this.player.getDuration();
-        return  formatSecondsTime(duration, duration);
-    }
+    // public getDisplayDuration(): string {
+    //     // console.log('getDisplayDuration(): ' + this.displayDuration);
+    //     // return this.displayDuration;
+    //     const duration: number = this.player.duration;
+    //     return  formatTime(duration, duration);
+    // }
 
     /**
      *
      */
     public getDisplayTime(): string {
-        // console.log('t: ' + this.progress);
-        const duration: number = this.player.getDuration();
+        console.log('t: ' + this.progress.toFixed(2));
+        const duration: number = this.player.duration;
         if (this.progress >= 0) {
-            return formatSecondsTime(this.progress * duration, duration);
+            return formatTime(this.progress * duration, duration);
         }
         else {
-            return formatSecondsTime(this.player.getTime(), duration);
+            return formatTime(this.player.getTime(), duration);
         }
     }
 

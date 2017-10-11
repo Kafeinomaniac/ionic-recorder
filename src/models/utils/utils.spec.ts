@@ -4,7 +4,7 @@ import {
     isPositiveWholeNumber,
     objectInspector,
     prependArray,
-    formatSecondsTime,
+    formatTime,
     formatUnixTimestamp,
     copyFromObject,
     has,
@@ -54,15 +54,15 @@ describe('utils/utils', () => {
         expect(x[0]).toEqual(obj);
     });
 
-    it('can formatSecondsTime', () => {
-        let x: string = formatSecondsTime(0, 0);
+    it('can formatTime', () => {
+        let x: string = formatTime(0, 0);
         alert(x);
         expect(x).toEqual('00.00');
-        x = formatSecondsTime(0, Infinity);
+        x = formatTime(0, Infinity);
         expect(x).toEqual('0:00:00.00');
-        x = formatSecondsTime(555.12, 555.12);
+        x = formatTime(555.12, 555.12);
         expect(x).toEqual('09:15.12');
-        x = formatSecondsTime(55555.12, Infinity);
+        x = formatTime(55555.12, Infinity);
         expect(x).toEqual('15:25:55.12');
     });
 

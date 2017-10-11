@@ -10,7 +10,11 @@
 
 import { Injectable } from '@angular/core';
 import { AUDIO_CONTEXT } from './common';
-import { prependArray } from '../../models/utils';
+import { formatTime, prependArray } from '../../models';
+import { MasterClock } from '../../services';
+
+/** @const {string} The name of the function we give to master clock to run */
+const PLAYER_CLOCK_FUNCTION_NAME: string = 'player';
 
 /**
  * Audio playback from an AudioBuffer (not from file, for playback from file,
@@ -23,25 +27,81 @@ import { prependArray } from '../../models/utils';
 @Injectable()
 export class WebAudioPlayer {
     public isPlaying: boolean;
+    // time is guaranteed to be MasterClock interval
+    public time: number;
+    public duration: number;
+    public displayTime: string;
+    public displayDuration: string;
+    public progress: number;
 
     protected sourceNode: AudioBufferSourceNode;
     protected startedAt: number;
     protected pausedAt: number;
-    protected duration: number;
 
+    private masterClock: MasterClock;
     private audioBuffer: AudioBuffer;
     private scheduledSourceNodes: AudioBufferSourceNode[];
 
     /**
      *
      */
-    constructor() {
+    constructor(masterClock: MasterClock) {
         console.log('WebAudioPlayer:constructor()');
+        this.masterClock = masterClock;
+
+        if (!masterClock) {
+            alert('no masterclock!');
+        }
+
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
         this.scheduledSourceNodes = [];
+        this.time = 0;
         this.duration = 0;
+        this.displayTime = formatTime(0, 0);
+        this.displayDuration = this.displayTime;
+        this.progress = 0;
+    }
+
+    /**
+     * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
+     */
+    private startMonitoring(): void {
+        // console.log('PLAYER: startMonitoring()');
+        this.masterClock.addFunction(
+            PLAYER_CLOCK_FUNCTION_NAME,
+            // the monitoring actions are in the following function:
+            () => {
+                let time: number = this.getTime();
+
+                if (time > this.duration) {
+                    time = this.duration;
+                    this.stop();
+                    alert('time > this.duration!!!!!!!!!!!!!');
+                }
+
+                if (this.time !== time) {
+                    // change detected
+                    this.time = time;
+                    this.progress = time / this.duration;
+                    this.displayTime = formatTime(time, this.duration);
+                }
+            }
+        );
+    }
+
+    /**
+     * Ensure source node stops playback. This does the reset part (stopping
+     * playback) only as far as AudioBufferSourceNode is concerned, not fully
+     * resetting everything in this function, for that see this.stop(), which
+     * calls this function.
+     */
+    private stopMonitoring(): void {
+        setTimeout(
+            () => {
+                this.masterClock.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
+            });
     }
 
     /**
@@ -72,15 +132,6 @@ export class WebAudioPlayer {
             return AUDIO_CONTEXT.currentTime - this.startedAt;
         }
         return 0;
-    }
-
-    /**
-     * Returns duration of the current file we're playing from - even if
-     * the played back file is chunked, we want this to be the total duration,
-     * of all chunks.
-     */
-    public getDuration(): number {
-        return this.duration;
     }
 
     /**
@@ -130,8 +181,14 @@ export class WebAudioPlayer {
 
             // not sure if this next line is necessary but it makes sure
             // that as soon as the audio is done it's done...
-            sourceNode.stop(this.startedAt + startedAtOffset +
-                            this.audioBuffer.duration);
+            // NB: when we do not comment-out this next stop() command,
+            // there is a bad side effect: the onEnded callback gets called
+            // twice (sometimes, perhaps not always) - once when the thing
+            // ends and another time when the stop command is executed
+            // at about the same time that it ends. So we're trying to go on
+            // with this next line commented out.
+            // sourceNode.stop(this.startedAt + startedAtOffset +
+            //     this.audioBuffer.duration);
             this.pausedAt = 0;
             this.isPlaying = true;
         }
@@ -159,11 +216,13 @@ export class WebAudioPlayer {
      */
     public togglePlayPause(): void {
         if (!this.isPlaying) {
-            this.schedulePlay(this.audioBuffer);
+            // this.schedulePlay(this.audioBuffer);
+            this.startMonitoring();
         }
         else {
             this.pause();
             console.log('paused at: ' + this.pausedAt);
+            this.stopMonitoring();
         }
     }
 

@@ -1,11 +1,14 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppStorage, GainState } from '../../services';
 import { Component, ViewChild } from '@angular/core';
 import { Content, NavController } from 'ionic-angular';
-import { RecordStatus } from '../../services/web-audio/recorder';
-import { WavRecorder } from '../../services/web-audio/wav-recorder';
-import { TrackPage } from '../track-page/track-page';
+import {
+    AppStorage,
+    GainState,
+    RecordStatus,
+    WavRecorder
+} from '../../services';
+import { TrackPage } from '../../pages';
 
 const START_RESUME_ICON: string = 'mic';
 const PAUSE_ICON: string = 'pause';

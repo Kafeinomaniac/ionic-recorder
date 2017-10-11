@@ -7,8 +7,23 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
-* Something is failing in wav read/write
+* wav-player.ts - issues...
+  - if we're paused you don't want to start playing.
+  - just deal with that later.  you'd still need jumpToRelativeTime()
+    so continue writing that.
+  - in jumpToRelativeTime() we need to take all precautions:
+    - typically we load in two buffers but sometimes there is only one
+    available, what do you do then? 
 
+* wav-player.ts - the recursive function.
+  loadAndDecode(audioBuffer) =>
+      - start playing
+      RECURSE w/scheduled time
+  - so the recursive function needs to know
+  NO: above is not good. The reason is that it will end up loading
+  many and scheduling many all at once.  It needs to do so in
+  sequence.  We basically need to repeat what we did before.
+  - just base it on previous implementation.
 * In debugging wav-player, go back to original plan and first do the step
   where we show the track page track info - let's make sure we can read the
   states properly first - they may reveal something...

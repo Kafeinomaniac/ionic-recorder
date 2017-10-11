@@ -3,11 +3,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from './common';
-import { MasterClock } from '../master-clock/master-clock';
-import { ABS, formatSecondsTime } from '../../models/utils/utils';
+import { ABS, formatTime } from '../../models';
+import { MasterClock } from '../../services';
 
 // the name of the function we give to master clock to run
-export const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
+const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 
 // length of script processing buffer (must be power of 2, smallest possible,
 // to reduce latency and to compute time as accurately as possible)
@@ -74,7 +74,7 @@ export abstract class WebAudioRecorder {
     // isRecording means actively recording and not paused
     public isRecording: boolean;
     public currentVolume: number;
-    public currentTime: string;
+    public displayTime: string;
     public maxVolumeSinceReset: number;
     public percentPeaksAtMax: string;
 
@@ -296,8 +296,7 @@ export abstract class WebAudioRecorder {
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      */
     public startMonitoring(bReplace: boolean = false): void {
-        console.log('startMonitoring()');
-
+        console.log('startMonitoring(' + bReplace + ')');
         if (this.masterClock.has(RECORDER_CLOCK_FUNCTION_NAME)) {
             if (bReplace) {
                 // remove anything already there if we're replacing
@@ -313,11 +312,11 @@ export abstract class WebAudioRecorder {
             RECORDER_CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
-                // update currentTime property
+                // update displayTime property
                 // TODO: do the formatting outside this function, test heavily
                 // but it should significantly help efficiency
-                this.currentTime = formatSecondsTime(this.getTime(), Infinity);
-                // console.log(this.currentTime);
+                this.displayTime = formatTime(this.getTime(), Infinity);
+                // console.log(this.displayTime);
                 // update currentVolume property
                 this.nPeakMeasurements += 1;
                 if (this.currentVolume > this.maxVolumeSinceReset) {

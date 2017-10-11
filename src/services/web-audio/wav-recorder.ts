@@ -2,12 +2,15 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-import { DoubleBufferSetter } from '../../models/utils/double-buffer';
-import { formatUnixTimestamp } from '../../models/utils/utils';
+import { MasterClock } from '../../services';
 import { WebAudioRecorder } from './recorder';
-import { MasterClock } from '../master-clock/master-clock';
-import { MAX, MIN } from '../../models/utils/utils';
-import { WavFile } from '../../models';
+import {
+    formatUnixTimestamp,
+    DoubleBufferSetter,
+    MAX,
+    MIN,
+    WavFile
+} from '../../models';
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH (from record.ts)
 export const WAV_CHUNK_LENGTH: number = 131072;
