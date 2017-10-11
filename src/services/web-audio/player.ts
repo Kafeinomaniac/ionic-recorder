@@ -31,7 +31,6 @@ export class WebAudioPlayer {
 
     private audioBuffer: AudioBuffer;
     private scheduledSourceNodes: AudioBufferSourceNode[];
-    private startedAtOffset: number;
 
     /**
      *
@@ -39,7 +38,6 @@ export class WebAudioPlayer {
     constructor() {
         console.log('WebAudioPlayer:constructor()');
         this.startedAt = 0;
-        this.startedAtOffset = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
         this.scheduledSourceNodes = [];
@@ -95,10 +93,11 @@ export class WebAudioPlayer {
         startOffset: number = 0,
         onEnded?: () => void
     ): void {
-        console.log('====> schedulePlay(when: ' +
-                    (when - this.startedAt).toFixed(2) + ', offset: ' +
-                    offset.toFixed(2) + ', s-offset: ' +
-                    startOffset.toFixed(2) + ')');
+        console.log('====> schedulePlay(when: ' + when.toFixed(2) + 
+                    ', offset: ' + offset.toFixed(2) + 
+                    ', startOffset: ' + startOffset.toFixed(2) + 
+                    ', startedAt: ' + this.startedAt.toFixed(2) + ')');
+
         this.audioBuffer = audioBuffer;
 
         let sourceNode: AudioBufferSourceNode =
@@ -106,6 +105,7 @@ export class WebAudioPlayer {
 
         sourceNode.connect(AUDIO_CONTEXT.destination);
         sourceNode.buffer = audioBuffer;
+
         if (onEnded) {
             sourceNode.onended = onEnded;
         }
@@ -116,19 +116,21 @@ export class WebAudioPlayer {
                 offset = this.pausedAt;
                 startOffset = 0;
             }
-            this.startedAtOffset = offset + startOffset;
+            const startedAtOffset: number = offset + startOffset;
             this.sourceNode = sourceNode;
 
             sourceNode.start(0, offset);
 
-            this.startedAt = AUDIO_CONTEXT.currentTime - this.startedAtOffset;
+            this.startedAt = AUDIO_CONTEXT.currentTime - startedAtOffset;
 
             console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
                         ', stopping at: ' +
-                        (this.startedAt + this.startedAtOffset +
+                        (this.startedAt + startedAtOffset +
                          this.audioBuffer.duration).toFixed(2));
 
-            sourceNode.stop(this.startedAt + this.startedAtOffset +
+            // not sure if this next line is necessary but it makes sure
+            // that as soon as the audio is done it's done...
+            sourceNode.stop(this.startedAt + startedAtOffset +
                             this.audioBuffer.duration);
             this.pausedAt = 0;
             this.isPlaying = true;

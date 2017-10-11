@@ -14,10 +14,7 @@ const N_BUFFER_SAMPLES: number = 44100;
  */
 @Injectable()
 export class WavPlayer extends WebAudioPlayer {
-    private oddKeyFileReader: FileReader;
-    private evenKeyFileReader: FileReader;
-
-    // current file info
+    // current file's info
     private filePath: string;
     private sampleRate: number;
     private nSamples: number;
@@ -28,8 +25,6 @@ export class WavPlayer extends WebAudioPlayer {
     constructor() {
         console.log('WavPlayer:constructor()');
         super();
-        this.oddKeyFileReader = new FileReader();
-        this.evenKeyFileReader = new FileReader();
     }
 
     /**
@@ -53,19 +48,31 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    public jumpTo(progress: number): void {
+    public jumpToRatio(ratio: number): void {
         if (!this.nSamples || !this.sampleRate) {
             alert('jumpTo(): !this.nSamples || !this.sampleRate');
         }
-        const startSample: number = Math.floor(progress * this.nSamples),
-              tmp: number = startSample + N_BUFFER_SAMPLES,
-              endSample: number = tmp > this.nSamples ? this.nSamples : tmp,
-              startTime: number = startSample / this.sampleRate;
+        // Compute startSample1, startSample2 and endSample1, endSample2 - the
+        // start/end of the first two chunks.
+        const startSample1: number = Math.floor(ratio * this.nSamples),
+              tmp1: number = startSample1 + N_BUFFER_SAMPLES,
+              endSample1: number = tmp1 > this.nSamples ? this.nSamples : tmp1,
+              startSample2: number = endSample1,
+              tmp2: number = startSample2 + N_BUFFER_SAMPLES,
+              endSample2: number = tmp2 > this.nSamples ? this.nSamples : tmp2,
+              startTime1: number = startSample1 / this.sampleRate,
+              startTime2: number = startSample2 / this.sampleRate,
+              when2: number = N_BUFFER_SAMPLES / this.sampleRate,
+              zeroOffset: number = 0;
 
-        console.log('jumpTo(' + progress + '): startSample: ' +
-                    startSample + ', endSample: ' + endSample +
-                    ', startTime: ' + startTime);
-
+        console.log('jumpTo(' + ratio.toFixed(2) +
+                    '): startSample1: ' + startSample1.toFixed(2) +
+                    ', endSample1: ' + endSample1.toFixed(2) + 
+                    ', startSample2: ' + startSample2.toFixed(2) + 
+                    ', endSample2: ' + endSample2.toFixed(2) +
+                    ', startTime1: ' + startTime1.toFixed(2) + 
+                    ', startTime2: ' + startTime2.toFixed(2));
+        
         if (this.startedAt) {
             // we're in the midst of playing
             alert('already started, playing now...');
@@ -74,23 +81,45 @@ export class WavPlayer extends WebAudioPlayer {
             // we're either paused somewhere (this.pausedAt > 0) or
             // we haven't even started (this.pausedAt === 0)
             console.log('PRE-JUMP PAUSED AT: ' + this.pausedAt);
-            this.pausedAt = startTime;
+            this.pausedAt = startTime1;
             console.log('POST-JUMP PAUSED AT: ' + this.pausedAt);
 
             WavFile.readWavFileAudio(
                 this.filePath,
-                startSample,
-                endSample
+                startSample1,
+                endSample1
             ).subscribe(
-                (audioBuffer: AudioBuffer) => {
-                    console.log('Just read wav file audio successfully!!!');
-                    this.schedulePlay(audioBuffer, 0, 0, 0, () => {
-                        alert('play ended cb');
-                    });
+                (audioBuffer1: AudioBuffer) => {
+                    this.schedulePlay(audioBuffer1,
+                                      0,
+                                      zeroOffset,
+                                      startTime1,
+                                      () => {
+                                          console.log('play ended cb1');
+                                      });
+                    WavFile.readWavFileAudio(
+                        this.filePath,
+                        startSample2,
+                        endSample2
+                    ).subscribe(
+                        (audioBuffer2: AudioBuffer) => {
+                            this.schedulePlay(audioBuffer2,
+                                              when2,
+                                              zeroOffset,
+                                              startTime2,
+                                              () => {
+                                                  console.log('play ended cb2');
+                                              });
+                        },
+                        (err1: any) => {
+                            alert(err1);
+                            console.dir(err1);
+                        }
+                    );
                 },
-                (err: any) => {
-                    alert('Error: ' + err);
-                    console.dir(err);
+                (err2: any) => {
+                    alert(err2);
+                    console.dir(err2);
                 }
             ); // WavFile.readWavFileAduio(..).subscribe(
         }

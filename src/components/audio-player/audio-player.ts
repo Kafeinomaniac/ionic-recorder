@@ -73,7 +73,7 @@ export class AudioPlayer implements OnChanges {
      */
     public onProgressChangeEnd(progress: number): void {
         console.log('onProgressChangeEnd(): stopping to move at ' + progress);
-        this.player.jumpTo(progress);
+        this.player.jumpToRatio(progress);
         // restore this.progress to being negative so as to tell this player
         // that we are now no longer moving the progress slider manually but
         // are driving it via the player class
