@@ -7,6 +7,13 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* NO: we broke the progress bar setting time when you manually move
+  it, we need to bring that back again
+
+* next goal: if we're paused (default start state is not playing) then
+  even when we click into the progress bar, it should not start
+  playing.  Try to reach that set of states.
+
 * next goal: completely stop previously played 
 
 * the goal, right now, is to get a single chunk to play right - that
