@@ -74,9 +74,9 @@ describe('utils/utils', () => {
                 (now.getMonth() + 1).toString(),
                 '-',
                 now.getDate().toString(),
-                ' - ',
+                '--',
                 now.toLocaleTimeString()
-            ].join('').toLowerCase(),
+            ].join('').toLowerCase().replace(' ', ''),
             fmt2: string = formatUnixTimestamp(now.valueOf());
         expect(fmt1).toBe(fmt2);
     });
