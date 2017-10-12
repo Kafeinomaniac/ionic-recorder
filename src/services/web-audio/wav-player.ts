@@ -65,9 +65,12 @@ export class WavPlayer extends WebAudioPlayer {
               startTime1: number = startSample1 / this.sampleRate;
 
         if (!this.isPlaying) {
-            console.log('playFromRelativeTime(' +
-                        relativeTime.toFixed(2) + ') - PAUSED');
+            console.log('playFromRelativeTime(' + relativeTime.toFixed(2) +
+                        ') - PAUSED AT ' + startTime1);
             this.pausedAt = startTime1;
+            // this.time = this.pausedAt;
+            this.progress = this.pausedAt / this.duration;
+            this.displayTime = formatTime(this.pausedAt, this.duration);
             return;
         }
         console.log('playFromRelativeTime(' +

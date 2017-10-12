@@ -1,11 +1,15 @@
 <!-- Copyright (c) 2017 Tracktunes Inc -->
 
-<div id="progress-slider-container"
+<!--div id="progress-slider-container"
      (touchstart)="onSliderTouchStart($event)"
      (touchmove)="onSliderTouchMove($event)"
      (touchend)="onSliderTouchEnd($event)"
-     (mousedown)="onSliderMouseDown($event)">
-    <div class="track">
+     (mousedown)="onSliderMouseDown($event)"-->
+<div id="progress-slider-container"
+     (touchstart)="onSliderTouchStart($event)"
+     (touchmove)="onSliderTouchMove($event)"
+     (touchend)="onSliderTouchEnd($event)">
+     <div class="track">
         <div class="track-inner-left" [style.width]="progressPercent()"></div>
         <div class="track-inner-right" [style.left]="progressPercent()"
              [style.width]="remainingPercent()"></div>

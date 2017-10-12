@@ -84,7 +84,7 @@ export class WebAudioPlayer {
                     this.stop();
                 }
                     // alert('time > duration\n' + time + '\n    >\n' +
-                    //       this.duration + '\n' + 
+                    //       this.duration + '\n' +
                     //       (time - this.duration)*1000000000);
                 // }
 

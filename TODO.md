@@ -7,8 +7,39 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Good progress. Next: if the player is paused, and you move around
+  the progress slider via touch, then right now we just stay where 
+  the player was previously paused at.
+* OK, let's define more precisely the audio player requirements:
+  * if player playing & you move progress bar around manually -->
+    * we want to move the time around as the finger moves.
+  vs.
+  * player NOT playing, move progress bar around manually -->
+    * we want to move the time around as the finger moves.
+  i.e. same behavior - we want to show the moving time.
+  * but ideally, we'd show both times when playing: the current,
+  changing, playback time, and the manual seek-to time
+  * IDEA: put a bubble and a new time around when moving the 
+  handle on the progressbar.
+  * instead of a tooltip/bubble and fancy graphics, let's try
+    to piggyback on the displayed filename, just replace the
+    filename (which is conveniently located above the moving
+    finger and is also relevant as a filename when you're moving
+    your finger, and it's also very large text - so this may be
+    a good design idea, let's try...)
 * NO: we broke the progress bar setting time when you manually move
-  it, we need to bring that back again
+  it, we need to bring that back again. When we're dragging the progress bar
+  around, we need to take control of the time variable and display only
+  that time that we're dragging. one way to do this is to change the 
+  player's displayTime variable. So part of the player's API is that
+  whenever you want to override what the player is telling you, you
+  can always change the player's displayTime to show something else.
+  That's fine, as long as you make it very clear in the player's API - we
+  need to work a whole lot on the player's API, but much later...
+
+  For now: we simply change player's displayTime when we are shifting
+  the progress bar around - in onChange() of AudioPlayer as opposed to
+  in onChangeEnd().
 
 * next goal: if we're paused (default start state is not playing) then
   even when we click into the progress bar, it should not start

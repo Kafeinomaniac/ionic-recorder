@@ -27,10 +27,8 @@ export class AudioPlayer implements OnChanges {
     public player: WavPlayer;
 
     private changeDetectorRef: ChangeDetectorRef;
-
-    // when progress is < 0, we are not moving the progress bar but when
-    // we are moving the progress bar it is zero
-    private progress: number;
+    private displayManualProgress: string;
+    public progress: number;
 
     /**
      * @constructor
@@ -42,6 +40,7 @@ export class AudioPlayer implements OnChanges {
         console.log('AudioPlayer:constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.player = player;
+        this.displayManualProgress = '';
         this.progress = -1;
     }
 
@@ -63,7 +62,12 @@ export class AudioPlayer implements OnChanges {
      * of each sequence of such events there will be one changeEnd event.
      */
     public onProgressChange(progress: number): void {
+        console.log('onProgressChange(' + progress.toFixed(2) + ')');
         this.progress = progress;
+        this.displayManualProgress = formatTime(
+            progress * this.player.duration,
+            this.player.duration
+        );
         this.detectChanges();
     }
 
@@ -78,11 +82,13 @@ export class AudioPlayer implements OnChanges {
         // }
         this.player.playFromRelativeTime(progress);
 
+        this.displayManualProgress = this.filePath;
         // TODO: check if next line (this.progress = -1;) is necessary.
         // restore this.progress to being negative so as to tell this player
         // that we are now no longer moving the progress slider manually but
         // are driving it via the player class
         this.progress = -1;
+        this.detectChanges();
     }
 
     /**
@@ -93,6 +99,7 @@ export class AudioPlayer implements OnChanges {
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
             console.log('ngOnChanges(): filePath=' + this.filePath);
+            this.displayManualProgress = this.filePath;
             this.player.setSourceFile(this.filePath);
         }
     }
@@ -100,8 +107,14 @@ export class AudioPlayer implements OnChanges {
     /**
      *
      */
+
     public getProgress(): number {
-        return this.player.getTime() / this.player.duration;
+        if (this.progress === -1) {
+            return this.player.progress;
+        }
+        else {
+            return this.progress;
+        }
     }
 
     /**
@@ -117,6 +130,7 @@ export class AudioPlayer implements OnChanges {
     /**
      *
      */
+    /*
     public getDisplayTime(): string {
         console.log('t: ' + this.progress.toFixed(2));
         const duration: number = this.player.duration;
@@ -127,7 +141,7 @@ export class AudioPlayer implements OnChanges {
             return formatTime(this.player.getTime(), duration);
         }
     }
-
+    */
     /**
      *
      */
