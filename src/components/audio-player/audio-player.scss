@@ -2,11 +2,12 @@
 $audio-player-padding: 1.2em;
 $audio-player-font-size: 1.2em;
 audio-player {
-    p {
+    p.filepath-or-position {
         font-size: $audio-player-font-size;
         margin-top: 0.1em;
         margin-bottom: 0.8em;
         color: color($colors, primary, base);
+        font-weight: 500;
     }
     div#progress-slider-container {
         padding-left: $audio-player-padding;
