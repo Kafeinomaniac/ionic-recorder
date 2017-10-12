@@ -142,6 +142,7 @@ export class ProgressSlider {
     }
 
     public onMouseUp(event: MouseEvent): void {
+        // console.log('onMouseUp()');
         // free up the listening to mouse up from<body>now that it happened
         // until the next time we click on the progress-bar
         this.freeMouseUpListener();
@@ -151,8 +152,8 @@ export class ProgressSlider {
         // we comment out the emit below because touchEnd happens in
         // desktop browsers so we get a double firing of this event.
         // we'll keep the one there (touchEnd), comment out the one here.
-        // this.changeEnd.emit(this.progress);
-        // console.log('onMouseUp(): changeEnd.emit(' + this.progress + ')');
+        this.changeEnd.emit(this.progress);
+        console.log('onMouseUp(): changeEnd.emit(' + this.progress + ')');
         // this.detectChanges();
     }
 

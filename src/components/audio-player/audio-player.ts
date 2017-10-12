@@ -62,7 +62,7 @@ export class AudioPlayer implements OnChanges {
      * of each sequence of such events there will be one changeEnd event.
      */
     public onProgressChange(progress: number): void {
-        console.log('onProgressChange(' + progress.toFixed(2) + ')');
+        // console.log('onProgressChange(' + progress.toFixed(2) + ')');
         this.progress = progress;
         this.displayManualProgress = formatTime(
             progress * this.player.duration,
