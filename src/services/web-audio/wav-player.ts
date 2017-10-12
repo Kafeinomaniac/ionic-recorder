@@ -1,6 +1,11 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { Injectable } from '@angular/core';
+import {
+    /* tslint:disable */
+    ChangeDetectorRef,
+    /* tslint:enable */
+    Injectable
+} from '@angular/core';
 import { WebAudioPlayer } from './player';
 import { formatTime, WavFile, WavInfo } from '../../models';
 import { MasterClock } from '../../services';
@@ -16,6 +21,7 @@ const N_BUFFER_SAMPLES: number = 88200;
  */
 @Injectable()
 export class WavPlayer extends WebAudioPlayer {
+    private changeDetectorRef: ChangeDetectorRef;
     // current file's info
     private filePath: string;
     private sampleRate: number;
@@ -24,9 +30,13 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    constructor(masterClock: MasterClock) {
+    constructor(
+        masterClock: MasterClock,
+        changeDetectorRef: ChangeDetectorRef
+    ) {
         console.log('WavPlayer:constructor()');
         super(masterClock);
+        this.changeDetectorRef = changeDetectorRef;
         this.filePath = null;
         this.sampleRate = null;
         this.nSamples = 0;
@@ -58,23 +68,11 @@ export class WavPlayer extends WebAudioPlayer {
      * time, in units of total duration, so relative time always starts at 0
      * and ends at 1).
      */
-    public playFromRelativeTime(relativeTime: number): void {
-        const startSample1: number = Math.floor(relativeTime * this.nSamples),
+    public jumpToPosition(position: number): void {
+        const startSample1: number = Math.floor(position * this.nSamples),
               tmp1: number = startSample1 + N_BUFFER_SAMPLES,
               endSample1: number = tmp1 > this.nSamples ? this.nSamples : tmp1,
               startTime1: number = startSample1 / this.sampleRate;
-
-        if (!this.isPlaying) {
-            console.log('playFromRelativeTime(' + relativeTime.toFixed(2) +
-                        ') - PAUSED AT ' + startTime1);
-            this.pausedAt = startTime1;
-            // this.time = this.pausedAt;
-            this.progress = this.pausedAt / this.duration;
-            this.displayTime = formatTime(this.pausedAt, this.duration);
-            return;
-        }
-        console.log('playFromRelativeTime(' +
-                    relativeTime.toFixed(2) + ') - PLAYING');
 
         WavFile.readWavFileAudio(
             this.filePath,
@@ -82,13 +80,24 @@ export class WavPlayer extends WebAudioPlayer {
             endSample1
         ).subscribe(
             (audioBuffer1: AudioBuffer) => {
-                this.schedulePlay(audioBuffer1,
-                                  0,
-                                  0,
-                                  startTime1,
-                                  () => {
-                                      console.log('play ended cb1');
-                                  });
+                this.audioBuffer = audioBuffer1;
+                if (this.isPlaying) {
+                    console.log('jumpToPosition(' +
+                                position.toFixed(2) +
+                                ') - PLAYING FROM ' + startTime1);
+                    // 1) stop playing,
+                    // 2) restart playing.
+                }
+                else {
+                    console.log('jumpToPosition(' +
+                                position.toFixed(2) +
+                                ') - PAUSED AT ' + startTime1);
+                    this.pausedAt = startTime1;
+                    // this.time = this.pausedAt;
+                    this.progress = this.pausedAt / this.duration;
+                    this.displayTime = formatTime(this.pausedAt, this.duration);
+                    this.detectChanges();
+                }
             },
             (err1: any) => {
                 alert(err1);
@@ -97,4 +106,16 @@ export class WavPlayer extends WebAudioPlayer {
 
     }
 
+    /**
+     *
+     */
+    private detectChanges(): void {
+        // console.log('detectChanges()');
+        setTimeout(
+            () => {
+                this.changeDetectorRef.detectChanges();
+            },
+            0
+        );
+    }
 }

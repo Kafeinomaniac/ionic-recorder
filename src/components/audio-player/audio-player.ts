@@ -78,9 +78,9 @@ export class AudioPlayer implements OnChanges {
     public onProgressChangeEnd(progress: number): void {
         console.log('onProgressChangeEnd(): At ' + progress.toFixed(2));
         // if (this.player.isPlaying) {
-        //     this.player.playFromRelativeTime(progress);
+        //     this.player.jumpToPosition(progress);
         // }
-        this.player.playFromRelativeTime(progress);
+        this.player.jumpToPosition(progress);
 
         this.displayManualProgress = this.filePath;
         // TODO: check if next line (this.progress = -1;) is necessary.
