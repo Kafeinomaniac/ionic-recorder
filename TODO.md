@@ -7,6 +7,10 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Get rid of the progress bar jumpiness when you seek: hypothesis =
+  it sometimes does a double-event. you can prevent a double-
+  event by allowing a debounce period!  add a debounce to the
+  progressbar events!
 * Good progress. Next: if the player is paused, and you move around
   the progress slider via touch, then right now we just stay where 
   the player was previously paused at.
