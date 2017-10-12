@@ -149,9 +149,9 @@ export function formatUnixTimestamp(timestamp: number): string {
         (dateTimestamp.getMonth() + 1).toString(),
         '-',
         dateTimestamp.getDate().toString(),
-        ' - ',
+        '--',
         dateTimestamp.toLocaleTimeString()
-    ].join('').toLowerCase();
+    ].join('').toLowerCase().replace(' ', '');
 }
 
 /**
