@@ -110,11 +110,13 @@ export class AudioPlayer implements OnChanges {
 
     public getProgress(): number {
         if (this.progress === -1) {
-            console.log('getProgress() => ' + this.player.progress);
+            // NOTE: uncomment console.logs here to spy on jumps in the
+            // position of the handle. They are what helped fix it.
+            // console.log('getProgress() => ' + this.player.progress);
             return this.player.progress;
         }
         else {
-            console.log('getProgress() => ' + this.progress);
+            // console.log('getProgress() => ' + this.progress);
             return this.progress;
         }
     }
