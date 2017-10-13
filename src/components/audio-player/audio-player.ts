@@ -80,14 +80,14 @@ export class AudioPlayer implements OnChanges {
         // if (this.player.isPlaying) {
         //     this.player.jumpToPosition(progress);
         // }
-        this.player.jumpToPosition(progress);
-
         this.displayManualProgress = this.filePath;
         // TODO: check if next line (this.progress = -1;) is necessary.
         // restore this.progress to being negative so as to tell this player
         // that we are now no longer moving the progress slider manually but
         // are driving it via the player class
         this.progress = -1;
+        this.player.jumpToPosition(progress);
+
         this.detectChanges();
     }
 
@@ -110,9 +110,11 @@ export class AudioPlayer implements OnChanges {
 
     public getProgress(): number {
         if (this.progress === -1) {
+            console.log('getProgress() => ' + this.player.progress);
             return this.player.progress;
         }
         else {
+            console.log('getProgress() => ' + this.progress);
             return this.progress;
         }
     }

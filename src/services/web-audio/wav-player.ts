@@ -57,8 +57,7 @@ export class WavPlayer extends WebAudioPlayer {
                 console.log('setSourceFile(' + filePath +
                             ') - nSamples: ' + this.nSamples +
                             ', sampleRate: ' + this.sampleRate +
-                            ', duration: ' + this.duration.toFixed(2) +
-                            ', displayDuration: ' + this.displayDuration);
+                            ', duration: ' + this.displayDuration);
             }
         );
     }
@@ -69,6 +68,7 @@ export class WavPlayer extends WebAudioPlayer {
      * and ends at 1).
      */
     public jumpToPosition(position: number): void {
+        this.progress = position;
         const startSample1: number = Math.floor(position * this.nSamples),
               tmp1: number = startSample1 + N_BUFFER_SAMPLES,
               endSample1: number = tmp1 > this.nSamples ? this.nSamples : tmp1,
@@ -94,7 +94,7 @@ export class WavPlayer extends WebAudioPlayer {
                                 ') - PAUSED AT ' + startTime1);
                     this.pausedAt = startTime1;
                     // this.time = this.pausedAt;
-                    this.progress = this.pausedAt / this.duration;
+                    // this.progress = this.pausedAt / this.duration;
                     this.displayTime = formatTime(this.pausedAt, this.duration);
                     this.detectChanges();
                 }
