@@ -161,7 +161,7 @@ export class WebAudioPlayer {
                     ', startOffset: ' + startOffset.toFixed(2) +
                     ', startedAt: ' + this.startedAt.toFixed(2) + ')');
 
-        this.audioBuffer = audioBuffer;
+        // this.audioBuffer = audioBuffer;
 
         let sourceNode: AudioBufferSourceNode =
             AUDIO_CONTEXT.createBufferSource();
@@ -189,7 +189,7 @@ export class WebAudioPlayer {
             console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
                         ', stopping at: ' +
                         (this.startedAt + startedAtOffset +
-                         this.audioBuffer.duration).toFixed(2));
+                         audioBuffer.duration).toFixed(2));
 
             // not sure if this next line is necessary but it makes sure
             // that as soon as the audio is done it's done...
@@ -228,13 +228,16 @@ export class WebAudioPlayer {
      */
     public togglePlayPause(): void {
         if (!this.isPlaying) {
-            this.schedulePlay(this.audioBuffer);
-            this.startMonitoring();
+            console.log('playing from: ' + this.pausedAt);
+            // this.schedulePlay(this.audioBuffer);
+            // this.startMonitoring();
+            // this.playFrom(this.position);
+            this.playFrom((this.pausedAt - this.startedAt) / this.duration);
         }
         else {
             this.pause();
             console.log('paused at: ' + this.pausedAt);
-            this.stopMonitoring();
+            // this.stopMonitoring();
         }
     }
 

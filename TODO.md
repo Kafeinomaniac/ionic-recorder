@@ -7,6 +7,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* We now turn to the player itself. First question is how to organize the
+  function calls related to playback. AudioPlayer component calls
+  jumpToPosition(). jumpToPosition() does not need to load the buffer
+  immediately, because it does not know if we're paused or playing. If we're
+  paused, there's no reason to load things if we're paused.
 * Get rid of the progress bar jumpiness when you seek: hypothesis =
   it sometimes does a double-event. you can prevent a double-
   event by allowing a debounce period!  add a debounce to the
