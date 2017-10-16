@@ -162,7 +162,7 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    private getChunkPlayTime(startSample: number): void {
+    private getChunkPlayTime(startSample: number): number {
         if (startSample >= this.nSamples) {
             throw Error('startSample >= this.nSamples');
         }
@@ -174,13 +174,18 @@ export class WavPlayer extends WebAudioPlayer {
      */
     private getOnEndedCB(startSample: number): () => void {
         const nextStartSample: number = startSample + 2 * N_BUFFER_SAMPLES;
-        
+        console.log(startSample + ' >>>>>>>>>>> ' + nextStartSample + ' >= ' +
+                    this.nSamples);
         if (nextStartSample >= this.nSamples) {
             return () => {
                 console.log('====> onEndedCB(' + startSample +
                             ') - reached last chunk');
             };
         }
+
+        console.log(startSample + ' >.>.>.>.>.> ' + nextStartSample + ' >= ' +
+                    this.nSamples);
+
         return () => {
             const when: number = this.getChunkPlayTime(nextStartSample),
                   tmp: number = nextStartSample + N_BUFFER_SAMPLES,
@@ -189,12 +194,18 @@ export class WavPlayer extends WebAudioPlayer {
             console.log('====> onEndedCB(' + startSample + '), time = ' +
                         this.getTime().toFixed(2) + ', when: ' +
                         (when - this.startedAt).toFixed(2));
+            console.log('<<<<<<<<<<<<<<<<<<< ' + nextStartSample);
+
             WavFile.readWavFileAudio(
                 this.filePath,
                 nextStartSample,
                 endSample
             ).subscribe(
                 (audioBuffer: AudioBuffer) => {
+
+                    console.log('+++++++++++++++ ' + audioBuffer.length);
+                    console.log('+++++++++++++++ ' + when);
+
                     this.schedulePlay(
                         audioBuffer,
                         when,
@@ -204,6 +215,7 @@ export class WavPlayer extends WebAudioPlayer {
                     );
                 },
                 (err: any) => {
+                    console.log('THIS IS WHERE ERR IS: ' + err);
                     throw err;
                 }
             );

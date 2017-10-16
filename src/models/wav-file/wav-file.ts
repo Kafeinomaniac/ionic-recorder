@@ -171,6 +171,14 @@ export class WavFile {
                         endByte
                     ).subscribe(
                         (arrayBuffer: ArrayBuffer) => {
+                            console.log('read arrayBuffer! ' + startByte +
+                                        ', ' + endByte + ', ' +
+                                        arrayBuffer.byteLength);
+                            if (!arrayBuffer.byteLength) {
+                                // could not read anything - this is where we
+                                // are failing currently.
+                                obs.error('!arrayBuffer.byteLength');
+                            }
                             // console.log('array buffer: ' + arrayBuffer);
                             // console.log(arrayBuffer.byteLength);
                             // console.dir(arrayBuffer);
@@ -194,6 +202,9 @@ export class WavFile {
                                 };
 
                                 fileReader.onload = () => {
+                                    console.log('onload: ' +
+                                                fileReader.result.byteLength);
+
                                     // For decodeAudioData errs on
                                     // arrayBuffer, see
                                     // https://stackoverflow.com/questions..

@@ -222,7 +222,7 @@ export class WebAudioPlayer {
         this.stop(elapsed);
         // this.pausedAt = elapsed;
     }
-
+    public playFrom: (number) => void;
     /**
      * Toggle state between play and pause
      */
