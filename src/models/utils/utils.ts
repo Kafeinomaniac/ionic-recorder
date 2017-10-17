@@ -7,6 +7,22 @@ export const MAX: (a: number, b: number) => number = Math.max;
 export const MIN: (a: number, b: number) => number = Math.min;
 
 /**
+ * Extracts the filename out of a full-path
+ */
+export function pathFileName(filePath: string): string {
+    'use strict';
+    return filePath.replace(/^.*[\\\/]/, '');
+}
+
+/**
+ * Extracts the directory out of a full-path
+ */
+export function pathDirectoryName(filePath: string): string {
+    'use strict';
+    return filePath.replace(pathFileName(filePath), '');
+}
+
+/**
  * Update object 'dest' by adding or changing any fields that differ in 'src'
  * @param {Object} 'src' the source object from which to update 'dest'
  * @param {Object} 'dest' the destination object to update and return

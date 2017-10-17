@@ -3,7 +3,13 @@
 import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components';
 import { Component } from '@angular/core';
-import { formatDate, WAV_MIME_TYPE, WavFile, WavInfo } from '../../models';
+import {
+    pathDirectoryName,
+    formatDate,
+    WAV_MIME_TYPE,
+    WavFile,
+    WavInfo
+} from '../../models';
 
 /**
  * @class TrackPage
@@ -22,6 +28,7 @@ export class TrackPage {
     public fileSize: number;
     public sampleRate: number;
     public nSamples: number;
+    public parentFolder: string;
 
     /**
      * @constructor
@@ -37,6 +44,8 @@ export class TrackPage {
         this.actionSheetController = actionSheetController;
 
         this.filePath = navParams.data;
+
+        this.parentFolder = pathDirectoryName(this.filePath);
 
         this.encoding = WAV_MIME_TYPE;
 

@@ -10,7 +10,7 @@ import {
     Input
 } from '@angular/core';
 import { WavPlayer } from '../../services/web-audio/wav-player';
-import { formatTime } from '../../models';
+import { formatTime, pathFileName } from '../../models';
 
 /**
  * An toolbar-like (row on the screen) audio player for controlling
@@ -24,6 +24,7 @@ import { formatTime } from '../../models';
 })
 export class AudioPlayer implements OnChanges {
     @Input() public filePath: string;
+    public fileName: string;
     public player: WavPlayer;
 
     private changeDetectorRef: ChangeDetectorRef;
@@ -42,6 +43,7 @@ export class AudioPlayer implements OnChanges {
         this.player = player;
         this.displayManualProgress = '';
         this.progress = -1;
+        this.fileName = '';
     }
 
     /**
@@ -99,7 +101,8 @@ export class AudioPlayer implements OnChanges {
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
             console.log('ngOnChanges(): filePath=' + this.filePath);
-            this.displayManualProgress = this.filePath;
+            this.fileName = pathFileName(this.filePath);
+            this.displayManualProgress = this.fileName;
             this.player.setSourceFile(this.filePath);
         }
     }
