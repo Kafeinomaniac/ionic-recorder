@@ -8,12 +8,85 @@
         </ion-title>
     </ion-navbar>
     <ion-toolbar>
-        <!--p text-center>{{filePath}}</p-->
         <audio-player [filePath]="filePath"></audio-player>
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
+
+    <ion-list>
+        <!--ion-item text-wrap>
+            <p>
+                <span style="float: left;">
+                    Parent folder:
+                </span>
+                <span style="float:right;">
+                    {{folderPath}}
+                </span>
+            </p>
+        </ion-item-->
+        <ion-item>
+            <p>
+                <span style="float: left;">
+                    Modified on:
+                </span>
+                <span style="float:right;">
+                    {{dateModified}}
+                </span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">
+                    Encoding:
+                </span>
+                <span style="float:right;">
+                    {{encoding}}
+                </span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">
+                    Duration:
+                </span>
+                <span style="float:right;">
+                    {{duration}}
+                </span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">
+                    File size:
+                </span>
+                <span style="float:right;">
+                    {{fileSize}} bytes
+                </span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">
+                    Sample rate:
+                </span>
+                <span style="float:right;">
+                    {{sampleRate}} Hz
+                </span>
+            </p>
+        </ion-item>
+        <ion-item>
+            <p>
+                <span style="float: left;">
+                    # of samples:
+                </span>
+                <span style="float:right;">
+                    {{nSamples}}
+                </span>
+            </p>
+        </ion-item>
+
+    </ion-list>
 </ion-content>
 
 <ion-footer>

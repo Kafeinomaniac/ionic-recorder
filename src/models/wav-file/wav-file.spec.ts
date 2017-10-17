@@ -27,7 +27,7 @@ describe('models/wav-file', () => {
     });
 
     it('can read and verify wav file header', (done) => {
-        WavFile.readWavFileHeader(TEST_FILE_PATH).subscribe(
+        WavFile.readWavFileInfo(TEST_FILE_PATH).subscribe(
             (wavHeaderInfo: WavInfo) => {
                 expect(wavHeaderInfo.nSamples).toEqual(lengthA);
                 expect(wavHeaderInfo.sampleRate).toEqual(SAMPLE_RATE);
@@ -54,7 +54,7 @@ describe('models/wav-file', () => {
     });
 
     it('can read and verify the wav file header', (done) => {
-        WavFile.readWavFileHeader(TEST_FILE_PATH).subscribe(
+        WavFile.readWavFileInfo(TEST_FILE_PATH).subscribe(
             (wavHeaderInfo: WavInfo) => {
                 expect(wavHeaderInfo.nSamples).toEqual(lengthAB);
                 expect(wavHeaderInfo.sampleRate).toEqual(SAMPLE_RATE);
@@ -91,7 +91,7 @@ describe('models/wav-file', () => {
     });
 
     it('can read and verify the wav file header', (done) => {
-        WavFile.readWavFileHeader(TEST_FILE_PATH2).subscribe(
+        WavFile.readWavFileInfo(TEST_FILE_PATH2).subscribe(
             (wavHeaderInfo: WavInfo) => {
                 expect(wavHeaderInfo.nSamples).toEqual(lengthAB);
                 expect(wavHeaderInfo.sampleRate).toEqual(SAMPLE_RATE);

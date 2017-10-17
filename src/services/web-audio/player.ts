@@ -24,7 +24,7 @@ const PLAYER_CLOCK_FUNCTION_NAME: string = 'player';
  * @class WebAudioPlayer
  */
 @Injectable()
-export class WebAudioPlayer {
+export abstract class WebAudioPlayer {
     public isPlaying: boolean;
     // time is guaranteed to be MasterClock interval
     public time: number;
@@ -62,6 +62,16 @@ export class WebAudioPlayer {
         this.displayDuration = this.displayTime;
         this.progress = 0;
     }
+
+    /**
+     * Abstract method
+     */
+    public abstract playFrom(position: number): void;
+
+    /**
+     * Abstract method
+     */
+    public abstract pauseAt(position: number): void;
 
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
@@ -222,7 +232,7 @@ export class WebAudioPlayer {
         this.stop(elapsed);
         // this.pausedAt = elapsed;
     }
-    public playFrom: (number) => void;
+
     /**
      * Toggle state between play and pause
      */

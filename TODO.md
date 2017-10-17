@@ -7,6 +7,14 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* looks like there's a mismatch between file size in metadata and what
+  the number of samples tell you it should be - last two chunks do not
+  get recorded sometimes? or perhaps last 1 chunk doesn't sometimes or
+  perhaps last 0, 1, or 2 chunks don't get saved sometimes.
+* track page - add the parent folder informational item row and allow
+  it to be arbitrarily long
+* track page - date modified must be same as filename and call it 'date created'
+* track page - title only has filename
 * We now turn to the player itself. First question is how to organize the
   function calls related to playback. AudioPlayer component calls
   jumpToPosition(). jumpToPosition() does not need to load the buffer

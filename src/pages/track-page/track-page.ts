@@ -1,8 +1,9 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { ActionSheetController, NavParams } from 'ionic-angular';
-import { ButtonbarButton } from '../../components/button-bar/button-bar';
+import { ButtonbarButton } from '../../components';
 import { Component } from '@angular/core';
+import { formatDate, WAV_MIME_TYPE, WavFile, WavInfo } from '../../models';
 
 /**
  * @class TrackPage
@@ -15,6 +16,12 @@ export class TrackPage {
     private actionSheetController: ActionSheetController;
     public footerButtons: ButtonbarButton[];
     public filePath: string;
+    public dateModified: string;
+    public encoding: string;
+    public duration: string;
+    public fileSize: number;
+    public sampleRate: number;
+    public nSamples: number;
 
     /**
      * @constructor
@@ -30,6 +37,26 @@ export class TrackPage {
         this.actionSheetController = actionSheetController;
 
         this.filePath = navParams.data;
+
+        this.encoding = WAV_MIME_TYPE;
+
+        WavFile.readWavFileInfo(this.filePath).subscribe(
+            (wavInfo: WavInfo) => {
+                this.nSamples = wavInfo.nSamples;
+                this.sampleRate = wavInfo.sampleRate;
+                this.duration = (this.nSamples / this.sampleRate).toFixed(2);
+                this.fileSize = wavInfo.metadata.size;
+                this.dateModified = formatDate(
+                    wavInfo.metadata.modificationTime
+                );
+                console.log('METADATA:');
+                console.log(typeof wavInfo.metadata);
+                console.dir(wavInfo.metadata);
+            },
+            (err: any) => {
+                throw(err);
+            }
+        );
 
         this.footerButtons = [
             {

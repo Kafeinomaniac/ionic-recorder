@@ -21,7 +21,7 @@
     "test-ci": "ng test --watch=false --code-coverage",
     "deploy": "./scripts/deploy.sh"
   },
-  "version": "0.3.0-alpha.20",
+  "version": "0.3.0-alpha.21",
   "dependencies": {
     "@angular/common": "4.4.4",
     "@angular/compiler": "4.4.4",
@@ -56,7 +56,7 @@
     "@types/node": "8.0.33",
     "codecov": "2.3.0",
     "connect": "3.6.5",
-    "ionic": "3.13.0",
+    "ionic": "3.13.1",
     "ionic-mocks": "1.0.3",
     "jasmine-core": "2.8.0",
     "jasmine-reporters": "2.2.1",

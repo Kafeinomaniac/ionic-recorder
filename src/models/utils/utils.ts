@@ -142,15 +142,24 @@ export function formatTime(
  */
 export function formatUnixTimestamp(timestamp: number): string {
     'use strict';
-    const dateTimestamp: Date = new Date(timestamp);
+    return formatDate(new Date(timestamp));
+}
+
+/**
+ * Create a string that reflects the Unix date 'date'
+ * at 1 second resolution in human readable form
+ * @param {number} timestamp - Unix timestamp representation of datetime
+ * @return {string} - human readable text representation of timestamp
+ */
+export function formatDate(date: Date): string {
     return [
-        dateTimestamp.getFullYear().toString(),
+        date.getFullYear().toString(),
         '-',
-        (dateTimestamp.getMonth() + 1).toString(),
+        (date.getMonth() + 1).toString(),
         '-',
-        dateTimestamp.getDate().toString(),
+        date.getDate().toString(),
         '--',
-        dateTimestamp.toLocaleTimeString()
+        date.toLocaleTimeString()
     ].join('').toLowerCase().replace(' ', '');
 }
 

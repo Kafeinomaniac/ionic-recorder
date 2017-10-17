@@ -10,11 +10,12 @@ import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
 export interface WavInfo {
     nSamples: number;
     sampleRate: number;
+    metadata: Metadata;
 }
 
 // internal constants and functions
 
-const WAV_MIME_TYPE: string = 'audio/wav';
+export const WAV_MIME_TYPE: string = 'audio/wav';
 const NUMBER_MIME_TYPE: string = 'application/octet-stream';
 const CHUNKSIZE_START_BYTE: number = 4;
 const SAMPLE_RATE_START_BYTE: number = 24;
@@ -32,10 +33,10 @@ function sampleToByte(iSample: number): number {
 }
 
 /*
-function byteToSample(iByte: number): number {
-    'use strict';
-    return iByte / 2 - N_HEADER_BYTES;
-}
+  function byteToSample(iByte: number): number {
+  'use strict';
+  return iByte / 2 - N_HEADER_BYTES;
+  }
 */
 
 /**
@@ -101,8 +102,8 @@ export class WavFile {
     /**
      *
      */
-    public static readWavFileHeader(filePath: string): Observable<WavInfo> {
-        console.log('readWavFileHeader(' + filePath + ')');
+    public static readWavFileInfo(filePath: string): Observable<WavInfo> {
+        console.log('readWavFileInfo(' + filePath + ')');
         let src: Observable<WavInfo> = Observable.create((observer) => {
             Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
@@ -126,11 +127,22 @@ export class WavFile {
                                           subchunk2Size: number =
                                           view2.getUint32(0, true),
                                           nSamples: number = subchunk2Size / 2;
-                                    observer.next({
-                                        nSamples: nSamples,
-                                        sampleRate: sampleRate
-                                    });
-                                    observer.complete();
+                                    Filesystem.getMetadata(
+                                        fileSystem,
+                                        filePath
+                                    ).subscribe(
+                                        (metadata: Metadata) => {
+                                            observer.next({
+                                                nSamples: nSamples,
+                                                sampleRate: sampleRate,
+                                                metadata: metadata
+                                            });
+                                            observer.complete();
+                                        },
+                                        (err0: any) => {
+                                            observer.error(err0);
+                                        }
+                                    );
                                 },
                                 (err1: any) => {
                                     observer.error(err1);
@@ -147,7 +159,7 @@ export class WavFile {
                 });
         });
         return src;
-    } // public static readWavFileHeader(
+    } // public static readWavFileInfo(
 
     /**
      *
@@ -256,7 +268,7 @@ export class WavFile {
                 });
         });
         return src;
-    } // public static readWavFileHeader(
+    } // public static readWavFileInfo(
 
     /**
      *
@@ -302,7 +314,7 @@ export class WavFile {
             );
         });
         return src;
-    } // public static readWavFileHeader(
+    } // public static readWavFileInfo(
 
     /**
      *

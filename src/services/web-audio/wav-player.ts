@@ -47,7 +47,7 @@ export class WavPlayer extends WebAudioPlayer {
      *
      */
     public setSourceFile(filePath: string): void {
-        WavFile.readWavFileHeader(filePath).subscribe(
+        WavFile.readWavFileInfo(filePath).subscribe(
             (wavInfo: WavInfo) => {
                 this.filePath = filePath;
                 this.nSamples = wavInfo.nSamples;
@@ -82,7 +82,7 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    private pauseAt(position: number): void {
+    public pauseAt(position: number): void {
         const startSample1: number = Math.floor(position * this.nSamples),
               startTime1: number = startSample1 / this.sampleRate;
         console.log('jumpToPosition(' + position.toFixed(2) +
@@ -96,8 +96,8 @@ export class WavPlayer extends WebAudioPlayer {
      * time, in units of total duration, so relative time always starts at 0
      * and ends at 1).
      */
-    private playFrom(position: number): void {
-        const nSamples = this.nSamples,
+    public playFrom(position: number): void {
+        const nSamples: number = this.nSamples,
               startSample1: number = Math.floor(position * nSamples),
               t1: number = startSample1 + N_BUFFER_SAMPLES,
               endSample1: number = t1 > nSamples ? nSamples : t1,
@@ -125,8 +125,7 @@ export class WavPlayer extends WebAudioPlayer {
                     // INV: startSample2 = endSample1
                     const t2: number = endSample1 + N_BUFFER_SAMPLES,
                           startSample2: number = endSample1,
-                          endSample2: number = t2 > nSamples ? nSamples : t2,
-                          startTime2: number = startSample2 / this.sampleRate;
+                          endSample2: number = t2 > nSamples ? nSamples : t2;
                     WavFile.readWavFileAudio(
                         this.filePath,
                         startSample2,
@@ -141,7 +140,6 @@ export class WavPlayer extends WebAudioPlayer {
                                 0,
                                 this.getOnEndedCB(startSample2)
                             );
-                            
                         },
                         (err2: any) => {
                             alert(err2);
@@ -219,7 +217,7 @@ export class WavPlayer extends WebAudioPlayer {
                     throw err;
                 }
             );
-        }
+        };
     }
 
 }
