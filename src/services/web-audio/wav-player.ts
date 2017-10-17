@@ -180,7 +180,7 @@ export class WavPlayer extends WebAudioPlayer {
                             ') - reached last chunk');
             };
         }
-
+        
         console.log(startSample + ' >.>.>.>.>.> ' + nextStartSample + ' >= ' +
                     this.nSamples);
 
@@ -192,7 +192,8 @@ export class WavPlayer extends WebAudioPlayer {
             console.log('====> onEndedCB(' + startSample + '), time = ' +
                         this.getTime().toFixed(2) + ', when: ' +
                         (when - this.startedAt).toFixed(2));
-            console.log('<<<<<<<<<<<<<<<<<<< ' + nextStartSample);
+            console.log('<<<<<<<<<<<<<<<<<<< ' + nextStartSample +
+                       ' ---> ' + endSample);
 
             WavFile.readWavFileAudio(
                 this.filePath,

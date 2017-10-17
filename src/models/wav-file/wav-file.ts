@@ -300,6 +300,7 @@ export class WavFile {
                         true
                     ).subscribe(
                         () => {
+                            console.log('appended cata len: ' + wavData.length);
                             observer.next();
                             observer.complete();
                         },
@@ -324,7 +325,8 @@ export class WavFile {
         wavData: Int16Array,
         nPreAppendSamples: number
     ): Observable<void> {
-        console.log('appendToWavFile(' + filePath + ')');
+        console.log('appendToWavFile(' + filePath + '), nPre: '
+                   + nPreAppendSamples);
         let src: Observable<void> = Observable.create((observer) => {
             Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
@@ -333,6 +335,7 @@ export class WavFile {
                     const nSamples: number = nPreAppendSamples + wavData.length,
                           subchunk2size: number = 2 * nSamples,
                           chunkSize: number = 36 + subchunk2size;
+                    console.log('nSamples: ' + nSamples);
                     let view: DataView = new DataView(new ArrayBuffer(4));
                     view.setUint32(0, chunkSize, true);
                     Filesystem.writeToFile(
@@ -361,6 +364,8 @@ export class WavFile {
                                         )
                                     ).subscribe(
                                         () => {
+                                            console.log('appended data len: ' +
+                                                        wavData.length);
                                             observer.next();
                                             observer.complete();
                                         },
