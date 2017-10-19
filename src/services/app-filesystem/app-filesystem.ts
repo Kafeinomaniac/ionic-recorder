@@ -90,7 +90,7 @@ export class AppFilesystem {
                                                         this.isReady = true;
                                                     },
                                                     (err1: any) => {
-                                                        alert('err1: ' + err1);
+                                                        alert('err1a: ' + err1);
                                                     }
                                                 ); // this.switchDirectory(
                                         }

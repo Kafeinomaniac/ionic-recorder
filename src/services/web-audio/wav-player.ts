@@ -83,11 +83,11 @@ export class WavPlayer extends WebAudioPlayer {
      *
      */
     public pauseAt(position: number): void {
-        const startSample1: number = Math.floor(position * this.nSamples),
-              startTime1: number = startSample1 / this.sampleRate;
+        const startSampl: number = Math.floor(position * this.nSamples),
+              startTime: number = startSampl / this.sampleRate;
         console.log('jumpToPosition(' + position.toFixed(2) +
-                    ') - PAUSED AT TIME: ' + startTime1.toFixed(2));
-        this.pausedAt = startTime1;
+                    ') - PAUSED AT TIME: ' + startTime.toFixed(2));
+        this.pausedAt = startTime;
         this.displayTime = formatTime(this.pausedAt, this.duration);
     }
 
@@ -99,8 +99,8 @@ export class WavPlayer extends WebAudioPlayer {
     public playFrom(position: number): void {
         const nSamples: number = this.nSamples,
               startSample1: number = Math.floor(position * nSamples),
-              t1: number = startSample1 + N_BUFFER_SAMPLES,
-              endSample1: number = t1 > nSamples ? nSamples : t1,
+              tmp: number = startSample1 + N_BUFFER_SAMPLES,
+              endSample1: number = tmp > nSamples ? nSamples : tmp,
               startTime1: number = startSample1 / this.sampleRate;
 
         WavFile.readWavFileAudio(
@@ -180,7 +180,7 @@ export class WavPlayer extends WebAudioPlayer {
                             ') - reached last chunk');
             };
         }
-        
+
         console.log(startSample + ' >.>.>.>.>.> ' + nextStartSample + ' >= ' +
                     this.nSamples);
 
