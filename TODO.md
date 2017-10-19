@@ -7,6 +7,19 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Record something long (> 10 seconds) and make sure that we do not
+  release/delete/clear/reset all nodes all at once at the end - i.e. we should
+  be deleting audio nodes that are no longer needed as soon as they are needed.
+  there are many ways to do this. one way is to schedule a stop() at the same
+  time that we schedule a start().  but ideally we delete the node completely -
+  this is because if the wav file is very long we will have many nodes
+  accumulating, which may cause memory to grow too much.
+* Good progress: we find that in order to get the master clock to behave
+  properly upon playback (i.e. in order to see the progress bar moving while
+  we are playing) then we first have to land on record page - probably because
+  it starts the master clock.  Also - we're doing better about not playing
+  source audio nodes at the same time by calling pause() then stop() before
+  play in wav-player::jumpToPosition()
 * looks like there's a mismatch between file size in metadata and what
   the number of samples tell you it should be - last two chunks do not
   get recorded sometimes? or perhaps last 1 chunk doesn't sometimes or

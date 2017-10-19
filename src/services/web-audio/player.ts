@@ -238,18 +238,19 @@ export abstract class WebAudioPlayer {
      * Toggle state between play and pause
      */
     public togglePlayPause(): void {
-        if (!this.isPlaying) {
+        if (this.isPlaying) {
+            this.pause();
+            console.log('pausing at: ' + this.pausedAt);
+            // this.stopMonitoring();
+        }
+        else {
             this.startMonitoring();
             console.log('playing from: ' + this.pausedAt);
             // this.schedulePlay(this.audioBuffer);
             // this.startMonitoring();
             // this.playFrom(this.position);
             this.playFrom((this.pausedAt - this.startedAt) / this.duration);
-        }
-        else {
-            this.pause();
-            console.log('paused at: ' + this.pausedAt);
-            // this.stopMonitoring();
+
         }
     }
 

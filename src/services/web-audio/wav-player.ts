@@ -68,10 +68,17 @@ export class WavPlayer extends WebAudioPlayer {
     public jumpToPosition(position: number = null): void {
         console.log('jumpToPosition(' + position + ')');
         if (position) {
+            // a non-zero, non-null position has been provided as an argument
             this.progress = position;
         }
 
         if (this.isPlaying) {
+            // TODO: next two lines sort of solve the double node playback
+            // issue but they do not solve it completely. the other problem
+            // that we see with this approach is that there is some jumpiness
+            // in the progress handle when we jump-play in the middle of play
+            // this.pause();
+            // this.stop();
             this.playFrom(position);
         }
         else {
@@ -99,10 +106,8 @@ export class WavPlayer extends WebAudioPlayer {
     public playFrom(position: number): void {
         const nSamples: number = this.nSamples,
               startSample1: number = Math.floor(position * nSamples),
-              tmp: number = startSample1 + N_BUFFER_SAMPLES,
-              endSample1: number = tmp > nSamples ? nSamples : tmp,
-              startTime1: number = startSample1 / this.sampleRate;
-
+              t1: number = startSample1 + N_BUFFER_SAMPLES,
+              endSample1: number = t1 > nSamples ? nSamples : t1;
         WavFile.readWavFileAudio(
             this.filePath,
             startSample1,
@@ -110,17 +115,18 @@ export class WavPlayer extends WebAudioPlayer {
         ).subscribe(
             (audioBuffer1: AudioBuffer) => {
                 // this.audioBuffer = audioBuffer1;
+                const startTime1: number = startSample1 / this.sampleRate,
+                      playFirstBuffer: () => void =  () => {
+                          this.schedulePlay(
+                              audioBuffer1,
+                              0,
+                              0,
+                              startTime1,
+                              this.getOnEndedCB(startSample1)
+                          );
+                      };
                 console.log('jumpToPosition(' + position.toFixed(2) +
                             ') - PLAYING FROM ' + startTime1.toFixed(2));
-                const playFirstBuffer: () => void =  () => {
-                    this.schedulePlay(
-                        audioBuffer1,
-                        0,
-                        0,
-                        startTime1,
-                        this.getOnEndedCB(startSample1)
-                    );
-                };
                 if (endSample1 < nSamples) {
                     // INV: startSample2 = endSample1
                     const t2: number = endSample1 + N_BUFFER_SAMPLES,
