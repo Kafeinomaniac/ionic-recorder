@@ -26,7 +26,7 @@ export class MasterClock {
      * constructor
      */
     constructor() {
-        console.log('MasterClock:constructor()');
+        console.log('constructor()');
         this.isRunning = false;
         this.intervalId = null;
         this.ngZone = new NgZone({ enableLongStackTrace: false });
@@ -63,7 +63,7 @@ export class MasterClock {
                     });
                 },
                 CLOCK_INTERVAL_MSEC);
-            console.log('MasterClock:start() interval: ' +
+            console.log('start() interval: ' +
                         this.intervalId['data']['handleId']);
         });
         this.isRunning = true;
@@ -73,12 +73,13 @@ export class MasterClock {
      * Stop the clock. Stop repeat-running any scheduled functions.
      */
     public stop(): void {
+        console.log('stop()');
         if (!this.isRunning) {
             return;
         }
         this.isRunning = false;
         if (this.intervalId) {
-            console.log('MasterClock:stop(): clearing interval: ' +
+            console.log('stop(): clearing interval: ' +
                         this.intervalId['data']['handleId']);
             clearInterval(this.intervalId);
             this.intervalId = null;
@@ -94,9 +95,10 @@ export class MasterClock {
         const nFunctions: number = Object.keys(this.functions).length;
         if (nFunctions === 0) {
             this.start();
+            console.log('started master clock ...');
         }
         this.functions[id] = fun;
-        console.log('MasterClock:addFunction(' + id +
+        console.log('addFunction(' + id +
                     ') - number of functions now == ' +
                     Object.keys(this.functions).length);
     }
@@ -110,9 +112,9 @@ export class MasterClock {
         const nFunctions: number = Object.keys(this.functions).length;
         if (nFunctions === 0) {
             this.stop();
+            console.log('stopped master clock ...');
         }
-        console.log('MasterClock:removeFunction(' + id +
-                    ') - number of functions now == ' +
+        console.log('removeFunction(' + id + ') - # of functions now == ' +
                     Object.keys(this.functions).length);
     }
 }

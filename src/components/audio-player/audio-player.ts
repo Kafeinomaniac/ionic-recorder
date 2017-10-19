@@ -62,7 +62,7 @@ export class AudioPlayer implements OnChanges {
      * of each sequence of such events there will be one changeEnd event.
      */
     public onProgressChange(progress: number): void {
-        console.log('onProgressChange(' + progress.toFixed(2) + ')');
+        // console.log('onProgressChange(' + progress.toFixed(2) + ')');
         this.progress = progress;
         this.filenameOrProgress = formatTime(
             progress * this.player.duration,
@@ -110,15 +110,16 @@ export class AudioPlayer implements OnChanges {
      */
 
     public getProgress(): number {
-        console.log('getProgress()');
         if (this.progress === -1) {
             // NOTE: uncomment console.logs here to spy on jumps in the
             // position of the handle. They are what helped fix it.
             // console.log('getProgress() => ' + this.player.progress);
+            console.log('getProgress() -P-> ' + this.player.progress);
             return this.player.progress;
         }
         else {
             // console.log('getProgress() => ' + this.progress);
+            console.log('getProgress() -A-> ' + this.progress);
             return this.progress;
         }
     }
