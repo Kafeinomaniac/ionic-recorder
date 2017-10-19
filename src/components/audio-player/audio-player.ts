@@ -24,7 +24,6 @@ import { formatTime, pathFilename } from '../../models';
 })
 export class AudioPlayer implements OnChanges {
     @Input() public filePath: string;
-    public filename: string;
     public player: WavPlayer;
 
     private changeDetectorRef: ChangeDetectorRef;
@@ -43,7 +42,6 @@ export class AudioPlayer implements OnChanges {
         this.player = player;
         this.filenameOrProgress = '';
         this.progress = -1;
-        this.filename = '';
     }
 
     /**
@@ -82,7 +80,8 @@ export class AudioPlayer implements OnChanges {
         // if (this.player.isPlaying) {
         //     this.player.jumpToPosition(progress);
         // }
-        this.filenameOrProgress = this.filePath;
+        this.filenameOrProgress = pathFilename(this.filePath);
+
         // TODO: check if next line (this.progress = -1;) is necessary.
         // restore this.progress to being negative so as to tell this player
         // that we are now no longer moving the progress slider manually but
@@ -101,8 +100,7 @@ export class AudioPlayer implements OnChanges {
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
             console.log('ngOnChanges(): filePath=' + this.filePath);
-            this.filename = pathFilename(this.filePath);
-            this.filenameOrProgress = this.filename;
+            this.filenameOrProgress = pathFilename(this.filePath);
             this.player.setSourceFile(this.filePath);
         }
     }
