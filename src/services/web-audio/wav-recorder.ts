@@ -87,7 +87,7 @@ export class WavRecorder extends WebAudioRecorder {
                 WavFile.appendToWavFile(
                     this.filePath,
                     arr,
-                    this.nRecordedSamples
+                    this.nRecordedSamples - arr.length
                 ).subscribe(
                     () => {
                         this.nChunksSaved++;
