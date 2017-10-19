@@ -9,7 +9,7 @@ export const MIN: (a: number, b: number) => number = Math.min;
 /**
  * Extracts the filename out of a full-path
  */
-export function pathFileName(filePath: string): string {
+export function pathFilename(filePath: string): string {
     'use strict';
     return filePath.replace(/^.*[\\\/]/, '');
 }
@@ -19,7 +19,7 @@ export function pathFileName(filePath: string): string {
  */
 export function pathDirectoryName(filePath: string): string {
     'use strict';
-    return filePath.replace(pathFileName(filePath), '');
+    return filePath.replace(pathFilename(filePath), '');
 }
 
 /**
@@ -226,13 +226,13 @@ export function prependArray(value: any, arr: any[]): any[] {
  *     it to be a cross origin request, so at this point we cannot
  *     download on mobile browsers.
  */
-export function downloadBlob(blob: Blob, fileName: string): void {
+export function downloadBlob(blob: Blob, filename: string): void {
     'use strict';
     const url: string = window.URL.createObjectURL(blob);
     let anchorElement: HTMLAnchorElement = document.createElement('a');
     anchorElement.style.display = 'none';
     anchorElement.href = url;
-    anchorElement.setAttribute('download', fileName);
+    anchorElement.setAttribute('download', filename);
     document.body.appendChild(anchorElement);
     anchorElement.click();
     setTimeout(

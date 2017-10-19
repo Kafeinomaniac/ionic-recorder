@@ -49,7 +49,7 @@ export abstract class WebAudioPlayer {
         this.masterClock = masterClock;
 
         if (!masterClock) {
-            alert('no masterclock!');
+            throw Error('no masterclock!');
         }
 
         this.startedAt = 0;
@@ -238,6 +238,7 @@ export abstract class WebAudioPlayer {
      */
     public togglePlayPause(): void {
         if (!this.isPlaying) {
+            this.startMonitoring();
             console.log('playing from: ' + this.pausedAt);
             // this.schedulePlay(this.audioBuffer);
             // this.startMonitoring();

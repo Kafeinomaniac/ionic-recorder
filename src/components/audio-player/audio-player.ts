@@ -10,7 +10,7 @@ import {
     Input
 } from '@angular/core';
 import { WavPlayer } from '../../services/web-audio/wav-player';
-import { formatTime, pathFileName } from '../../models';
+import { formatTime, pathFilename } from '../../models';
 
 /**
  * An toolbar-like (row on the screen) audio player for controlling
@@ -24,11 +24,11 @@ import { formatTime, pathFileName } from '../../models';
 })
 export class AudioPlayer implements OnChanges {
     @Input() public filePath: string;
-    public fileName: string;
+    public filename: string;
     public player: WavPlayer;
 
     private changeDetectorRef: ChangeDetectorRef;
-    private displayManualProgress: string;
+    private filenameOrProgress: string;
     public progress: number;
 
     /**
@@ -41,9 +41,9 @@ export class AudioPlayer implements OnChanges {
         console.log('AudioPlayer:constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.player = player;
-        this.displayManualProgress = '';
+        this.filenameOrProgress = '';
         this.progress = -1;
-        this.fileName = '';
+        this.filename = '';
     }
 
     /**
@@ -64,9 +64,9 @@ export class AudioPlayer implements OnChanges {
      * of each sequence of such events there will be one changeEnd event.
      */
     public onProgressChange(progress: number): void {
-        // console.log('onProgressChange(' + progress.toFixed(2) + ')');
+        console.log('onProgressChange(' + progress.toFixed(2) + ')');
         this.progress = progress;
-        this.displayManualProgress = formatTime(
+        this.filenameOrProgress = formatTime(
             progress * this.player.duration,
             this.player.duration
         );
@@ -82,7 +82,7 @@ export class AudioPlayer implements OnChanges {
         // if (this.player.isPlaying) {
         //     this.player.jumpToPosition(progress);
         // }
-        this.displayManualProgress = this.filePath;
+        this.filenameOrProgress = this.filePath;
         // TODO: check if next line (this.progress = -1;) is necessary.
         // restore this.progress to being negative so as to tell this player
         // that we are now no longer moving the progress slider manually but
@@ -101,8 +101,8 @@ export class AudioPlayer implements OnChanges {
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
             console.log('ngOnChanges(): filePath=' + this.filePath);
-            this.fileName = pathFileName(this.filePath);
-            this.displayManualProgress = this.fileName;
+            this.filename = pathFilename(this.filePath);
+            this.filenameOrProgress = this.filename;
             this.player.setSourceFile(this.filePath);
         }
     }
@@ -112,6 +112,7 @@ export class AudioPlayer implements OnChanges {
      */
 
     public getProgress(): number {
+        console.log('getProgress()');
         if (this.progress === -1) {
             // NOTE: uncomment console.logs here to spy on jumps in the
             // position of the handle. They are what helped fix it.
