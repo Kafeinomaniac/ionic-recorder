@@ -34,8 +34,8 @@ export class MasterClock {
     /**
      *
      */
-    public has(key: string): boolean {
-        return Object.prototype.hasOwnProperty.call(this.functions, key);
+    public has(id: string): boolean {
+        return Object.prototype.hasOwnProperty.call(this.functions, id);
     }
 
     /**
@@ -47,6 +47,7 @@ export class MasterClock {
      */
     public start(): void {
         if (this.intervalId) {
+            // already started, no need to do anything
             return;
         }
         this.ngZone.runOutsideAngular(() => {
@@ -73,6 +74,7 @@ export class MasterClock {
     public stop(): void {
         console.log('stop()');
         if (!this.intervalId) {
+            // already stopped, no need to do anything
             return;
         }
         if (this.intervalId) {
@@ -91,11 +93,12 @@ export class MasterClock {
     public addFunction(id: string, fun: () => void): void {
         const nFunctions: number = Object.keys(this.functions).length;
         if (nFunctions === 0) {
+            // auto-start
             this.start();
         }
         this.functions[id] = fun;
         console.log('addFunction(' + id +
-                    ') - number of functions now == ' +
+                    ') - after call, # of functions is: ' +
                     Object.keys(this.functions).length);
     }
 
@@ -107,6 +110,7 @@ export class MasterClock {
         delete this.functions[id];
         const nFunctions: number = Object.keys(this.functions).length;
         if (nFunctions === 0) {
+            // auto-stop
             this.stop();
             console.log('stopped master clock ...');
         }

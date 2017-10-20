@@ -7,6 +7,14 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* master-clock: call it heartbeat
+* master-clock: startMonitoring and stopMonitoring automatic, they begin and end
+  setInterval depending on whether nFunctions is 0 (end) or not (start), you
+  just need to add or remove your function. add the replace flag to master-clock
+  code, too.
+* settings: allow the default filename to be written as you wish
+* RENAME: "progress" and "position" are synonyms - we mix them up a lot, esp.
+  in audio services code
 * playback problem 1: pause/resume does not work, has a lag on resume
 * playback problem 2: master clock not always moving progress bar, it's flaky
 * playback problem 3: when you play and then jump somewhere, it seems to

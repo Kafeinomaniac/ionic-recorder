@@ -82,8 +82,8 @@ export class WavPlayer extends WebAudioPlayer {
      *
      */
     public pauseAt(position: number): void {
-        const startSampl: number = Math.floor(position * this.nSamples),
-              startTime: number = startSampl / this.sampleRate;
+        const startSample: number = Math.floor(position * this.nSamples),
+              startTime: number = startSample / this.sampleRate;
         console.log('jumpToPosition(' + position.toFixed(2) +
                     ') - PAUSED AT TIME: ' + startTime.toFixed(2));
         this.pausedAt = startTime;
@@ -98,8 +98,8 @@ export class WavPlayer extends WebAudioPlayer {
     public playFrom(position: number): void {
         const nSamples: number = this.nSamples,
               startSample1: number = Math.floor(position * nSamples),
-              t1: number = startSample1 + N_BUFFER_SAMPLES,
-              endSample1: number = t1 > nSamples ? nSamples : t1;
+              tmp: number = startSample1 + N_BUFFER_SAMPLES,
+              endSample1: number = tmp > nSamples ? nSamples : tmp;
         WavFile.readWavFileAudio(
             this.filePath,
             startSample1,
@@ -121,9 +121,9 @@ export class WavPlayer extends WebAudioPlayer {
                             ') - PLAYING FROM ' + startTime1.toFixed(2));
                 if (endSample1 < nSamples) {
                     // INV: startSample2 = endSample1
-                    const t2: number = endSample1 + N_BUFFER_SAMPLES,
-                          startSample2: number = endSample1,
-                          endSample2: number = t2 > nSamples ? nSamples : t2;
+                    const startSample2: number = endSample1,
+                          tmp: number = startSample2 + N_BUFFER_SAMPLES,
+                          endSample2: number = tmp > nSamples ? nSamples : tmp;
                     WavFile.readWavFileAudio(
                         this.filePath,
                         startSample2,

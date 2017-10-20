@@ -295,19 +295,8 @@ export abstract class WebAudioRecorder {
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      */
-    public startMonitoring(bReplace: boolean = false): void {
-        console.log('startMonitoring(' + bReplace + ')');
-        if (this.masterClock.has(RECORDER_CLOCK_FUNCTION_NAME)) {
-            if (bReplace) {
-                // remove anything already there if we're replacing
-                this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
-            }
-            else {
-                // not replacing but something there, do nothing
-                return;
-            }
-        }
-
+    public startMonitoring(): void {
+        console.log('startMonitoring()');
         this.masterClock.addFunction(
             RECORDER_CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
@@ -340,7 +329,10 @@ export abstract class WebAudioRecorder {
      */
     public stopMonitoring(): void {
         console.log('stopMonitoring()');
-        this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
+        setTimeout(
+            () => {
+                this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
+            });
     }
 
     /**

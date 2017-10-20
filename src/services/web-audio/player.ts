@@ -47,11 +47,6 @@ export abstract class WebAudioPlayer {
     constructor(masterClock: MasterClock) {
         console.log('WebAudioPlayer:constructor()');
         this.masterClock = masterClock;
-
-        if (!masterClock) {
-            throw Error('no masterclock!');
-        }
-
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
@@ -97,7 +92,7 @@ export abstract class WebAudioPlayer {
                           ') > this.duration (' + this.duration +
                           ') delta: ' + (time - this.duration)*1000000000;
                     console.log(msg);
-                    alert(msg);
+                    // alert(msg);
                 }
 
                 if (this.time !== time) {
@@ -123,15 +118,12 @@ export abstract class WebAudioPlayer {
      */
     public stopMonitoring(): void {
         console.log('stopMonitoring()');
-        this.masterClock.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
-        /*
         setTimeout(
             () => {
                 this.masterClock.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
             });
-        */
     }
-
+    
     /**
      * Ensure source node stops playback. This does the reset part (stopping
      * playback) only as far as AudioBufferSourceNode is concerned, not fully
@@ -218,9 +210,13 @@ export abstract class WebAudioPlayer {
      */
     public pause(): void {
         const elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
-        this.stop(elapsed);
-        // this.pausedAt = elapsed;
-        this.stopMonitoring;
+        // this.stop(elapsed);
+        // TODO: we need to figure out monitoring, may need to uncomment below:
+        // this.stopMonitoring;
+        this.resetSourceNode(this.sourceNode);
+        this.cancelScheduled();
+        this.pausedAt = elapsed;
+        this.isPlaying = false;
     }
 
     /**
@@ -263,13 +259,14 @@ export abstract class WebAudioPlayer {
      * is that you are stopped and paused at the very start (time=0).
      * @param {number} The time you want to be paused at after stopping.
      */
-    public stop(pausedAt: number = 0): void {
-        console.log('stop(' + pausedAt.toFixed(2) + ')');
+    // public stop(pausedAt: number = 0): void {
+    public stop(): void {
+        console.log('stop()');
         this.resetSourceNode(this.sourceNode);
         this.cancelScheduled();
         this.startedAt = 0;
-        this.pausedAt = pausedAt;
+        this.pausedAt = 0;
         this.isPlaying = false;
-        this.stopMonitoring();
+        // this.stopMonitoring();
     }
 }
