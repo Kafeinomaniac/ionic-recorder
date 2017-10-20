@@ -186,9 +186,9 @@ export class AppFilesystem {
     /**
      *
      */
-    public getSelectedEntries(): Observable < Entry[] > {
+    public getSelectedEntries(): Observable <Entry[]> {
         console.log('getSelectedEntries()');
-        let obs: Observable < Entry[] > = Observable.create((observer) => {
+        let obs: Observable <Entry[]> = Observable.create((observer) => {
             // get the file system
             this.whenReady().subscribe(
                 () => {
@@ -274,9 +274,9 @@ export class AppFilesystem {
      * @returns {Observable<FileSystem>} Observable that emits the file
      * system when it's ready for use.
      */
-    public switchDirectory(path: string): Observable < Entry[] > {
+    public switchDirectory(path: string): Observable <Entry[]> {
         console.log('switchDirectory(' + path + ')');
-        let obs: Observable < Entry[] > = Observable.create((observer) => {
+        let obs: Observable <Entry[]> = Observable.create((observer) => {
             // got file system, now get entry object for path
             // of directory we're switching to
             Filesystem.getPathEntry(this.fileSystem, path, false).subscribe(

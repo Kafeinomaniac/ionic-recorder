@@ -19,10 +19,10 @@ find src -name \*\.ts -exec \
      's/([^\s])\s*<\s*(\w+)\s*>\s*/$1<$2>/g' \
      '{}' \;
 
-find src -name \*\.ts -exec \
-     perl -i -pe \
-     's/>= /> = /g' \
-     '{}' \;
+# find src -name \*\.ts -exec \
+#      perl -i -pe \
+#      's\a+/>= /> = /g' \
+#      '{}' \;
 
 find src -name \*\.ts -exec \
      perl -i -pe \

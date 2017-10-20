@@ -108,7 +108,6 @@ export class AudioPlayer implements OnChanges {
     /**
      *
      */
-
     public getProgress(): number {
         if (this.progress === -1) {
             // NOTE: uncomment console.logs here to spy on jumps in the
@@ -122,51 +121,6 @@ export class AudioPlayer implements OnChanges {
             // console.log('getProgress() -A-> ' + this.progress);
             return this.progress;
         }
-    }
-
-    /**
-     *
-     */
-    // public getDisplayDuration(): string {
-    //     // console.log('getDisplayDuration(): ' + this.displayDuration);
-    //     // return this.displayDuration;
-    //     const duration: number = this.player.duration;
-    //     return  formatTime(duration, duration);
-    // }
-
-    /**
-     *
-     */
-    /*
-    public getDisplayTime(): string {
-        console.log('t: ' + this.progress.toFixed(2));
-        const duration: number = this.player.duration;
-        if (this.progress >= 0) {
-            return formatTime(this.progress * duration, duration);
-        }
-        else {
-            return formatTime(this.player.getTime(), duration);
-        }
-    }
-    */
-    /**
-     *
-     */
-    public ngOnInit(): void {
-        console.log('ngOnInit()');
-        // TODO: this maintains monitoring throughout app, you
-        // can do this better by stopping to monitor when going to
-        // another page but then there will need to be communication
-        // between the track page and this directive to tell the
-        // directive to start/stop monitoring. We can start monitoring
-        // upon player.relativeTimeSeek() and stop monitoring upon
-        // player.pause() or player.stop() - but right now that does
-        // not work due to race conditions (perhaps add a setTimeout()
-        // to delay the stop monitoring command?)
-        // this.player.startMonitoring();
-
-        // NB: this next line is what starts player playing right away
-        // this.player.togglePlayPause();
     }
 
     /**

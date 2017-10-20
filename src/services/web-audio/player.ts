@@ -76,7 +76,7 @@ export abstract class WebAudioPlayer {
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      */
-    protected startMonitoring(): void {
+    public startMonitoring(): void {
         console.log('startMonitoring()');
         this.masterClock.addFunction(
             PLAYER_CLOCK_FUNCTION_NAME,
