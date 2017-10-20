@@ -73,25 +73,40 @@ export class AppFilesystem {
                                     // (paths: Set<string>) => {
                                     (paths: {
                                         [path: string]: number }) => {
-                                            if (paths === null ||
-                                                typeof paths === 'undefined') {
+                                            if (paths) {
+                                                this.selectedPaths = paths;
+                                            }
+                                            else {
                                                 this.selectedPaths = {};
                                                 this.storage.set(
                                                     'filesystemSelected',
                                                     this.selectedPaths
                                                 );
                                             }
-                                            else {
-                                                this.selectedPaths = paths;
-                                            }
                                             this.switchDirectory(directoryPath)
                                                 .subscribe(
                                                     () => {
                                                         this.isReady = true;
                                                     },
-                                                    (err1: any) => {
-                                                        alert('err1a: ' + err1);
+                                                    (err0: any) => {
+                                                        // err - try switching
+                                                        // to /Unfiled/ instead
+                                                        this.switchDirectory(
+                                                            '/Unfiled/'
+                                                        ).subscribe(
+                                                            () => {
+                                                                this.isReady =
+                                                                    true;
+                                                            },
+                                                            (err1: any) => {
+                                                                alert('err0:' +
+                                                                      err0 +
+                                                                      'err1:' +
+                                                                      err1);
+                                                            }
+                                                        );
                                                     }
+
                                                 ); // this.switchDirectory(
                                         }
                                 ).catch((err2: any) => {
