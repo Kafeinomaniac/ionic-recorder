@@ -7,6 +7,10 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* playback problem 1: pause/resume does not work, has a lag on resume
+* playback problem 2: master clock not always moving progress bar, it's flaky
+* playback problem 3: when you play and then jump somewhere, it seems to
+  jump elsewhere (far) first
 * Record something long (> 10 seconds) and make sure that we do not
   release/delete/clear/reset all nodes all at once at the end - i.e. we should
   be deleting audio nodes that are no longer needed as soon as they are needed.

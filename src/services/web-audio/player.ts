@@ -93,11 +93,12 @@ export abstract class WebAudioPlayer {
                 if (time > this.duration) {
                     time = this.duration;
                     this.stop();
+                    const msg: string = 'time (' + time + 
+                          ') > this.duration (' + this.duration +
+                          ') delta: ' + (time - this.duration)*1000000000;
+                    console.log(msg);
+                    alert(msg);
                 }
-                    // alert('time > duration\n' + time + '\n    >\n' +
-                    //       this.duration + '\n' +
-                    //       (time - this.duration)*1000000000);
-                // }
 
                 if (this.time !== time) {
                     // console.log('this.time !== time\n' + this.time + '\n' +
@@ -196,26 +197,9 @@ export abstract class WebAudioPlayer {
             }
             const startedAtOffset: number = offset + startOffset;
             this.sourceNode = sourceNode;
-
             sourceNode.start(0, offset);
-
             this.startedAt = AUDIO_CONTEXT.currentTime - startedAtOffset;
-
-            console.log('====> this.starteAt = ' + this.startedAt.toFixed(2) +
-                        ', stopping at: ' +
-                        (this.startedAt + startedAtOffset +
-                         audioBuffer.duration).toFixed(2));
-
-            // not sure if this next line is necessary but it makes sure
-            // that as soon as the audio is done it's done...
-            // NB: when we do not comment-out this next stop() command,
-            // there is a bad side effect: the onEnded callback gets called
-            // twice (sometimes, perhaps not always) - once when the thing
-            // ends and another time when the stop command is executed
-            // at about the same time that it ends. So we're trying to go on
-            // with this next line commented out.
-            // sourceNode.stop(this.startedAt + startedAtOffset +
-            //     this.audioBuffer.duration);
+            console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2))
             this.pausedAt = 0;
             this.isPlaying = true;
         }
@@ -233,9 +217,10 @@ export abstract class WebAudioPlayer {
      * Pause playback - assumes we are playing.
      */
     public pause(): void {
-        let elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
+        const elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
         this.stop(elapsed);
         // this.pausedAt = elapsed;
+        this.stopMonitoring;
     }
 
     /**
@@ -252,9 +237,8 @@ export abstract class WebAudioPlayer {
             console.log('playing from: ' + this.pausedAt);
             // this.schedulePlay(this.audioBuffer);
             // this.startMonitoring();
-            // this.playFrom(this.position);
-            this.playFrom((this.pausedAt - this.startedAt) / this.duration);
-
+            // this.playFrom((this.pausedAt - this.startedAt) / this.duration);
+            this.playFrom(this.progress);
         }
     }
 
@@ -280,11 +264,12 @@ export abstract class WebAudioPlayer {
      * @param {number} The time you want to be paused at after stopping.
      */
     public stop(pausedAt: number = 0): void {
-        console.log('stop()');
+        console.log('stop(' + pausedAt.toFixed(2) + ')');
         this.resetSourceNode(this.sourceNode);
         this.cancelScheduled();
         this.startedAt = 0;
         this.pausedAt = pausedAt;
         this.isPlaying = false;
+        this.stopMonitoring();
     }
 }
