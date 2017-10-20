@@ -1,11 +1,6 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import {
-    /* tslint:disable */
-    ChangeDetectorRef,
-    /* tslint:enable */
-    Injectable
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { WebAudioPlayer } from './player';
 import { formatTime, WavFile, WavInfo } from '../../models';
 import { MasterClock } from '../../services';
@@ -21,7 +16,6 @@ const N_BUFFER_SAMPLES: number = 40000;
  */
 @Injectable()
 export class WavPlayer extends WebAudioPlayer {
-    private changeDetectorRef: ChangeDetectorRef;
     // current file's info
     private filePath: string;
     private sampleRate: number;
@@ -31,12 +25,10 @@ export class WavPlayer extends WebAudioPlayer {
      *
      */
     constructor(
-        masterClock: MasterClock,
-        changeDetectorRef: ChangeDetectorRef
+        masterClock: MasterClock
     ) {
         console.log('WavPlayer:constructor()');
         super(masterClock);
-        this.changeDetectorRef = changeDetectorRef;
         this.filePath = null;
         this.sampleRate = null;
         this.nSamples = 0;

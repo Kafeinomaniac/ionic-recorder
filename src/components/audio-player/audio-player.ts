@@ -114,12 +114,12 @@ export class AudioPlayer implements OnChanges {
             // NOTE: uncomment console.logs here to spy on jumps in the
             // position of the handle. They are what helped fix it.
             // console.log('getProgress() => ' + this.player.progress);
-            console.log('getProgress() -P-> ' + this.player.progress);
+            // console.log('getProgress() -P-> ' + this.player.progress);
             return this.player.progress;
         }
         else {
             // console.log('getProgress() => ' + this.progress);
-            console.log('getProgress() -A-> ' + this.progress);
+            // console.log('getProgress() -A-> ' + this.progress);
             return this.progress;
         }
     }

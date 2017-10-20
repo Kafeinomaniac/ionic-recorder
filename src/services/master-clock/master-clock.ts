@@ -10,14 +10,13 @@
 import { NgZone, Injectable } from '@angular/core';
 
 // clock frequency, in Hz
-const CLOCK_FREQUENCY_HZ: number = 24;
+const CLOCK_FREQUENCY_HZ: number = 30;
 
 // derived constant, please do not touch
 export const CLOCK_INTERVAL_MSEC: number = 1000 / CLOCK_FREQUENCY_HZ;
 
 @Injectable()
 export class MasterClock {
-    public isRunning: boolean;
     private intervalId: NodeJS.Timer;
     private ngZone: NgZone;
     private functions: { [id: string]: () => void };
@@ -27,7 +26,6 @@ export class MasterClock {
      */
     constructor() {
         console.log('constructor()');
-        this.isRunning = false;
         this.intervalId = null;
         this.ngZone = new NgZone({ enableLongStackTrace: false });
         this.functions = {};
@@ -48,7 +46,7 @@ export class MasterClock {
      * clock frequency.
      */
     public start(): void {
-        if (this.isRunning) {
+        if (this.intervalId) {
             return;
         }
         this.ngZone.runOutsideAngular(() => {
@@ -62,11 +60,11 @@ export class MasterClock {
                         }
                     });
                 },
-                CLOCK_INTERVAL_MSEC);
+                CLOCK_INTERVAL_MSEC
+            );
             console.log('start() interval: ' +
                         this.intervalId['data']['handleId']);
         });
-        this.isRunning = true;
     }
 
     /**
@@ -74,10 +72,9 @@ export class MasterClock {
      */
     public stop(): void {
         console.log('stop()');
-        if (!this.isRunning) {
+        if (!this.intervalId) {
             return;
         }
-        this.isRunning = false;
         if (this.intervalId) {
             console.log('stop(): clearing interval: ' +
                         this.intervalId['data']['handleId']);
@@ -95,7 +92,6 @@ export class MasterClock {
         const nFunctions: number = Object.keys(this.functions).length;
         if (nFunctions === 0) {
             this.start();
-            console.log('started master clock ...');
         }
         this.functions[id] = fun;
         console.log('addFunction(' + id +

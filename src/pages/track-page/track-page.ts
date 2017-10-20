@@ -1,8 +1,9 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+import { Component } from '@angular/core';
 import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components';
-import { Component } from '@angular/core';
+import { WavPlayer } from '../../services';
 import {
     pathDirectoryName,
     formatDate,
@@ -29,6 +30,7 @@ export class TrackPage {
     public sampleRate: number;
     public nSamples: number;
     public parentFolder: string;
+    private player: WavPlayer;
 
     /**
      * @constructor
@@ -37,11 +39,14 @@ export class TrackPage {
      */
     constructor(
         navParams: NavParams,
-        actionSheetController: ActionSheetController
+        actionSheetController: ActionSheetController,
+        wavPlayer: WavPlayer
     ) {
         console.log('TrackPage:constructor(' + navParams.data + ')');
 
         this.actionSheetController = actionSheetController;
+
+        this.player = wavPlayer;
 
         this.filePath = navParams.data;
 
@@ -150,6 +155,11 @@ export class TrackPage {
     public onClickShareButton(): void {
         console.log('onClickShareButton()');
         this.presentActionSheet();
+    }
+
+    public ionViewDidLeave(): void {
+        console.log('ionViewDidLeave()');
+        this.player.stopMonitoring();
     }
 
 }

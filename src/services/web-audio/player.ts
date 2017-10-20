@@ -77,12 +77,12 @@ export abstract class WebAudioPlayer {
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      */
     protected startMonitoring(): void {
-        console.log('PLAYER: startMonitoring()');
+        console.log('startMonitoring()');
         this.masterClock.addFunction(
             PLAYER_CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
-                console.log('.p.');
+                // console.log('.p.');
                 let time: number = this.getTime();
 
                 if (this.duration <= 0) {
@@ -121,10 +121,14 @@ export abstract class WebAudioPlayer {
      * calls this function.
      */
     protected stopMonitoring(): void {
+        console.log('stopMonitoring()');
+        this.masterClock.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
+        /*
         setTimeout(
             () => {
                 this.masterClock.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
             });
+        */
     }
 
     /**
