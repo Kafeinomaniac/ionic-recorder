@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from './common';
 import { ABS, formatTime } from '../../models';
-import { MasterClock } from '../../services';
+import { Heartbeat } from '../../services';
 
 // the name of the function we give to master clock to run
 const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
@@ -59,7 +59,7 @@ interface AudioGainNode extends AudioNode {
  */
 @Injectable()
 export abstract class WebAudioRecorder {
-    private masterClock: MasterClock;
+    private heartbeat: Heartbeat;
     private sourceNode: MediaElementAudioSourceNode;
     private audioGainNode: AudioGainNode;
     private scriptProcessorNode: ScriptProcessorNode;
@@ -81,10 +81,10 @@ export abstract class WebAudioRecorder {
     protected abstract valueCB(pcm: number): void;
 
     // this is how we signal
-    constructor(masterClock: MasterClock) {
+    constructor(heartbeat: Heartbeat) {
         console.log('WebAudioRecorder:constructor()');
 
-        this.masterClock = masterClock;
+        this.heartbeat = heartbeat;
 
         if (!AUDIO_CONTEXT) {
             this.status = RecordStatus.NO_CONTEXT_ERROR;
@@ -297,7 +297,7 @@ export abstract class WebAudioRecorder {
      */
     public startMonitoring(): void {
         console.log('startMonitoring()');
-        this.masterClock.addFunction(
+        this.heartbeat.addFunction(
             RECORDER_CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
@@ -331,7 +331,7 @@ export abstract class WebAudioRecorder {
         console.log('stopMonitoring()');
         setTimeout(
             () => {
-                this.masterClock.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
+                this.heartbeat.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
             });
     }
 

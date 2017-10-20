@@ -10,7 +10,7 @@
 
 import { Injectable } from '@angular/core';
 import { formatTime, prependArray } from '../../models';
-import { AUDIO_CONTEXT, MasterClock } from '../../services';
+import { AUDIO_CONTEXT, Heartbeat } from '../../services';
 
 /** @const {string} The name of the function we give to master clock to run */
 const PLAYER_CLOCK_FUNCTION_NAME: string = 'player';
@@ -26,7 +26,7 @@ const PLAYER_CLOCK_FUNCTION_NAME: string = 'player';
 @Injectable()
 export abstract class WebAudioPlayer {
     public isPlaying: boolean;
-    // time is guaranteed to be MasterClock interval
+    // time is guaranteed to be Heartbeat interval
     public time: number;
     public duration: number;
     public displayTime: string;
@@ -37,16 +37,16 @@ export abstract class WebAudioPlayer {
     protected startedAt: number;
     protected pausedAt: number;
 
-    private masterClock: MasterClock;
+    private heartbeat: Heartbeat;
     protected audioBuffer: AudioBuffer;
     private scheduledSourceNodes: AudioBufferSourceNode[];
 
     /**
      *
      */
-    constructor(masterClock: MasterClock) {
+    constructor(heartbeat: Heartbeat) {
         console.log('WebAudioPlayer:constructor()');
-        this.masterClock = masterClock;
+        this.heartbeat = heartbeat;
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
@@ -73,7 +73,7 @@ export abstract class WebAudioPlayer {
      */
     public startMonitoring(): void {
         console.log('startMonitoring()');
-        this.masterClock.addFunction(
+        this.heartbeat.addFunction(
             PLAYER_CLOCK_FUNCTION_NAME,
             // the monitoring actions are in the following function:
             () => {
@@ -88,9 +88,9 @@ export abstract class WebAudioPlayer {
                 if (time > this.duration) {
                     time = this.duration;
                     this.stop();
-                    const msg: string = 'time (' + time + 
+                    const msg: string = 'time (' + time +
                           ') > this.duration (' + this.duration +
-                          ') delta: ' + (time - this.duration)*1000000000;
+                          ') delta: ' + (time - this.duration) * 1000000000.0;
                     console.log(msg);
                     // alert(msg);
                 }
@@ -120,10 +120,10 @@ export abstract class WebAudioPlayer {
         console.log('stopMonitoring()');
         setTimeout(
             () => {
-                this.masterClock.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
+                this.heartbeat.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
             });
     }
-    
+
     /**
      * Ensure source node stops playback. This does the reset part (stopping
      * playback) only as far as AudioBufferSourceNode is concerned, not fully
@@ -191,7 +191,7 @@ export abstract class WebAudioPlayer {
             this.sourceNode = sourceNode;
             sourceNode.start(0, offset);
             this.startedAt = AUDIO_CONTEXT.currentTime - startedAtOffset;
-            console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2))
+            console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2));
             this.pausedAt = 0;
             this.isPlaying = true;
         }

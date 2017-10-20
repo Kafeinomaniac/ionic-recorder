@@ -2,7 +2,7 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-import { MasterClock } from '../../services';
+import { Heartbeat } from '../../services';
 import { WebAudioRecorder } from './recorder';
 import {
     formatUnixTimestamp,
@@ -30,8 +30,8 @@ export class WavRecorder extends WebAudioRecorder {
     private filePath: string;
 
     // this is how we signal
-    constructor(masterClock: MasterClock) {
-        super(masterClock);
+    constructor(heartbeat: Heartbeat) {
+        super(heartbeat);
         console.log('WavRecorder:constructor()');
 
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {

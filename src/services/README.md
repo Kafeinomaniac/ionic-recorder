@@ -8,5 +8,5 @@ Each directory here is a singleton class injected via angular2 direct-injection.
 |------|---------|
 | app-filesystem | Local library for local file storage |
 | app-storage | Store stuff to remembers between app invocations |
-| master-clock | Do something every X miliseconds - class |
+| heartbeat | Do something every X miliseconds - class |
 | web-audio | Web Audio API local library |

@@ -26,7 +26,7 @@ import {
 import {
     AppFilesystem,
     AppStorage,
-    MasterClock,
+    Heartbeat,
     WavPlayer,
     WavRecorder
 } from '../services';
@@ -74,7 +74,7 @@ import { IonicRecorderApp } from './app.component';
         AppFilesystem,
         WavPlayer,
         WavRecorder,
-        MasterClock
+        Heartbeat
     ]
 })
 export class AppModule {}

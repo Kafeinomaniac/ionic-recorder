@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { WebAudioPlayer } from './player';
 import { formatTime, WavFile, WavInfo } from '../../models';
-import { MasterClock } from '../../services';
+import { Heartbeat } from '../../services';
 
 /** @constant {number} Number of samples in the playback memory buffer. */
 // const N_BUFFER_SAMPLES: number = 44100;
@@ -25,10 +25,10 @@ export class WavPlayer extends WebAudioPlayer {
      *
      */
     constructor(
-        masterClock: MasterClock
+        heartbeat: Heartbeat
     ) {
         console.log('WavPlayer:constructor()');
-        super(masterClock);
+        super(heartbeat);
         this.filePath = null;
         this.sampleRate = null;
         this.nSamples = 0;
@@ -98,8 +98,8 @@ export class WavPlayer extends WebAudioPlayer {
     public playFrom(position: number): void {
         const nSamples: number = this.nSamples,
               startSample1: number = Math.floor(position * nSamples),
-              tmp: number = startSample1 + N_BUFFER_SAMPLES,
-              endSample1: number = tmp > nSamples ? nSamples : tmp;
+              t1: number = startSample1 + N_BUFFER_SAMPLES,
+              endSample1: number = t1 > nSamples ? nSamples : t1;
         WavFile.readWavFileAudio(
             this.filePath,
             startSample1,
@@ -122,8 +122,8 @@ export class WavPlayer extends WebAudioPlayer {
                 if (endSample1 < nSamples) {
                     // INV: startSample2 = endSample1
                     const startSample2: number = endSample1,
-                          tmp: number = startSample2 + N_BUFFER_SAMPLES,
-                          endSample2: number = tmp > nSamples ? nSamples : tmp;
+                          t2: number = startSample2 + N_BUFFER_SAMPLES,
+                          endSample2: number = t2 > nSamples ? nSamples : t2;
                     WavFile.readWavFileAudio(
                         this.filePath,
                         startSample2,
