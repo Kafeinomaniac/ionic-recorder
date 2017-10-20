@@ -120,7 +120,7 @@ export abstract class WebAudioPlayer {
      * resetting everything in this function, for that see this.stop(), which
      * calls this function.
      */
-    protected stopMonitoring(): void {
+    public stopMonitoring(): void {
         console.log('stopMonitoring()');
         this.masterClock.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
         /*
