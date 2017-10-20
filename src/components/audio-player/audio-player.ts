@@ -37,7 +37,7 @@ export class AudioPlayer implements OnChanges {
         player: WavPlayer,
         changeDetectorRef: ChangeDetectorRef
     ) {
-        console.log('AudioPlayer:constructor()');
+        console.log('constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.player = player;
         this.filenameOrProgress = '';

@@ -32,7 +32,7 @@ export class WavRecorder extends WebAudioRecorder {
     // this is how we signal
     constructor(heartbeat: Heartbeat) {
         super(heartbeat);
-        console.log('WavRecorder:constructor()');
+        console.log('constructor()');
 
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {
             this.saveWavFileChunk(this.setter.activeBuffer).subscribe(

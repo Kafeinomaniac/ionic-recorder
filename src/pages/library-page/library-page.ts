@@ -61,7 +61,7 @@ export class LibraryPage {
         platform: Platform
     ) {
 
-        console.log('LibraryPage:constructor()');
+        console.log('constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.actionSheetController = actionSheetController;
         this.modalController = modalController;
@@ -127,7 +127,7 @@ export class LibraryPage {
         console.log('ionViewDidEnter()');
         // refresh appFilesystem directory in case we're entering this
         // view after a recording and we happen to be at the /Unfiled
-        // folder. NOTE: this is kind of overkill. We could do
+        // directory. NOTE: this is kind of overkill. We could do
         // the refresh only when in /Unfiled as in:
         // if (this.appFilesystem.directoryEntry.fullPath === '/Unfiled') {
         //     this.appFilesystem.refreshDirectory().subscribe(
@@ -225,8 +225,8 @@ export class LibraryPage {
                     text: 'Folder',
                     icon: 'folder',
                     handler: () => {
-                        console.log('Add folder clicked.');
-                        this.addFolder();
+                        console.log('Add directory clicked.');
+                        this.addDirectory();
                     }
                 },
                 {
@@ -259,7 +259,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when move button is clicked.
-     * Moves selected items into a folder.
+     * Moves selected items into a directory.
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
@@ -273,7 +273,7 @@ export class LibraryPage {
      * @returns {boolean}
      */
     public moveButtonDisabled(): boolean {
-        // if the only thing selected is the unfiled folder
+        // if the only thing selected is the unfiled directory
         // disable delete and move
         if (this.appFilesystem.nSelected() === 1 &&
             this.appFilesystem.isPathSelected('/Unfiled/')) {
@@ -322,7 +322,7 @@ export class LibraryPage {
 
         if (this.appFilesystem.isPathSelected('/Unfiled/')) {
             const deleteAlert: Alert = this.alertController.create();
-            deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
+            deleteAlert.setTitle('/Unfiled directory cannot be deleted. But it' +
                                  '\'s selected. Automatically unselect it?');
             deleteAlert.addButton('Cancel');
             deleteAlert.addButton({
@@ -344,7 +344,7 @@ export class LibraryPage {
      * @returns {boolean}
      */
     public deleteButtonDisabled(): boolean {
-        // if the only thing selected is the unfiled folder
+        // if the only thing selected is the unfiled directory
         // disable delete and move
         if (this.appFilesystem.nSelected() === 1 &&
             this.appFilesystem.isPathSelected('/Unfiled/')) {
@@ -386,7 +386,7 @@ export class LibraryPage {
     }
 
     /**
-     * UI calls this when the new folder button is clicked
+     * UI calls this when the new directory button is clicked
      */
     public onClickCheckbox(entry: Entry): void {
         console.log('onClickCheckbox()');
@@ -395,7 +395,7 @@ export class LibraryPage {
     }
 
     /**
-     * UI calls this when the new folder button is clicked
+     * UI calls this when the new directory button is clicked
      */
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
@@ -413,28 +413,28 @@ export class LibraryPage {
     }
 
     /**
-     * UI calls this when the new folder button is clicked
+     * UI calls this when the new directory button is clicked
      */
-    public addFolder(): void {
+    public addDirectory(): void {
         let parentPath: string = this.appFilesystem.getPath(),
-            newFolderAlert: Alert = this.alertController.create({
-                title: 'Create a new folder in ' + parentPath,
+            newDirectoryAlert: Alert = this.alertController.create({
+                title: 'Create a new directory in ' + parentPath,
                 inputs: [{
-                    name: 'folderName',
-                    placeholder: 'Enter folder name...'
+                    name: 'directoryName',
+                    placeholder: 'Enter directory name...'
                 }],
                 buttons: [
                     {
                         text: 'Cancel',
                         role: 'cancel',
                         handler: () => {
-                            console.log('Cancel clicked in new-folder alert');
+                            console.log('Cancel clicked in new-directory alert');
                         }
                     },
                     {
                         text: 'Done',
                         handler: (data: any) => {
-                            let fullPath: string = parentPath + data.folderName;
+                            let fullPath: string = parentPath + data.directoryName;
                             if (!fullPath.length) {
                                 // this code should never be reached
                                 alert('how did we reach this code?');
@@ -464,7 +464,7 @@ export class LibraryPage {
                         } // handler: (data: any) => {
                     }
                 ] // buttons: [
-            }); // newFolderAlert: Alert = this.alertController.create({
-        newFolderAlert.present();
+            }); // newDirectoryAlert: Alert = this.alertController.create({
+        newDirectoryAlert.present();
     }
 }

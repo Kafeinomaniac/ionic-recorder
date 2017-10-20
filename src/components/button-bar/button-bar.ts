@@ -34,7 +34,7 @@ export class ButtonBar implements OnChanges {
      * @constructor
      */
     constructor() {
-        console.log('ButtonBar:constructor()');
+        console.log('constructor()');
         // this.buttons = [];
     }
 

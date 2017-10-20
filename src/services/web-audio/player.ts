@@ -45,7 +45,7 @@ export abstract class WebAudioPlayer {
      *
      */
     constructor(heartbeat: Heartbeat) {
-        console.log('WebAudioPlayer:constructor()');
+        console.log('constructor()');
         this.heartbeat = heartbeat;
         this.startedAt = 0;
         this.pausedAt = 0;
@@ -84,24 +84,25 @@ export abstract class WebAudioPlayer {
                     alert('this.duration <= 0');
                 }
 
-                // console.log(time + ', ' + this.duration);
+                console.log(time.toFixed(2) + ', ' + this.duration.toFixed(2));
                 if (time > this.duration) {
                     time = this.duration;
                     this.stop();
-                    const msg: string = 'time (' + time +
-                          ') > this.duration (' + this.duration +
+                    const msg: string = 'time (' + time.toFixed(2) +
+                          ') > this.duration (' + this.duration.toFixed(2) +
                           ') delta: ' + (time - this.duration) * 1000000000.0;
                     console.log(msg);
                     // alert(msg);
                 }
 
                 if (this.time !== time) {
-                    // console.log('this.time !== time\n' + this.time + '\n' +
-                    //      time);
                     // change detected
                     this.time = time;
                     this.progress = time / this.duration;
                     this.displayTime = formatTime(time, this.duration);
+
+                    console.log('time change! ' + this.progress.toFixed(2));
+
                     // console.log(this.progress);
                     // console.log('this.time !== time\n' + this.time + '\n' +
                     //             time + '\n' + this.displayTime);
@@ -225,12 +226,13 @@ export abstract class WebAudioPlayer {
     public togglePlayPause(): void {
         if (this.isPlaying) {
             this.pause();
-            console.log('pausing at: ' + this.pausedAt);
+            console.log('togglePlayPause(): pausing at: ' + this.pausedAt);
             // this.stopMonitoring();
         }
         else {
             this.startMonitoring();
-            console.log('playing from: ' + this.pausedAt);
+            console.log('togglePlayPause(): playing from: ' + this.pausedAt);
+
             // this.schedulePlay(this.audioBuffer);
             // this.startMonitoring();
             // this.playFrom((this.pausedAt - this.startedAt) / this.duration);
@@ -267,6 +269,6 @@ export abstract class WebAudioPlayer {
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
-        // this.stopMonitoring();
+        this.stopMonitoring();
     }
 }

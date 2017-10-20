@@ -251,7 +251,6 @@ export class Filesystem {
                         },
                         (err: any) => {
                             console.log('gFS():err1 ' + err);
-                            console.dir(err);
                             observer.error(err);
                         }
                     );
@@ -390,19 +389,17 @@ export class Filesystem {
                 (fileEntry: FileEntry) => {
                     fileEntry.getMetadata(
                         (metadata: Metadata) => {
-                            console.log('Metadata: ');
-                            console.dir(metadata);
                             observer.next(metadata);
                             observer.complete();
                         },
                         (err1: FileError) => {
-                            console.log('getMetadata err1: ' + err1);
+                            console.log(err1);
                             observer.error(err1);
                         }
                     );
                 },
                 (err2: any) => {
-                    console.log('getMetadata err2: ' + err2);
+                    console.log(err2);
                     observer.error(err2);
                 }
             ); // fs.root.getFile(

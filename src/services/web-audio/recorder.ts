@@ -82,7 +82,7 @@ export abstract class WebAudioRecorder {
 
     // this is how we signal
     constructor(heartbeat: Heartbeat) {
-        console.log('WebAudioRecorder:constructor()');
+        console.log('constructor()');
 
         this.heartbeat = heartbeat;
 

@@ -8,7 +8,7 @@ selection-page {
         margin-bottom: 0.5em;
         // color: color($colors, primary, base);
     }
-    // control appearance of the text that says a folder is empty
+    // control appearance of the text that says a directory is empty
     ion-content ion-list {
         ion-item.selection-page-item {
             ion-checkbox {
@@ -23,21 +23,15 @@ selection-page {
             }
             ion-label.button span.button-inner {
                 color: $content-text-color;
-                // text-transform: : none; is needed to remove uppercase transform
+                // text-transform line is to remove uppercase transform
                 text-transform: none;
-                // justify-content: unset is needed for label
-                // text to not be centered; now it is left justified
+                // justify-content line is for label text to not be centered
                 justify-content: unset;
                 ion-icon {
                     font-size: 1.8em;
                     min-width: .9em;
                 }
             }
-        }
-        // control appearance of the text that says a folder is empty
-        ion-item.selection-page-empty-folder-message {
-            text-align: center;
-            color: map-get($colors, logo-orange);
         }
     }
 }

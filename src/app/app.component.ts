@@ -43,7 +43,7 @@ export class IonicRecorderApp {
         statusBar: StatusBar,
         appStorage: AppStorage
     ) {
-        console.log('IonicRecorderApp:constructor()');
+        console.log('constructor()');
 
         this.platform = platform;
         this.menu = menu;

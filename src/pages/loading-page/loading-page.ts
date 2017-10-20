@@ -18,7 +18,7 @@ export class LoadingPage {
      * @constructor
      */
     constructor(appFilesystem: AppFilesystem) {
-        console.log('LoadingPage:constructor()');
+        console.log('constructor()');
         // preload appFilesystem as early as possible by injecting it here
         this.appFilesystem = appFilesystem;
     }

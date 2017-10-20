@@ -27,7 +27,7 @@ export class WavPlayer extends WebAudioPlayer {
     constructor(
         heartbeat: Heartbeat
     ) {
-        console.log('WavPlayer:constructor()');
+        console.log('constructor()');
         super(heartbeat);
         this.filePath = null;
         this.sampleRate = null;
@@ -58,7 +58,7 @@ export class WavPlayer extends WebAudioPlayer {
      *
      */
     public jumpToPosition(position: number = null): void {
-        console.log('jumpToPosition(' + position + ')');
+        console.log('jumpToPosition(' + position.toFixed(2) + ')');
         if (position) {
             // a non-zero, non-null position has been provided as an argument
             this.progress = position;
@@ -84,8 +84,8 @@ export class WavPlayer extends WebAudioPlayer {
     public pauseAt(position: number): void {
         const startSample: number = Math.floor(position * this.nSamples),
               startTime: number = startSample / this.sampleRate;
-        console.log('jumpToPosition(' + position.toFixed(2) +
-                    ') - PAUSED AT TIME: ' + startTime.toFixed(2));
+        console.log('pauseAt(' + position.toFixed(2) +
+                    ') - time: ' + startTime.toFixed(2));
         this.pausedAt = startTime;
         this.displayTime = formatTime(this.pausedAt, this.duration);
     }
@@ -117,8 +117,8 @@ export class WavPlayer extends WebAudioPlayer {
                               this.getOnEndedCB(startSample1)
                           );
                       };
-                console.log('jumpToPosition(' + position.toFixed(2) +
-                            ') - PLAYING FROM ' + startTime1.toFixed(2));
+                console.log('playFrom(' + position.toFixed(2) +
+                            ') - time: ' + startTime1.toFixed(2));
                 if (endSample1 < nSamples) {
                     // INV: startSample2 = endSample1
                     const startSample2: number = endSample1,

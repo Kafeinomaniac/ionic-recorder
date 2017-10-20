@@ -28,7 +28,7 @@ export class AppFilesystem {
      */
     // constructor(storage: Storage) {
     constructor() {
-        console.log('AppFilesystem:constructor()');
+        console.log('constructor()');
 
         // this.storage = storage;
         this.storage = new Storage({});
@@ -138,9 +138,11 @@ export class AppFilesystem {
     /**
      *
      */
+    /*
     public getMetadata(fullPath: string): Observable<Metadata> {
         return Filesystem.getMetadata(this.fileSystem, fullPath);
     }
+    */
 
     /**
      *
@@ -329,7 +331,7 @@ export class AppFilesystem {
      * @param {Entry} entry
      */
     public entryIcon(entry: Entry): string {
-        return entry.isDirectory ? 'folder' : 'play';
+        return entry.isDirectory ? 'directory' : 'play';
     }
 
     /**
@@ -430,11 +432,11 @@ export class AppFilesystem {
     }
 
     /**
-     * Select all or no items in current folder, depending on 'all; argument
+     * Select all or no items in current directory, depending on 'all; argument
      * @param {boolean} if true, select all, if false, select none
      */
     public selectAllOrNone(bSelectAll: boolean): void {
-        console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
+        console.log('selectAllOrNoneInDirectory(' + bSelectAll + ')');
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
             const fullPath: string = this.getFullPath(entry),

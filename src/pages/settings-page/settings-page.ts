@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
 })
 export class SettingsPage {
     constructor() {
-        console.log('SettingsPage:constructor()');
+        console.log('constructor()');
     }
 
 }

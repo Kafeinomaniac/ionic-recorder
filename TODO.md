@@ -7,6 +7,19 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* reset scheduled: not resetting them as we go along
+* change detection: totally screwed up, must understand ngzone as it is not
+  working for us right now
+* fix the visualizatioon of the progerss bar before fixing other things because
+  it would help.
+* why is getMetadata() called twice when we enter track page? OK that's because
+  track page does it to get info for its ion-content list item that shows file
+  size. but also readWavFileInfo calls it in setSourceFile() of wav-player  --
+  check if we really need to call getMetadata there in the readWavFileInfo.
+  It gives us the file format but that's in the header anyway. It gives us the
+  file size in bytes but that's in the header (implied) anyway too. Most likely
+  we do not need getMetadata in readWavFileInfo().
+
 * master-clock: call it heartbeat
 * master-clock: startMonitoring and stopMonitoring automatic, they begin and end
   setInterval depending on whether nFunctions is 0 (end) or not (start), you
@@ -26,6 +39,7 @@ anything written here, unless you wrote it.
   time that we schedule a start().  but ideally we delete the node completely -
   this is because if the wav file is very long we will have many nodes
   accumulating, which may cause memory to grow too much.
+
 * Good progress: we find that in order to get the master clock to behave
   properly upon playback (i.e. in order to see the progress bar moving while
   we are playing) then we first have to land on record page - probably because

@@ -29,29 +29,28 @@ export class TrackPage {
     public fileSize: number;
     public sampleRate: number;
     public nSamples: number;
-    public parentFolder: string;
+    public parentDirectory: string;
     private player: WavPlayer;
 
     /**
      * @constructor
      * @param {NavParams}
      * @param {ActionSheetController}
+     * @param {WavPlayer}
      */
     constructor(
         navParams: NavParams,
         actionSheetController: ActionSheetController,
         wavPlayer: WavPlayer
     ) {
-        console.log('TrackPage:constructor(' + navParams.data + ')');
+        console.log('constructor(' + navParams.data + ')');
 
-        this.actionSheetController = actionSheetController;
-
-        this.player = wavPlayer;
-
+        // grab data sent over from the caller of this page - full path of file
         this.filePath = navParams.data;
 
-        this.parentFolder = pathDirectoryName(this.filePath);
-
+        this.actionSheetController = actionSheetController;
+        this.player = wavPlayer;
+        this.parentDirectory = pathDirectoryName(this.filePath);
         this.encoding = WAV_MIME_TYPE;
 
         WavFile.readWavFileInfo(this.filePath).subscribe(
@@ -81,7 +80,7 @@ export class TrackPage {
             {
                 text: 'Move',
                 leftIcon: 'share-alt',
-                rightIcon: 'folder',
+                rightIcon: 'directory',
                 clickCB: () => { this.onClickMoveButton(); }
             },
             {

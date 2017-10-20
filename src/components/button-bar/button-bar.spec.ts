@@ -16,7 +16,7 @@ const BUTTONS: ButtonbarButton[] = [{
     {
         text: 'Move',
         leftIcon: 'share-alt',
-        rightIcon: 'folder',
+        rightIcon: 'directory',
         clickCB: () => {
             ACTION = 'move';
         },

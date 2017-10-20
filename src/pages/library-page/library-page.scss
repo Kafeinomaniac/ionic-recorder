@@ -8,7 +8,7 @@ $content-text-color: color($colors, almost-dark);
         margin-bottom: 0.5em;
         color: color($colors, primary, base);
     }
-    // control appearance of the text that says a folder is empty
+    // control appearance of the text that says a directory is empty
     ion-content ion-list {
         ion-item.library-page-item {
             ion-checkbox {
@@ -35,7 +35,7 @@ $content-text-color: color($colors, almost-dark);
                 }
             }
         }
-        // control appearance of the text that says a folder is empty
+        // control appearance of the text that says a directory is empty
         ion-item.library-page-empty-folder-message {
             text-align: center;
             color: map-get($colors, logo-orange);
