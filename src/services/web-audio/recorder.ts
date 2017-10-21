@@ -279,12 +279,10 @@ export abstract class WebAudioRecorder {
         // this.scriptProcessorNode.connect(dest);
         this.scriptProcessorNode.connect(AUDIO_CONTEXT.destination);
 
-        // finally, start monitoring audio volume levels, but
-        // before we do that we reset things
+        // call the reset() function to normalize state
         this.reset();
-        this.startMonitoring();
 
-        // now you can tell the world we're ready
+        // now, after nodes are connected, we can tell the world we're ready
         this.status = RecordStatus.READY_STATE;
     }
 
