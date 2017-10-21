@@ -173,7 +173,7 @@ export class WavPlayer extends WebAudioPlayer {
               nextStartSample: number = startSample + 2 * N_BUFFER_SAMPLES;
         if (nextStartSample >= nSamples) {
             return () => {
-                console.log('====> onEndedCB(' + startSample +
+                console.log('onEndedCB(' + startSample +
                             ') - reached last chunk');
             };
         }

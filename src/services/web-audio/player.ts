@@ -45,7 +45,7 @@ export abstract class WebAudioPlayer {
 
     private heartbeat: Heartbeat;
     protected audioBuffer: AudioBuffer;
-    private scheduledSourceNodes: AudioBufferSourceNode[];
+    // private scheduledSourceNodes: AudioBufferSourceNode[];
 
     /**
      *
@@ -56,7 +56,7 @@ export abstract class WebAudioPlayer {
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
-        this.scheduledSourceNodes = [];
+        // this.scheduledSourceNodes = [];
         this.time = 0;
         this.duration = 0;
         this.displayTime = formatTime(0, 0);
@@ -123,10 +123,11 @@ export abstract class WebAudioPlayer {
         if (sourceNode) {
             sourceNode.stop();
             sourceNode.disconnect();
-            const idx: number = this.scheduledSourceNodes.indexOf(sourceNode);
-            if (idx !== -1) {
-                delete this.scheduledSourceNodes[idx];
-            }
+            // const idx: number =
+            //     this.scheduledSourceNodes.indexOf(sourceNode);
+            // if (idx !== -1) {
+            //     delete this.scheduledSourceNodes[idx];
+            // }
         }
     }
 
@@ -178,23 +179,20 @@ export abstract class WebAudioPlayer {
                 offset = this.pausedAt;
                 startOffset = 0;
             }
-            const startedAtOffset: number = offset + startOffset;
             this.sourceNode = sourceNode;
             sourceNode.start(0, offset, bufferDuration);
-            this.startedAt = AUDIO_CONTEXT.currentTime - startedAtOffset;
-            console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2));
-            sourceNode.stop(this.startedAt + startedAtOffset +
-                            audioBuffer.duration);
+            this.startedAt = AUDIO_CONTEXT.currentTime - offset - startOffset;
             this.pausedAt = 0;
             this.isPlaying = true;
+            console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2));
         }
         else {
             // start later (when)
-            sourceNode.start(when, 0, bufferDuration);
+            sourceNode.start(when, 0, when + bufferDuration);
             // we save the scheduled source nodes in an array to avoid them
             // being garbage collected while they wait to be played.
-            this.scheduledSourceNodes =
-                prependArray(sourceNode, this.scheduledSourceNodes);
+            // this.scheduledSourceNodes =
+            //     prependArray(sourceNode, this.scheduledSourceNodes);
         }
     }
 
@@ -207,7 +205,7 @@ export abstract class WebAudioPlayer {
         // TODO: we need to figure out monitoring, may need to uncomment below:
         // this.stopMonitoring;
         this.resetSourceNode(this.sourceNode);
-        this.cancelScheduled();
+        // this.cancelScheduled();
         this.pausedAt = elapsed;
         this.isPlaying = false;
     }
@@ -239,12 +237,12 @@ export abstract class WebAudioPlayer {
     public cancelScheduled(): void {
         console.log('*** resetting ' + this.scheduledSourceNodes.length +
                     ' scheduled ***');
-        let node: AudioBufferSourceNode = this.scheduledSourceNodes.pop();
-        while (node) {
-            console.log('.');
-            this.resetSourceNode(node);
-            node = this.scheduledSourceNodes.pop();
-        }
+        // let node: AudioBufferSourceNode = this.scheduledSourceNodes.pop();
+        // while (node) {
+        //     console.log('.');
+        //     this.resetSourceNode(node);
+        //     node = this.scheduledSourceNodes.pop();
+        // }
     }
 
     /**
@@ -257,7 +255,7 @@ export abstract class WebAudioPlayer {
     public stop(): void {
         console.log('stop()');
         this.resetSourceNode(this.sourceNode);
-        this.cancelScheduled();
+        // this.cancelScheduled();
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
