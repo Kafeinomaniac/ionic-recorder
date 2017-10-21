@@ -169,40 +169,31 @@ export class WavPlayer extends WebAudioPlayer {
      *
      */
     private getOnEndedCB(startSample: number): () => void {
-        const nextStartSample: number = startSample + 2 * N_BUFFER_SAMPLES;
-        console.log(startSample + ' >>>>>>>>>>> ' + nextStartSample + ' >= ' +
-                    this.nSamples);
-        if (nextStartSample >= this.nSamples) {
+        const nSamples: number = this.nSamples,
+              nextStartSample: number = startSample + 2 * N_BUFFER_SAMPLES;
+        if (nextStartSample >= nSamples) {
             return () => {
                 console.log('====> onEndedCB(' + startSample +
                             ') - reached last chunk');
             };
         }
-
-        console.log(startSample + ' >.>.>.>.>.> ' + nextStartSample + ' >= ' +
-                    this.nSamples);
-
         return () => {
             const when: number = this.getChunkPlayTime(nextStartSample),
                   tmp: number = nextStartSample + N_BUFFER_SAMPLES,
-                  endSample: number = tmp > this.nSamples ? this.nSamples : tmp;
-
-            console.log('====> onEndedCB(' + startSample + '), time = ' +
+                  endSample: number = tmp > nSamples ? nSamples : tmp;
+            console.log('onEndedCB(' + startSample + '), time = ' +
                         this.getTime().toFixed(2) + ', when: ' +
-                        (when - this.startedAt).toFixed(2));
-            console.log('<<<<<<<<<<<<<<<<<<< ' + nextStartSample +
-                       ' ---> ' + endSample);
-
+                        (when - this.startedAt).toFixed(2) + 
+                        ', nextStartSample: ' + nextStartSample +
+                        ', endSample: ' + endSample);
             WavFile.readWavFileAudio(
                 this.filePath,
                 nextStartSample,
                 endSample
             ).subscribe(
                 (audioBuffer: AudioBuffer) => {
-
-                    console.log('+++++++++++++++ ' + audioBuffer.length);
-                    console.log('+++++++++++++++ ' + when);
-
+                    // console.log('+++++++++++++++ ' + audioBuffer.length);
+                    // console.log('+++++++++++++++ ' + when);
                     this.schedulePlay(
                         audioBuffer,
                         when,
