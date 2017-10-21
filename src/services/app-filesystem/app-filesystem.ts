@@ -185,7 +185,7 @@ export class AppFilesystem {
      */
     public whenReady(): Observable<void> {
         let obs: Observable<void> = Observable.create((observer) => {
-            let repeat: () => void = () => {
+            const repeat: () => void = () => {
                 console.log('repeat()');
                 if (this.isReady) {
                     observer.next();

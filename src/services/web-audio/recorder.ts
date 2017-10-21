@@ -111,8 +111,8 @@ export abstract class WebAudioRecorder {
     public waitForWAA(): Observable<void> {
         // NOTE:this loop should only repeat a handful of times or so
         let source: Observable<void> = Observable.create((observer) => {
-            let repeat: () => void = () => {
-                console.log('WAIT FOR WAA - REPEAT');
+            const repeat: () => void = () => {
+                console.log('waitForWAA:repeat()');
                 if (this.status !== RecordStatus.UNINITIALIZED_STATE) {
                     observer.next();
                     observer.complete();
@@ -130,7 +130,7 @@ export abstract class WebAudioRecorder {
      * Initialize audio, get it ready to record
      */
     private initAudio(): void {
-        console.log('SAMPLE RATE: ' + SAMPLE_RATE);
+        console.log('initAudio(): SAMPLE RATE: ' + SAMPLE_RATE);
 
         const getUserMediaOptions: Object = {
             video: false,
@@ -231,6 +231,7 @@ export abstract class WebAudioRecorder {
      * Create audioGainNode & scriptProcessorNode
      */
     private createNodes(): void {
+        console.log('createNodes()');
         // create the gainNode
         this.audioGainNode = AUDIO_CONTEXT.createGain();
 
@@ -281,7 +282,6 @@ export abstract class WebAudioRecorder {
         // finally, start monitoring audio volume levels, but
         // before we do that we reset things
         this.reset();
-
         this.startMonitoring();
 
         // now you can tell the world we're ready
