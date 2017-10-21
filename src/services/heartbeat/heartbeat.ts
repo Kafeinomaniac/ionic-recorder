@@ -7,16 +7,15 @@
 // http://blog.thoughtram.io/angular/2017/02/01/zones-in-angular-2.html
 // to understand the zone-related code here.
 
-import { NgZone, Injectable } from '@angular/core';
+import { ApplicationRef, NgZone, Injectable } from '@angular/core';
 
 // clock frequency, in Hz
-const CLOCK_FREQUENCY_HZ: number = 30;
-
-// derived constant, please do not touch
-export const CLOCK_INTERVAL_MSEC: number = 1000 / CLOCK_FREQUENCY_HZ;
+const CLOCK_FREQUENCY_HZ: number = 24;
+const CLOCK_INTERVAL_MSEC: number = 1000 / CLOCK_FREQUENCY_HZ;
 
 @Injectable()
 export class Heartbeat {
+    private applicationRef: ApplicationRef;
     private intervalId: NodeJS.Timer;
     private ngZone: NgZone;
     private functions: { [id: string]: () => void };
@@ -24,8 +23,9 @@ export class Heartbeat {
     /**
      * constructor
      */
-    constructor() {
+    constructor(applicationRef: ApplicationRef) {
         console.log('constructor()');
+        this.applicationRef = applicationRef;
         this.intervalId = null;
         this.ngZone = new NgZone({ enableLongStackTrace: false });
         this.functions = {};
@@ -58,6 +58,7 @@ export class Heartbeat {
                         // console.log(Object.keys(this.functions).length);
                         for (let id in this.functions) {
                             this.functions[id]();
+                            this.applicationRef.tick();
                         }
                     });
                 },

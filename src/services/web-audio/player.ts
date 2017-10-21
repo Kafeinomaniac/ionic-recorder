@@ -84,7 +84,9 @@ export abstract class WebAudioPlayer {
                     alert('this.duration <= 0');
                 }
 
-                console.log(time.toFixed(2) + ', ' + this.duration.toFixed(2));
+                // console.log(time.toFixed(2) + ', ' +
+                //             this.duration.toFixed(2));
+
                 if (time > this.duration) {
                     time = this.duration;
                     this.stop();
@@ -101,7 +103,7 @@ export abstract class WebAudioPlayer {
                     this.progress = time / this.duration;
                     this.displayTime = formatTime(time, this.duration);
 
-                    console.log('time change! ' + this.progress.toFixed(2));
+                    // console.log('time change! ' + this.progress.toFixed(2));
 
                     // console.log(this.progress);
                     // console.log('this.time !== time\n' + this.time + '\n' +
