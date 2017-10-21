@@ -48,8 +48,8 @@ describe('models/filesystem', () => {
         );
     });
 
-    it('can read the root directory contents to be empty', (done) => {
-        Filesystem.readDirectoryEntries(FILE_SYSTEM.root).subscribe(
+    it('can read the root folder contents to be empty', (done) => {
+        Filesystem.readFolderEntries(FILE_SYSTEM.root).subscribe(
             (entries: Entry[]) => {
                 expect(entries.length).toEqual(0);
                 done();
@@ -68,7 +68,7 @@ describe('models/filesystem', () => {
         );
     });
 
-    it('cannot read directory /Unfiled', (done) => {
+    it('cannot read folder /Unfiled', (done) => {
         Filesystem.getPathEntry(FILE_SYSTEM, '/Unfiled/', false).subscribe(
             null,
             (err: any) => {
@@ -79,9 +79,9 @@ describe('models/filesystem', () => {
         );
     });
 
-    // system should allow us to create a directory that's already
+    // system should allow us to create a folder that's already
     // been created, without error
-    it('can create directory /Unfiled', (done) => {
+    it('can create folder /Unfiled', (done) => {
         Filesystem.getPathEntry(FILE_SYSTEM, '/Unfiled/', true).subscribe(
             (entry: Entry) => {
                 expect(entry.name).toEqual('Unfiled');
@@ -93,7 +93,7 @@ describe('models/filesystem', () => {
         );
     });
 
-    it('can create directory /Unfiled/tstsubdir', (done) => {
+    it('can create folder /Unfiled/tstsubdir', (done) => {
         Filesystem.getPathEntry(
             FILE_SYSTEM,
             '/Unfiled/tstsubdir/',
@@ -169,8 +169,8 @@ describe('models/filesystem', () => {
         );
     });
 
-    it('can read the root directory contents to be empty', (done) => {
-        Filesystem.readDirectoryEntries(FILE_SYSTEM.root).subscribe(
+    it('can read the root folder contents to be empty', (done) => {
+        Filesystem.readFolderEntries(FILE_SYSTEM.root).subscribe(
             (entries: Entry[]) => {
                 expect(entries.length).toEqual(0);
                 done();

@@ -15,11 +15,25 @@ export function pathFilename(filePath: string): string {
 }
 
 /**
- * Extracts the directory out of a full-path
+ * Extracts the folder out of a full-path
  */
-export function pathDirectoryName(filePath: string): string {
+export function pathFolderName(filePath: string): string {
     'use strict';
     return filePath.replace(pathFilename(filePath), '');
+}
+
+/**
+ * Extracts the parent folder out of a full-path of a folder argument.
+ */
+export function folderPathParent(dirPath: string): string {
+    'use strict';
+    const pathParts: string[] =
+          dirPath.split('/').filter((str: string) => { return str !== ''; }),
+          nParts: number = pathParts.length;
+    if (nParts === 0) {
+        return '/';
+    }
+    return '/' + pathParts.splice(0, nParts - 1).join('/') + '/';
 }
 
 /**
@@ -82,9 +96,9 @@ export function isPositiveWholeNumber(num: number): boolean {
     'use strict';
     return<boolean>(
         num &&
-        !isNaN(num) &&
-        num > 0 &&
-        num === Math.floor(num)
+            !isNaN(num) &&
+            num > 0 &&
+            num === Math.floor(num)
     );
 }
 
@@ -95,7 +109,7 @@ export function isOdd(num: number): boolean {
     'use strict';
     if (!isPositiveWholeNumber(num)) {
         throw Error('isOdd expected positive whole number as input, got: ' +
-            num);
+                    num);
     }
     return num % 2 === 1;
 }

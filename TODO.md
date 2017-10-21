@@ -7,8 +7,11 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* rename Directory -> Folder everywhere
+* playback problem 3: when you play and then jump somewhere, it seems to play
+  both, i.e. it does not stop properly
 * playback problem 1: pause/resume does not work, has a lag on resume
-* playback problem 3: when you play and then jump somewhere, it seems to
+
 * reset scheduled: not resetting them as we go along
 * change detection: totally screwed up, must understand ngzone as it is not
   working for us right now

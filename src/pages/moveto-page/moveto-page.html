@@ -19,8 +19,8 @@
         </ion-buttons>
     </ion-toolbar>
     <ion-toolbar>
-        <p *ngIf="appFilesystem.directoryEntry" text-center>
-            {{appFilesystem.getFullPath(appFilesystem.directoryEntry)}}
+        <p *ngIf="appFilesystem.folderEntry" text-center>
+            {{appFilesystem.getFullPath(appFilesystem.folderEntry)}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>
@@ -39,7 +39,7 @@
         </ion-item>
         <ion-item *ngIf="!appFilesystem.entries.length"
                   class="moveto-page-empty-folder-message">
-            <h2>Empty directory</h2>
+            <h2>Empty folder</h2>
         </ion-item>
     </ion-list>
 </ion-content>

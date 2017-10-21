@@ -19,7 +19,7 @@
         </ion-buttons>
     </ion-navbar>
     <ion-toolbar>
-        <p *ngIf="appFilesystem.directoryEntry" text-center>
+        <p *ngIf="appFilesystem.folderEntry" text-center>
             {{appFilesystem.getPath()}}
         </p>
         <button-bar [buttons]="headerButtons">

@@ -18,7 +18,7 @@ export class AppFilesystem {
     private storage: Storage;
     public isReady: boolean;
     public entries: Entry[];
-    public directoryEntry: DirectoryEntry;
+    public folderEntry: DirectoryEntry;
     public selectedPaths: { [path: string]: number };
     private fileSystem: FileSystem;
     private nWavFileSamples: number;
@@ -34,7 +34,7 @@ export class AppFilesystem {
         this.storage = new Storage({});
         this.isReady = false;
         this.entries = [];
-        this.directoryEntry = null;
+        this.folderEntry = null;
         this.selectedPaths = {};
         this.fileSystem = null;
         this.nWavFileSamples = 0;
@@ -51,22 +51,22 @@ export class AppFilesystem {
             (fs: FileSystem) => {
                 // remember the filesystem you got
                 this.fileSystem = fs;
-                // create the /Unfiled/ directory if not already there
+                // create the /Unfiled/ folder if not already there
                 Filesystem.getPathEntry(fs, '/Unfiled/', true).subscribe(
-                    (directoryEntry: DirectoryEntry) => {
+                    (folderEntry: DirectoryEntry) => {
                         console.log('Created /Unfiled/ (or already there)');
                         // grab remembered location from storage and go there
                         if (!this.storage) {
                             alert('!this.storage');
                         }
                         this.storage.get('filesystemPath').then(
-                            (directoryPath: string) => {
-                                if (directoryPath === '//') {
+                            (folderPath: string) => {
+                                if (folderPath === '//') {
                                     alert('dir path is //');
                                 }
-                                if (!directoryPath) {
+                                if (!folderPath) {
                                     // current path not in storage, use default
-                                    directoryPath = DEFAULT_PATH;
+                                    folderPath = DEFAULT_PATH;
                                 }
                                 // grab selection from storage
                                 this.storage.get('filesystemSelected').then(
@@ -83,7 +83,7 @@ export class AppFilesystem {
                                                     this.selectedPaths
                                                 );
                                             }
-                                            this.switchDirectory(directoryPath)
+                                            this.switchFolder(folderPath)
                                                 .subscribe(
                                                     () => {
                                                         this.isReady = true;
@@ -91,7 +91,7 @@ export class AppFilesystem {
                                                     (err0: any) => {
                                                         // err - try switching
                                                         // to /Unfiled/ instead
-                                                        this.switchDirectory(
+                                                        this.switchFolder(
                                                             '/Unfiled/'
                                                         ).subscribe(
                                                             () => {
@@ -107,16 +107,16 @@ export class AppFilesystem {
                                                         );
                                                     }
 
-                                                ); // this.switchDirectory(
+                                                ); // this.switchFolder(
                                         }
                                 ).catch((err2: any) => {
                                     alert('err2: ' + err2);
                                 }); // .then(..).catch((err2: any) => {..
-                            } // (directoryPath: string) => {
+                            } // (folderPath: string) => {
                         ).catch((err3: any) => {
                             alert('* err3: ' + err3);
                         }); // .then(..).catch((err3: any) => {
-                    }, // (directoryEntry: DirectoryEntry) => {
+                    }, // (folderEntry: DirectoryEntry) => {
                     (err4: any) => {
                         alert('err4: ' + err4);
                     }
@@ -155,7 +155,7 @@ export class AppFilesystem {
      *
      */
     public getPath(): string {
-        return this.getFullPath(this.directoryEntry);
+        return this.getFullPath(this.folderEntry);
     }
 
     /**
@@ -233,12 +233,12 @@ export class AppFilesystem {
     /**
      *
      */
-    public createDirectory(path: string): Observable<DirectoryEntry> {
-        console.log('createDirectory(' + path + ')');
+    public createFolder(path: string): Observable<DirectoryEntry> {
+        console.log('createFolder(' + path + ')');
         let obs: Observable<DirectoryEntry> =
             Observable.create((observer) => {
                 if (path[path.length - 1] !== '/') {
-                    observer.error('path must end with / for createDirectory');
+                    observer.error('path must end with / for createFolder');
                 }
                 else {
                     Filesystem.getPathEntry(
@@ -246,8 +246,8 @@ export class AppFilesystem {
                         path,
                         true
                     ).subscribe(
-                        (directoryEntry: Entry) => {
-                            observer.next(directoryEntry);
+                        (folderEntry: Entry) => {
+                            observer.next(folderEntry);
                             observer.complete();
                         },
                         (err: any) => {
@@ -262,12 +262,12 @@ export class AppFilesystem {
     /**
      *
      */
-    public refreshDirectory(): Observable<void> {
+    public refreshFolder(): Observable<void> {
         let obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
-                    this.switchDirectory(
-                        this.getFullPath(this.directoryEntry)
+                    this.switchFolder(
+                        this.getFullPath(this.folderEntry)
                     ).subscribe(
                         () => {
                             observer.next();
@@ -291,18 +291,18 @@ export class AppFilesystem {
      * @returns {Observable<FileSystem>} Observable that emits the file
      * system when it's ready for use.
      */
-    public switchDirectory(path: string): Observable <Entry[]> {
-        console.log('switchDirectory(' + path + ')');
+    public switchFolder(path: string): Observable <Entry[]> {
+        console.log('switchFolder(' + path + ')');
         let obs: Observable <Entry[]> = Observable.create((observer) => {
             // got file system, now get entry object for path
-            // of directory we're switching to
+            // of folder we're switching to
             Filesystem.getPathEntry(this.fileSystem, path, false).subscribe(
                 (entry: Entry) => {
-                    this.directoryEntry = <DirectoryEntry>entry;
-                    // console.log('this.directoryEntry = ' +
-                    //             this.directoryEntry.fullPath);
-                    // we got the directory entry, now read it
-                    Filesystem.readDirectoryEntries(
+                    this.folderEntry = <DirectoryEntry>entry;
+                    // console.log('this.folderEntry = ' +
+                    //             this.folderEntry.fullPath);
+                    // we got the folder entry, now read it
+                    Filesystem.readFolderEntries(
                             <DirectoryEntry>entry
                     ).subscribe(
                         (entries: Entry[]) => {
@@ -317,7 +317,7 @@ export class AppFilesystem {
                         (err1: any) => {
                             observer.error(err1);
                         }
-                    ); // .readDirectoryEntries(directoryEntry).subscribe(
+                    ); // .readFolderEntries(folderEntry).subscribe(
                 },
                 (err2: any) => {
                     observer.error(err2);
@@ -331,7 +331,7 @@ export class AppFilesystem {
      * @param {Entry} entry
      */
     public entryIcon(entry: Entry): string {
-        return entry.isDirectory ? 'directory' : 'play';
+        return entry.isDirectory ? 'folder' : 'play';
     }
 
     /**
@@ -380,8 +380,8 @@ export class AppFilesystem {
      */
     public atHome(): boolean {
         // console.log('atHome(): ' +
-        //             (this.directoryEntry.fullPath === '/'));
-        return this.directoryEntry.fullPath === '/';
+        //             (this.folderEntry.fullPath === '/'));
+        return this.folderEntry.fullPath === '/';
     }
 
     /**
@@ -432,11 +432,11 @@ export class AppFilesystem {
     }
 
     /**
-     * Select all or no items in current directory, depending on 'all; argument
+     * Select all or no items in current folder, depending on 'all; argument
      * @param {boolean} if true, select all, if false, select none
      */
     public selectAllOrNone(bSelectAll: boolean): void {
-        console.log('selectAllOrNoneInDirectory(' + bSelectAll + ')');
+        console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
             const fullPath: string = this.getFullPath(entry),
@@ -467,7 +467,7 @@ export class AppFilesystem {
                     Filesystem.moveEntries(
                         this.fileSystem,
                         paths,
-                        this.directoryEntry
+                        this.folderEntry
                     ).subscribe(
                         () => {
                             // TODO: do some error checking before getting here
@@ -475,8 +475,8 @@ export class AppFilesystem {
                             paths.forEach((path: string) => {
                                 this.unselectPath(path);
                             });
-                            this.switchDirectory(this.getFullPath(
-                                this.directoryEntry
+                            this.switchFolder(this.getFullPath(
+                                this.folderEntry
                             )).subscribe(
                                 (entries: Entry[]) => {
                                     observer.next();
@@ -503,7 +503,7 @@ export class AppFilesystem {
     public deleteSelected(): Observable<void> {
         // sort() is important below for proper deletion order
         const paths: string[] = Object.keys(this.selectedPaths).sort(),
-              fullPath: string = this.getFullPath(this.directoryEntry),
+              fullPath: string = this.getFullPath(this.folderEntry),
               fullPathSize: number = fullPath.length;
         console.log('deleteSelected(): ' + paths);
         let obs: Observable<void> = Observable.create((observer) => {
@@ -513,8 +513,8 @@ export class AppFilesystem {
                     Filesystem.deleteEntries(this.fileSystem, paths).subscribe(
                         () => {
                             // unselect removed paths, also track:
-                            // if removed path contains current directory,
-                            // then switch to root directory
+                            // if removed path contains current folder,
+                            // then switch to root folder
                             let switchHome: boolean = false;
                             paths.forEach((path: string) => {
                                 const pathSize: number = path.length;
@@ -531,7 +531,7 @@ export class AppFilesystem {
                                              this.selectedPaths);
 
                             if (switchHome) {
-                                this.switchDirectory('/').subscribe(
+                                this.switchFolder('/').subscribe(
                                     (entries: Entry[]) => {
                                         observer.next();
                                         observer.complete();

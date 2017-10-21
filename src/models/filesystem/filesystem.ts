@@ -181,7 +181,7 @@ export class Filesystem {
                 observer.complete();
             }
             else if (path[path.length - 1] === '/') {
-                // it's a directory
+                // it's a folder
                 fileSystem.root.getDirectory(
                     path,
                     { create: bCreate },
@@ -476,11 +476,11 @@ export class Filesystem {
     /**
      *
      */
-    public static createDirectory(
+    public static createFolder(
         parentDirectoryEntry: DirectoryEntry,
         name: string
     ): Observable<DirectoryEntry> {
-        console.log('createDirectory(' +
+        console.log('createFolder(' +
                     parentDirectoryEntry.fullPath + ', ' + name + ')');
         let src: Observable<DirectoryEntry> = Observable.create((observer) => {
             parentDirectoryEntry.getDirectory(
@@ -501,10 +501,10 @@ export class Filesystem {
     /**
      *
      */
-    public static readDirectoryEntries(
+    public static readFolderEntries(
         directoryEntry: DirectoryEntry
     ): Observable<Entry[]> {
-        console.log('readDirectoryEntries(' + directoryEntry.fullPath + ')');
+        console.log('readFolderEntries(' + directoryEntry.fullPath + ')');
         let src: Observable<Entry[]> = Observable.create((observer) => {
             let dirReader: DirectoryReader = directoryEntry.createReader(),
                 results: Entry[] = [],
@@ -537,7 +537,7 @@ export class Filesystem {
      */
     public static eraseEverything(fileSystem: FileSystem): Observable<void> {
         let src: Observable<void> = Observable.create((observer) => {
-            Filesystem.readDirectoryEntries(fileSystem.root).subscribe(
+            Filesystem.readFolderEntries(fileSystem.root).subscribe(
                 (entries: Entry[]) => {
                     const paths: string[] = entries.map(
                         (entry: Entry): string => {

@@ -19,7 +19,7 @@ import { SelectionPage } from '../../pages';
 
 /**
  * @class MoveToPage
- * A page for choosing directory to move selected entries into.
+ * A page for choosing folder to move selected entries into.
  */
 @Component({
     selector: 'moveto-page',
@@ -72,7 +72,7 @@ export class MoveToPage {
                     {
                         text: 'Go to parent',
                         leftIcon: 'arrow-up',
-                        rightIcon: 'directory',
+                        rightIcon: 'folder',
                         clickCB: () => {
                             this.onClickParentButton();
                         },
@@ -109,13 +109,13 @@ export class MoveToPage {
     public onClickMoveHereButton(): void {
         console.log('onClickMoveHereButton()');
         if (this.appFilesystem.isPathSelected('/Unfiled/')) {
-            // TODO: do not allow /Unfiled directory to be
+            // TODO: do not allow /Unfiled folder to be
             // moved
         }
-        // TODO: do not allow moving a parent directory into
+        // TODO: do not allow moving a parent folder into
         // itself or any of its children
 
-        // TODO: do not allow a child directory to be moved
+        // TODO: do not allow a child folder to be moved
         // into the parent because it is already there - so
         // do a filter first to get rid of those paths
         // that are already going to be at the same place
@@ -137,7 +137,7 @@ export class MoveToPage {
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
-        this.appFilesystem.switchDirectory('/').subscribe(
+        this.appFilesystem.switchFolder('/').subscribe(
             () => {
                 this.detectChanges();
             }
@@ -154,7 +154,7 @@ export class MoveToPage {
                   (str: string) => { return str !== ''; }),
               parentPath: string = '/' +
               pathParts.splice(0, pathParts.length - 1).join('/') + '/';
-        this.appFilesystem.switchDirectory(parentPath).subscribe(
+        this.appFilesystem.switchFolder(parentPath).subscribe(
             () => {
                 this.detectChanges();
             }
@@ -162,12 +162,12 @@ export class MoveToPage {
     }
 
     /**
-     * UI calls this when the new directory button is clicked
+     * UI calls this when the new folder button is clicked
      */
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
-            this.appFilesystem.switchDirectory(
+            this.appFilesystem.switchFolder(
                 this.appFilesystem.getFullPath(entry)
             ).subscribe(
                 () => {

@@ -5,7 +5,7 @@ import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components';
 import { WavPlayer } from '../../services';
 import {
-    pathDirectoryName,
+    pathFolderName,
     formatDate,
     WAV_MIME_TYPE,
     WavFile,
@@ -29,7 +29,7 @@ export class TrackPage {
     public fileSize: number;
     public sampleRate: number;
     public nSamples: number;
-    public parentDirectory: string;
+    public parentFolder: string;
     private player: WavPlayer;
 
     /**
@@ -50,7 +50,7 @@ export class TrackPage {
 
         this.actionSheetController = actionSheetController;
         this.player = wavPlayer;
-        this.parentDirectory = pathDirectoryName(this.filePath);
+        this.parentFolder = pathFolderName(this.filePath);
         this.encoding = WAV_MIME_TYPE;
 
         WavFile.readWavFileInfo(this.filePath).subscribe(
@@ -80,7 +80,7 @@ export class TrackPage {
             {
                 text: 'Move',
                 leftIcon: 'share-alt',
-                rightIcon: 'directory',
+                rightIcon: 'folder',
                 clickCB: () => { this.onClickMoveButton(); }
             },
             {

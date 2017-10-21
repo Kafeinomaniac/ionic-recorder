@@ -22,6 +22,7 @@ import {
 import { AppFilesystem } from '../../services';
 import { ButtonbarButton } from '../../components/';
 import { MoveToPage, SelectionPage, TrackPage } from '../../pages';
+import { folderPathParent } from '../../models';
 
 /**
  * Files/folders music library page.
@@ -125,21 +126,7 @@ export class LibraryPage {
 
     public ionViewDidEnter(): void {
         console.log('ionViewDidEnter()');
-        // refresh appFilesystem directory in case we're entering this
-        // view after a recording and we happen to be at the /Unfiled
-        // directory. NOTE: this is kind of overkill. We could do
-        // the refresh only when in /Unfiled as in:
-        // if (this.appFilesystem.directoryEntry.fullPath === '/Unfiled') {
-        //     this.appFilesystem.refreshDirectory().subscribe(
-        //         () => {
-        //             this.detectChanges();
-        //         }
-        //     );
-        // }
-        // else {
-        //     this.detectChanges();
-        // }
-        this.appFilesystem.refreshDirectory().subscribe(
+        this.appFilesystem.refreshFolder().subscribe(
             () => {
                 this.detectChanges();
             }
@@ -184,13 +171,16 @@ export class LibraryPage {
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
-        this.appFilesystem.switchDirectory('/').subscribe(
+        this.appFilesystem.switchFolder('/').subscribe(
             () => {
                 this.detectChanges();
             }
         );
     }
 
+    /**
+     * UI calls this when the 'Go home' button is clicked.
+     */
     public atHome(): boolean {
         // console.log('atHome(): ' + this.appFilesystem.atHome());
         return this.appFilesystem.atHome();
@@ -204,9 +194,18 @@ export class LibraryPage {
         const path: string = this.appFilesystem.getPath(),
               pathParts: string[] = path.split('/').filter(
                   (str: string) => { return str !== ''; }),
-              parentPath: string = '/' +
+              parentPath2: string = '/' +
               pathParts.splice(0, pathParts.length - 1).join('/') + '/';
-        this.appFilesystem.switchDirectory(parentPath).subscribe(
+
+        const parentPath: string =
+              folderPathParent(this.appFilesystem.getPath());
+
+        if (parentPath2 !== parentPath) {
+            alert('(parentPath2 ' + parentPath2 +
+                  ' !== parentPath) ' + parentPath);
+        }
+
+        this.appFilesystem.switchFolder(parentPath).subscribe(
             () => {
                 this.detectChanges();
             }
@@ -225,8 +224,8 @@ export class LibraryPage {
                     text: 'Folder',
                     icon: 'folder',
                     handler: () => {
-                        console.log('Add directory clicked.');
-                        this.addDirectory();
+                        console.log('Add folder clicked.');
+                        this.addFolder();
                     }
                 },
                 {
@@ -259,7 +258,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when move button is clicked.
-     * Moves selected items into a directory.
+     * Moves selected items into a folder.
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
@@ -273,7 +272,7 @@ export class LibraryPage {
      * @returns {boolean}
      */
     public moveButtonDisabled(): boolean {
-        // if the only thing selected is the unfiled directory
+        // if the only thing selected is the unfiled folder
         // disable delete and move
         if (this.appFilesystem.nSelected() === 1 &&
             this.appFilesystem.isPathSelected('/Unfiled/')) {
@@ -299,9 +298,9 @@ export class LibraryPage {
             handler: () => {
                 this.appFilesystem.deleteSelected().subscribe(
                     () => {
-                        this.appFilesystem.switchDirectory(
+                        this.appFilesystem.switchFolder(
                             this.appFilesystem.getFullPath(
-                                this.appFilesystem.directoryEntry
+                                this.appFilesystem.folderEntry
                             )).subscribe(
                                 () => {
                                     this.detectChanges();
@@ -322,7 +321,7 @@ export class LibraryPage {
 
         if (this.appFilesystem.isPathSelected('/Unfiled/')) {
             const deleteAlert: Alert = this.alertController.create();
-            deleteAlert.setTitle('/Unfiled directory cannot be deleted. But it' +
+            deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
                                  '\'s selected. Automatically unselect it?');
             deleteAlert.addButton('Cancel');
             deleteAlert.addButton({
@@ -344,7 +343,7 @@ export class LibraryPage {
      * @returns {boolean}
      */
     public deleteButtonDisabled(): boolean {
-        // if the only thing selected is the unfiled directory
+        // if the only thing selected is the unfiled folder
         // disable delete and move
         if (this.appFilesystem.nSelected() === 1 &&
             this.appFilesystem.isPathSelected('/Unfiled/')) {
@@ -386,7 +385,7 @@ export class LibraryPage {
     }
 
     /**
-     * UI calls this when the new directory button is clicked
+     * UI calls this when the new folder button is clicked
      */
     public onClickCheckbox(entry: Entry): void {
         console.log('onClickCheckbox()');
@@ -395,12 +394,12 @@ export class LibraryPage {
     }
 
     /**
-     * UI calls this when the new directory button is clicked
+     * UI calls this when the new folder button is clicked
      */
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
-            this.appFilesystem.switchDirectory(
+            this.appFilesystem.switchFolder(
                 this.appFilesystem.getFullPath(entry)).subscribe(
                     () => {
                         this.detectChanges();
@@ -413,14 +412,14 @@ export class LibraryPage {
     }
 
     /**
-     * UI calls this when the new directory button is clicked
+     * UI calls this when the new folder button is clicked
      */
-    public addDirectory(): void {
+    public addFolder(): void {
         let parentPath: string = this.appFilesystem.getPath(),
-            newDirectoryAlert: Alert = this.alertController.create({
-                title: 'Create a new directory in ' + parentPath,
+            newFolderAlert: Alert = this.alertController.create({
+                title: 'Create a new folder in ' + parentPath,
                 inputs: [{
-                    name: 'directoryName',
+                    name: 'folderName',
                     placeholder: 'Enter folder name...'
                 }],
                 buttons: [
@@ -434,8 +433,8 @@ export class LibraryPage {
                     {
                         text: 'Done',
                         handler: (data: any) => {
-                            let fullPath: string = parentPath + 
-                                data.directoryName;
+                            let fullPath: string = parentPath +
+                                data.folderName;
                             if (!fullPath.length) {
                                 // this code should never be reached
                                 alert('how did we reach this code?');
@@ -446,14 +445,14 @@ export class LibraryPage {
                                 // slash at the end
                                 fullPath += '/';
                             }
-                            // create the directory
-                            this.appFilesystem.createDirectory(
+                            // create the folder
+                            this.appFilesystem.createFolder(
                                 fullPath
                             ).subscribe(
-                                (directoryEntry: DirectoryEntry) => {
+                                (folderEntry: DirectoryEntry) => {
                                     // re-read parent
                                     // to load in new info
-                                    this.appFilesystem.switchDirectory(
+                                    this.appFilesystem.switchFolder(
                                         parentPath
                                     ).subscribe(
                                         () => {
@@ -461,11 +460,11 @@ export class LibraryPage {
                                         }
                                     );
                                 }
-                            ); // .createDirectory().subscribe(
+                            ); // .createFolder().subscribe(
                         } // handler: (data: any) => {
                     }
                 ] // buttons: [
-            }); // newDirectoryAlert: Alert = this.alertController.create({
-        newDirectoryAlert.present();
+            }); // newFolderAlert: Alert = this.alertController.create({
+        newFolderAlert.present();
     }
 }

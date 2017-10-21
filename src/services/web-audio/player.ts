@@ -175,7 +175,7 @@ export abstract class WebAudioPlayer {
             sourceNode.start(0, offset);
             this.startedAt = AUDIO_CONTEXT.currentTime - startedAtOffset;
             console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2));
-            sourceNode.stop(this.startedAt + startedAtOffset + 
+            sourceNode.stop(this.startedAt + startedAtOffset +
                             audioBuffer.duration);
             this.pausedAt = 0;
             this.isPlaying = true;

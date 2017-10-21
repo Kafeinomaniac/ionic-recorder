@@ -7,7 +7,13 @@
 // http://blog.thoughtram.io/angular/2017/02/01/zones-in-angular-2.html
 // to understand the zone-related code here.
 
-import { ApplicationRef, NgZone, Injectable } from '@angular/core';
+import {
+    /* tslint:disable */
+    ApplicationRef,
+    /* tslint:enable */
+    NgZone,
+    Injectable
+} from '@angular/core';
 
 // clock frequency, in Hz
 const CLOCK_FREQUENCY_HZ: number = 24;
