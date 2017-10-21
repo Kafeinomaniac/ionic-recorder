@@ -75,18 +75,8 @@ export abstract class WebAudioPlayer {
         console.log('startMonitoring()');
         this.heartbeat.addFunction(
             PLAYER_CLOCK_FUNCTION_NAME,
-            // the monitoring actions are in the following function:
             () => {
-                // console.log('.p.');
                 let time: number = this.getTime();
-
-                if (this.duration <= 0) {
-                    alert('this.duration <= 0');
-                }
-
-                // console.log(time.toFixed(2) + ', ' +
-                //             this.duration.toFixed(2));
-
                 if (time > this.duration) {
                     time = this.duration;
                     this.stop();
@@ -94,7 +84,6 @@ export abstract class WebAudioPlayer {
                           ') > this.duration (' + this.duration.toFixed(2) +
                           ') delta: ' + (time - this.duration) * 1000000000.0;
                     console.log(msg);
-                    // alert(msg);
                 }
 
                 if (this.time !== time) {
@@ -102,12 +91,6 @@ export abstract class WebAudioPlayer {
                     this.time = time;
                     this.progress = time / this.duration;
                     this.displayTime = formatTime(time, this.duration);
-
-                    // console.log('time change! ' + this.progress.toFixed(2));
-
-                    // console.log(this.progress);
-                    // console.log('this.time !== time\n' + this.time + '\n' +
-                    //             time + '\n' + this.displayTime);
                 }
             }
         );
@@ -121,10 +104,7 @@ export abstract class WebAudioPlayer {
      */
     public stopMonitoring(): void {
         console.log('stopMonitoring()');
-        setTimeout(
-            () => {
-                this.heartbeat.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
-            });
+        this.heartbeat.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
     }
 
     /**
@@ -195,6 +175,8 @@ export abstract class WebAudioPlayer {
             sourceNode.start(0, offset);
             this.startedAt = AUDIO_CONTEXT.currentTime - startedAtOffset;
             console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2));
+            sourceNode.stop(this.startedAt + startedAtOffset + 
+                            audioBuffer.duration);
             this.pausedAt = 0;
             this.isPlaying = true;
         }
@@ -271,6 +253,6 @@ export abstract class WebAudioPlayer {
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
-        this.stopMonitoring();
+        // this.stopMonitoring();
     }
 }

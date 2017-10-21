@@ -7,6 +7,8 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* playback problem 1: pause/resume does not work, has a lag on resume
+* playback problem 3: when you play and then jump somewhere, it seems to
 * reset scheduled: not resetting them as we go along
 * change detection: totally screwed up, must understand ngzone as it is not
   working for us right now
@@ -20,6 +22,7 @@ anything written here, unless you wrote it.
   file size in bytes but that's in the header (implied) anyway too. Most likely
   we do not need getMetadata in readWavFileInfo().
 
+* playback problem 2: master clock not always moving progress bar, it's flaky
 * master-clock: call it heartbeat
 * master-clock: startMonitoring and stopMonitoring automatic, they begin and end
   setInterval depending on whether nFunctions is 0 (end) or not (start), you
@@ -28,9 +31,6 @@ anything written here, unless you wrote it.
 * settings: allow the default filename to be written as you wish
 * RENAME: "progress" and "position" are synonyms - we mix them up a lot, esp.
   in audio services code
-* playback problem 1: pause/resume does not work, has a lag on resume
-* playback problem 2: master clock not always moving progress bar, it's flaky
-* playback problem 3: when you play and then jump somewhere, it seems to
   jump elsewhere (far) first
 * Record something long (> 10 seconds) and make sure that we do not
   release/delete/clear/reset all nodes all at once at the end - i.e. we should

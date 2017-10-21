@@ -329,10 +329,7 @@ export abstract class WebAudioRecorder {
      */
     public stopMonitoring(): void {
         console.log('stopMonitoring()');
-        setTimeout(
-            () => {
-                this.heartbeat.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
-            });
+        this.heartbeat.removeFunction(RECORDER_CLOCK_FUNCTION_NAME);
     }
 
     /**

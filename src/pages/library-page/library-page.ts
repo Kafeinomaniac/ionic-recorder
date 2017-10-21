@@ -421,20 +421,21 @@ export class LibraryPage {
                 title: 'Create a new directory in ' + parentPath,
                 inputs: [{
                     name: 'directoryName',
-                    placeholder: 'Enter directory name...'
+                    placeholder: 'Enter folder name...'
                 }],
                 buttons: [
                     {
                         text: 'Cancel',
                         role: 'cancel',
                         handler: () => {
-                            console.log('Cancel clicked in new-directory alert');
+                            console.log('Clicked cancel in add-folder alert');
                         }
                     },
                     {
                         text: 'Done',
                         handler: (data: any) => {
-                            let fullPath: string = parentPath + data.directoryName;
+                            let fullPath: string = parentPath + 
+                                data.directoryName;
                             if (!fullPath.length) {
                                 // this code should never be reached
                                 alert('how did we reach this code?');
