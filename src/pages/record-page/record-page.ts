@@ -20,8 +20,8 @@ const MAX_GAIN_SLIDER_VALUE: number = 1000;
  */
 @Component({
     selector: 'record-page',
-    providers: [WavRecorder],
-    templateUrl: 'record-page.html'
+    templateUrl: 'record-page.html',
+    providers: [WavRecorder]
 })
 export class RecordPage {
     @ViewChild(Content) public content: Content;
@@ -107,6 +107,9 @@ export class RecordPage {
             this.recorder.status === RecordStatus.READY_STATE;
     }
 
+    /**
+     *
+     */
     public onResetGain(): void {
         console.log('onResetGain()');
         // 0.5 if progress-slider is used instead of ion-range:
@@ -115,6 +118,9 @@ export class RecordPage {
         this.onGainChange(this.gainRangeSliderValue, true);
     }
 
+    /**
+     *
+     */
     public onGainChange(
         sliderValue: number,
         updateStorage: boolean = true
@@ -181,9 +187,7 @@ export class RecordPage {
      */
     public onClickStopButton(): void {
         console.log('onClickStopButton()');
-
         this.recordButtonIcon = START_RESUME_ICON;
-
         this.recorder.stop().subscribe(
             null,
             (err: any) => {
@@ -192,11 +196,17 @@ export class RecordPage {
         );
     }
 
+    /**
+     *
+     */
     public onPlayLastRecording(): void {
         console.log('onPlayLastRecording()');
         this.navController.push(TrackPage, this.recorder.getFilePath());
     }
 
+    /**
+     *
+     */
     public ionViewDidEnter(): void {
         console.log('ionViewDidEnter()');
         this.recorder.startMonitoring();
@@ -205,6 +215,9 @@ export class RecordPage {
         this.content.resize();
     }
 
+    /**
+     *
+     */
     public ionViewDidLeave(): void {
         console.log('ionViewDidLeave()');
         this.recorder.stopMonitoring();
