@@ -70,6 +70,41 @@ export function isFunction(func: any): boolean {
 }
 
 /**
+ * @function
+ */
+export function isTruthy(obj: any): boolean {
+    'use strict';
+    if (obj) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+/**
+ * @function
+ */
+export function isFalsy(obj: any): boolean {
+    'use strict';
+    if (obj) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+/**
+ * Checks if the given argument is defined.
+ * @function
+ */
+export function isDefined(obj: any): boolean {
+    'use strict';
+    return (typeof obj) !== 'undefined';
+}
+
+/**
  * Checks if the given argument is undefined.
  * @function
  */

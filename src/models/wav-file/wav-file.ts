@@ -226,6 +226,7 @@ export class WavFile {
                                         fileReader.result
                                     ).then(
                                         (audioBuffer: AudioBuffer) => {
+                                            console.log('AUDIO DATA DECODED!');
                                             obs.next(audioBuffer);
                                             obs.complete(audioBuffer);
                                         }).catch((err2: any) => {

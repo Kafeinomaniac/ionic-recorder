@@ -100,54 +100,59 @@ export class WavPlayer extends WebAudioPlayer {
               startSample1: number = Math.floor(position * nSamples),
               t1: number = startSample1 + N_BUFFER_SAMPLES,
               endSample1: number = t1 > nSamples ? nSamples : t1;
+
+        console.log('playFrom(position=' + position.toFixed(2) + ') - ' +
+                    'startSample1=' + startSample1 + ', endSample1=' +
+                   endSample1 + ', nSamples=' + nSamples);
+
+        console.log('hi-2');
         WavFile.readWavFileAudio(
             this.filePath,
             startSample1,
             endSample1
         ).subscribe(
             (audioBuffer1: AudioBuffer) => {
+                console.log('hi-1.5');
                 // this.audioBuffer = audioBuffer1;
                 const startTime1: number = startSample1 / this.sampleRate,
+                      onEndedCB1: () => void = this.getOnEndedCB(startSample1),
                       playFirstBuffer: () => void =  () => {
-                          this.schedulePlay(
-                              audioBuffer1,
-                              0,
-                              0,
-                              startTime1,
-                              this.getOnEndedCB(startSample1)
-                          );
+                          console.log('playFirstBuffer');
+                          this.schedulePlay(audioBuffer1, 0,
+                                            0, 0, startTime1, onEndedCB1);
                       };
-                console.log('playFrom(' + position.toFixed(2) +
-                            ') - time: ' + startTime1.toFixed(2));
+                console.log('hi-1');
+                playFirstBuffer();
                 if (endSample1 < nSamples) {
                     // INV: startSample2 = endSample1
                     const startSample2: number = endSample1,
+                          startTime2: number = this.getChunkPlayTime(
+                              startSample2
+                          ),
+                          onEndedCB2: () => void = this.getOnEndedCB(
+                              startSample2
+                          ),
                           t2: number = startSample2 + N_BUFFER_SAMPLES,
                           endSample2: number = t2 > nSamples ? nSamples : t2;
+                    console.log('hi0');
+
                     WavFile.readWavFileAudio(
                         this.filePath,
                         startSample2,
                         endSample2
                     ).subscribe(
                         (audioBuffer2: AudioBuffer) => {
-                            playFirstBuffer();
-                            this.schedulePlay(
-                                audioBuffer2,
-                                this.getChunkPlayTime(startSample2),
-                                0,
-                                0,
-                                this.getOnEndedCB(startSample2)
-                            );
+                            console.log('hi1');
+
+                            this.schedulePlay(audioBuffer2, startTime2,
+                                              startSample2, 0, 0, onEndedCB2);
+                            console.log('hi2');
                         },
                         (err2: any) => {
                             alert(err2);
                         }
                     );
                 } // if (endSample1 < nSamples) {
-                else {
-                    // no 2nd buffer
-                    playFirstBuffer();
-                }
             },
             (err1: any) => {
                 alert(err1);
@@ -170,20 +175,35 @@ export class WavPlayer extends WebAudioPlayer {
      */
     private getOnEndedCB(startSample: number): () => void {
         const nSamples: number = this.nSamples,
-              nextStartSample: number = startSample + 2 * N_BUFFER_SAMPLES;
+              nextStartSample: number = startSample + 2 * N_BUFFER_SAMPLES,
+              destroyMe: (i: number) => void = (i: number) => {
+                  console.log('destroyMe(' + i + ')');
+                  const sourceNode: AudioBufferSourceNode = this.sourceNodes[i];
+                  if (sourceNode) {
+                      this.resetSourceNode(sourceNode);
+                      delete this.sourceNodes[i];
+                  }
+              };
+
+        console.log('getOnEndedCB(' + startSample + ') - startSample: ' +
+                    startSample  + ', nextStartSample: ' +
+                    nextStartSample + ', nSamples: ' + nSamples);
+
         if (nextStartSample >= nSamples) {
             return () => {
+                destroyMe(startSample);
                 console.log('onEndedCB(' + startSample +
                             ') - reached last chunk');
             };
         }
         return () => {
+            destroyMe(startSample);
             const when: number = this.getChunkPlayTime(nextStartSample),
                   tmp: number = nextStartSample + N_BUFFER_SAMPLES,
                   endSample: number = tmp > nSamples ? nSamples : tmp;
             console.log('onEndedCB(' + startSample + '), time = ' +
                         this.getTime().toFixed(2) + ', when: ' +
-                        (when - this.startedAt).toFixed(2) + 
+                        (when - this.startedAt).toFixed(2) +
                         ', nextStartSample: ' + nextStartSample +
                         ', endSample: ' + endSample);
             WavFile.readWavFileAudio(
@@ -197,6 +217,7 @@ export class WavPlayer extends WebAudioPlayer {
                     this.schedulePlay(
                         audioBuffer,
                         when,
+                        nextStartSample,
                         0,
                         0,
                         this.getOnEndedCB(nextStartSample)
