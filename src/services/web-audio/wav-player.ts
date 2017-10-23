@@ -177,7 +177,8 @@ export class WavPlayer extends WebAudioPlayer {
         const nSamples: number = this.nSamples,
               nextStartSample: number = startSample + 2 * N_BUFFER_SAMPLES,
               destroyMe: (i: number) => void = (i: number) => {
-                  console.log('destroyMe(' + i + ')');
+                  console.log('destroyMe(' + i + ') - ' +
+                              Object.keys(this.sourceNodes).length);
                   const sourceNode: AudioBufferSourceNode = this.sourceNodes[i];
                   if (sourceNode) {
                       this.resetSourceNode(sourceNode);

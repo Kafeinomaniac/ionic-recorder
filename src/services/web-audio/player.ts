@@ -211,7 +211,7 @@ export abstract class WebAudioPlayer {
         // TODO: we need to figure out monitoring, may need to uncomment below:
         // this.stopMonitoring;
         this.resetSourceNode(this.sourceNode);
-        // this.cancelScheduled();
+        this.cancelScheduled();
         this.pausedAt = elapsed;
         this.isPlaying = false;
     }
@@ -243,12 +243,10 @@ export abstract class WebAudioPlayer {
     public cancelScheduled(): void {
         console.log('*** resetting ' + Object.keys(this.sourceNodes).length +
                     ' scheduled ***');
-        // let node: AudioBufferSourceNode = this.sourceNodes.pop();
-        // while (node) {
-        //     console.log('.');
-        //     this.resetSourceNode(node);
-        //     node = this.sourceNodes.pop();
-        // }
+        for (let key in this.sourceNodes) {
+            this.resetSourceNode(this.sourceNodes[key]);
+            delete this.sourceNodes[key];
+        }
     }
 
     /**
@@ -261,7 +259,7 @@ export abstract class WebAudioPlayer {
     public stop(): void {
         console.log('stop()');
         this.resetSourceNode(this.sourceNode);
-        // this.cancelScheduled();
+        this.cancelScheduled();
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
