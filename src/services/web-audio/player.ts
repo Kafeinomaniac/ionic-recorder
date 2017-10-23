@@ -1,5 +1,27 @@
 // Copyright (c) 2017 Tracktunes Inc
 
+/*
+ * Player API
+ * ==========
+ *
+ * --------
+ * Members:
+ * --------
+ * - isPlaying
+ * - duration
+ * - progress
+ * - displayTime
+ * - displayDuration
+ *
+ * ----------
+ * Functions:
+ * ----------
+ * - togglePlayPause()
+ * - jumpToPosition(progress)
+ * - setSourceFile(path)
+ * - stop()
+ */
+
 // Lowest-level audio-buffer Web Audio Api playback class.
 // This class only deals with a single audio-buffer, it
 // knows nothing about multi-buffer streams or encodings.
@@ -154,7 +176,7 @@ export abstract class WebAudioPlayer {
         audioBuffer: AudioBuffer,
         when: number = 0,
         startSample: number = 0,
-        startOffset: number = 0,
+        startedAtOffset: number = 0,
         onEnded: () => void
     ): void {
         const bufferDuration: number = audioBuffer.duration,
@@ -165,7 +187,7 @@ export abstract class WebAudioPlayer {
 
         console.log('schedulePlay(when: ' + when.toFixed(2) +
                     ', startSample: ' + startSample +
-                    ', startOffset: ' + startOffset.toFixed(2) +
+                    ', startedAtOffset: ' + startedAtOffset.toFixed(2) +
                     ', startedAt: ' + this.startedAt.toFixed(2) +
                     ', bufferDuration: ' + bufferDuration.toFixed(2) +
                     '): ' + Object.keys(this.sourceNodes).length);
@@ -181,7 +203,7 @@ export abstract class WebAudioPlayer {
             }
             this.sourceNode = sourceNode;
             sourceNode.start(0, 0, bufferDuration);
-            this.startedAt = AUDIO_CONTEXT.currentTime - startOffset;
+            this.startedAt = AUDIO_CONTEXT.currentTime - startedAtOffset;
             this.pausedAt = 0;
             this.isPlaying = true;
             console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2));
