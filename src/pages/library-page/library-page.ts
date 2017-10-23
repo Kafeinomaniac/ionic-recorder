@@ -269,7 +269,7 @@ export class LibraryPage {
 
     /**
      * UI calls this to determine whether to disable move button.
-     * @returns {boolean}
+     * @return {boolean}
      */
     public moveButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
@@ -340,7 +340,7 @@ export class LibraryPage {
 
     /**
      * UI calls this to determine whether disable the delete button
-     * @returns {boolean}
+     * @return {boolean}
      */
     public deleteButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder

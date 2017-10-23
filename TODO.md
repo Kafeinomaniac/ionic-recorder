@@ -7,6 +7,17 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* one way to fix all is to refactor now: in these steps:
+  1) figure out what functionality we need from the UI and define the playback
+  and record API very clearly
+  2) implement the generic / audio-type-specific library
+  3) write tests for the library
+  - we kind of have (1) and (2).  we need to write tests for the audio.
+* problem: record something, then record something else. it mixes the end of
+  the last recording with the beginning of the next recording.
+* We still have problems with playback: make sure (a) we only use sample
+  numbers for all time tracking, no float/double precision time variables for
+  timing anything, if we can help it; (b) perhaps we need to get rid of offset.
 * [issue 160](https://github.com/tracktunes/ionic-recorder/issues/160)
 
 * rename Directory -> Folder everywhere

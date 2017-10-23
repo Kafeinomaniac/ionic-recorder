@@ -180,7 +180,7 @@ export class AppFilesystem {
 
     /**
      * Wait until file system is ready for use, to emit observable.
-     * @returns {Observable<FileSystem>} Observable that emits the file
+     * @return {Observable<FileSystem>} Observable that emits the file
      * system when it's ready for use.
      */
     public whenReady(): Observable<void> {
@@ -288,7 +288,7 @@ export class AppFilesystem {
 
     /**
      * Wait until file system is ready for use, to emit observable.
-     * @returns {Observable<FileSystem>} Observable that emits the file
+     * @return {Observable<FileSystem>} Observable that emits the file
      * system when it's ready for use.
      */
     public switchFolder(path: string): Observable <Entry[]> {

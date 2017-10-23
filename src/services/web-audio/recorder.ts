@@ -105,7 +105,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Wait indefinitely until DB is ready for use, via an observable.
-     * @returns {Observable<IDBDatabase>} Observable that emits the database
+     * @return {Observable<IDBDatabase>} Observable that emits the database
      * when it's ready for use.
      */
     public waitForWAA(): Observable<void> {
@@ -388,7 +388,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Returns recording time, in seconds.
-     * @returns {number}
+     * @return {number}
      */
     private getTime(): number {
         return this.isInactive ? 0 : this.nRecordedSamples / SAMPLE_RATE;

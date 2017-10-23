@@ -40,7 +40,7 @@ export function folderPathParent(dirPath: string): string {
  * Update object 'dest' by adding or changing any fields that differ in 'src'
  * @param {Object} 'src' the source object from which to update 'dest'
  * @param {Object} 'dest' the destination object to update and return
- * @returns {Object} the updated 'dest' object
+ * @return {Object} the updated 'dest' object
  */
 export function copyFromObject(src: Object, dest: Object): Object {
     'use strict';
@@ -125,7 +125,7 @@ export function isString(obj: any): boolean {
 /**
  * Positive whole number test
  * @param {number} the number we're verifying
- * @returns {boolean} whether argument is a positive whole number
+ * @return {boolean} whether argument is a positive whole number
  */
 export function isPositiveWholeNumber(num: number): boolean {
     'use strict';

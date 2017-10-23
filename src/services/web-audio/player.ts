@@ -154,7 +154,6 @@ export abstract class WebAudioPlayer {
         audioBuffer: AudioBuffer,
         when: number = 0,
         startSample: number = 0,
-        offset: number = 0,
         startOffset: number = 0,
         onEnded: () => void
     ): void {
@@ -166,7 +165,6 @@ export abstract class WebAudioPlayer {
 
         console.log('schedulePlay(when: ' + when.toFixed(2) +
                     ', startSample: ' + startSample +
-                    ', offset: ' + offset.toFixed(2) +
                     ', startOffset: ' + startOffset.toFixed(2) +
                     ', startedAt: ' + this.startedAt.toFixed(2) +
                     ', bufferDuration: ' + bufferDuration.toFixed(2) +
@@ -179,12 +177,11 @@ export abstract class WebAudioPlayer {
         if (when === 0) {
             // start now
             if (this.pausedAt) {
-                offset = this.pausedAt;
-                startOffset = 0;
+                throw Error('this.pausedAt non zero in schedulePlay()');
             }
             this.sourceNode = sourceNode;
-            sourceNode.start(0, offset, bufferDuration);
-            this.startedAt = AUDIO_CONTEXT.currentTime - offset - startOffset;
+            sourceNode.start(0, 0, bufferDuration);
+            this.startedAt = AUDIO_CONTEXT.currentTime - startOffset;
             this.pausedAt = 0;
             this.isPlaying = true;
             console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2));

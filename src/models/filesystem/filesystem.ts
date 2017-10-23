@@ -266,7 +266,7 @@ export class Filesystem {
      * @param {Blob} blob - the data to write.
      * @param {number} seekOffset - the location (byte) to start writing from.
      * @param {boolean} bCreate - whether to create the file first or not.
-     * @returns {Observable<void>}
+     * @return {Observable<void>}
      */
     public static writeToFile(
         fs: FileSystem,

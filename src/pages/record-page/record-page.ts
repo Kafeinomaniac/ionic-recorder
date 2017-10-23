@@ -100,7 +100,7 @@ export class RecordPage {
     /**
      * Used in template
      * Returns whether this.recorder is fully initialized
-     * @returns {boolean}
+     * @return {boolean}
      */
     public recorderIsReady(): boolean {
         return this.recorder &&

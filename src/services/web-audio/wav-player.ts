@@ -101,10 +101,11 @@ export class WavPlayer extends WebAudioPlayer {
               t1: number = startSample1 + N_BUFFER_SAMPLES,
               endSample1: number = t1 > nSamples ? nSamples : t1;
 
-        console.log('playFrom(position=' + position.toFixed(2) + ') - ' +
+        console.log('playFrom(position=' + position + ') - ' +
                     'startSample1=' + startSample1 + ', endSample1=' +
-                   endSample1 + ', nSamples=' + nSamples);
-
+                    endSample1 + ', nSamples=' + nSamples + ', startTime(A): ' +
+                    startSample1 / this.sampleRate);
+        
         WavFile.readWavFileAudio(
             this.filePath,
             startSample1,
@@ -113,11 +114,10 @@ export class WavPlayer extends WebAudioPlayer {
             (audioBuffer1: AudioBuffer) => {
                 // this.audioBuffer = audioBuffer1;
                 const startTime1: number = startSample1 / this.sampleRate,
-                      onEndedCB1: () => void = this.getOnEndedCB(startSample1),
                       playFirstBuffer: () => void =  () => {
                           console.log('playFirstBuffer');
-                          this.schedulePlay(audioBuffer1, 0,
-                                            0, 0, startTime1, onEndedCB1);
+                          this.schedulePlay(audioBuffer1, 0, 0, startTime1,
+                                            this.getOnEndedCB(startSample1));
                       };
                 if (endSample1 < nSamples) {
                     // INV: startSample2 = endSample1
@@ -139,13 +139,16 @@ export class WavPlayer extends WebAudioPlayer {
                         (audioBuffer2: AudioBuffer) => {
                             playFirstBuffer();
                             this.schedulePlay(audioBuffer2, startTime2,
-                                              startSample2, 0, 0, onEndedCB2);
+                                              startSample2, 0, onEndedCB2);
                         },
                         (err2: any) => {
                             alert(err2);
                         }
                     );
                 } // if (endSample1 < nSamples) {
+                else {
+                    playFirstBuffer();
+                }
             },
             (err1: any) => {
                 alert(err1);
@@ -212,7 +215,6 @@ export class WavPlayer extends WebAudioPlayer {
                         audioBuffer,
                         when,
                         nextStartSample,
-                        0,
                         0,
                         this.getOnEndedCB(nextStartSample)
                     );

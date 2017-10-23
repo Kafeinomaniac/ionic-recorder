@@ -42,7 +42,7 @@ export class AppStorage {
 
     /**
      * Gets a state property (from DB if necessary)
-     * @returns {Observable<any>} Observable of value of property obtained
+     * @return {Promise<any>} Promise of property-value obtained
      */
     public get(key: string): Promise<any> {
         return new Promise((resolve, reject) => {

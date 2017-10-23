@@ -63,7 +63,7 @@ export class WavRecorder extends WebAudioRecorder {
 
     /**
      * Save the next wav file chunk
-     * @returns {Observable<void>}
+     * @return {Observable<void>}
      */
     private saveWavFileChunk(
         arr: Int16Array
@@ -118,7 +118,7 @@ export class WavRecorder extends WebAudioRecorder {
     /**
      * Stop recording and save the last chunk.
      * Precondition: called start() already
-     * @returns {Observable<void>}
+     * @return {Observable<void>}
      */
     public stop(): Observable<void> {
         console.log('WavRecorder:stop() @ ' + this.setter.bufferIndex +
