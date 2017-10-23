@@ -54,7 +54,7 @@ export class Filesystem {
                         Filesystem.deleteEntry(entry).subscribe(
                             null,
                             (err1: any) => {
-                                observer.error('err1: ' + err1);
+                                observer.error(err1);
                             }
                         );
                     },
@@ -90,7 +90,7 @@ export class Filesystem {
                         Filesystem.moveEntry(entry, parent).subscribe(
                             null,
                             (err1: any) => {
-                                observer.error('err1: ' + err1);
+                                observer.error(err1);
                             }
                         );
                     },
@@ -119,9 +119,9 @@ export class Filesystem {
                 observer.next();
                 observer.complete();
             };
-            const errorCB: (error: FileError) => void = (error: FileError) => {
+            const errorCB: (err: FileError) => void = (err: FileError) => {
                 console.log('moveEntry.errorCB()');
-                observer.error(error);
+                observer.error(err);
             };
             entry.moveTo(parent, entry.name, successCB, errorCB);
         });
@@ -142,7 +142,7 @@ export class Filesystem {
                         observer.complete();
                     },
                     (err: FileError) => {
-                        console.log('remove file error: ' + err);
+                        console.log(err);
                         observer.error(err);
                     }
                 );
@@ -156,7 +156,7 @@ export class Filesystem {
                         observer.complete();
                     },
                     (err: FileError) => {
-                        console.log('remove dir error: ' + err);
+                        console.log(err);
                         observer.error(err);
                     }
                 );
@@ -190,8 +190,7 @@ export class Filesystem {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log('getPathEntry(.., ' + path +
-                                    ') error1: ' + err);
+                        console.log(err);
                         observer.error(err);
                     }
                 );
@@ -208,9 +207,7 @@ export class Filesystem {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log('getPathEntry error2: ' + err +
-                                    ' - it wrongly thinks path:' + path +
-                                    ' is a file!');
+                        console.log(err);
                         observer.error(err);
                     }
                 );
@@ -250,13 +247,13 @@ export class Filesystem {
                             observer.complete();
                         },
                         (err: any) => {
-                            console.log('gFS():err1 ' + err);
+                            console.log(err);
                             observer.error(err);
                         }
                     );
                 },
                 (err: any) => {
-                    observer.error('gFS():err2 ' + err);
+                    observer.error(err);
                 }
             );
         });

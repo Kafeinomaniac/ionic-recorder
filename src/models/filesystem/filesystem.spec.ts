@@ -61,8 +61,6 @@ describe('models/filesystem', () => {
         Filesystem.deleteEntries(FILE_SYSTEM, ['/Unfiled/']).subscribe(
             null,
             (err: any) => {
-                console.log('Expected Error in Filesystem.deleteEntries: ' +
-                            err);
                 done();
             }
         );
@@ -72,8 +70,6 @@ describe('models/filesystem', () => {
         Filesystem.getPathEntry(FILE_SYSTEM, '/Unfiled/', false).subscribe(
             null,
             (err: any) => {
-                console.log('Expected Error in Filesystem.getPathEntry: ' +
-                            err);
                 done();
             }
         );

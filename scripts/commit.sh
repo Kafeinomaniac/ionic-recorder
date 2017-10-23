@@ -14,14 +14,13 @@ if [ "$1" == "--no-tests" ]; then
     echo "Running commit script with no tests!"
 else
     echo "Running unit tests ..."
-    TEST_ERRORS="`npm test 2>&1 | grep -i error | tail -n 1`"
-    if [ "$TEST_ERRORS" != "" ]; then
-        echo "Unit tests failed. Fix and try again. Errors reported:"
-        echo "    $TEST_ERRORS"
-        echo "Exiting."
+    TEST_ERRORS="`npm test`"
+    if [ $? -eq 0 ]; then
+        echo "UNIT TESTS PASSED!"
+    else
+        echo "UNIT TESTS FAILED! FIX AND TRY AGAIN. EXITING."
         exit 1
     fi
-    echo "Unit tests DONE"
 fi
 
 # grab a commit message
