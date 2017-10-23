@@ -132,6 +132,7 @@ export class WavRecorder extends WebAudioRecorder {
             ).subscribe(
                 () => {
                     this.nChunksSaved = 0;
+                    this.setter.reset();
                     observer.next();
                     observer.complete();
                 },
