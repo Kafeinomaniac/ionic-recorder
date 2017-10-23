@@ -62,9 +62,6 @@ export class TrackPage {
                 this.dateModified = formatDate(
                     wavInfo.metadata.modificationTime
                 );
-                console.log('METADATA:');
-                console.log(typeof wavInfo.metadata);
-                console.dir(wavInfo.metadata);
             },
             (err: any) => {
                 throw(err);
@@ -156,8 +153,11 @@ export class TrackPage {
         this.presentActionSheet();
     }
 
-    public ionViewDidLeave(): void {
-        console.log('ionViewDidLeave()');
+    /**
+     * UI callback handler called after leaving this view
+     */
+    public ionViewWillLeave(): void {
+        console.log('ionViewWillLeave()');
         this.player.stopMonitoring();
     }
 

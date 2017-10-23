@@ -45,14 +45,23 @@ export class ProgressSlider {
         this.changeEnd = new EventEmitter();
     }
 
+    /**
+     *
+     */
     public progressPercent(): string {
         return (100.0 * this.progress).toString() + '%';
     }
 
+    /**
+     *
+     */
     public remainingPercent(): string {
         return (100.0 - 100.0 * this.progress).toString() + '%';
     }
 
+    /**
+     *
+     */
     private getTrackWidthRange(): { start: number, end: number } {
         const
         progressSliderContainerElement: Element =
@@ -71,6 +80,9 @@ export class ProgressSlider {
         };
     }
 
+    /**
+     *
+     */
     private computeProgress(
         clientX: number,
         range: { start: number, end: number }
@@ -98,6 +110,9 @@ export class ProgressSlider {
         return clickRelativeX / rangeX;
     }
 
+    /**
+     *
+     */
     private jumpToPosition(
         clientX: number,
         range: { start: number, end: number }
@@ -110,6 +125,9 @@ export class ProgressSlider {
         // this.detectChanges();
     }
 
+    /**
+     *
+     */
     public onSliderMouseDown(event: MouseEvent): void {
         console.log('onSliderMouseDown ' + event.clientX);
 
@@ -141,6 +159,9 @@ export class ProgressSlider {
                 });
     }
 
+    /**
+     *
+     */
     public onMouseUp(event: MouseEvent): void {
         // console.log('onMouseUp()');
         // free up the listening to mouse up from<body>now that it happened
@@ -157,28 +178,35 @@ export class ProgressSlider {
         // this.detectChanges();
     }
 
+    /**
+     *
+     */
     public onMouseMove(event: MouseEvent): void {
         this.jumpToPosition(event.clientX, this.trackWidthRange);
     }
 
+    /**
+     *
+     */
     public onSliderTouchMove(event: TouchEvent): void {
         event.preventDefault();
         this.jumpToPosition(event.touches[0].clientX, this.trackWidthRange);
         // console.log('T moving: '+ event.touches[0].clientX);
     }
 
+    /**
+     *
+     */
     public onSliderTouchStart(event: TouchEvent): void {
         event.preventDefault();
         this.trackWidthRange = this.getTrackWidthRange();
-        // this.jumpToPosition(event.clientX, this.trackWidthRange);
-        // console.log('ON SLIDER TOUCH START ---------------------------<' +
-        //             event.clientX);
-        // console.dir(event);
-
         this.jumpToPosition(event.touches[0].clientX, this.trackWidthRange);
         console.log('ON SLIDER TOUCH START ---------------------------');
     }
 
+    /**
+     *
+     */
     public onSliderTouchEnd(event: TouchEvent): void {
         // to understand the 'preventDefault()' call below, see
         // https://www.html5rocks.com/en/mobile/touchandmouse/

@@ -45,7 +45,7 @@ export abstract class WebAudioPlayer {
     protected pausedAt: number;
 
     private heartbeat: Heartbeat;
-    protected audioBuffer: AudioBuffer;
+    // protected audioBuffer: AudioBuffer;
     // private sourceNodes: AudioBufferSourceNode[];
     protected sourceNodes: { [id: number]: AudioBufferSourceNode };
 
@@ -156,7 +156,7 @@ export abstract class WebAudioPlayer {
         startSample: number = 0,
         offset: number = 0,
         startOffset: number = 0,
-        onEnded?: () => void
+        onEnded: () => void
     ): void {
         const bufferDuration: number = audioBuffer.duration,
               sourceNode: AudioBufferSourceNode =
@@ -172,12 +172,9 @@ export abstract class WebAudioPlayer {
                     ', bufferDuration: ' + bufferDuration.toFixed(2) +
                     '): ' + Object.keys(this.sourceNodes).length);
 
-        sourceNode.connect(AUDIO_CONTEXT.destination);
+        sourceNode.onended = onEnded;
         sourceNode.buffer = audioBuffer;
-
-        if (onEnded) {
-            sourceNode.onended = onEnded;
-        }
+        sourceNode.connect(AUDIO_CONTEXT.destination);
 
         if (when === 0) {
             // start now

@@ -105,14 +105,12 @@ export class WavPlayer extends WebAudioPlayer {
                     'startSample1=' + startSample1 + ', endSample1=' +
                    endSample1 + ', nSamples=' + nSamples);
 
-        console.log('hi-2');
         WavFile.readWavFileAudio(
             this.filePath,
             startSample1,
             endSample1
         ).subscribe(
             (audioBuffer1: AudioBuffer) => {
-                console.log('hi-1.5');
                 // this.audioBuffer = audioBuffer1;
                 const startTime1: number = startSample1 / this.sampleRate,
                       onEndedCB1: () => void = this.getOnEndedCB(startSample1),
@@ -121,8 +119,6 @@ export class WavPlayer extends WebAudioPlayer {
                           this.schedulePlay(audioBuffer1, 0,
                                             0, 0, startTime1, onEndedCB1);
                       };
-                console.log('hi-1');
-                playFirstBuffer();
                 if (endSample1 < nSamples) {
                     // INV: startSample2 = endSample1
                     const startSample2: number = endSample1,
@@ -134,7 +130,6 @@ export class WavPlayer extends WebAudioPlayer {
                           ),
                           t2: number = startSample2 + N_BUFFER_SAMPLES,
                           endSample2: number = t2 > nSamples ? nSamples : t2;
-                    console.log('hi0');
 
                     WavFile.readWavFileAudio(
                         this.filePath,
@@ -142,11 +137,9 @@ export class WavPlayer extends WebAudioPlayer {
                         endSample2
                     ).subscribe(
                         (audioBuffer2: AudioBuffer) => {
-                            console.log('hi1');
-
+                            playFirstBuffer();
                             this.schedulePlay(audioBuffer2, startTime2,
                                               startSample2, 0, 0, onEndedCB2);
-                            console.log('hi2');
                         },
                         (err2: any) => {
                             alert(err2);
