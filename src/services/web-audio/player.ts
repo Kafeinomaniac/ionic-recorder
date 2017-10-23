@@ -222,12 +222,14 @@ export abstract class WebAudioPlayer {
     public togglePlayPause(): void {
         if (this.isPlaying) {
             this.pause();
-            console.log('togglePlayPause(): pausing at: ' + this.pausedAt);
+            console.log('togglePlayPause(): pausing at: ' +
+                        this.pausedAt.toFixed(2));
             // this.stopMonitoring();
         }
         else {
             this.startMonitoring();
-            console.log('togglePlayPause(): playing from: ' + this.pausedAt);
+            console.log('togglePlayPause(): playing from: ' +
+                        this.pausedAt.toFixed(2));
 
             // this.schedulePlay(this.audioBuffer);
             // this.startMonitoring();

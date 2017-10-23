@@ -7,6 +7,8 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* [issue 160](https://github.com/tracktunes/ionic-recorder/issues/160)
+
 * rename Directory -> Folder everywhere
 * playback problem 3: when you play and then jump somewhere, it seems to play
   both, i.e. it does not stop properly
