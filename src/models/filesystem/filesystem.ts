@@ -239,10 +239,6 @@ export class Filesystem {
                         fsType,
                         grantedBytes,
                         (fs: FileSystem) => {
-                            // console.log('grantedBytes: ' + grantedBytes);
-                            // console.log('onInitFs():fs.name: ' + fs.name);
-                            // console.log('onInitFs():fs.root.toURL(): ' +
-                            //             fs.root.toURL());
                             observer.next(fs);
                             observer.complete();
                         },

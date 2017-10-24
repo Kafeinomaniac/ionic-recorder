@@ -116,7 +116,6 @@ export class WavPlayer extends WebAudioPlayer {
                     this.schedulePlay(audioBuffer1, 0, 0,
                                       startSample1 / this.sampleRate,
                                       this.getOnEndedCB(startSample1));
-                                      // null);
                 };
                 if (endSample1 < nSamples) {
                     // INV: startSample2 = endSample1
