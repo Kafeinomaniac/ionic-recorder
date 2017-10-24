@@ -7,6 +7,13 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* only call getMetadata once inside setSourceFile of player, then you
+  can grab file properties from player. This expands player API to include:
+  last-modified, duration, file-size, sample rate, # of samples
+* rename: jumpToPosition --> seek()
+* refactor: swallow pauseAt into pause with optional argument
+* rename: playFrom --> play()
+* so player API becomes
 * one way to fix all is to refactor now: in these steps:
   1) figure out what functionality we need from the UI and define the playback
   and record API very clearly

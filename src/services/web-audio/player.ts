@@ -1,55 +1,21 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-/*
- * Player API
- * ==========
- *
- * --------
- * Members:
- * --------
- * - isPlaying
- * - duration
- * - progress
- * - displayTime
- * - displayDuration
- *
- * ----------
- * Functions:
- * ----------
- * - togglePlayPause()
- * - jumpToPosition(progress)
- * - setSourceFile(path)
- * - stop()
- */
-
-// Lowest-level audio-buffer Web Audio Api playback class.
-// This class only deals with a single audio-buffer, it
-// knows nothing about multi-buffer streams or encodings.
-// Plays for various encodings are in files with name player-X.ts
-// (where 'X' is, e.g, 'wav' or 'webm') in play-wav.ts and are
-// responsible for dealing with multiple-chunk files stored via indexedDB -
-// these extension classes use this base class for single buffer operations.
-
 import { Injectable } from '@angular/core';
 import { AUDIO_CONTEXT, Heartbeat } from '../../services';
-// import { formatTime, prependArray } from '../../models';
 import { formatTime } from '../../models';
 
-/** @const {string} The name of the function we give to master clock to run */
+/** @const {string} Heartbeat clock's ID of function to run periodically */
 const PLAYER_CLOCK_FUNCTION_NAME: string = 'player';
 
 /**
- * Audio playback from an AudioBuffer (not from file, for playback from file,
- * see the classes that extend this one, e.g. wav-player.ts. Based on Web
- * Audio API. Originally this was based on code by Ian McGregor here:
+ * Loads and plays audio files (using the Web Audio API and HTML5
+ * FileSystem API). Playback part inspired by by Ian McGregor's code here:
  * http://codepen.io/ianmcgregor/pen/EjdJZZ
- *
  * @class WebAudioPlayer
  */
 @Injectable()
 export abstract class WebAudioPlayer {
     public isPlaying: boolean;
-    // time is guaranteed to be Heartbeat interval
     public time: number;
     public duration: number;
     public displayTime: string;
@@ -57,22 +23,20 @@ export abstract class WebAudioPlayer {
     public progress: number;
 
     protected sourceNode: AudioBufferSourceNode;
-
     // When playing, not paused, (AUDIO_CONTEXT.currentTime - this.startedAt)
-    // is the current time.
+    // is the current time, in seconds, into the playback, from the start of
+    // the file we're playing.
     protected startedAt: number;
-
     // When paused, this.pausedAt is the AUDIO_CONTEXT.currentTime time at
     // which we paused
     protected pausedAt: number;
-
-    private heartbeat: Heartbeat;
-    // protected audioBuffer: AudioBuffer;
-    // private sourceNodes: AudioBufferSourceNode[];
     protected sourceNodes: { [id: number]: AudioBufferSourceNode };
 
+    private heartbeat: Heartbeat;
+
     /**
-     *
+     * @constructor
+     * @param {Heartbeat} heartbeat - used for regular updates of properties.
      */
     constructor(heartbeat: Heartbeat) {
         console.log('constructor()');
@@ -88,6 +52,16 @@ export abstract class WebAudioPlayer {
         this.displayDuration = this.displayTime;
         this.progress = 0;
     }
+
+    /**
+     * Abstract method
+     */
+    public abstract setSourceFile(filePath: string): void;
+
+    /**
+     * Abstract method
+     */
+    public abstract jumpToPosition(position: number): void;
 
     /**
      * Abstract method
@@ -227,13 +201,11 @@ export abstract class WebAudioPlayer {
      */
     public pause(): void {
         const elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
-        // this.stop(elapsed);
-        // TODO: we need to figure out monitoring, may need to uncomment below:
-        // this.stopMonitoring;
         this.resetSourceNode(this.sourceNode);
         this.cancelScheduled();
         this.pausedAt = elapsed;
         this.isPlaying = false;
+        this.stopMonitoring;
     }
 
     /**
@@ -244,16 +216,11 @@ export abstract class WebAudioPlayer {
             this.pause();
             console.log('togglePlayPause(): pausing at: ' +
                         this.pausedAt.toFixed(2));
-            // this.stopMonitoring();
         }
         else {
             this.startMonitoring();
             console.log('togglePlayPause(): playing from: ' +
                         this.pausedAt.toFixed(2));
-
-            // this.schedulePlay(this.audioBuffer);
-            // this.startMonitoring();
-            // this.playFrom((this.pausedAt - this.startedAt) / this.duration);
             this.playFrom(this.progress);
         }
     }

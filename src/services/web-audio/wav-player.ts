@@ -155,8 +155,8 @@ export class WavPlayer extends WebAudioPlayer {
     private getOnEndedCB(startSample: number): () => void {
         const nSamples: number = this.nSamples,
               nextStartSample: number = startSample + 2 * N_BUFFER_SAMPLES,
-              destroyMe: (i: number) => void = (i: number) => {
-                  console.log('destroyMe(' + i + ') - ' +
+              destroySourceNode: (i: number) => void = (i: number) => {
+                  console.log('destroySourceNode(' + i + ') - ' +
                               Object.keys(this.sourceNodes).length);
                   const sourceNode: AudioBufferSourceNode = this.sourceNodes[i];
                   if (sourceNode) {
@@ -171,13 +171,13 @@ export class WavPlayer extends WebAudioPlayer {
 
         if (nextStartSample >= nSamples) {
             return () => {
-                destroyMe(startSample);
+                destroySourceNode(startSample);
                 console.log('onEndedCB(' + startSample +
                             ') - reached last chunk');
             };
         }
         return () => {
-            destroyMe(startSample);
+            destroySourceNode(startSample);
             const when: number = this.getChunkTime(nextStartSample),
                   tmp: number = nextStartSample + N_BUFFER_SAMPLES,
                   endSample: number = tmp > nSamples ? nSamples : tmp;
@@ -192,8 +192,6 @@ export class WavPlayer extends WebAudioPlayer {
                 endSample
             ).subscribe(
                 (audioBuffer: AudioBuffer) => {
-                    // console.log('+++++++++++++++ ' + audioBuffer.length);
-                    // console.log('+++++++++++++++ ' + when);
                     this.schedulePlay(
                         audioBuffer,
                         when,

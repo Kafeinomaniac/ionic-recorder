@@ -6,14 +6,16 @@ import { AUDIO_CONTEXT, SAMPLE_RATE } from './common';
 import { ABS, formatTime } from '../../models';
 import { Heartbeat } from '../../services';
 
-// the name of the function we give to master clock to run
+/** @const {string} Heartbeat clock's ID of function to run periodically */
 const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
 
-// length of script processing buffer (must be power of 2, smallest possible,
-// to reduce latency and to compute time as accurately as possible)
+/**
+ * @const {string} Length of script processing buffer - (a) this must be a
+ * power of 2; (b) the smaller this is, the more accurately we track time.
+ */
 const PROCESSING_BUFFER_LENGTH: number = 2048;
 
-// wait-time between checks that WAA is initialized
+/** @const {number}  Waiting time between checks that WAA is initialized */
 const WAIT_MSEC: number = 50;
 
 // statuses

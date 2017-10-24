@@ -3,7 +3,7 @@
 import { Component } from '@angular/core';
 import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components';
-import { WavPlayer } from '../../services';
+// import { WavPlayer } from '../../services';
 import {
     pathFolderName,
     formatDate,
@@ -30,26 +30,20 @@ export class TrackPage {
     public sampleRate: number;
     public nSamples: number;
     public parentFolder: string;
-    private player: WavPlayer;
 
     /**
      * @constructor
      * @param {NavParams}
      * @param {ActionSheetController}
-     * @param {WavPlayer}
      */
     constructor(
         navParams: NavParams,
-        actionSheetController: ActionSheetController,
-        wavPlayer: WavPlayer
+        actionSheetController: ActionSheetController
     ) {
         console.log('constructor(' + navParams.data + ')');
-
         // grab data sent over from the caller of this page - full path of file
         this.filePath = navParams.data;
-
         this.actionSheetController = actionSheetController;
-        this.player = wavPlayer;
         this.parentFolder = pathFolderName(this.filePath);
         this.encoding = WAV_MIME_TYPE;
 
@@ -91,6 +85,7 @@ export class TrackPage {
                 clickCB: () => { this.onClickShareButton(); }
             }
         ];
+
     }
 
     /**
@@ -151,14 +146,6 @@ export class TrackPage {
     public onClickShareButton(): void {
         console.log('onClickShareButton()');
         this.presentActionSheet();
-    }
-
-    /**
-     * UI callback handler called after leaving this view
-     */
-    public ionViewWillLeave(): void {
-        console.log('ionViewWillLeave()');
-        this.player.stopMonitoring();
     }
 
 }

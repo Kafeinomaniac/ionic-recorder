@@ -1,7 +1,7 @@
 {
   "name": "ionic-recorder",
   "description": "Sound recording app (Angular/Ionic/WebAudioAPI SPA/PWA)",
-  "version": "0.3.0-alpha.33",
+  "version": "0.3.0-alpha.34",
   "author": "Tracktunes Inc",
   "license": "GPL-2.0",
   "homepage": "https://github.com/tracktunes/ionic-recorder",
