@@ -154,10 +154,7 @@ export abstract class WebAudioPlayer {
 
         this.sourceNodes[startSample] = sourceNode;
 
-        console.log('schedulePlay(when: ' +
-                    (when === 0 ?
-                     AUDIO_CONTEXT.currentTime - timeOffset :
-                     when.toFixed(2)) +
+        console.log('schedulePlay(when: ' + when.toFixed(2) +
                     ', startSample: ' + startSample +
                     ', timeOffset: ' + timeOffset.toFixed(2) +
                     ', startedAt: ' + this.startedAt.toFixed(2) +
@@ -170,9 +167,6 @@ export abstract class WebAudioPlayer {
 
         if (when === 0) {
             // start now
-            if (this.pausedAt) {
-                throw Error('this.pausedAt non zero in schedulePlay()');
-            }
             this.sourceNode = sourceNode;
             sourceNode.start(0, 0, bufferDuration);
             this.startedAt = AUDIO_CONTEXT.currentTime - timeOffset;
@@ -194,13 +188,17 @@ export abstract class WebAudioPlayer {
     /**
      * Pause playback - assumes we are playing.
      */
-    public pause(elapsed: number = -1): void {
-        if (elapsed < 0) {
-            elapsed = AUDIO_CONTEXT.currentTime - this.startedAt;
+    public pause(pauseTime: number = -1): void {
+        if (pauseTime < 0) {
+            console.log('pause(NOW)');
+            pauseTime = AUDIO_CONTEXT.currentTime - this.startedAt;
+        }
+        else {
+            console.log('pause(' + pauseTime.toFixed(2) + ')');
         }
         this.resetSourceNode(this.sourceNode);
         this.cancelScheduled();
-        this.pausedAt = elapsed;
+        this.pausedAt = pauseTime;
         this.isPlaying = false;
         this.stopMonitoring;
     }
@@ -215,10 +213,11 @@ export abstract class WebAudioPlayer {
                         this.pausedAt.toFixed(2));
         }
         else {
-            this.startMonitoring();
             console.log('togglePlayPause(): playing from: ' +
                         this.pausedAt.toFixed(2));
             this.playFrom(this.progress);
+            // startMonitoring done inside playFrom() now
+            // this.startMonitoring();
         }
     }
 

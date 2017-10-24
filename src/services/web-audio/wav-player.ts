@@ -68,7 +68,7 @@ export class WavPlayer extends WebAudioPlayer {
             // issue but they do not solve it completely. the other problem
             // that we see with this approach is that there is some jumpiness
             // in the progress handle when we jump-play in the middle of play
-            // this.pause();
+            this.pause();
             // this.stop();
             this.playFrom(position);
         }
@@ -83,12 +83,9 @@ export class WavPlayer extends WebAudioPlayer {
     public pauseAt(position: number): void {
         const startSample: number = Math.floor(position * this.nSamples),
               startTime: number = startSample / this.sampleRate;
-        this
-
         console.log('pauseAt(' + position.toFixed(2) + ') - time: ' +
                     startTime.toFixed(2));
-        this.pausedAt = startTime;
-        this.displayTime = formatTime(this.pausedAt, this.duration);
+        this.pause(startTime);
     }
 
     /**
@@ -103,8 +100,9 @@ export class WavPlayer extends WebAudioPlayer {
               endSample1: number = t1 > nSamples ? nSamples : t1;
 
         console.log('playFrom(position=' + position + '): ' +
-                    'startSample1=' + startSample1 + ', endSample1=' +
-                    ', nSamples=' + nSamples);
+                    'startSample1=' + startSample1 + ', nSamples=' + nSamples);
+
+        this.startMonitoring();
 
         WavFile.readWavFileAudio(
             this.filePath,
@@ -114,7 +112,7 @@ export class WavPlayer extends WebAudioPlayer {
             (audioBuffer1: AudioBuffer) => {
                 const playFirstBuffer: () => void =  () => {
                     console.log('playFirstBuffer');
-                    this.schedulePlay(audioBuffer1, 0, 0,
+                    this.schedulePlay(audioBuffer1, 0, startSample1,
                                       startSample1 / this.sampleRate,
                                       this.getOnEndedCB(startSample1));
                 };

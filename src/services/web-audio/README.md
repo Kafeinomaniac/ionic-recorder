@@ -17,7 +17,7 @@ not yet implemented. This API is not yet stable and will change a lot.
 #### Properties
 * `isPlaying` - True if currently playing and not paused (changes in real time).
 * `duration` - Total time in seconds of currently loaded track'
-* `relativePosition` - 
+* `relativePosition` -
 * `displayTime`
 * `displayDuration`
 * `lastModified`

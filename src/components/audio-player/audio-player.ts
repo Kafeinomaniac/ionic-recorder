@@ -12,6 +12,8 @@ import {
 import { WavPlayer } from '../../services/web-audio/wav-player';
 import { formatTime, pathFilename } from '../../models';
 
+const PROGRESS_BY_PLAYER: number = -1;
+
 /**
  * An toolbar-like (row on the screen) audio player for controlling
  * blob playback.
@@ -41,7 +43,7 @@ export class AudioPlayer implements OnChanges {
         this.changeDetectorRef = changeDetectorRef;
         this.player = player;
         this.filenameOrProgress = '';
-        this.progress = -1;
+        this.progress = PROGRESS_BY_PLAYER;
     }
 
     /**
@@ -82,11 +84,12 @@ export class AudioPlayer implements OnChanges {
         // }
         this.filenameOrProgress = pathFilename(this.filePath);
 
-        // TODO: check if next line (this.progress = -1;) is necessary.
-        // restore this.progress to being negative so as to tell this player
-        // that we are now no longer moving the progress slider manually but
-        // are driving it via the player class
-        this.progress = -1;
+        // TODO: check if next line (this.progress =
+        // PROGRESS_BY_PLAYER) is necessary.  Restore this.progress
+        // to being negative so as to tell this player that we are now
+        // no longer moving the progress slider manually but are
+        // driving it via the player class
+        this.progress = PROGRESS_BY_PLAYER;
         this.player.jumpToPosition(progress);
 
         this.detectChanges();
@@ -106,10 +109,16 @@ export class AudioPlayer implements OnChanges {
     }
 
     /**
-     *
+     * Used by template to display progress position in the
+     * progress-slider directive. It reflects user mouse or touch
+     * gesture of the progress slider handle if it is being moved by
+     * the user or, if the player is playing audio, the current audio
+     * playback position.
+     * @return {number} A float in [0, 1] that reflects the current
+     * play position / current progress slider handle position.
      */
     public getProgress(): number {
-        if (this.progress === -1) {
+        if (this.progress === PROGRESS_BY_PLAYER) {
             // NOTE: uncomment console.logs here to spy on jumps in the
             // position of the handle. They are what helped fix it.
             // console.log('getProgress() => ' + this.player.progress);
@@ -117,8 +126,9 @@ export class AudioPlayer implements OnChanges {
             return this.player.progress;
         }
         else {
+            // progress by mouse or touch gesture
             // console.log('getProgress() => ' + this.progress);
-            // console.log('getProgress() -A-> ' + this.progress);
+            // console.log('getProgress() -M-> ' + this.progress);
             return this.progress;
         }
     }
