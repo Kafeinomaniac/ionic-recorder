@@ -23,9 +23,7 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    constructor(
-        heartbeat: Heartbeat
-    ) {
+    constructor(heartbeat: Heartbeat) {
         console.log('constructor()');
         super(heartbeat);
         this.filePath = null;
@@ -75,6 +73,19 @@ export class WavPlayer extends WebAudioPlayer {
         else {
             this.pauseAt(position);
         }
+    }
+
+    /**
+     *
+     */
+    private getChunkTime(startSample: number): number {
+        console.log('getChunkTime(startSample: ' + startSample + ') = ' +
+                    (this.startedAt + startSample / this.sampleRate)
+                    .toFixed(2));
+        if (startSample >= this.nSamples) {
+            throw Error('startSample >= this.nSamples');
+        }
+        return this.startedAt + startSample / this.sampleRate;
     }
 
     /**
@@ -163,11 +174,9 @@ export class WavPlayer extends WebAudioPlayer {
                       delete this.sourceNodes[i];
                   }
               };
-
         console.log('getOnEndedCB(' + startSample + ') - startSample: ' +
                     startSample  + ', nextStartSample: ' +
                     nextStartSample + ', nSamples: ' + nSamples);
-
         if (nextStartSample >= nSamples) {
             return () => {
                 destroySourceNode(startSample);
@@ -206,18 +215,4 @@ export class WavPlayer extends WebAudioPlayer {
             );
         };
     }
-
-    /**
-     *
-     */
-    private getChunkTime(startSample: number): number {
-        console.log('getChunkTime(startSample: ' + startSample + ') = ' +
-                    (this.startedAt + startSample / this.sampleRate)
-                    .toFixed(2));
-        if (startSample >= this.nSamples) {
-            throw Error('startSample >= this.nSamples');
-        }
-        return this.startedAt + startSample / this.sampleRate;
-    }
-
 }
