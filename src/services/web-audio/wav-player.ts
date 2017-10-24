@@ -84,8 +84,8 @@ export class WavPlayer extends WebAudioPlayer {
     public pauseAt(position: number): void {
         const startSample: number = Math.floor(position * this.nSamples),
               startTime: number = startSample / this.sampleRate;
-        console.log('pauseAt(' + position.toFixed(2) +
-                    ') - time: ' + startTime.toFixed(2));
+        console.log('pauseAt(' + position.toFixed(2) + ') - time: ' +
+                    startTime.toFixed(2));
         this.pausedAt = startTime;
         this.displayTime = formatTime(this.pausedAt, this.duration);
     }
