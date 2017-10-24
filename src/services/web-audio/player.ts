@@ -176,7 +176,7 @@ export abstract class WebAudioPlayer {
         audioBuffer: AudioBuffer,
         when: number = 0,
         startSample: number = 0,
-        startedAtOffset: number = 0,
+        timeOffset: number = 0,
         onEnded: () => void
     ): void {
         const bufferDuration: number = audioBuffer.duration,
@@ -185,9 +185,12 @@ export abstract class WebAudioPlayer {
 
         this.sourceNodes[startSample] = sourceNode;
 
-        console.log('schedulePlay(when: ' + when.toFixed(2) +
+        console.log('schedulePlay(when: ' +
+                    (when === 0 ?
+                     AUDIO_CONTEXT.currentTime - timeOffset :
+                     when.toFixed(2)) +
                     ', startSample: ' + startSample +
-                    ', startedAtOffset: ' + startedAtOffset.toFixed(2) +
+                    ', timeOffset: ' + timeOffset.toFixed(2) +
                     ', startedAt: ' + this.startedAt.toFixed(2) +
                     ', bufferDuration: ' + bufferDuration.toFixed(2) +
                     '): ' + Object.keys(this.sourceNodes).length);
@@ -203,7 +206,7 @@ export abstract class WebAudioPlayer {
             }
             this.sourceNode = sourceNode;
             sourceNode.start(0, 0, bufferDuration);
-            this.startedAt = AUDIO_CONTEXT.currentTime - startedAtOffset;
+            this.startedAt = AUDIO_CONTEXT.currentTime - timeOffset;
             this.pausedAt = 0;
             this.isPlaying = true;
             console.log('====> START PLAY AT = ' + this.startedAt.toFixed(2));
@@ -211,6 +214,7 @@ export abstract class WebAudioPlayer {
         else {
             // start later (when)
             sourceNode.start(when, 0, when + bufferDuration);
+            // sourceNode.start(when, 0);
             // we save the scheduled source nodes in an array to avoid them
             // being garbage collected while they wait to be played.
             // this.sourceNodes =
