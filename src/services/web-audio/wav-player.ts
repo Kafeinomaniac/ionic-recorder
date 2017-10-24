@@ -6,7 +6,6 @@ import { formatTime, WavFile, WavInfo } from '../../models';
 import { Heartbeat } from '../../services';
 
 /** @constant {number} Number of samples in the playback memory buffer. */
-// const N_BUFFER_SAMPLES: number = 44100;
 const N_BUFFER_SAMPLES: number = 40000.0;
 
 /**
@@ -84,6 +83,8 @@ export class WavPlayer extends WebAudioPlayer {
     public pauseAt(position: number): void {
         const startSample: number = Math.floor(position * this.nSamples),
               startTime: number = startSample / this.sampleRate;
+        this
+
         console.log('pauseAt(' + position.toFixed(2) + ') - time: ' +
                     startTime.toFixed(2));
         this.pausedAt = startTime;

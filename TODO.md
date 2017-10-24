@@ -7,6 +7,8 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* rename: either use position or progress, not both - use relativePosition,
+  actually - a longer but clearer name
 * only call getMetadata once inside setSourceFile of player, then you
   can grab file properties from player. This expands player API to include:
   last-modified, duration, file-size, sample rate, # of samples

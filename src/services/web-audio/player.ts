@@ -5,7 +5,7 @@ import { AUDIO_CONTEXT, Heartbeat } from '../../services';
 import { formatTime } from '../../models';
 
 /** @const {string} Heartbeat clock's ID of function to run periodically */
-const PLAYER_CLOCK_FUNCTION_NAME: string = 'player';
+const PLAYER_CLOCK_FUNCTION_ID: string = 'player';
 
 /**
  * Loads and plays audio files (using the Web Audio API and HTML5
@@ -73,31 +73,30 @@ export abstract class WebAudioPlayer {
      */
     public abstract pauseAt(position: number): void;
 
+    private playerClockCallback() {
+        let time: number = this.getTime();
+        if (time >= this.duration) {
+            this.stop();
+            time = 0;
+        }
+        if (this.time !== time) {
+            // change detected
+            // console.log('playerClockCallback(): time change detected');
+            this.time = time;
+            this.progress = time / this.duration;
+            this.displayTime = formatTime(time, this.duration);
+        }
+    }
+
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
      */
     public startMonitoring(): void {
         console.log('startMonitoring()');
+        this.playerClockCallback();
         this.heartbeat.addFunction(
-            PLAYER_CLOCK_FUNCTION_NAME,
-            () => {
-                let time: number = this.getTime();
-                if (time > this.duration) {
-                    time = this.duration;
-                    this.stop();
-                    const msg: string = 'time (' + time.toFixed(2) +
-                          ') > this.duration (' + this.duration.toFixed(2) +
-                          ') delta: ' + (time - this.duration) * 1000000000.0;
-                    console.log(msg);
-                }
-
-                if (this.time !== time) {
-                    // change detected
-                    this.time = time;
-                    this.progress = time / this.duration;
-                    this.displayTime = formatTime(time, this.duration);
-                }
-            }
+            PLAYER_CLOCK_FUNCTION_ID,
+            () => { this.playerClockCallback(); }
         );
     }
 
@@ -109,7 +108,8 @@ export abstract class WebAudioPlayer {
      */
     public stopMonitoring(): void {
         console.log('stopMonitoring()');
-        this.heartbeat.removeFunction(PLAYER_CLOCK_FUNCTION_NAME);
+        this.heartbeat.removeFunction(PLAYER_CLOCK_FUNCTION_ID);
+        this.playerClockCallback();
     }
 
     /**
@@ -122,11 +122,6 @@ export abstract class WebAudioPlayer {
         if (sourceNode) {
             sourceNode.stop();
             sourceNode.disconnect();
-            // const idx: number =
-            //     this.sourceNodes.indexOf(sourceNode);
-            // if (idx !== -1) {
-            //     delete this.sourceNodes[idx];
-            // }
         }
     }
 
@@ -199,8 +194,10 @@ export abstract class WebAudioPlayer {
     /**
      * Pause playback - assumes we are playing.
      */
-    public pause(): void {
-        const elapsed: number = AUDIO_CONTEXT.currentTime - this.startedAt;
+    public pause(elapsed: number = -1): void {
+        if (elapsed < 0) {
+            elapsed = AUDIO_CONTEXT.currentTime - this.startedAt;
+        }
         this.resetSourceNode(this.sourceNode);
         this.cancelScheduled();
         this.pausedAt = elapsed;
@@ -252,6 +249,6 @@ export abstract class WebAudioPlayer {
         this.startedAt = 0;
         this.pausedAt = 0;
         this.isPlaying = false;
-        // this.stopMonitoring();
+        this.stopMonitoring();
     }
 }
