@@ -73,7 +73,7 @@ export abstract class WebAudioPlayer {
      */
     public abstract pauseAt(position: number): void;
 
-    private playerClockCallback() {
+    private playerClockCallback(): void {
         let time: number = this.getTime();
         if (time >= this.duration) {
             this.stop();
@@ -200,7 +200,7 @@ export abstract class WebAudioPlayer {
         this.cancelScheduled();
         this.pausedAt = pauseTime;
         this.isPlaying = false;
-        this.stopMonitoring;
+        this.stopMonitoring();
     }
 
     /**

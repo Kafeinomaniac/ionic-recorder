@@ -1,3 +1,9 @@
+## 0.3.1-alpha
+* Play / Pause whether we're already playing or paused, in track page
+  / audio-player - all works now as expected, with FileSystem API
+  only, no IndexedDB - real files being played in a chunked manner, so
+  the memory overhead remains low even on gigantic file playback.
+
 ## 0.3.0-alpha
 * File System API (implemented/tested in Chrome) replaces the ol'
   indexedDB home brewed file system and wav file appended recording

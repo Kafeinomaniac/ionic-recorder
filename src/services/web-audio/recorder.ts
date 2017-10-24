@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from './common';
-import { ABS, formatTime } from '../../models';
+import { ABS, formatTime, objectInspector } from '../../models';
 import { Heartbeat } from '../../services';
 
 /** @const {string} Heartbeat clock's ID of function to run periodically */
@@ -149,10 +149,11 @@ export abstract class WebAudioRecorder {
                 .then((stream: MediaStream) => {
                     this.connectNodes(stream);
                 })
-                .catch((error: any) => {
-                    console.warn('NO MICROPHONE: ' + error);
-                    console.dir(error);
+                .catch((err: any) => {
                     this.status = RecordStatus.NO_MICROPHONE_ERROR;
+                    const msg: string = 'initAudio(new): err: ' +
+                          err + ', code: ' + err.code;
+                    alert(msg);
                 });
         }
         else {
@@ -169,17 +170,18 @@ export abstract class WebAudioRecorder {
                         (stream: MediaStream) => {
                             this.connectNodes(stream);
                         },
-                        (error: any) => {
-                            console.warn('initAudio(old1) ' + error);
-                            alert('initAudio(old1) ' + error);
+                        (err: any) => {
                             this.status = RecordStatus.NO_MICROPHONE_ERROR;
+                            const msg: string = 'initAudio(old1): err: ' +
+                                  err + ', code: ' + err.code;
+                            alert(msg);
                         });
                 }
-                catch (error) {
-                    console.warn('initAudio(old2) ' + error);
-                    console.dir(error);
-                    alert('initAudio(old2) ' + error);
+                catch (err) {
                     this.status = RecordStatus.GETUSERMEDIA_ERROR;
+                    const msg: string = 'initAudio(old2): err: ' +
+                          err + ', code: ' + err.code;
+                    alert(msg);
                 }
             }
             else {
