@@ -13,15 +13,11 @@ export interface GainState {
 interface State {
     lastTabIndex: number;
     gain: GainState;
-    lastRecordingPath: string;
-    lastRecordingDuration: string;
 }
 
 const DEFAULT_STATE: State = {
     lastTabIndex: 1,
-    gain: { factor: 1.0, maxFactor: 2.0 },
-    lastRecordingPath: '',
-    lastRecordingDuration: ''
+    gain: { factor: 1.0, maxFactor: 2.0 }
 };
 
 /**

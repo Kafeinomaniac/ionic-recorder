@@ -34,6 +34,8 @@ export class WavRecorder extends WebAudioRecorder {
         super(heartbeat);
         console.log('constructor()');
 
+        this.filePath = null;
+
         this.setter = new DoubleBufferSetter(WAV_CHUNK1, WAV_CHUNK2, () => {
             this.saveWavFileChunk(this.setter.activeBuffer).subscribe(
                 null,
@@ -59,6 +61,13 @@ export class WavRecorder extends WebAudioRecorder {
      */
     public getFilePath(): string {
         return this.filePath;
+    }
+
+    /**
+     *
+     */
+    public unloadRecordedFile(): void {
+        this.filePath = null;
     }
 
     /**

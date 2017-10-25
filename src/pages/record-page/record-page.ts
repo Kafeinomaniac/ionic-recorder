@@ -85,16 +85,6 @@ export class RecordPage {
             }
         );
 
-        this.appStorage.get('lastRecordingPath').then(
-            (path: string) => {
-                this.lastRecordingPath = path;
-                this.appStorage.get('lastRecordingDuration').then(
-                    (duration: string) => {
-                        this.lastRecordingDuration = duration;
-                    }
-                );
-            }
-        );
     }
 
     /**
@@ -199,9 +189,17 @@ export class RecordPage {
     /**
      *
      */
+    public recorderLastSavedFile(): string {
+        return this.recorder.getFilePath();
+    }
+
+    /**
+     *
+     */
     public onPlayLastRecording(): void {
         console.log('onPlayLastRecording()');
-        this.navController.push(TrackPage, this.recorder.getFilePath());
+        const filePath: string = this.recorderLastSavedFile();
+        this.navController.push(TrackPage, filePath);
     }
 
     /**
@@ -221,5 +219,6 @@ export class RecordPage {
     public ionViewDidLeave(): void {
         console.log('ionViewDidLeave()');
         this.recorder.stopMonitoring();
+        this.recorder.unloadRecordedFile();
     }
 }

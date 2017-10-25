@@ -104,7 +104,7 @@ export class WavFile {
      */
     public static readWavFileInfo(
         filePath: string,
-        bIncludeMetadata :boolean = false
+        bIncludeMetadata: boolean = false
     ): Observable<WavInfo> {
         console.log('readWavFileInfo(' + filePath + ')');
         let src: Observable<WavInfo> = Observable.create((observer) => {

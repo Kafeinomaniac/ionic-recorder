@@ -51,12 +51,12 @@
                 margin: 0;
             }
             p {
-                //color: color($colors, button-on-dark-bg, contrast);
                 color: color($colors, light-gray);
             }
             button {
                 color: color($colors, light-gray);
-                font-size: 120%;
+                font-size: 100%;
+                text-transform: none;
             }
         }
         ion-card {

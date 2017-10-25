@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from './common';
-import { ABS, formatTime, objectInspector } from '../../models';
+import { ABS, formatTime } from '../../models';
 import { Heartbeat } from '../../services';
 
 /** @const {string} Heartbeat clock's ID of function to run periodically */

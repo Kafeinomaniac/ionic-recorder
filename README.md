@@ -31,8 +31,7 @@ On Andfoid/iOS, some features are still only partially supported,
 specifically, the recording may come out at low quality due to buggy
 implementation of `getUserMedia()` on your device, e.g. Samsung Galaxy
 S7 - [check this link](http://caniuse.com/#feat=stream) to see if your
-browser fully supports `getUserMedia()` - probably some time in
-2018.
+browser fully supports `getUserMedia()`.
 
 ## Live Demo
 The following URL hosts a live demo of the current version of the code:
