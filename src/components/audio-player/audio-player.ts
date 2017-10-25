@@ -104,7 +104,7 @@ export class AudioPlayer implements OnChanges {
         if (changeRecord['filePath'] && this.filePath) {
             console.log('ngOnChanges(): filePath=' + this.filePath);
             this.filenameOrProgress = pathFilename(this.filePath);
-            this.player.setSourceFile(this.filePath);
+            this.player.setSourceFile(this.filePath, true);
         }
     }
 

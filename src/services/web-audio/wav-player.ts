@@ -36,7 +36,7 @@ export class WavPlayer extends WebAudioPlayer {
     /**
      *
      */
-    public setSourceFile(filePath: string): void {
+    public setSourceFile(filePath: string, bPlay: boolean = false): void {
         WavFile.readWavFileInfo(filePath).subscribe(
             (wavInfo: WavInfo) => {
                 this.filePath = filePath;
@@ -49,6 +49,13 @@ export class WavPlayer extends WebAudioPlayer {
                             ', sampleRate: ' + this.sampleRate +
                             ', duration: ' + this.displayDuration +
                             ', metadata: ' + wavInfo.metadata);
+                if (bPlay) {
+                    this.playFrom(0);
+                }
+            },
+            (err: any) => {
+                console.error(err);
+                alert(err);
             }
         );
     }
