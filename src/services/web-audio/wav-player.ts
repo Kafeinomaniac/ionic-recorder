@@ -16,7 +16,8 @@ const N_BUFFER_SAMPLES: number = 40000.0;
 @Injectable()
 export class WavPlayer extends WebAudioPlayer {
     // current file's info
-    private filePath: string;
+    // private filePath: string;
+    public filePath: string;
     private sampleRate: number;
     private nSamples: number;
 
@@ -46,7 +47,8 @@ export class WavPlayer extends WebAudioPlayer {
                 console.log('setSourceFile(' + filePath +
                             ') - nSamples: ' + this.nSamples +
                             ', sampleRate: ' + this.sampleRate +
-                            ', duration: ' + this.displayDuration);
+                            ', duration: ' + this.displayDuration +
+                            ', metadata: ' + wavInfo.metadata);
             }
         );
     }

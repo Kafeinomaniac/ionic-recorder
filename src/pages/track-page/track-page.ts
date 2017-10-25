@@ -3,7 +3,6 @@
 import { Component } from '@angular/core';
 import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components';
-// import { WavPlayer } from '../../services';
 import {
     pathFolderName,
     formatDate,
@@ -47,7 +46,7 @@ export class TrackPage {
         this.parentFolder = pathFolderName(this.filePath);
         this.encoding = WAV_MIME_TYPE;
 
-        WavFile.readWavFileInfo(this.filePath).subscribe(
+        WavFile.readWavFileInfo(this.filePath, true).subscribe(
             (wavInfo: WavInfo) => {
                 this.nSamples = wavInfo.nSamples;
                 this.sampleRate = wavInfo.sampleRate;

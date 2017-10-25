@@ -102,7 +102,10 @@ export class WavFile {
     /**
      *
      */
-    public static readWavFileInfo(filePath: string): Observable<WavInfo> {
+    public static readWavFileInfo(
+        filePath: string,
+        bIncludeMetadata :boolean = false
+    ): Observable<WavInfo> {
         console.log('readWavFileInfo(' + filePath + ')');
         let src: Observable<WavInfo> = Observable.create((observer) => {
             Filesystem.getFileSystem(true).subscribe(
@@ -127,22 +130,34 @@ export class WavFile {
                                           subchunk2Size: number =
                                           view2.getUint32(0, true),
                                           nSamples: number = subchunk2Size / 2;
-                                    Filesystem.getMetadata(
-                                        fileSystem,
-                                        filePath
-                                    ).subscribe(
-                                        (metadata: Metadata) => {
-                                            observer.next({
-                                                nSamples: nSamples,
-                                                sampleRate: sampleRate,
-                                                metadata: metadata
-                                            });
-                                            observer.complete();
-                                        },
-                                        (err0: any) => {
-                                            observer.error(err0);
-                                        }
-                                    );
+                                    if (bIncludeMetadata) {
+                                        // yes metadata
+                                        Filesystem.getMetadata(
+                                            fileSystem,
+                                            filePath
+                                        ).subscribe(
+                                            (metadata: Metadata) => {
+                                                observer.next({
+                                                    nSamples: nSamples,
+                                                    sampleRate: sampleRate,
+                                                    metadata: metadata
+                                                });
+                                                observer.complete();
+                                            },
+                                            (err0: any) => {
+                                                observer.error(err0);
+                                            }
+                                        );
+                                    }
+                                    else {
+                                        // no metadata
+                                        observer.next({
+                                            nSamples: nSamples,
+                                            sampleRate: sampleRate,
+                                            metadata: null
+                                        });
+                                        observer.complete();
+                                    }
                                 },
                                 (err1: any) => {
                                     observer.error(err1);

@@ -1,4 +1,4 @@
-## 0.3.1-alpha
+## 0.4.0-alpha
 * Play / Pause whether we're already playing or paused, in track page
   / audio-player - all works now as expected, with FileSystem API
   only, no IndexedDB - real files being played in a chunked manner, so
