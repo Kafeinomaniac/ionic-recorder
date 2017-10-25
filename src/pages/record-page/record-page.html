@@ -50,7 +50,7 @@
         </button>
     </div>
 
-    <ion-card *ngIf="recorderLastSavedFile()">
+    <ion-card *ngIf="recorderLastSavedFile() && recorder.isInactive">
         <p>
             Last recording:
         </p>
