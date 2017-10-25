@@ -11,6 +11,9 @@ cd "${0%/*}/.."
 echo "SRC: `hostname -s`:`pwd`"
 echo "DEST: $RSYNC_DEST"
 
+# reset stuff
+/bin/rm -fr platforms/browser
+
 # npm run build
 ionic cordova build browser --prod
 
