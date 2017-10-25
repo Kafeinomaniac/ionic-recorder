@@ -6,30 +6,33 @@
 * [Ionic](http://ionicframework.com/docs/v2/)
 * [Web Audio API](
         https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
-* [IndexedDB](
-        https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
 
 ## Features
-* Simple interface to record sounds
+* Simple user interface for recording sounds
 * Real-time visualizations, stats and data-analysis of incoming audio
 * A file/folder music organizer for recordings and links
 
 ## Project Status
-This project is still very much a work in progress. 
 
-The recorder app is still in alpha, it does not yet have all features.
+This project is still very much a work in progress. As long as its
+version is labeled "alpha" (as is the case now), expect lots of bugs
+and constantly changing code without all features implemented.  As
+soon as the vast majority of features is implemented and some testing
+has occurred, we will change to "beta" status and adopt a more stable
+change path.
 
 ## System Requirements (for running the app)
-This apps runs only in browsers that implement
-a late version of IndexedDB that supports the `onupgradeended` event,
-plus a recent version of the Web Audio Api.
 
-Currently it should work on recent Chrome and Firefox desktop versions.
-On Andfoid/iOS, some features are still only partially supported, specifically,
-the recording may come out at low quality due to buggy implementation of 
-`getUserMedia()` - [check this link](http://caniuse.com/#feat=stream) for
-when mobile browsers fully support `getUserMedia()` - probably some
-time in 2018.
+This apps runs only in browsers that implement
+a recent version of the Web Audio Api.
+
+This app wors on recent Chrome and Firefox desktop browser versions.
+On Andfoid/iOS, some features are still only partially supported,
+specifically, the recording may come out at low quality due to buggy
+implementation of `getUserMedia()` on your device, e.g. Samsung Galaxy
+S7 - [check this link](http://caniuse.com/#feat=stream) to see if your
+browser fully supports `getUserMedia()` - probably some time in
+2018.
 
 ## Live Demo
 The following URL hosts a live demo of the current version of the code:
@@ -92,3 +95,4 @@ This software is licensed under the [GNU General Public License, version 2 (GPL-
 ## Copyright
 
 Copyright (C) 2017 Tracktunes Inc. ([tracktunes.org](https://tracktunes.org))
+All Rights Reserved.
