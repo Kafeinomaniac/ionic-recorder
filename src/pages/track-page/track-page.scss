@@ -2,12 +2,12 @@
 
 track-page {
     ion-content {
-        // we need to redefine ion-content to inherit from whatever is
-        // the parent element on the tab page. if we do not do this, then
-        // if we come to this page after visiting the record page, we
-        // would have the record page background-color continue to show
-        // up here
-        background-color: inherit !important;
+        div.scroll-content {
+            // background color was transparent which made for too much
+            // contrast between old page (record) and new page (track) when
+            // transitioning between the two pages from record to track
+            background-color: white;
+        }
     }
 }
 
@@ -16,6 +16,6 @@ track-page {
 // (the padded part) shows up black, becuase somehow a background: #fff
 // is remembered.  putting this here fixes that and doesn't seem to have
 // detrimental effects anywhere else
-.ios .ion-page.show-page~.nav-decor {
-    background: transparent;
-}
+// .ios .ion-page.show-page~.nav-decor {
+//     background: transparent;
+// }
