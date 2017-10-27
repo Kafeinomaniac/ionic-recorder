@@ -7,6 +7,21 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* now we need to share: if we can get that wav file out somehow and
+  saved onto the desktop and then open it with audacity and test it to
+  make sure that it is acutally recorded OK - this would be great
+  verification.  SHARE FROM PHONE TO DESKTOP SOMEHOW FIRST, ANY WHICH
+  WAY, FOR VERIFICATION - the verification is that indeed it is the
+  Android Chrome that's to blame for playback artifacts, rather than
+  the file itself.  I.e. if the file plays perfectly on a desktop but
+  continues to have artifacts when played back on the cell phone, we
+  know it's not the recording that's to blame, but the playback.
+
+  We may be able to fix playback issues by reducing events fired (?)
+
+* recording and playback works - except that playback is shoddy on
+  android chrome for some reason - wait for new versions?
+
 * rename: either use position or progress, not both - use relativePosition,
   actually - a longer but clearer name
 * only call getMetadata once inside setSourceFile of player, then you

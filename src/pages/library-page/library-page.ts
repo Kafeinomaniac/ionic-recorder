@@ -217,7 +217,7 @@ export class LibraryPage {
      */
     public onClickAddButton(): void {
         console.log('onClickAddButton()');
-        let actionSheet: ActionSheet = this.actionSheetController.create({
+        const actionSheet: ActionSheet = this.actionSheetController.create({
             title: 'Create new ... in ' + this.appFilesystem.getPath(),
             buttons: [
                 {

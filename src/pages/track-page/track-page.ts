@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components';
 import {
+    downloadBlob,
     pathFolderName,
     formatDate,
     WAV_MIME_TYPE,
@@ -118,7 +119,7 @@ export class TrackPage {
     /**
      * UI callback handling 'share' button click
      */
-    private presentActionSheet(): void {
+    private presentShareActionSheet(): void {
         this.actionSheetController.create({
             title: 'Share as',
             buttons: [
@@ -126,6 +127,7 @@ export class TrackPage {
                     text: 'Local file on device',
                     handler: () => {
                         console.log('Share as local file clicked, fname: ');
+                        
                     }
                 },
                 {
@@ -144,7 +146,7 @@ export class TrackPage {
      */
     public onClickShareButton(): void {
         console.log('onClickShareButton()');
-        this.presentActionSheet();
+        this.presentShareActionSheet();
     }
 
 }
