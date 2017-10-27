@@ -3,7 +3,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { AUDIO_CONTEXT, SAMPLE_RATE } from './common';
-import { ABS, formatTime } from '../../models';
+import {
+    ABS,
+    formatTime,
+    MAX,
+    MIN
+} from '../../models';
 import { Heartbeat } from '../../services';
 
 /** @const {string} Heartbeat clock's ID of function to run periodically */
@@ -80,11 +85,15 @@ export abstract class WebAudioRecorder {
     public maxVolumeSinceReset: number;
     public percentPeaksAtMax: string;
 
+    public nClipped: number;
+
     protected abstract valueCB(pcm: number): void;
 
     // this is how we signal
     constructor(heartbeat: Heartbeat) {
         console.log('constructor()');
+
+        this.nClipped = 0;
 
         this.heartbeat = heartbeat;
 
@@ -208,13 +217,20 @@ export abstract class WebAudioRecorder {
             // sometimes
             value = inputData[i];
 
+            const clippedValue: number = MAX(-1.0, MIN(1.0, value));
+
+            if (value !== clippedValue) {
+                this.nClipped++;
+            }
+
             // absValue is what we use to monitor volume = abs(value)
-            absValue = ABS(value);
+            // absValue = ABS(value);
+            absValue = ABS(clippedValue);
 
             // clip monitored volume at [0, 1]
-            if (absValue > 1) {
-                absValue = 1;
-            }
+            // if (absValue > 1) {
+            //     absValue = 1;
+            // }
 
             // keep track of volume using abs value
             if (absValue > this.currentVolume) {
@@ -225,7 +241,7 @@ export abstract class WebAudioRecorder {
             // save every time a fill-up occurs)
             // if (this.valueCB && this.isRecording) {
             if (this.isRecording) {
-                this.valueCB(value);
+                this.valueCB(clippedValue);
                 this.nRecordedSamples++;
             }
         } // for (i ...
@@ -346,6 +362,8 @@ export abstract class WebAudioRecorder {
         this.nPeakMeasurements = 1;
         // make this 1 to match nPeakMeasurements and get 100% at start
         this.nPeaksAtMax = 1;
+        // we start from zero again
+        this.nClipped = 0;
     }
 
     /**

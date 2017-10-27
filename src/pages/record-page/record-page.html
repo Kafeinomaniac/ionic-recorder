@@ -9,7 +9,14 @@
         <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
             <button ion-button small (click)="recorder.resetPeaks()">
                 <ion-badge item-right button-on-dark-bg text-lowercase>
-                    {{recorder.percentPeaksAtMax}}% peaks
+                    <span class="none-clipped" *ngIf="recorder.nClippedPerBuffer">
+                        {{recorder.nClipped}}
+                    </span>
+                    <span class="some-clipped" *ngIf="!recorder.nClippedPerBuffer">
+                        {{recorder.nClipped}}
+                    </span>
+                    /
+                    {{recorder.percentPeaksAtMax}}%
                 </ion-badge>
             </button>
         </ion-buttons>
