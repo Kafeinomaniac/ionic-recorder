@@ -277,7 +277,7 @@ export function prependArray(value: any, arr: any[]): any[] {
  */
 export function downloadBlob(blob: Blob, filename: string): void {
     'use strict';
-    /*    
+    /*
     let url = (window.URL || window.webkitURL)
         .createObjectURL(blob);
     let link = document.getElementById("a-save-link");
