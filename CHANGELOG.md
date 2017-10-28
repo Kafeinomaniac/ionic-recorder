@@ -1,3 +1,6 @@
+## 0.4.1-alpha
+* Can save 'wav' file to local file on device.
+
 ## 0.4.0-alpha
 * Play / Pause whether we're already playing or paused, in track page
   / audio-player - all works now as expected, with FileSystem API
