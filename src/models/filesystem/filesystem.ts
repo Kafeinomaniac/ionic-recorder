@@ -1,6 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Observable } from 'rxjs/Rx';
+import { downloadBlob, pathFilename } from '../../models';
 
 /** @constant {number} */
 export const DEFAULT_REQUEST_SIZE: number = 1024 * 1024 * 1024;
@@ -403,11 +404,41 @@ export class Filesystem {
     /**
      *
      */
+    public static downloadFileToDevice(
+        fs: FileSystem,
+        path: string
+    ): Observable<void> {
+        let src: Observable<void> = Observable.create((observer) => {
+        fs.root.getFile(
+                path,
+                { create: false },
+                (fileEntry: FileEntry) => {
+                    fileEntry.file(
+                        (file: File) => {
+                            console.log('got file');
+                            const rawFilename: string = pathFilename(path),
+                            len: number = rawFilename.length,
+                            bSuffix: boolean = rawFilename.slice(len - 4, len)
+                                .toLowerCase() === '.wav',
+                            filename: string =
+                                bSuffix ? rawFilename : rawFilename + '.wav';
+                            downloadBlob(file, filename);
+                        }
+                    );
+                }
+            );
+        });
+        return src;
+    }
+
+    /**
+     *
+     */
     public static readFromFile(
         fs: FileSystem,
         path: string,
-        startByte: number = undefined,
-        endByte: number = undefined
+        startByte: number = null,
+        endByte: number = null
     ): Observable<ArrayBuffer> {
         console.log('readFromFile(fs, ' + path + ', ' +
                     startByte + ', ' + endByte + ')');

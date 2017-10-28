@@ -131,6 +131,17 @@ export class AppFilesystem {
     /**
      *
      */
+    public downloadFileToDevice(filePath: string): Observable<void> {
+        console.log('downloadFileToDevice(' + filePath + ')');
+        return Filesystem.downloadFileToDevice(
+            this.fileSystem,
+            filePath
+        );
+    }
+
+    /**
+     *
+     */
     public getFilesystem(): FileSystem {
         return this.fileSystem;
     }

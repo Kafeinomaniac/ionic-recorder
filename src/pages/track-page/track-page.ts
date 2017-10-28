@@ -4,13 +4,13 @@ import { Component } from '@angular/core';
 import { ActionSheetController, NavParams } from 'ionic-angular';
 import { ButtonbarButton } from '../../components';
 import {
-    downloadBlob,
     pathFolderName,
     formatDate,
     WAV_MIME_TYPE,
     WavFile,
     WavInfo
 } from '../../models';
+import { AppFilesystem } from '../../services';
 
 /**
  * @class TrackPage
@@ -30,6 +30,7 @@ export class TrackPage {
     public sampleRate: number;
     public nSamples: number;
     public parentFolder: string;
+    private appFilesystem: AppFilesystem;
 
     /**
      * @constructor
@@ -38,11 +39,13 @@ export class TrackPage {
      */
     constructor(
         navParams: NavParams,
+        appFilesystem: AppFilesystem,
         actionSheetController: ActionSheetController
     ) {
         console.log('constructor(' + navParams.data + ')');
         // grab data sent over from the caller of this page - full path of file
         this.filePath = navParams.data;
+        this.appFilesystem = appFilesystem;
         this.actionSheetController = actionSheetController;
         this.parentFolder = pathFolderName(this.filePath);
         this.encoding = WAV_MIME_TYPE;
@@ -127,7 +130,9 @@ export class TrackPage {
                     text: 'Local file on device',
                     handler: () => {
                         console.log('Share as local file clicked, fname: ');
-                        
+                        this.appFilesystem.downloadFileToDevice(
+                            this.filePath
+                        ).subscribe();
                     }
                 },
                 {

@@ -277,18 +277,50 @@ export function prependArray(value: any, arr: any[]): any[] {
  */
 export function downloadBlob(blob: Blob, filename: string): void {
     'use strict';
-    const url: string = window.URL.createObjectURL(blob);
+    /*    
+    let url = (window.URL || window.webkitURL)
+        .createObjectURL(blob);
+    let link = document.getElementById("a-save-link");
+    link.href = url;
+    link.download = filename || 'output.wav';
+    console.log('hi1');
+    console.dir(link);
+    console.log('simulateCLick(link): ' + simulateClick(link));
+    console.log('hi2');
+    // link.click();
+    */
+    const url: string = (window['URL'] || window['webkitURL'])
+        .createObjectURL(blob);
     let anchorElement: HTMLAnchorElement = document.createElement('a');
     anchorElement.style.display = 'none';
     anchorElement.href = url;
     anchorElement.setAttribute('download', filename);
     document.body.appendChild(anchorElement);
-    anchorElement.click();
+    // anchorElement.click();
+    simulateClick(anchorElement);
     setTimeout(
         () => {
             document.body.removeChild(anchorElement);
             window.URL.revokeObjectURL(url);
+            console.log('downloadBlob(' + filename + '): finished!');
         },
         100);
-    console.log('saveBlob(): finished!');
+}
+
+/**
+ * Simulate a click event.
+ * @public
+ * @param {Element} elem  the element to simulate a click on
+ * @return {boolean} True if canceled, false otherwise
+ */
+function simulateClick(elem: Element): boolean {
+    'use strict';
+    // Create our event (with options)
+    const evt: MouseEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: false,
+        view: window
+    });
+    // If cancelled, don't dispatch our event
+    return elem.dispatchEvent(evt);
 }
