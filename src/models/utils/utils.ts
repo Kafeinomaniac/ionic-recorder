@@ -313,7 +313,7 @@ export function downloadBlob(blob: Blob, filename: string): void {
  * @param {Element} elem  the element to simulate a click on
  * @return {boolean} True if canceled, false otherwise
  */
-function simulateClick(elem: Element): boolean {
+function simulateClick(element: Element): boolean {
     'use strict';
     // Create our event (with options)
     const evt: MouseEvent = new MouseEvent('click', {
@@ -322,5 +322,5 @@ function simulateClick(elem: Element): boolean {
         view: window
     });
     // If cancelled, don't dispatch our event
-    return elem.dispatchEvent(evt);
+    return element.dispatchEvent(evt);
 }
