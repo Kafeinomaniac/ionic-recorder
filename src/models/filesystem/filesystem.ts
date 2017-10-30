@@ -6,6 +6,11 @@ import { downloadBlob, pathFilename } from '../../models';
 /** @constant {number} */
 export const DEFAULT_REQUEST_SIZE: number = 1024 * 1024 * 1024;
 
+interface UsageAndQuota {
+    usedBytes: number;
+    grantedBytes: number;
+}
+
 export class Filesystem {
     /**
      *
@@ -220,12 +225,68 @@ export class Filesystem {
     /**
      *
      */
+    public static queryUsageAndQuota(
+        bPersistent: boolean
+    ): Observable<UsageAndQuota> {
+        const storageType: string =
+        bPersistent ? 'webkitPersistentStorage' : 'webkitTemporaryStorage',
+        src: Observable<UsageAndQuota> = Observable.create(
+            (observer) => {
+                navigator[storageType].queryUsageAndQuota(
+                    (usedBytes: number, grantedBytes: number) => {
+                        observer.next({
+                            usedBytes: usedBytes,
+                            grantedBytes: grantedBytes
+                        });
+                        observer.complete();
+                    },
+                    (err: any) => {
+                        observer.error(err);
+                    }
+                );
+            }
+        );
+        return src;
+    }
+
+    /**
+     *
+     */
+    public static requestQuota(
+        bPersistent: boolean
+    ): Observable<number> {
+        const storageType: string =
+        bPersistent ? 'webkitPersistentStorage' : 'webkitTemporaryStorage',
+        src: Observable<number> = Observable.create(
+            (observer) => {
+                navigator[storageType].requestQuota(
+                    DEFAULT_REQUEST_SIZE, (grantedBytes: number) => {
+                        console.log('REQUESTED BYTES: ' +
+                            DEFAULT_REQUEST_SIZE + ' -- GRANTED BYTES: ' +
+                            grantedBytes
+                        );
+                        observer.next(grantedBytes);
+                        observer.complete();
+                    },
+                    (err: any) => {
+                        observer.error(err);
+                    }
+                );
+            }
+        );
+        return src;
+    }
+
+    /**
+     *
+     */
     public static getFileSystem(
         bPersistent: boolean = true,
         requestSize: number = DEFAULT_REQUEST_SIZE
     ): Observable<FileSystem> {
         console.log('getFileSystem(bPersistent=' + bPersistent +
                     ', requestSize=' + requestSize + ')');
+        /*
         const fsType: number = (
             bPersistent ? window.PERSISTENT :  window.TEMPORARY
         );
@@ -251,6 +312,32 @@ export class Filesystem {
                 },
                 (err: any) => {
                     observer.error(err);
+                }
+            );
+        });
+        */
+        const
+        fsType: number =
+            bPersistent ? window.PERSISTENT :  window.TEMPORARY,
+        storageType: string =
+            bPersistent ? 'webkitPersistentStorage' : 'webkitTemporaryStorage',
+        src: Observable<FileSystem> = Observable.create((observer) => {
+            Filesystem.requestQuota(bPersistent).subscribe(
+                (grantedBytes: number) => {
+                     ( window.requestFileSystem ||
+                      window['webkitRequestFileSystem']
+                    )(
+                        fsType,
+                        grantedBytes,
+                        (fs: FileSystem) => {
+                            observer.next(fs);
+                            observer.complete();
+                        },
+                        (err: any) => {
+                            console.log(err);
+                            observer.error(err);
+                        }
+                    );
                 }
             );
         });
