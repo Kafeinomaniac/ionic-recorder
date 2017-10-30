@@ -9,7 +9,7 @@ export const MIN: (a: number, b: number) => number = Math.min;
 /**
  * Extracts the filename out of a full-path
  */
-export function pathFilename(filePath: string): string {
+export function pathFileName(filePath: string): string {
     'use strict';
     return filePath.replace(/^.*[\\\/]/, '');
 }
@@ -19,7 +19,7 @@ export function pathFilename(filePath: string): string {
  */
 export function pathFolderName(filePath: string): string {
     'use strict';
-    return filePath.replace(pathFilename(filePath), '');
+    return filePath.replace(pathFileName(filePath), '');
 }
 
 /**

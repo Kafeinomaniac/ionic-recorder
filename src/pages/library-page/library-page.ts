@@ -45,6 +45,7 @@ export class LibraryPage {
 
     /**
      * @constructor
+     * @param {ModalController}
      * @param {NavController}
      * @param {AlertController}
      * @param {ActionSheetController}
@@ -99,12 +100,17 @@ export class LibraryPage {
         ];
         this.footerButtons = [
             {
-                text: 'Info',
+                text: 'Stats',
                 leftIcon: 'information-circle',
-                clickCB: () => { this.onClickInfoButton(); }
+                clickCB: () => { this.onClickStatsButton(); }
             },
             {
-                text: 'Move to...',
+                text: 'Rename',
+                leftIcon: 'md-create',
+                clickCB: () => { console.log('rename clicked!'); }
+            },
+            {
+                text: 'Move',
                 leftIcon: 'share-alt',
                 rightIcon: 'folder',
                 clickCB: () => { this.onClickMoveButton(); },
@@ -124,11 +130,17 @@ export class LibraryPage {
         ];
     }
 
+    /**
+     *
+     */
     public ionViewDidEnter(): void {
         console.log('ionViewDidEnter()');
         this.appFilesystem.refreshFolder().subscribe(
             () => {
                 this.detectChanges();
+            },
+            (err: any) => {
+                throw Error(err);
             }
         );
     }
@@ -139,7 +151,7 @@ export class LibraryPage {
     public onClickSelectButton(): void {
         console.log('onClickSelectButton()');
 
-        let selectAlert: Alert = this.alertController.create();
+        const selectAlert: Alert = this.alertController.create();
         selectAlert.setTitle('Select which, in ' +
                              this.appFilesystem.getPath());
         selectAlert.addButton({
@@ -161,6 +173,9 @@ export class LibraryPage {
         console.log('after selectAlert.present();');
     }
 
+    /**
+     *
+     */
     public selectButtonDisabled(): boolean {
         // console.log('selectButtonDisabled()');
         return this.appFilesystem.nEntries() <= 1;
@@ -174,6 +189,9 @@ export class LibraryPage {
         this.appFilesystem.switchFolder('/').subscribe(
             () => {
                 this.detectChanges();
+            },
+            (err: any) => {
+                throw Error(err);
             }
         );
     }
@@ -208,6 +226,9 @@ export class LibraryPage {
         this.appFilesystem.switchFolder(parentPath).subscribe(
             () => {
                 this.detectChanges();
+            },
+            (err: any) => {
+                throw Error(err);
             }
         );
     }
@@ -249,11 +270,11 @@ export class LibraryPage {
     }
 
     /**
-     * UI calls this when the info button is clicked.
-     * Shows cumulative info on all selected items.
+     * UI calls this when the stats button is clicked.
+     * Shows cumulative stats on all selected items.
      */
-    public onClickInfoButton(): void {
-        console.log('onClickInfoButton');
+    public onClickStatsButton(): void {
+        console.log('onClickStatsButton');
     }
 
     /**
@@ -262,7 +283,7 @@ export class LibraryPage {
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
-        let modal: Modal = this.modalController.create(MoveToPage);
+        const modal: Modal = this.modalController.create(MoveToPage);
         modal.present();
         console.log('after modal.present();');
     }
@@ -282,14 +303,16 @@ export class LibraryPage {
     }
 
     /**
+     *
      */
     private confirmAndDeleteSelected(): void {
-        let nSelected: number = this.appFilesystem.nSelected(),
-            itemsStr: string = nSelected.toString() + ' item' +
-            ((nSelected > 1) ? 's' : ''),
-            deleteAlert: Alert = this.alertController.create();
+        const nSelected: number = this.appFilesystem.nSelected(),
+              itemsStr: string = nSelected.toString() + ' item' +
+              ((nSelected > 1) ? 's' : ''),
+              deleteAlert: Alert = this.alertController.create();
 
-        deleteAlert.setTitle('Sure you want to delete ' + itemsStr + '?');
+        deleteAlert.setTitle('Are you sure you want to delete ' +
+                             itemsStr + '?');
 
         deleteAlert.addButton('Cancel');
 
@@ -304,9 +327,16 @@ export class LibraryPage {
                             )).subscribe(
                                 () => {
                                     this.detectChanges();
+                                },
+                                (err1: any) => {
+                                    throw Error(err1);
                                 }
                             );
-                    });
+                    },
+                    (err2: any) => {
+                        throw Error(err2);
+                    }
+                );
             }
         });
 
@@ -318,7 +348,6 @@ export class LibraryPage {
      */
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
-
         if (this.appFilesystem.isPathSelected('/Unfiled/')) {
             const deleteAlert: Alert = this.alertController.create();
             deleteAlert.setTitle('/Unfiled folder cannot be deleted. But it' +
@@ -366,7 +395,7 @@ export class LibraryPage {
         console.log('onClickSelectedBadge()');
         // only go to edit selections if at least one is selected
         // this.navController.push(SelectionPage);
-        let modal: Modal = this.modalController.create(SelectionPage);
+        const modal: Modal = this.modalController.create(SelectionPage);
         modal.present();
         console.log('after modal.present();');
     }
@@ -403,6 +432,9 @@ export class LibraryPage {
                 this.appFilesystem.getFullPath(entry)).subscribe(
                     () => {
                         this.detectChanges();
+                    },
+                    (err: any) => {
+                        throw Error(err);
                     }
                 );
         }
@@ -415,56 +447,58 @@ export class LibraryPage {
      * UI calls this when the new folder button is clicked
      */
     public addFolder(): void {
-        let parentPath: string = this.appFilesystem.getPath(),
-            newFolderAlert: Alert = this.alertController.create({
-                title: 'Create a new folder in ' + parentPath,
-                inputs: [{
-                    name: 'folderName',
-                    placeholder: 'Enter folder name...'
-                }],
-                buttons: [
-                    {
-                        text: 'Cancel',
-                        role: 'cancel',
-                        handler: () => {
-                            console.log('Clicked cancel in add-folder alert');
-                        }
-                    },
-                    {
-                        text: 'Done',
-                        handler: (data: any) => {
-                            let fullPath: string = parentPath +
-                                data.folderName;
-                            if (!fullPath.length) {
-                                // this code should never be reached
-                                alert('how did we reach this code?');
-                                return;
-                            }
-                            if (fullPath[fullPath.length - 1] !== '/') {
-                                // last char isn't a slash, add a
-                                // slash at the end
-                                fullPath += '/';
-                            }
-                            // create the folder
-                            this.appFilesystem.createFolder(
-                                fullPath
-                            ).subscribe(
-                                (folderEntry: DirectoryEntry) => {
-                                    // re-read parent
-                                    // to load in new info
-                                    this.appFilesystem.switchFolder(
-                                        parentPath
-                                    ).subscribe(
-                                        () => {
-                                            this.detectChanges();
-                                        }
-                                    );
-                                }
-                            ); // .createFolder().subscribe(
-                        } // handler: (data: any) => {
-                    }
-                ] // buttons: [
-            }); // newFolderAlert: Alert = this.alertController.create({
+        const parentPath: string = this.appFilesystem.getPath(),
+              newFolderAlert: Alert = this.alertController.create({
+                  title: 'Create a new folder in ' + parentPath,
+                  inputs: [{
+                      name: 'folderName',
+                      placeholder: 'Enter folder name...'
+                  }],
+                  buttons: [
+                      {
+                          text: 'Cancel',
+                          role: 'cancel',
+                          handler: () => {
+                              console.log('Clicked cancel in add-folder alert');
+                          }
+                      },
+                      {
+                          text: 'Done',
+                          handler: (data: any) => {
+                              let path: string = parentPath + data.folderName;
+                              if (!path.length) {
+                                  // this code should never be reached
+                                  alert('how did we reach this code?');
+                                  return;
+                              }
+                              if (path[path.length - 1] !== '/') {
+                                  // last char isn't a slash, add a
+                                  // slash at the end
+                                  path += '/';
+                              }
+                              // create the folder
+                              this.appFilesystem.createFolder(path).subscribe(
+                                  (folderEntry: DirectoryEntry) => {
+                                      // re-read parent to load new info
+                                      this.appFilesystem.switchFolder(
+                                          parentPath
+                                      ).subscribe(
+                                          () => {
+                                              this.detectChanges();
+                                          },
+                                          (err1: any) => {
+                                              throw Error(err1);
+                                          }
+                                      );
+                                  },
+                                  (err2: any) => {
+                                      throw Error(err2);
+                                  }
+                              ); // .createFolder().subscribe(
+                          } // handler: (data: any) => {
+                      }
+                  ] // buttons: [
+              }); // newFolderAlert: Alert = this.alertController.create({
         newFolderAlert.present();
     }
 }

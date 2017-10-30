@@ -1,7 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Observable } from 'rxjs/Rx';
-import { downloadBlob, pathFilename } from '../../models';
+import { downloadBlob, pathFileName } from '../../models';
 
 /** @constant {number} */
 export const DEFAULT_REQUEST_SIZE: number = 1024 * 1024 * 1024;
@@ -478,7 +478,7 @@ export class Filesystem {
                 (fileEntry: FileEntry) => {
                     fileEntry.file(
                         (file: File) => {
-                            const name: string = pathFilename(path),
+                            const name: string = pathFileName(path),
                                   len: number = name.length,
                                   bSuffix: boolean = name.slice(len - 4, len)
                                   .toLowerCase() === '.wav';

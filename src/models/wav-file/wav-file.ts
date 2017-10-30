@@ -13,9 +13,10 @@ export interface WavInfo {
     metadata: Metadata;
 }
 
-// internal constants and functions
-
+/** @const {string} Mime type of wav file */
 export const WAV_MIME_TYPE: string = 'audio/wav';
+
+// internal constants and functions
 const NUMBER_MIME_TYPE: string = 'application/octet-stream';
 const CHUNKSIZE_START_BYTE: number = 4;
 const SAMPLE_RATE_START_BYTE: number = 24;
@@ -107,7 +108,7 @@ export class WavFile {
         bIncludeMetadata: boolean = false
     ): Observable<WavInfo> {
         console.log('readWavFileInfo(' + filePath + ')');
-        let src: Observable<WavInfo> = Observable.create((observer) => {
+        const src: Observable<WavInfo> = Observable.create((observer) => {
             Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
                     Filesystem.readFromFile(
@@ -188,7 +189,7 @@ export class WavFile {
                     startSample + ', endSample: ' + endSample + ')');
         const startByte: number = sampleToByte(startSample),
               endByte: number = sampleToByte(endSample);
-        let src: Observable<AudioBuffer> = Observable.create((obs) => {
+        const src: Observable<AudioBuffer> = Observable.create((obs) => {
             Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
                     Filesystem.readFromFile(
@@ -295,7 +296,7 @@ export class WavFile {
     ): Observable<void> {
         console.log('createWavFile(' + filePath + ') - nSamples=' +
                     wavData.length);
-        let src: Observable<void> = Observable.create((observer) => {
+        const src: Observable<void> = Observable.create((observer) => {
             Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
                     console.log('GOT IT');
@@ -342,8 +343,8 @@ export class WavFile {
         nPreAppendSamples: number
     ): Observable<void> {
         console.log('appendToWavFile(' + filePath + '), nPre: '
-                   + nPreAppendSamples);
-        let src: Observable<void> = Observable.create((observer) => {
+                    + nPreAppendSamples);
+        const src: Observable<void> = Observable.create((observer) => {
             Filesystem.getFileSystem(true).subscribe(
                 (fileSystem: FileSystem) => {
                     // see http://soundfile.sapp.org/doc/WaveFormat/

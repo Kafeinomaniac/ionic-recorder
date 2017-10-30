@@ -10,7 +10,7 @@ import {
     Input
 } from '@angular/core';
 import { WavPlayer } from '../../services/web-audio/wav-player';
-import { formatTime, pathFilename } from '../../models';
+import { formatTime, pathFileName } from '../../models';
 
 const PROGRESS_BY_PLAYER: number = -1;
 
@@ -82,7 +82,7 @@ export class AudioPlayer implements OnChanges {
         // if (this.player.isPlaying) {
         //     this.player.jumpToPosition(progress);
         // }
-        this.filenameOrProgress = pathFilename(this.filePath);
+        this.filenameOrProgress = pathFileName(this.filePath);
 
         // TODO: check if next line (this.progress =
         // PROGRESS_BY_PLAYER) is necessary.  Restore this.progress
@@ -103,7 +103,7 @@ export class AudioPlayer implements OnChanges {
     ): void {
         if (changeRecord['filePath'] && this.filePath) {
             console.log('ngOnChanges(): filePath=' + this.filePath);
-            this.filenameOrProgress = pathFilename(this.filePath);
+            this.filenameOrProgress = pathFileName(this.filePath);
             this.player.setSourceFile(this.filePath, true);
         }
     }
