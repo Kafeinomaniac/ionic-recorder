@@ -77,6 +77,7 @@ describe('models/filesystem', () => {
 
     // system should allow us to create a folder that's already
     // been created, without error
+
     it('can create folder /Unfiled', (done) => {
         Filesystem.getPathEntry(FILE_SYSTEM, '/Unfiled/', true).subscribe(
             (entry: Entry) => {

@@ -188,7 +188,7 @@ export class Filesystem {
                 // it's a folder
                 fileSystem.root.getDirectory(
                     path,
-                    { create: false },
+                    { create: bCreate },
                     (directoryEntry: DirectoryEntry) => {
                         observer.next(directoryEntry);
                         observer.complete();

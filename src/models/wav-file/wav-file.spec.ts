@@ -73,6 +73,7 @@ describe('models/wav-file', () => {
         );
     });
 
+    /*
     it('can remove the file it just created', (done) => {
         appFilesystem.selectPath(TEST_FILE_PATH);
         appFilesystem.deleteSelected().subscribe(
@@ -82,6 +83,7 @@ describe('models/wav-file', () => {
             }
         );
     });
+    */
 
     it('can recreate in ' + TEST_FILE_PATH2 + ' all at once', (done) => {
         WavFile.createWavFile(TEST_FILE_PATH2, dataAB).subscribe(
@@ -124,8 +126,12 @@ describe('models/wav-file', () => {
     });
 
     it('can clean up', (done) => {
-        appFilesystem.selectPath(TEST_FILE_PATH2);
-        appFilesystem.deleteSelected().subscribe(
+        // appFilesystem.selectPath(TEST_FILE_PATH2);
+        // appFilesystem.deleteSelected().subscribe(
+        appFilesystem.deleteFiles([
+            TEST_FILE_PATH,
+            TEST_FILE_PATH2
+        ]).subscribe(
             () => {
                 appFilesystem.clearSelection();
                 done();

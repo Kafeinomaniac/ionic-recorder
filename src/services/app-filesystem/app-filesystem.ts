@@ -26,11 +26,9 @@ export class AppFilesystem {
     /**
      * @constructor
      */
-    // constructor(storage: Storage) {
     constructor() {
         console.log('constructor()');
 
-        // this.storage = storage;
         this.storage = new Storage({});
         this.isReady = false;
         this.entries = [];
@@ -186,7 +184,7 @@ export class AppFilesystem {
         if (this.selectedPaths !== {}) {
             alert('noway');
         }
-        this.storage.set('filesystemSelected', this.selectedPaths);
+        this.storage.set('filesystemSelected', {});
     }
 
     /**
@@ -498,9 +496,9 @@ export class AppFilesystem {
                         },
                         (err1: any) => {
                             observer.error(err1);
-                        } // .deleteEntries(this.fileSystem, paths).subscribe(
-                    ); //
-                }, // () => {
+                        }
+                    );
+                },
                 (err2: any) => {
                     observer.error(err2);
                 }
@@ -519,9 +517,9 @@ export class AppFilesystem {
                 () => {
                     // sort() is important below for proper deletion order
                     const paths: string[] =
-                              Object.keys(this.selectedPaths).sort(),
+                          Object.keys(this.selectedPaths).sort(),
                           fullPath: string =
-                              this.getFullPath(this.folderEntry),
+                          this.getFullPath(this.folderEntry),
                           fullPathSize: number = fullPath.length;
                     console.log('deleteSelected([' + paths.join(', ') + '])');
 
@@ -568,6 +566,34 @@ export class AppFilesystem {
             ); // this.whenReady().subscribe(
         });
         return obs;
+    }
+
+    /**
+     * Renames either a file or a directory.
+     */
+    public deleteFiles(filePaths: string[]): Observable<void> {
+        const obs: Observable<void> = Observable.create((observer) => {
+            this.whenReady().subscribe(
+                () => {
+                    Filesystem.deleteEntries(
+                        this.fileSystem,
+                        filePaths
+                    ).subscribe(
+                        () => {
+                            observer.next();
+                            observer.complete();
+                        },
+                        (err1: any) => {
+                            observer.error(err1);
+                        }
+                    );
+                },
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            );
+        });
+        return obs
     }
 
     /**
