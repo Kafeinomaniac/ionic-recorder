@@ -79,7 +79,8 @@ describe('models/wav-file', () => {
             () => {
                 appFilesystem.clearSelection();
                 done();
-            });
+            }
+        );
     });
 
     it('can recreate in ' + TEST_FILE_PATH2 + ' all at once', (done) => {

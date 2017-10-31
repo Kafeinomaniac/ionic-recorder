@@ -200,7 +200,6 @@ export class LibraryPage {
      * UI calls this when the 'Go home' button is clicked.
      */
     public atHome(): boolean {
-        // console.log('atHome(): ' + this.appFilesystem.atHome());
         return this.appFilesystem.atHome();
     }
 
@@ -208,21 +207,10 @@ export class LibraryPage {
      * UI calls this when the 'Go to parent' button is clicked.
      */
     public onClickParentButton(): void {
-        console.log('onClickParentButton()');
         const path: string = this.appFilesystem.getPath(),
-              pathParts: string[] = path.split('/').filter(
-                  (str: string) => { return str !== ''; }),
-              parentPath2: string = '/' +
-              pathParts.splice(0, pathParts.length - 1).join('/') + '/';
-
-        const parentPath: string =
-              folderPathParent(this.appFilesystem.getPath());
-
-        if (parentPath2 !== parentPath) {
-            alert('(parentPath2 ' + parentPath2 +
-                  ' !== parentPath) ' + parentPath);
-        }
-
+              parentPath: string = folderPathParent(path);
+        console.log('onClickParentButton() - path: ' + path +
+                    ', parentPath: ' + parentPath);
         this.appFilesystem.switchFolder(parentPath).subscribe(
             () => {
                 this.detectChanges();
@@ -401,6 +389,7 @@ export class LibraryPage {
     }
 
     /**
+     *
      */
     private detectChanges(): void {
         console.log('detectChanges()');

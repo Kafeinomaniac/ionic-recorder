@@ -30,7 +30,7 @@ export function folderPathParent(dirPath: string): string {
     const pathParts: string[] =
           dirPath.split('/').filter((str: string) => { return str !== ''; }),
           nParts: number = pathParts.length;
-    if (nParts === 0) {
+    if (nParts <= 1) {
         return '/';
     }
     return '/' + pathParts.splice(0, nParts - 1).join('/') + '/';

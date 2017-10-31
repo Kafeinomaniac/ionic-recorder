@@ -117,8 +117,8 @@ export class TrackPage {
         const renameAlert: Alert = this.alertController.create({
             title: 'Rename file \'' + this.fileName + '\' to:',
             inputs: [{
-                // name: 'newName',
-                placeholder: 'New name ...'
+                name: 'newName',
+                placeholder: 'Enter new file name ...'
             }],
             buttons: [
                 {
@@ -131,7 +131,17 @@ export class TrackPage {
                 {
                     text: 'Done',
                     handler: (data: any) => {
-                        console.log('Renaming to: ' + data.newName);
+                        this.appFilesystem.rename(this.filePath, data.newName)
+                            .subscribe(
+                                () => {
+                                    this.fileName = data.newName;
+                                    this.filePath = this.parentFolder +
+                                        this.fileName;
+                                },
+                                (err: any) => {
+                                    throw Error(err);
+                                }
+                            );
                     }
                 }
             ]
@@ -198,5 +208,4 @@ export class TrackPage {
         console.log('onClickShareButton()');
         this.presentShareActionSheet();
     }
-
 }

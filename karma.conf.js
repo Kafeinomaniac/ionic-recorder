@@ -42,7 +42,8 @@ module.exports = function (config) {
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: ['Chrome'],
-        singleRun: true,
+        singleRun: false,
+        // singleRun: true,
         junitReporter: {
             outputDir: process.env.JUNIT_REPORT_PATH,
             outputFile: process.env.JUNIT_REPORT_NAME,

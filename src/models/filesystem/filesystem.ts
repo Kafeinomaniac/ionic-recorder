@@ -124,12 +124,12 @@ export class Filesystem {
                 parent,
                 entry.name,
                 (ent: Entry) => {
-                    console.log('moveEntry.successCB()');
+                    console.log('moveEntry(): SUCCESS');
                     observer.next();
                     observer.complete();
                 },
                 (err: FileError) => {
-                    console.log('moveEntry.errorCB()');
+                    console.log('moveEntry(): ERROR: ' + err);
                     observer.error(err);
                 }
             );
@@ -178,8 +178,7 @@ export class Filesystem {
         path: string,
         bCreate: boolean = false
     ): Observable<Entry> {
-        console.log('getPathEntry(fs, ' + path + ', ' +
-                    bCreate + ')');
+        console.log('getPathEntry(fs, ' + path + ', ' + bCreate + ')');
         const src: Observable<Entry> = Observable.create((observer) => {
             if (path === '/') {
                 observer.next(fileSystem.root);
@@ -189,7 +188,7 @@ export class Filesystem {
                 // it's a folder
                 fileSystem.root.getDirectory(
                     path,
-                    { create: bCreate },
+                    { create: false },
                     (directoryEntry: DirectoryEntry) => {
                         observer.next(directoryEntry);
                         observer.complete();
@@ -282,33 +281,6 @@ export class Filesystem {
         const
         fsType: number =
             bPersistent ? window.PERSISTENT :  window.TEMPORARY,
-        /*
-        src: Observable<FileSystem> = Observable.create((observer) => {
-            window['webkitStorageInfo'].requestQuota(
-                fsType,
-                requestSize,
-                (grantedBytes: number) => {
-                    ( window.requestFileSystem ||
-                      window['webkitRequestFileSystem']
-                    )(
-                        fsType,
-                        grantedBytes,
-                        (fs: FileSystem) => {
-                            observer.next(fs);
-                            observer.complete();
-                        },
-                        (err: any) => {
-                            console.log(err);
-                            observer.error(err);
-                        }
-                    );
-                },
-                (err: any) => {
-                    observer.error(err);
-                }
-            );
-        });
-        */
         src: Observable<FileSystem> = Observable.create((observer) => {
             Filesystem.requestQuota(bPersistent).subscribe(
                 (grantedBytes: number) => {

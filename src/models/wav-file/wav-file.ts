@@ -199,9 +199,6 @@ export class WavFile {
                         endByte
                     ).subscribe(
                         (arrayBuffer: ArrayBuffer) => {
-                            console.log('read arrayBuffer! ' + startByte +
-                                        ', ' + endByte + ', ' +
-                                        arrayBuffer.byteLength);
                             if (!arrayBuffer.byteLength) {
                                 // could not read anything - this is where we
                                 // are failing currently.

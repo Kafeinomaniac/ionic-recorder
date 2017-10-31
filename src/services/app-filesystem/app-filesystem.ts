@@ -150,9 +150,9 @@ export class AppFilesystem {
      *
      */
     /*
-    public getMetadata(fullPath: string): Observable<Metadata> {
-        return Filesystem.getMetadata(this.fileSystem, fullPath);
-    }
+      public getMetadata(fullPath: string): Observable<Metadata> {
+      return Filesystem.getMetadata(this.fileSystem, fullPath);
+      }
     */
 
     /**
@@ -195,7 +195,7 @@ export class AppFilesystem {
      * system when it's ready for use.
      */
     public whenReady(): Observable<void> {
-        let obs: Observable<void> = Observable.create((observer) => {
+        const obs: Observable<void> = Observable.create((observer) => {
             const repeat: () => void = () => {
                 console.log('repeat()');
                 if (this.isReady) {
@@ -216,7 +216,7 @@ export class AppFilesystem {
      */
     public getSelectedEntries(): Observable <Entry[]> {
         console.log('getSelectedEntries()');
-        let obs: Observable <Entry[]> = Observable.create((observer) => {
+        const obs: Observable <Entry[]> = Observable.create((observer) => {
             // get the file system
             this.whenReady().subscribe(
                 () => {
@@ -246,27 +246,27 @@ export class AppFilesystem {
      */
     public createFolder(path: string): Observable<DirectoryEntry> {
         console.log('createFolder(' + path + ')');
-        let obs: Observable<DirectoryEntry> =
-            Observable.create((observer) => {
-                if (path[path.length - 1] !== '/') {
-                    observer.error('path must end with / for createFolder');
-                }
-                else {
-                    Filesystem.getPathEntry(
-                        this.fileSystem,
-                        path,
-                        true
-                    ).subscribe(
-                        (folderEntry: Entry) => {
-                            observer.next(folderEntry);
-                            observer.complete();
-                        },
-                        (err: any) => {
-                            observer.error(err);
-                        }
-                    );
-                }
-            });
+        const obs: Observable<DirectoryEntry> =
+              Observable.create((observer) => {
+                  if (path[path.length - 1] !== '/') {
+                      observer.error('path must end with / for createFolder');
+                  }
+                  else {
+                      Filesystem.getPathEntry(
+                          this.fileSystem,
+                          path,
+                          true
+                      ).subscribe(
+                          (folderEntry: Entry) => {
+                              observer.next(folderEntry);
+                              observer.complete();
+                          },
+                          (err: any) => {
+                              observer.error(err);
+                          }
+                      );
+                  }
+              });
         return obs;
     }
 
@@ -274,7 +274,7 @@ export class AppFilesystem {
      *
      */
     public refreshFolder(): Observable<void> {
-        let obs: Observable<void> = Observable.create((observer) => {
+        const obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
                     this.switchFolder(
@@ -304,7 +304,7 @@ export class AppFilesystem {
      */
     public switchFolder(path: string): Observable <Entry[]> {
         console.log('switchFolder(' + path + ')');
-        let obs: Observable <Entry[]> = Observable.create((observer) => {
+        const obs: Observable <Entry[]> = Observable.create((observer) => {
             // got file system, now get entry object for path
             // of folder we're switching to
             Filesystem.getPathEntry(this.fileSystem, path, false).subscribe(
@@ -334,7 +334,7 @@ export class AppFilesystem {
                     observer.error(err2);
                 }
             ); // Filesystem.getPathEntry(fileSystem, path, false).subscribe(
-        }); // let obs: Observable<Entry[]> = Observable.create((observer)
+        }); // const obs: Observable<Entry[]> = Observable.create((observer)
         return obs;
     }
 
@@ -467,12 +467,13 @@ export class AppFilesystem {
     }
 
     /**
-     * Deletes selected entries.
+     * Moves selected entries to current folder (here).
      */
     public moveSelected(): Observable<void> {
+        // call to sort() below reduces file not found errors
         const paths: string[] = Object.keys(this.selectedPaths).sort();
         console.log('moveSelected(): ' + paths);
-        let obs: Observable<void> = Observable.create((observer) => {
+        const obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
                     Filesystem.moveEntries(
@@ -512,15 +513,18 @@ export class AppFilesystem {
      * Deletes selected entries.
      */
     public deleteSelected(): Observable<void> {
-        // sort() is important below for proper deletion order
-        const paths: string[] = Object.keys(this.selectedPaths).sort(),
-              fullPath: string = this.getFullPath(this.folderEntry),
-              fullPathSize: number = fullPath.length;
-        console.log('deleteSelected(): ' + paths);
-        let obs: Observable<void> = Observable.create((observer) => {
+        const obs: Observable<void> = Observable.create((observer) => {
             // get the file system
             this.whenReady().subscribe(
                 () => {
+                    // sort() is important below for proper deletion order
+                    const paths: string[] =
+                              Object.keys(this.selectedPaths).sort(),
+                          fullPath: string =
+                              this.getFullPath(this.folderEntry),
+                          fullPathSize: number = fullPath.length;
+                    console.log('deleteSelected([' + paths.join(', ') + '])');
+
                     Filesystem.deleteEntries(this.fileSystem, paths).subscribe(
                         () => {
                             // unselect removed paths, also track:
@@ -540,32 +544,60 @@ export class AppFilesystem {
                             // store selection in case it has changed
                             this.storage.set('filesystemSelected',
                                              this.selectedPaths);
+                            const refreshFolder: string = switchHome ? '/'
+                                  : this.getFullPath(this.folderEntry);
 
-                            if (switchHome) {
-                                this.switchFolder('/').subscribe(
-                                    (entries: Entry[]) => {
-                                        observer.next();
-                                        observer.complete();
-                                    }
-                                );
-                            }
-                            else {
-                                // return
-                                observer.next();
-                                observer.complete();
-                            }
+                            this.switchFolder(refreshFolder).subscribe(
+                                () => {
+                                    observer.next();
+                                    observer.complete();
+                                },
+                                (err1: any) => {
+                                    observer.error(err1);
+                                }
+                            );
                         },
-                        (err1: any) => {
-                            observer.error(err1);
+                        (err2: any) => {
+                            observer.error(err2);
                         } // .deleteEntries(this.fileSystem, paths).subscribe(
                     ); //
                 }, // () => {
-                (err2: any) => {
-                    observer.error(err2);
+                (err3: any) => {
+                    observer.error(err3);
                 }
             ); // this.whenReady().subscribe(
         });
         return obs;
     }
 
+    /**
+     * Renames either a file or a directory.
+     */
+    public rename(fullPath: string, newName: string): Observable<void> {
+        console.log('renameEntry(' + fullPath + ', ' + newName + ')');
+        const obs: Observable<void> = Observable.create((observer) => {
+            this.fileSystem.root.getFile(
+                fullPath,
+                { create: false },
+                (fileEntry: Entry) => {
+                    fileEntry.moveTo(this.folderEntry, newName);
+                    this.switchFolder(
+                        this.getFullPath(this.folderEntry)
+                    ).subscribe(
+                        () => {
+                            observer.next();
+                            observer.complete();
+                        },
+                        (err1: any) => {
+                            observer.error('err1 ' + err1);
+                        }
+                    );
+                },
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            );
+        });
+        return obs;
+    }
 }
