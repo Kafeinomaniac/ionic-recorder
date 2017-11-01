@@ -80,8 +80,7 @@ export class TrackPage {
             {
                 text: 'Rename',
                 leftIcon: 'md-create',
-                clickCB: () => { this.onClickRenameButton(); },
-                disabledCB: () => { return this.renameButtonDisabled(); }
+                clickCB: () => { this.onClickRenameButton(); }
             },
             {
                 text: 'Move',
@@ -148,17 +147,6 @@ export class TrackPage {
             ]
         });
         renameAlert.present();
-    }
-
-    /**
-     * UI calls this to determine whether to disable the rename button.
-     * @return {boolean}
-     */
-    public renameButtonDisabled(): boolean {
-        console.log('renameButtonDisabled() = ' +
-                    ((this.appFilesystem.nSelected() !== 1) ?
-                     'TRUE' : 'FALSE'));
-        return this.appFilesystem.nSelected() !== 1;
     }
 
     /**

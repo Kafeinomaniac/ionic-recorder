@@ -268,10 +268,58 @@ export class LibraryPage {
 
     /**
      * UI calls this when rename button is clicked.
-     * Moves selected items into a folder.
+     * Moves selected items into a folder. Prereq: only one entry is
+     * selected when we call this function!
      */
     public onClickRenameButton(): void {
         console.log('onClickRenameButton()');
+        // only one entry is selected
+        const
+        afs: AppFilesystem = this.appFilesystem,
+        selectedPaths: { [path: string]: number } = afs.selectedPaths,
+        fullPath: string = Object.keys(selectedPaths)[0],
+        iEntry: number = afs.getOrderIndex(fullPath),
+        entry: Entry = afs.entries[iEntry],
+        // fullPath = afs.getFullPath(entry),
+        entryType: string = (entry.isFile ? 'file' : 'folder');
+        console.log('fullpath: ' + fullPath);
+        const renameAlert: Alert = this.alertController.create({
+            title: 'Rename ' + entryType + ' \'' + entry.name + '\' to:',
+            inputs: [{
+                name: 'newName',
+                placeholder: 'Enter new file name ...'
+            }],
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        console.log('Clicked cancel in rename alert');
+                    }
+                },
+                {
+                    text: 'Done',
+                    handler: (data: any) => {
+                        const newName: string = data.newName;
+                        // console.log('HAN: ' + entry);
+                        // console.dir(entry);
+                        // afs.rename(fullPath, newName).subscribe(
+                        afs.rename(fullPath, newName).subscribe(
+                            () => {
+                                console.log('RENAME DONE!');
+                                // does next assignment change it
+                                // everywhere?
+                                afs.unselectPath(fullPath);
+                            },
+                            (err: any) => {
+                                throw Error(err);
+                            }
+                        );
+                    }
+                }
+            ]
+        });
+        renameAlert.present();
     }
 
     /**
@@ -279,9 +327,6 @@ export class LibraryPage {
      * @return {boolean}
      */
     public renameButtonDisabled(): boolean {
-        console.log('renameButtonDisabled() = ' +
-                    ((this.appFilesystem.nSelected() !== 1) ?
-                     'TRUE' : 'FALSE'));
         return this.appFilesystem.nSelected() !== 1;
     }
 

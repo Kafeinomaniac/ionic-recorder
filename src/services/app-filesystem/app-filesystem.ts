@@ -368,11 +368,35 @@ export class AppFilesystem {
     }
 
     /**
+     * Assumes
+     */
+    public getOrderIndex(entryPath: string): number {
+        const len: number = entryPath.length,
+              lenM1: number = len - 1;
+        if (len > 1 && entryPath[lenM1] === '/') {
+            entryPath = entryPath.substr(0, len-1);
+        }
+        let result: number = -1;
+        this.entries.find((entry, index) => {
+            if (entry.fullPath === entryPath) {
+                result = index;
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+        console.log('getOrderIndex(' + entryPath + ') -> ' + result);
+        return result;
+    }
+
+    /**
      *
      */
     public selectPath(path: string): void {
-        console.log('selectPath(' + path + ')');
-        const orderIndex: number = this.nSelected();
+        // const orderIndex: number = this.nSelected();
+        const orderIndex: number = this.getOrderIndex(path);
+        console.log('selectPath(' + path + '): ' + orderIndex);
         this.selectedPaths[path] = orderIndex;
         this.storage.set('filesystemSelected', this.selectedPaths);
     }
@@ -569,7 +593,7 @@ export class AppFilesystem {
     }
 
     /**
-     * Renames either a file or a directory.
+     * Deletes a collection of files.
      */
     public deleteFiles(filePaths: string[]): Observable<void> {
         const obs: Observable<void> = Observable.create((observer) => {
@@ -598,31 +622,68 @@ export class AppFilesystem {
 
     /**
      * Renames either a file or a directory.
+     * @param {string} fullPath - full path of the entry to rename, if
+     * the last char of this path is a forward slash (/) then this is a
+     * folder and we must always end folders with a slash when specified.
+     * If not ending with a slash, it is a file.
+     * trailing slash  directories (folders).
+     * @param {string} newName - renames to this.
      */
     public rename(fullPath: string, newName: string): Observable<void> {
-        console.log('renameEntry(' + fullPath + ', ' + newName + ')');
+        console.log('rename(' + fullPath + ', ' + newName + ')');
         const obs: Observable<void> = Observable.create((observer) => {
-            this.fileSystem.root.getFile(
-                fullPath,
-                { create: false },
-                (fileEntry: Entry) => {
-                    fileEntry.moveTo(this.folderEntry, newName);
-                    this.switchFolder(
-                        this.getFullPath(this.folderEntry)
-                    ).subscribe(
-                        () => {
-                            observer.next();
-                            observer.complete();
-                        },
-                        (err1: any) => {
-                            observer.error('err1 ' + err1);
-                        }
-                    );
-                },
-                (err2: any) => {
-                    observer.error(err2);
-                }
-            );
+            if (fullPath[fullPath.length - 1] === '/') {
+                console.log('ITS A FOLDER');
+                this.fileSystem.root.getDirectory(
+                    fullPath,
+                    { create: false },
+                    (entry: Entry) => {
+                        console.log('rename(): got: ' + entry.name);
+                        entry.moveTo(this.folderEntry, newName);
+                        this.switchFolder(
+                            this.getFullPath(this.folderEntry)
+                        ).subscribe(
+                            () => {
+                                observer.next();
+                                observer.complete();
+                            },
+                            (err1: any) => {
+                                observer.error('err1 ' + err1);
+                            }
+                        );
+                    },
+                    (err2: any) => {
+                        observer.error(err2);
+                    }
+                );
+
+            }
+            else {
+                console.log('ITS A FILE');
+                this.fileSystem.root.getFile(
+                    fullPath,
+                    { create: false },
+                    (entry: Entry) => {
+                        console.log('rename(): got: ' + entry.name);
+                        entry.moveTo(this.folderEntry, newName);
+                        this.switchFolder(
+                            this.getFullPath(this.folderEntry)
+                        ).subscribe(
+                            () => {
+                                observer.next();
+                                observer.complete();
+                            },
+                            (err1: any) => {
+                                observer.error('err1 ' + err1);
+                            }
+                        );
+                    },
+                    (err2: any) => {
+                        observer.error(err2);
+                    }
+                );
+
+            }
         });
         return obs;
     }
