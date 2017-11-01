@@ -107,7 +107,8 @@ export class LibraryPage {
             {
                 text: 'Rename',
                 leftIcon: 'md-create',
-                clickCB: () => { console.log('rename clicked!'); }
+                clickCB: () => { this.onClickRenameButton(); },
+                disabledCB: () => { return this.renameButtonDisabled(); }
             },
             {
                 text: 'Move',
@@ -266,6 +267,25 @@ export class LibraryPage {
     }
 
     /**
+     * UI calls this when rename button is clicked.
+     * Moves selected items into a folder.
+     */
+    public onClickRenameButton(): void {
+        console.log('onClickRenameButton()');
+    }
+
+    /**
+     * UI calls this to determine whether to disable the rename button.
+     * @return {boolean}
+     */
+    public renameButtonDisabled(): boolean {
+        console.log('renameButtonDisabled() = ' +
+                    ((this.appFilesystem.nSelected() !== 1) ?
+                     'TRUE' : 'FALSE'));
+        return this.appFilesystem.nSelected() !== 1;
+    }
+
+    /**
      * UI calls this when move button is clicked.
      * Moves selected items into a folder.
      */
@@ -277,7 +297,7 @@ export class LibraryPage {
     }
 
     /**
-     * UI calls this to determine whether to disable move button.
+     * UI calls this to determine whether to disable the move button.
      * @return {boolean}
      */
     public moveButtonDisabled(): boolean {

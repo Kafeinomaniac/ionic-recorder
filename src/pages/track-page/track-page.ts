@@ -80,7 +80,8 @@ export class TrackPage {
             {
                 text: 'Rename',
                 leftIcon: 'md-create',
-                clickCB: () => { this.onClickRenameButton(); }
+                clickCB: () => { this.onClickRenameButton(); },
+                disabledCB: () => { return this.renameButtonDisabled(); }
             },
             {
                 text: 'Move',
@@ -150,6 +151,17 @@ export class TrackPage {
     }
 
     /**
+     * UI calls this to determine whether to disable the rename button.
+     * @return {boolean}
+     */
+    public renameButtonDisabled(): boolean {
+        console.log('renameButtonDisabled() = ' +
+                    ((this.appFilesystem.nSelected() !== 1) ?
+                     'TRUE' : 'FALSE'));
+        return this.appFilesystem.nSelected() !== 1;
+    }
+
+    /**
      * UI callback handling 'move' button click
      */
     public onClickMoveButton(): void {
@@ -185,9 +197,8 @@ export class TrackPage {
                     text: 'Local file on device',
                     handler: () => {
                         console.log('Share as local file clicked, fname: ');
-                        this.appFilesystem.downloadFileToDevice(
-                            this.filePath
-                        ).subscribe();
+                        this.appFilesystem.downloadFileToDevice(this.filePath)
+                            .subscribe();
                     }
                 },
                 {
