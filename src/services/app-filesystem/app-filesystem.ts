@@ -593,7 +593,7 @@ export class AppFilesystem {
                 }
             );
         });
-        return obs
+        return obs;
     }
 
     /**
