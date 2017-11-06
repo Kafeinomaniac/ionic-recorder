@@ -183,7 +183,7 @@ export class TrackPage {
             handler: () => {
                 console.log('we are deleting ...');
                 const filePath: string = DEFAULT_PATH + this.fileName;
-                this.appFilesystem.deleteFiles([filePath]).subscribe(
+                this.appFilesystem.deletePaths([filePath]).subscribe(
                     () => {
                         console.log('successfully deleted ' + this.fileName);
                         this.viewController.dismiss();

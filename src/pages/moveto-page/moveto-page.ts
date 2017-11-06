@@ -112,6 +112,11 @@ export class MoveToPage {
             // TODO: do not allow /Unfiled folder to be
             // moved
         }
+        const nSelected: number = this.appFilesystem.nSelected();
+
+        if (nSelected === 0) {
+
+
         // TODO: do not allow moving a parent folder into
         // itself or any of its children
 
@@ -178,6 +183,7 @@ export class MoveToPage {
     }
 
     /**
+     * detectChanges()
      */
     private detectChanges(): void {
         console.log('detectChanges()');

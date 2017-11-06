@@ -7,6 +7,7 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Rename: fileName -> filename / AppFilesyste.deleteFiles -> deletePaths
 * Right now in midst of move-to from track page. Finish this, then do
   button 'all' or 'none' instead of 'Select ...' and have dynamic button bar
   instead of the static one (i.e. change button bar to be dynamic.

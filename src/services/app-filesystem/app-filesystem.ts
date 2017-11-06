@@ -493,10 +493,8 @@ export class AppFilesystem {
     /**
      * Moves selected entries to current folder (here).
      */
-    public moveSelected(): Observable<void> {
-        // call to sort() below reduces file not found errors
-        const paths: string[] = Object.keys(this.selectedPaths).sort();
-        console.log('moveSelected(): ' + paths);
+    public movePaths(paths: string[]): Observable<void> {
+        console.log('movePaths(): ' + paths);
         const obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
@@ -531,6 +529,15 @@ export class AppFilesystem {
             ); // this.whenReady().subscribe(
         });
         return obs;
+    }
+
+    /**
+     * Moves selected entries to current folder (here).
+     */
+    public moveSelected(): Observable<void> {
+        console.log('moveSelected()');
+        // call to sort() below reduces file not found errors
+        return movePaths(Object.keys(this.selectedPaths).sort())
     }
 
     /**
@@ -597,7 +604,7 @@ export class AppFilesystem {
     /**
      * Deletes a collection of files.
      */
-    public deleteFiles(filePaths: string[]): Observable<void> {
+    public deletePaths(filePaths: string[]): Observable<void> {
         const obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
