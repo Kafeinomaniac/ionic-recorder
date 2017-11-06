@@ -8,7 +8,7 @@
         <ion-title>
             Move to
         </ion-title>
-        <ion-buttons end>
+        <ion-buttons end *ngIf="appFilesystem.nSelected()">
             <button ion-button small (click)="onClickSelectedBadge()">
                 <ion-badge item-right>
                     {{appFilesystem.nSelected()}} selected

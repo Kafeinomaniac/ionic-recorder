@@ -62,7 +62,6 @@ export class LibraryPage {
         appFilesystem: AppFilesystem,
         platform: Platform
     ) {
-
         console.log('constructor()');
         this.changeDetectorRef = changeDetectorRef;
         this.actionSheetController = actionSheetController;

@@ -7,6 +7,10 @@ adding TODO items such that only the programmer who added the item
 needs to understand it... i.e, do not attempt to try and understand 
 anything written here, unless you wrote it.
 
+* Right now in midst of move-to from track page. Finish this, then do
+  button 'all' or 'none' instead of 'Select ...' and have dynamic button bar
+  instead of the static one (i.e. change button bar to be dynamic.
+
 * now we need to share: if we can get that wav file out somehow and
   saved onto the desktop and then open it with audacity and test it to
   make sure that it is acutally recorded OK - this would be great

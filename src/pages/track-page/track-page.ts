@@ -5,6 +5,8 @@ import {
     ActionSheetController,
     Alert,
     AlertController,
+    Modal,
+    ModalController,
     NavParams,
     ViewController
 } from 'ionic-angular';
@@ -18,6 +20,7 @@ import {
     pathFileName,
     pathFolderName
 } from '../../models';
+import { MoveToPage } from '../../pages';
 
 /**
  * @class TrackPage
@@ -29,6 +32,7 @@ import {
 export class TrackPage {
     private actionSheetController: ActionSheetController;
     private viewController: ViewController;
+    private modalController: ModalController;
     public footerButtons: ButtonbarButton[];
     public filePath: string;
     public fileName: string;
@@ -52,12 +56,10 @@ export class TrackPage {
         appFilesystem: AppFilesystem,
         actionSheetController: ActionSheetController,
         alertController: AlertController,
-        viewController: ViewController
+        viewController: ViewController,
+        modalController: ModalController        
     ) {
         console.log('constructor(' + navParams.data + ')');
-
-        this.viewController = viewController;
-
         // grab data sent over from the caller of this page - full path of file
         this.filePath = navParams.data;
         this.fileName = pathFileName(this.filePath);
@@ -65,6 +67,8 @@ export class TrackPage {
         this.appFilesystem = appFilesystem;
         this.actionSheetController = actionSheetController;
         this.alertController = alertController;
+        this.viewController = viewController;
+        this.modalController = modalController;
         this.encoding = WAV_MIME_TYPE;
 
         WavFile.readWavFileInfo(this.filePath, true).subscribe(
@@ -160,6 +164,9 @@ export class TrackPage {
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton()');
+        const modal: Modal = this.modalController.create(MoveToPage);
+        modal.present();
+        console.log('after modal.present();');
     }
 
     /**
