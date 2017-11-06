@@ -18,7 +18,7 @@ export interface ButtonbarButton {
 }
 
 /**
- * Component: a bar that has buttons with two-row labels: icon(s) on
+ * A bar component that has buttons with double-row labels: icon(s) on
  * top and text on the bottom.
  * @class ButtonBar
  */
@@ -40,6 +40,7 @@ export class ButtonBar implements OnChanges {
 
     /**
      * Handle changes
+     * @param {[propertyName: string]: SimpleChange}
      */
     public ngOnChanges(
         changeRecord: { [propertyName: string]: SimpleChange }

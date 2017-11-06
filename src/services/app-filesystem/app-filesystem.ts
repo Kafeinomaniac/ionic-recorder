@@ -7,8 +7,10 @@ import { Storage } from '@ionic/storage';
 /* tslint:enable */
 import { Filesystem, has } from '../../models';
 
+/** @const {string} - the default save path */
+export const DEFAULT_PATH: string = '/Unfiled/';
+
 const WAIT_MSEC: number = 60;
-const DEFAULT_PATH: string = '/Unfiled/';
 
 /**
  * @class AppFileystem

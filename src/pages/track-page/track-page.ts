@@ -5,18 +5,19 @@ import {
     ActionSheetController,
     Alert,
     AlertController,
-    NavParams
+    NavParams,
+    ViewController
 } from 'ionic-angular';
+import { DEFAULT_PATH, AppFilesystem } from '../../services';
 import { ButtonbarButton } from '../../components';
 import {
-    pathFileName,
-    pathFolderName,
-    formatDate,
     WAV_MIME_TYPE,
     WavFile,
-    WavInfo
+    WavInfo,
+    formatDate,
+    pathFileName,
+    pathFolderName
 } from '../../models';
-import { AppFilesystem } from '../../services';
 
 /**
  * @class TrackPage
@@ -27,6 +28,7 @@ import { AppFilesystem } from '../../services';
 })
 export class TrackPage {
     private actionSheetController: ActionSheetController;
+    private viewController: ViewController;
     public footerButtons: ButtonbarButton[];
     public filePath: string;
     public fileName: string;
@@ -49,9 +51,13 @@ export class TrackPage {
         navParams: NavParams,
         appFilesystem: AppFilesystem,
         actionSheetController: ActionSheetController,
-        alertController: AlertController
+        alertController: AlertController,
+        viewController: ViewController
     ) {
         console.log('constructor(' + navParams.data + ')');
+
+        this.viewController = viewController;
+
         // grab data sent over from the caller of this page - full path of file
         this.filePath = navParams.data;
         this.fileName = pathFileName(this.filePath);
@@ -169,6 +175,16 @@ export class TrackPage {
             text: 'Yes',
             handler: () => {
                 console.log('we are deleting ...');
+                const filePath: string = DEFAULT_PATH + this.fileName;
+                this.appFilesystem.deleteFiles([filePath]).subscribe(
+                    () => {
+                        console.log('successfully deleted ' + this.fileName);
+                        this.viewController.dismiss();
+                    },
+                    (err: any) => {
+                        throw Error(err);
+                    }
+                );
             }
         });
         deleteAlert.present();
