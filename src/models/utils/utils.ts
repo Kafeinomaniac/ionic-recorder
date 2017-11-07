@@ -1,4 +1,5 @@
 // Copyright (c) 2017 Tracktunes Inc
+
 'use strict';
 
 export const ABS: (n: number) => number = Math.abs;
