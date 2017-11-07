@@ -7,6 +7,7 @@ import {
     AlertController,
     Modal,
     ModalController,
+    NavController,
     NavParams,
     ViewController
 } from 'ionic-angular';
@@ -30,6 +31,7 @@ import { MoveToPage } from '../../pages';
     templateUrl: 'track-page.html'
 })
 export class TrackPage {
+    protected navController: NavController;
     private actionSheetController: ActionSheetController;
     private viewController: ViewController;
     private modalController: ModalController;
@@ -52,15 +54,17 @@ export class TrackPage {
      * @param {ActionSheetController}
      */
     constructor(
+        navController: NavController,
         navParams: NavParams,
         appFilesystem: AppFilesystem,
         actionSheetController: ActionSheetController,
         alertController: AlertController,
         viewController: ViewController,
-        modalController: ModalController        
+        modalController: ModalController
     ) {
         console.log('constructor(' + navParams.data + ')');
         // grab data sent over from the caller of this page - full path of file
+        this.navController = navController;
         this.filePath = navParams.data;
         this.fileName = pathFileName(this.filePath);
         this.parentFolder = pathFolderName(this.filePath);
@@ -164,8 +168,9 @@ export class TrackPage {
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton()');
-        const modal: Modal = this.modalController.create(MoveToPage);
-        modal.present();
+        // const modal: Modal = this.modalController.create(MoveToPage);
+        // modal.present();
+        this.navController.push(MoveToPage, this.filePath);
         console.log('after modal.present();');
     }
 

@@ -4,6 +4,7 @@ import {
     Content,
     Modal,
     ModalController,
+    NavParams,
     ViewController
 } from 'ionic-angular';
 import {
@@ -27,6 +28,7 @@ import { SelectionPage } from '../../pages';
 })
 export class MoveToPage {
     @ViewChild(Content) public content: Content;
+    private navParams: NavParams;
     public appFilesystem: AppFilesystem;
     private modalController: ModalController;
     private viewController: ViewController;
@@ -35,15 +37,21 @@ export class MoveToPage {
 
     /**
      * @constructor
+     * @param {NavParams}
+     * @param {ChangeDetectorRef}
      * @param {AppFilesystem}
+     * @param {ModalController}
+     * @param {ViewController}
      */
     constructor(
+        navParams: NavParams,
         changeDetectorRef: ChangeDetectorRef,
         appFilesystem: AppFilesystem,
         modalController: ModalController,
         viewController: ViewController
     ) {
         console.log('constructor()');
+        this.navParams = navParams;
         this.changeDetectorRef = changeDetectorRef;
         this.appFilesystem = appFilesystem;
         this.modalController = modalController;
@@ -113,28 +121,43 @@ export class MoveToPage {
             // moved
         }
         const nSelected: number = this.appFilesystem.nSelected();
-
         if (nSelected === 0) {
+            // move only one file (e.g. from track-page)
+            // in this case, data was sent to us via navParams
+            const filePath: string = this.navParams.data;
+            this.appFilesystem.movePaths([filePath]).subscribe(
+                () => {
+                    console.log('moved em');
+                    this.detectChanges();
+                    this.dismiss();
+                },
+                (err: any) => {
+                    alert(err);
+                }
+            );
+        }
+        else {
+            // this is the case where we move all selected items
 
+            // TODO: do not allow moving a parent folder into
+            // itself or any of its children
 
-        // TODO: do not allow moving a parent folder into
-        // itself or any of its children
-
-        // TODO: do not allow a child folder to be moved
-        // into the parent because it is already there - so
-        // do a filter first to get rid of those paths
-        // that are already going to be at the same place
-        // as a result of the move
-        this.appFilesystem.moveSelected().subscribe(
-            () => {
-                console.log('moved em');
-                this.detectChanges();
-                this.dismiss();
-            },
-            (err: any) => {
-                alert(err);
-            }
-        );
+            // TODO: do not allow a child folder to be moved
+            // into the parent because it is already there - so
+            // do a filter first to get rid of those paths
+            // that are already going to be at the same place
+            // as a result of the move
+            this.appFilesystem.moveSelected().subscribe(
+                () => {
+                    console.log('moved em');
+                    this.detectChanges();
+                    this.dismiss();
+                },
+                (err: any) => {
+                    alert(err);
+                }
+            );
+        }
     }
 
     /**

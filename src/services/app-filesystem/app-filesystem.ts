@@ -376,7 +376,7 @@ export class AppFilesystem {
         const len: number = entryPath.length,
               lenM1: number = len - 1;
         if (len > 1 && entryPath[lenM1] === '/') {
-            entryPath = entryPath.substr(0, len-1);
+            entryPath = entryPath.substr(0, len - 1);
         }
         let result: number = -1;
         this.entries.find((entry, index) => {
@@ -537,7 +537,7 @@ export class AppFilesystem {
     public moveSelected(): Observable<void> {
         console.log('moveSelected()');
         // call to sort() below reduces file not found errors
-        return movePaths(Object.keys(this.selectedPaths).sort())
+        return this.movePaths(Object.keys(this.selectedPaths).sort());
     }
 
     /**

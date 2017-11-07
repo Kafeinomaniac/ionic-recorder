@@ -128,7 +128,7 @@ describe('models/wav-file', () => {
     it('can clean up', (done) => {
         // appFilesystem.selectPath(TEST_FILE_PATH2);
         // appFilesystem.deleteSelected().subscribe(
-        appFilesystem.deletePathss([
+        appFilesystem.deletePaths([
             TEST_FILE_PATH,
             TEST_FILE_PATH2
         ]).subscribe(
