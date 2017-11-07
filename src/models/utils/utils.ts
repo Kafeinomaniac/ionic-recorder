@@ -1,4 +1,5 @@
 // Copyright (c) 2017 Tracktunes Inc
+'use strict';
 
 export const ABS: (n: number) => number = Math.abs;
 
@@ -10,7 +11,6 @@ export const MIN: (a: number, b: number) => number = Math.min;
  * Extracts the filename out of a full-path
  */
 export function pathFileName(filePath: string): string {
-    'use strict';
     return filePath.replace(/^.*[\\\/]/, '');
 }
 
@@ -18,7 +18,6 @@ export function pathFileName(filePath: string): string {
  * Extracts the folder out of a full-path
  */
 export function pathFolderName(filePath: string): string {
-    'use strict';
     return filePath.replace(pathFileName(filePath), '');
 }
 
@@ -26,7 +25,6 @@ export function pathFolderName(filePath: string): string {
  * Extracts the parent folder out of a full-path of a folder argument.
  */
 export function folderPathParent(dirPath: string): string {
-    'use strict';
     const pathParts: string[] =
           dirPath.split('/').filter((str: string) => { return str !== ''; }),
           nParts: number = pathParts.length;
@@ -43,7 +41,6 @@ export function folderPathParent(dirPath: string): string {
  * @return {Object} the updated 'dest' object
  */
 export function copyFromObject(src: Object, dest: Object): Object {
-    'use strict';
     for (let prop in src) {
         if (has(src, prop)) {
             dest[prop] = src[prop];
@@ -56,7 +53,6 @@ export function copyFromObject(src: Object, dest: Object): Object {
  *
  */
 export function has(obj: any, prop: any): boolean {
-    'use strict';
     return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
@@ -65,7 +61,6 @@ export function has(obj: any, prop: any): boolean {
  * @function
  */
 export function isFunction(func: any): boolean {
-    'use strict';
     return (typeof func) === 'function';
 }
 
@@ -73,7 +68,6 @@ export function isFunction(func: any): boolean {
  * @function
  */
 export function isTruthy(obj: any): boolean {
-    'use strict';
     if (obj) {
         return true;
     }
@@ -86,7 +80,6 @@ export function isTruthy(obj: any): boolean {
  * @function
  */
 export function isFalsy(obj: any): boolean {
-    'use strict';
     if (obj) {
         return false;
     }
@@ -100,7 +93,6 @@ export function isFalsy(obj: any): boolean {
  * @function
  */
 export function isDefined(obj: any): boolean {
-    'use strict';
     return (typeof obj) !== 'undefined';
 }
 
@@ -109,7 +101,6 @@ export function isDefined(obj: any): boolean {
  * @function
  */
 export function isUndefined(obj: any): boolean {
-    'use strict';
     return (typeof obj) === 'undefined';
 }
 
@@ -118,7 +109,6 @@ export function isUndefined(obj: any): boolean {
  * @function
  */
 export function isString(obj: any): boolean {
-    'use strict';
     return Object.prototype.toString.call(obj) === '[object String]';
 }
 
@@ -128,7 +118,6 @@ export function isString(obj: any): boolean {
  * @return {boolean} whether argument is a positive whole number
  */
 export function isPositiveWholeNumber(num: number): boolean {
-    'use strict';
     return<boolean>(
         num &&
             !isNaN(num) &&
@@ -141,7 +130,6 @@ export function isPositiveWholeNumber(num: number): boolean {
  *
  */
 export function isOdd(num: number): boolean {
-    'use strict';
     if (!isPositiveWholeNumber(num)) {
         throw Error('isOdd expected positive whole number as input, got: ' +
                     num);
@@ -153,7 +141,6 @@ export function isOdd(num: number): boolean {
  *
  */
 export function isEven(num: number): boolean {
-    'use strict';
     return !isOdd(num);
 }
 
@@ -167,7 +154,6 @@ export function formatTime(
     timeInSeconds: number,
     maxTimeInSeconds: number
 ): string {
-    'use strict';
     let nSeconds: number = Math.floor(timeInSeconds),
         // initialize the result with the centiseconds portion and period
         result: string = (timeInSeconds - nSeconds).toFixed(2).substr(1),
@@ -206,7 +192,6 @@ export function formatTime(
  * @return {string} - human readable text representation of timestamp
  */
 export function formatUnixTimestamp(timestamp: number): string {
-    'use strict';
     return formatDate(new Date(timestamp));
 }
 
@@ -234,7 +219,6 @@ export function formatDate(date: Date): string {
  * @return result - the concatenated description of all object properties
  */
 export function objectInspector(object: Object): string {
-    'use strict';
     let rows: string[] = [],
         key: string,
         count: number = 0;
@@ -260,7 +244,6 @@ export function objectInspector(object: Object): string {
  * @return {any[]} - the appended-to array.
  */
 export function prependArray(value: any, arr: any[]): any[] {
-    'use strict';
     let newArray: any[] = arr.slice(0);
     newArray.unshift(value);
     return newArray;
@@ -276,7 +259,6 @@ export function prependArray(value: any, arr: any[]): any[] {
  *     download on mobile browsers.
  */
 export function downloadBlob(blob: Blob, filename: string): void {
-    'use strict';
     /*
     let url = (window.URL || window.webkitURL)
         .createObjectURL(blob);
@@ -314,7 +296,6 @@ export function downloadBlob(blob: Blob, filename: string): void {
  * @return {boolean} True if canceled, false otherwise
  */
 function simulateClick(element: Element): boolean {
-    'use strict';
     // Create our event (with options)
     const evt: MouseEvent = new MouseEvent('click', {
         bubbles: true,

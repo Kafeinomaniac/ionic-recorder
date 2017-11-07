@@ -37,7 +37,7 @@ export class TrackPage {
     private modalController: ModalController;
     public footerButtons: ButtonbarButton[];
     public filePath: string;
-    public fileName: string;
+    public filename: string;
     public parentFolder: string;
     public dateModified: string;
     public encoding: string;
@@ -66,7 +66,7 @@ export class TrackPage {
         // grab data sent over from the caller of this page - full path of file
         this.navController = navController;
         this.filePath = navParams.data;
-        this.fileName = pathFileName(this.filePath);
+        this.filename = pathFileName(this.filePath);
         this.parentFolder = pathFolderName(this.filePath);
         this.appFilesystem = appFilesystem;
         this.actionSheetController = actionSheetController;
@@ -129,7 +129,7 @@ export class TrackPage {
     public onClickRenameButton(): void {
         console.log('onClickRenameButton()');
         const renameAlert: Alert = this.alertController.create({
-            title: 'Rename file \'' + this.fileName + '\' to:',
+            title: 'Rename file \'' + this.filename + '\' to:',
             inputs: [{
                 name: 'newName',
                 placeholder: 'Enter new file name ...'
@@ -148,9 +148,9 @@ export class TrackPage {
                         this.appFilesystem.rename(this.filePath, data.newName)
                             .subscribe(
                                 () => {
-                                    this.fileName = data.newName;
+                                    this.filename = data.newName;
                                     this.filePath = this.parentFolder +
-                                        this.fileName;
+                                        this.filename;
                                 },
                                 (err: any) => {
                                     throw Error(err);
@@ -181,16 +181,16 @@ export class TrackPage {
         console.log('onClickDeleteButton()');
         const deleteAlert: Alert = this.alertController.create();
         deleteAlert.setTitle('Are you sure you want to delete \'' +
-                             this.fileName + '\'?');
+                             this.filename + '\'?');
         deleteAlert.addButton('Cancel');
         deleteAlert.addButton({
             text: 'Yes',
             handler: () => {
                 console.log('we are deleting ...');
-                const filePath: string = DEFAULT_PATH + this.fileName;
+                const filePath: string = DEFAULT_PATH + this.filename;
                 this.appFilesystem.deletePaths([filePath]).subscribe(
                     () => {
-                        console.log('successfully deleted ' + this.fileName);
+                        console.log('successfully deleted ' + this.filename);
                         this.viewController.dismiss();
                     },
                     (err: any) => {
