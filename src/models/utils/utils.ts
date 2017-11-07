@@ -9,6 +9,8 @@ export const MIN: (a: number, b: number) => number = Math.min;
 
 /**
  * Extracts the filename out of a full-path
+ * @param {string}
+ * @return {string}
  */
 export function pathFileName(filePath: string): string {
     return filePath.replace(/^.*[\\\/]/, '');
@@ -16,6 +18,8 @@ export function pathFileName(filePath: string): string {
 
 /**
  * Extracts the folder out of a full-path
+ * @param {string}
+ * @return {string}
  */
 export function pathFolderName(filePath: string): string {
     return filePath.replace(pathFileName(filePath), '');
@@ -23,6 +27,8 @@ export function pathFolderName(filePath: string): string {
 
 /**
  * Extracts the parent folder out of a full-path of a folder argument.
+ * @param {string}
+ * @return {string}
  */
 export function folderPathParent(dirPath: string): string {
     const pathParts: string[] =
@@ -50,7 +56,9 @@ export function copyFromObject(src: Object, dest: Object): Object {
 }
 
 /**
- *
+ * @param {any}
+ * @param {any}
+ * @return {boolean}
  */
 export function has(obj: any, prop: any): boolean {
     return Object.prototype.hasOwnProperty.call(obj, prop);
@@ -58,14 +66,16 @@ export function has(obj: any, prop: any): boolean {
 
 /**
  * Checks if the given argument is a function.
- * @function
+ * @param {any}
+ * @return {boolean}
  */
 export function isFunction(func: any): boolean {
     return (typeof func) === 'function';
 }
 
 /**
- * @function
+ * @param {any}
+ * @return {boolean}
  */
 export function isTruthy(obj: any): boolean {
     if (obj) {
@@ -77,7 +87,8 @@ export function isTruthy(obj: any): boolean {
 }
 
 /**
- * @function
+ * @param {any}
+ * @return {boolean}
  */
 export function isFalsy(obj: any): boolean {
     if (obj) {
@@ -90,7 +101,8 @@ export function isFalsy(obj: any): boolean {
 
 /**
  * Checks if the given argument is defined.
- * @function
+ * @param {any}
+ * @return {boolean}
  */
 export function isDefined(obj: any): boolean {
     return (typeof obj) !== 'undefined';
@@ -98,7 +110,8 @@ export function isDefined(obj: any): boolean {
 
 /**
  * Checks if the given argument is undefined.
- * @function
+ * @param {any}
+ * @return {boolean}
  */
 export function isUndefined(obj: any): boolean {
     return (typeof obj) === 'undefined';
@@ -106,7 +119,8 @@ export function isUndefined(obj: any): boolean {
 
 /**
  * Checks if the given argument is a string.
- * @function
+ * @param {any}
+ * @return {boolean}
  */
 export function isString(obj: any): boolean {
     return Object.prototype.toString.call(obj) === '[object String]';
@@ -127,7 +141,8 @@ export function isPositiveWholeNumber(num: number): boolean {
 }
 
 /**
- *
+ * @param {number}
+ * return {boolean}
  */
 export function isOdd(num: number): boolean {
     if (!isPositiveWholeNumber(num)) {
@@ -138,7 +153,8 @@ export function isOdd(num: number): boolean {
 }
 
 /**
- *
+ * @param {number}
+ * @return {boolean}
  */
 export function isEven(num: number): boolean {
     return !isOdd(num);
@@ -216,7 +232,7 @@ export function formatDate(date: Date): string {
 /**
  * Digs through a Javascript object to display all its properties.
  * @param object - a Javascript object to inspect
- * @return result - the concatenated description of all object properties
+ * @return {string} - concatenated descriptions of all object properties
  */
 export function objectInspector(object: Object): string {
     let rows: string[] = [],
