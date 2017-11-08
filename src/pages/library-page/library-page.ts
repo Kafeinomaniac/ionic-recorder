@@ -36,8 +36,8 @@ export class LibraryPage {
     @ViewChild(Content) public content: Content;
     public headerButtons: ButtonbarButton[];
     public footerButtons: ButtonbarButton[];
-    protected modalController: ModalController;
-    protected navController: NavController;
+    private modalController: ModalController;
+    private navController: NavController;
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
     private changeDetectorRef: ChangeDetectorRef;
