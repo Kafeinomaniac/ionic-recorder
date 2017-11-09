@@ -2,8 +2,9 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-import { Heartbeat, WebAudioRecorder } from '../../services';
 import { formatUnixTimestamp, DoubleBufferSetter, WavFile } from '../../models';
+import { Heartbeat } from '../../services';
+import { WebAudioRecorder } from './recorder';
 
 // make this a multiple of PROCESSING_BUFFER_LENGTH (from record.ts)
 export const WAV_CHUNK_LENGTH: number = 131072;

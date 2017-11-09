@@ -26,7 +26,8 @@ import {
 import { ConfigMock, PlatformMock } from 'ionic-mocks';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getTestBed, TestBed } from '@angular/core/testing';
-import { AppStorage, AppStorageMock } from './services';
+import { AppStorageMock } from './services/mocks';
+import { AppStorage } from './services';
 // import { ClickersService } from './services';
 // import { ClickersServiceMock } from './services/clickers.mock';
 

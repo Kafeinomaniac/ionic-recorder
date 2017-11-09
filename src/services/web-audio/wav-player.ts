@@ -1,9 +1,9 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Injectable } from '@angular/core';
-import { WebAudioPlayer } from './player';
 import { formatTime, WavFile, WavInfo } from '../../models';
 import { Heartbeat } from '../../services';
+import { WebAudioPlayer } from './player';
 
 /** @constant {number} Number of samples in the playback memory buffer. */
 const N_BUFFER_SAMPLES: number = 40000.0;
