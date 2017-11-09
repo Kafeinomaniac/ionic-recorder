@@ -26,8 +26,13 @@ import {
 import { ConfigMock, PlatformMock } from 'ionic-mocks';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getTestBed, TestBed } from '@angular/core/testing';
-import { AppStorageMock } from './services/mocks';
-import { AppStorage } from './services';
+import { AppFilesystem, AppStorage, Heartbeat } from './services';
+import {
+    AppFilesystemMock,
+    AppStorageMock,
+    HeartbeatMock
+} from './services/mocks';
+
 // import { ClickersService } from './services';
 // import { ClickersServiceMock } from './services/clickers.mock';
 
@@ -78,8 +83,9 @@ export class TestUtils {
                 MenuController, NavController,
                 {provide: Platform, useFactory: () => PlatformMock.instance()},
                 {provide: Config, useFactory: () => ConfigMock.instance()},
-                {provide: AppStorage, useClass: AppStorageMock}
-                // {provide: ClickersService, useClass: ClickersServiceMock},
+                {provide: AppStorage, useClass: AppStorageMock},
+                {provide: AppFilesystem, useClass: AppFilesystemMock},
+                {provide: Heartbeat, useClass: HeartbeatMock}
             ],
             imports: [
                 FormsModule,

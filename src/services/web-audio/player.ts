@@ -73,6 +73,9 @@ export abstract class WebAudioPlayer {
      */
     public abstract pauseAt(position: number): void;
 
+    /**
+     * Abstract method
+     */
     private playerClockCallback(): void {
         let time: number = this.getTime();
         if (time >= this.duration) {

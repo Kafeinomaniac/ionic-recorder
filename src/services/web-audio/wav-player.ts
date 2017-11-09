@@ -22,7 +22,8 @@ export class WavPlayer extends WebAudioPlayer {
     private nSamples: number;
 
     /**
-     *
+     * @constructor
+     * @param {Heartbeat}
      */
     constructor(heartbeat: Heartbeat) {
         console.log('constructor()');
@@ -34,7 +35,8 @@ export class WavPlayer extends WebAudioPlayer {
     }
 
     /**
-     *
+     * @param {string}
+     * @param {boolean}
      */
     public setSourceFile(filePath: string, bPlay: boolean = false): void {
         WavFile.readWavFileInfo(filePath).subscribe(
@@ -61,7 +63,7 @@ export class WavPlayer extends WebAudioPlayer {
     }
 
     /**
-     *
+     * @param {number}
      */
     public jumpToPosition(position: number = null): void {
         console.log('jumpToPosition(' + position.toFixed(2) + ')');
@@ -85,7 +87,7 @@ export class WavPlayer extends WebAudioPlayer {
     }
 
     /**
-     *
+     * @param {number}
      */
     private getChunkTime(startSample: number): number {
         console.log('getChunkTime(startSample: ' + startSample + ') = ' +
@@ -98,7 +100,7 @@ export class WavPlayer extends WebAudioPlayer {
     }
 
     /**
-     *
+     * @param {number}
      */
     public pauseAt(position: number): void {
         const startSample: number = Math.floor(position * this.nSamples),
@@ -112,6 +114,7 @@ export class WavPlayer extends WebAudioPlayer {
      * Start playing from a relative time point (a relative time point is
      * time, in units of total duration, so relative time always starts at 0
      * and ends at 1).
+     * @param {number}
      */
     public playFrom(position: number): void {
         const nSamples: number = this.nSamples,
@@ -169,7 +172,8 @@ export class WavPlayer extends WebAudioPlayer {
     }
 
     /**
-     *
+     * @param {number}
+     * @return {function}
      */
     private getOnEndedCB(startSample: number): () => void {
         const nSamples: number = this.nSamples,
