@@ -4,7 +4,7 @@
 // are no longer here. only use the base class. or use an interface.
 
 export * from './common';
-export * from './wav-player';
-export * from './wav-recorder';
 export * from './player';
 export * from './recorder';
+export * from './wav-player';
+export * from './wav-recorder';

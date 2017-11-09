@@ -2,14 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { AUDIO_CONTEXT, SAMPLE_RATE } from './common';
-import {
-    ABS,
-    formatTime,
-    MAX,
-    MIN
-} from '../../models';
-import { Heartbeat } from '../../services';
+import { formatTime } from '../../models';
+import { AUDIO_CONTEXT, SAMPLE_RATE, Heartbeat } from '../../services';
 
 /** @const {string} Heartbeat clock's ID of function to run periodically */
 const RECORDER_CLOCK_FUNCTION_NAME: string = 'recorder';
@@ -217,15 +211,14 @@ export abstract class WebAudioRecorder {
             // sometimes
             value = inputData[i];
 
-            const clippedValue: number = MAX(-1.0, MIN(1.0, value));
+            const clippedValue: number = Math.max(-1.0, Math.min(1.0, value));
 
             if (value !== clippedValue) {
                 this.nClipped++;
             }
 
             // absValue is what we use to monitor volume = abs(value)
-            // absValue = ABS(value);
-            absValue = ABS(clippedValue);
+            absValue = Math.abs(clippedValue);
 
             // clip monitored volume at [0, 1]
             // if (absValue > 1) {

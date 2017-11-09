@@ -2,12 +2,6 @@
 
 'use strict';
 
-export const ABS: (n: number) => number = Math.abs;
-
-export const MAX: (a: number, b: number) => number = Math.max;
-
-export const MIN: (a: number, b: number) => number = Math.min;
-
 /**
  * Extracts the filename out of a full-path
  * @param {string}
@@ -232,7 +226,7 @@ export function formatDate(date: Date): string {
 
 /**
  * Digs through a Javascript object to display all its properties.
- * @param object - a Javascript object to inspect
+ * @param {Object} - a Javascript object to inspect
  * @return {string} - concatenated descriptions of all object properties
  */
 export function objectInspector(object: Object): string {
@@ -274,6 +268,8 @@ export function prependArray(value: any, arr: any[]): any[] {
  * (b) because chrome on android would not allow this - it considers
  *     it to be a cross origin request, so at this point we cannot
  *     download on mobile browsers.
+ * @param {Blob}
+ * @param {filename}
  */
 export function downloadBlob(blob: Blob, filename: string): void {
     /*

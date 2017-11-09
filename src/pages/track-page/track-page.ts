@@ -5,7 +5,6 @@ import {
     ActionSheetController,
     Alert,
     AlertController,
-    Modal,
     ModalController,
     NavController,
     NavParams,

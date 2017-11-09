@@ -7,8 +7,6 @@ import { WebAudioRecorder } from './recorder';
 import {
     formatUnixTimestamp,
     DoubleBufferSetter,
-    // MAX,
-    // MIN,
     WavFile
 } from '../../models';
 
@@ -47,15 +45,11 @@ export class WavRecorder extends WebAudioRecorder {
         this.nChunksSaved = 0;
     }
 
-    // see: https://github.com/dorontal/Recordjs/blob/master/dist/record.js
-    // *** protected valueCB(pcm: number): void {
-        protected valueCB(clippedPcm: number): void {
-        // console.log('valueCB()');
-        // *** const clipped: number = MAX(-1, MIN(1, pcm));
-        this.setter.setNext(
-            // *** clipped < 0 ? clipped * 0x8000 : clipped * 0x7fff
-            clippedPcm < 0 ? clippedPcm * 0x8000 : clippedPcm * 0x7fff
-        );
+    /**
+     * Precondition: Pcm is clipped (?)
+     */
+    protected valueCB(pcm: number): void {
+        this.setter.setNext(pcm < 0 ? pcm * 0x8000 : pcm * 0x7fff);
     }
 
     /**

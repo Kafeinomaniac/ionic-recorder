@@ -70,8 +70,7 @@ export class Heartbeat {
                 },
                 CLOCK_INTERVAL_MSEC
             );
-            console.log('start() interval: ' +
-                        this.intervalId['data']['handleId']);
+            console.log('start() - interval: ' + this.intervalId);
         });
     }
 
