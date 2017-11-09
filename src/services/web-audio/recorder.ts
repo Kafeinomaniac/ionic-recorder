@@ -196,6 +196,9 @@ export abstract class WebAudioRecorder {
         }
     }
 
+    /**
+     * @param {AudioProcessingEvent}
+     */
     private onAudioProcess(processingEvent: AudioProcessingEvent): void {
         // console.log('onAudioProcess() ' + this.isRecording);
         let inputBuffer: AudioBuffer = processingEvent.inputBuffer,

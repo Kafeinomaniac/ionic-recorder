@@ -99,7 +99,9 @@ export abstract class WebAudioPlayer {
         this.playerClockCallback();
         this.heartbeat.addFunction(
             PLAYER_CLOCK_FUNCTION_ID,
-            () => { this.playerClockCallback(); }
+            () => {
+                this.playerClockCallback();
+            }
         );
     }
 
@@ -112,7 +114,7 @@ export abstract class WebAudioPlayer {
     public stopMonitoring(): void {
         console.log('stopMonitoring()');
         this.heartbeat.removeFunction(PLAYER_CLOCK_FUNCTION_ID);
-        this.playerClockCallback();
+        // this.playerClockCallback();
     }
 
     /**

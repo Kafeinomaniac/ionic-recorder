@@ -1,6 +1,5 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-/*
 import { ComponentFixture, async } from '@angular/core/testing';
 import { TestUtils } from '../../test';
 import { AudioPlayer, ButtonBar, ProgressSlider } from '../../components';
@@ -27,4 +26,3 @@ describe('pages/track-page', () => {
         expect(instance).toBeTruthy();
     });
 });
-*/

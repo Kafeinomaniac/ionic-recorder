@@ -84,8 +84,6 @@ export class Heartbeat {
             return;
         }
         if (this.intervalId) {
-            console.log('stop(): clearing interval: ' +
-                        this.intervalId['data']['handleId']);
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
