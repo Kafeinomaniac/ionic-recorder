@@ -2,7 +2,7 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Filesystem } from '../../models';
-import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
+import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services';
 
 /**
  *

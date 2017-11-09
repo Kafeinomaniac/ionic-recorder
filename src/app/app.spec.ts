@@ -1,9 +1,9 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppStorageMock } from '../services/app-storage/app-storage.mock';
 import { IonicRecorderApp } from './app.component';
-import { LoadingPage } from '../pages';
 import { MenuMock, PlatformMock, StatusBarMock } from 'ionic-mocks';
+import { AppStorageMock } from '../services/mocks';
+import { LoadingPage } from '../pages';
 
 let instance: IonicRecorderApp = null;
 

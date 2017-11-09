@@ -9,7 +9,7 @@ import {
     Component,
     Input
 } from '@angular/core';
-import { WavPlayer } from '../../services/web-audio/wav-player';
+import { WavPlayer } from '../../services';
 import { formatTime, pathFileName } from '../../models';
 
 const PROGRESS_BY_PLAYER: number = -1;

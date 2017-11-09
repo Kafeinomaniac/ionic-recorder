@@ -1,8 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppFilesystem } from '../../services';
-import { WavFile, WavInfo } from '../../models';
-import { AUDIO_CONTEXT, SAMPLE_RATE } from '../../services/web-audio/common';
+import { WavFile, WavInfo } from './wav-file';
+import { SAMPLE_RATE, AppFilesystem } from '../../services/';
 
 const TEST_FILE_PATH: string = '/test.wav';
 const TEST_FILE_PATH2: string = '/test2.wav';

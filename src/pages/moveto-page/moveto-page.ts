@@ -14,7 +14,7 @@ import {
     Component,
     ViewChild
 } from '@angular/core';
-import { ButtonbarButton } from '../../components/button-bar/button-bar';
+import { ButtonbarButton } from '../../components';
 import { AppFilesystem } from '../../services';
 import { SelectionPage } from '../../pages';
 

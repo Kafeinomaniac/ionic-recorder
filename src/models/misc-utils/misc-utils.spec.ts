@@ -11,9 +11,10 @@ import {
     isFunction,
     isUndefined,
     isString
-} from './utils';
+} from './misc-utils';
 
-describe('utils/utils', () => {
+describe('models/misc-utils/misc-utils', () => {
+
     it('isX() functions work as expected', () => {
         expect(isFunction(isPositiveWholeNumber)).toBe(true);
         expect(isFunction(null)).toBe(false);
