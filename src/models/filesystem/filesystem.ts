@@ -306,6 +306,7 @@ export class Filesystem {
 
     /**
      * Write data into a file, starting at a particular location.
+     * @param {FileSystem} fs - the file system we're working with
      * @param {string} path - the file to write to.
      * @param {Blob} blob - the data to write.
      * @param {number} seekOffset - the location (byte) to start writing from.
@@ -319,8 +320,7 @@ export class Filesystem {
         seekOffset: number,
         bCreate: boolean
     ): Observable<void> {
-        console.log('writeToFile(fs, ' + path +
-                    ', bCreate=' + bCreate + ')');
+        console.log('writeToFile(fs, ' + path + ', bCreate=' + bCreate + ')');
         const src: Observable<void> = Observable.create((observer) => {
             fs.root.getFile(
                 path,
@@ -356,7 +356,9 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param {FileSystem} fs - the file system we're working with
+     * @param {string} path - the file to append to
+     * @param {Blob} blob - the data to write
      */
     public static appendToFile(
         fs: FileSystem,
@@ -405,6 +407,8 @@ export class Filesystem {
 
     /**
      *
+     * @param {FileSystem} fs - the file system we're working with
+     * @param {string} path - the file to get metadata from
      */
     public static getMetadata(
         fs: FileSystem,
@@ -437,7 +441,8 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param {FileSystem} fs - the file system we're working with
+     * @param {string} path - the path of the file to download
      */
     public static downloadFileToDevice(
         fs: FileSystem,
@@ -464,7 +469,10 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param {FileSystem} fs - the file system we're working with
+     * @param {string} path - the file to read from
+     * @param {number} startByte -
+     * @param {number} endByte -
      */
     public static readFromFile(
         fs: FileSystem,
@@ -530,7 +538,8 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param {DirectoryEntry} parentDirectoryEntry -
+     * @param {string} name -
      */
     public static createFolder(
         parentDirectoryEntry: DirectoryEntry,
@@ -556,7 +565,7 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param {DirectoryEntry} directoryEntry -
      */
     public static readFolderEntries(
         directoryEntry: DirectoryEntry
@@ -590,7 +599,7 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param {FileSystem} fileSystem - file system where we're erasing all
      */
     public static eraseEverything(fileSystem: FileSystem): Observable<void> {
         const src: Observable<void> = Observable.create((observer) => {

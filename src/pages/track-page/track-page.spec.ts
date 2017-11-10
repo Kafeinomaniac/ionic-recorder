@@ -9,9 +9,8 @@ let fixture: ComponentFixture<TrackPage> = null;
 let instance: any = null;
 
 describe('pages/track-page', () => {
-
     beforeEach(async(() => TestUtils.beforeEachCompiler(
-        [AudioPlayer, ButtonBar, ProgressSlider, TrackPage]
+        [TrackPage, AudioPlayer, ButtonBar, ProgressSlider]
     ).then(compiled => {
         fixture = compiled.fixture;
         instance = compiled.instance;

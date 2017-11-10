@@ -9,21 +9,33 @@ import 'zone.js/dist/fake-async-test';
 import 'zone.js/dist/long-stack-trace-zone';
 
 import {
+    ActionSheetController,
+    AlertController,
     App,
     Config,
+    DeepLinker,
     DomController,
     Form,
+    GestureController,
     IonicModule,
     Keyboard,
     MenuController,
+    ModalController,
     NavController,
-    Platform
+    NavParams,
+    Platform,
+    ViewController
 } from 'ionic-angular';
 import {
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
-import { ConfigMock, PlatformMock } from 'ionic-mocks';
+import {
+    ConfigMock,
+    PlatformMock,
+    NavParamsMock,
+    ViewControllerMock
+} from 'ionic-mocks';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { AppFilesystem, AppStorage, Heartbeat } from './services';
@@ -72,8 +84,17 @@ export class TestUtils {
                     ...components
             ],
             providers: [
-                App, Form, Keyboard, DomController,
-                MenuController, NavController, Heartbeat,
+                ActionSheetController, AlertController, App, Form, Keyboard,
+                DomController, MenuController, ModalController,
+                GestureController, NavController, Heartbeat,
+                // For DeepLinker line below see this discussion:
+                // https://forum.ionicframework.com/t/error-no-provider-for-...
+                // ...deeplinker-while-unit-testing-components/76975/3
+                {provide: DeepLinker, useValue: {} },
+                {provide: NavParams, 
+                 useFactory: () => NavParamsMock.instance()},
+                {provide: ViewController, 
+                 useFactory: () => ViewControllerMock.instance()},
                 {provide: Platform, useFactory: () => PlatformMock.instance()},
                 {provide: Config, useFactory: () => ConfigMock.instance()},
                 {provide: AppStorage, useClass: AppStorageMock},

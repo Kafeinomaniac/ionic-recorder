@@ -30,10 +30,13 @@ import { MoveToPage } from '../../pages';
     templateUrl: 'track-page.html'
 })
 export class TrackPage {
-    protected navController: NavController;
     private actionSheetController: ActionSheetController;
-    private viewController: ViewController;
+    private alertController: AlertController;
+    private appFilesystem: AppFilesystem;
     private modalController: ModalController;
+    private navController: NavController;
+    private viewController: ViewController;
+
     public footerButtons: ButtonbarButton[];
     public filePath: string;
     public filename: string;
@@ -44,8 +47,6 @@ export class TrackPage {
     public fileSize: number;
     public sampleRate: number;
     public nSamples: number;
-    private appFilesystem: AppFilesystem;
-    private alertController: AlertController;
 
     /**
      * @constructor
@@ -53,41 +54,48 @@ export class TrackPage {
      * @param {ActionSheetController}
      */
     constructor(
-        navController: NavController,
-        navParams: NavParams,
-        appFilesystem: AppFilesystem,
         actionSheetController: ActionSheetController,
         alertController: AlertController,
-        viewController: ViewController,
-        modalController: ModalController
+        appFilesystem: AppFilesystem,
+        modalController: ModalController,
+        navController: NavController,
+        navParams: NavParams,
+        viewController: ViewController
     ) {
         console.log('constructor(' + navParams.data + ')');
-        // grab data sent over from the caller of this page - full path of file
-        this.navController = navController;
-        this.filePath = navParams.data;
-        this.filename = pathFileName(this.filePath);
-        this.parentFolder = pathFolderName(this.filePath);
-        this.appFilesystem = appFilesystem;
         this.actionSheetController = actionSheetController;
         this.alertController = alertController;
-        this.viewController = viewController;
+        this.appFilesystem = appFilesystem;
         this.modalController = modalController;
+        this.navController = navController;
+        this.viewController = viewController;
         this.encoding = WAV_MIME_TYPE;
 
-        WavFile.readWavFileInfo(this.filePath, true).subscribe(
-            (wavInfo: WavInfo) => {
-                this.nSamples = wavInfo.nSamples;
-                this.sampleRate = wavInfo.sampleRate;
-                this.duration = (this.nSamples / this.sampleRate).toFixed(2);
-                this.fileSize = wavInfo.metadata.size;
-                this.dateModified = formatDate(
-                    wavInfo.metadata.modificationTime
-                );
-            },
-            (err: any) => {
-                throw(err);
-            }
-        );
+        // grab data sent over from the caller of this page - full path of file
+        if (navParams.data) {
+            // this page was called via NavController.push with some params
+            // which include the track's file full path
+            this.filePath = navParams.data;
+            this.filename = pathFileName(this.filePath);
+            this.parentFolder = pathFolderName(this.filePath);
+
+            WavFile.readWavFileInfo(this.filePath, true).subscribe(
+                (wavInfo: WavInfo) => {
+                    this.nSamples = wavInfo.nSamples;
+                    this.sampleRate = wavInfo.sampleRate;
+                    this.duration = (this.nSamples / this.sampleRate)
+                        .toFixed(2);
+                    this.fileSize = wavInfo.metadata.size;
+                    this.dateModified = formatDate(
+                        wavInfo.metadata.modificationTime
+                    );
+                },
+                (err: any) => {
+                    throw(err);
+                }
+            );
+
+        }
 
         this.footerButtons = [
             {
@@ -129,10 +137,12 @@ export class TrackPage {
         console.log('onClickRenameButton()');
         const renameAlert: Alert = this.alertController.create({
             title: 'Rename file \'' + this.filename + '\' to:',
-            inputs: [{
-                name: 'newName',
-                placeholder: 'Enter new file name ...'
-            }],
+            inputs: [
+                {
+                    name: 'newName',
+                    placeholder: 'Enter new file name ...'
+                }
+            ],
             buttons: [
                 {
                     text: 'Cancel',
