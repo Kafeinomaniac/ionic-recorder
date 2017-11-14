@@ -70,32 +70,6 @@ export function isFunction(func: any): boolean {
 }
 
 /**
- * @param {any}
- * @return {boolean}
- */
-export function isTruthy(obj: any): boolean {
-    if (obj) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-/**
- * @param {any}
- * @return {boolean}
- */
-export function isFalsy(obj: any): boolean {
-    if (obj) {
-        return false;
-    }
-    else {
-        return true;
-    }
-}
-
-/**
  * Checks if the given argument is defined.
  * @param {any}
  * @return {boolean}
@@ -128,11 +102,17 @@ export function isString(obj: any): boolean {
  * @return {boolean} whether argument is a positive whole number
  */
 export function isPositiveWholeNumber(num: number): boolean {
+    return<boolean>(isWholeNumber(num) && num > 0);
+}
+
+/**
+ * Whole number test
+ * @param {number} the number we're verifying
+ * @return {boolean} whether argument is a whole number
+ */
+export function isWholeNumber(num: number): boolean {
     return<boolean>(
-        num &&
-            !isNaN(num) &&
-            num > 0 &&
-            num === Math.floor(num)
+        num === 0 || (num && !isNaN(num) && num === Math.floor(num))
     );
 }
 
@@ -141,9 +121,8 @@ export function isPositiveWholeNumber(num: number): boolean {
  * return {boolean}
  */
 export function isOdd(num: number): boolean {
-    if (!isPositiveWholeNumber(num)) {
-        throw Error('isOdd expected positive whole number as input, got: ' +
-                    num);
+    if (!isWholeNumber(num)) {
+        throw Error('isOdd expected whole number as input, got: ' + num);
     }
     return num % 2 === 1;
 }
@@ -154,6 +133,10 @@ export function isOdd(num: number): boolean {
  */
 export function isEven(num: number): boolean {
     return !isOdd(num);
+}
+
+function addZero(num: number): string {
+    return (num < 10) ? '0' : '';
 }
 
 /**
@@ -168,11 +151,7 @@ export function formatTime(
 ): string {
     let nSeconds: number = Math.floor(timeInSeconds),
         // initialize the result with the centiseconds portion and period
-        result: string = (timeInSeconds - nSeconds).toFixed(2).substr(1),
-        addZero: (num: number) => string = (num: number) => {
-            return (num < 10) ? '0' : '';
-        };
-
+        result: string = (timeInSeconds - nSeconds).toFixed(2).substr(1);
     if (timeInSeconds < 60 && maxTimeInSeconds < 60) {
         // no minutes
         result = addZero(nSeconds) + nSeconds.toString() + result;
@@ -183,12 +162,12 @@ export function formatTime(
         nSeconds -= nMinutes * 60;
         result = ':' + addZero(nSeconds) + nSeconds.toString() + result;
         if (timeInSeconds < 3600 && maxTimeInSeconds < 3600) {
-            // no hours
+            // no hours in timeInSeconds
             result = addZero(nMinutes) + nMinutes.toString() + result;
         }
         else {
-            // yes hours
-            let nHours: number = Math.floor(nMinutes / 60.0);
+            // we've got hours - timeInSeconds spans hours
+            const nHours: number = Math.floor(nMinutes / 60.0);
             nMinutes -= nHours * 60;
             result = nHours.toString() + ':' + addZero(nMinutes) +
                 nMinutes + result;

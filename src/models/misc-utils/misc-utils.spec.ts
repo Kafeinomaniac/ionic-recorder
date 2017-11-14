@@ -2,10 +2,13 @@
 
 import {
     copyFromObject,
+    folderPathParent,
     formatTime,
     formatUnixTimestamp,
     has,
+    isEven,
     isFunction,
+    isOdd,
     isPositiveWholeNumber,
     isString,
     isUndefined,
@@ -29,6 +32,13 @@ describe('models/misc-utils/misc-utils', () => {
         expect(pathFolderName('/a/b/c//d////')).toEqual('/a/b/c//d////');
     });
 
+    it('can folderPathParent()', () => {
+        expect(folderPathParent('/a/b/c')).toEqual('/a/b/');
+        expect(folderPathParent('/a/b/c/')).toEqual('/a/b/');
+        expect(folderPathParent('/a/b/c//')).toEqual('/a/b/');
+        expect(folderPathParent('/a/b/c///')).toEqual('/a/b/');
+    });
+
     it('isX() functions work as expected', () => {
         expect(isFunction(isPositiveWholeNumber)).toBe(true);
         expect(isFunction(null)).toBe(false);
@@ -47,6 +57,12 @@ describe('models/misc-utils/misc-utils', () => {
         expect(isPositiveWholeNumber(0)).toBeFalsy();
         expect(isPositiveWholeNumber(-1)).toBeFalsy();
         expect(isPositiveWholeNumber(1.1)).toBeFalsy();
+        expect(isEven(0)).toBe(true);
+        expect(isEven(2)).toBe(true);
+        expect(isEven(3)).toBe(false);
+        expect(isOdd(0)).toBe(false);
+        expect(isOdd(2)).toBe(false);
+        expect(isOdd(3)).toBe(true);
     });
 
     it('can run has', () => {
