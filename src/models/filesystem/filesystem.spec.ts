@@ -1,4 +1,4 @@
-import { Filesystem } from './filesystem';
+import { Filesystem, UsageAndQuota } from './filesystem';
 
 const WAIT_MSEC: number = 60;
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
@@ -277,6 +277,49 @@ describe('models/filesystem', () => {
             );
         });
     });
+
+    it('can create a file and download it to the device', (done) => {
+        const data: string = 'test data',
+              dataLen: number = data.length;
+        Filesystem.writeToFile(
+            FILE_SYSTEM,
+            TEST_FILE_PATH,
+            new Blob([data], { type: 'text/plain' }),
+            0,
+            true
+        ).subscribe(
+            () => {
+                Filesystem.downloadFileToDevice(
+                    FILE_SYSTEM,
+                    TEST_FILE_PATH
+                ).subscribe(
+                    () => {
+                        // clean up
+                        Filesystem.deleteEntries(
+                            FILE_SYSTEM,
+                            [TEST_FILE_PATH]
+                        ).subscribe(
+                            () => {
+                                done();
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    });
+
+      it('can query usage and quota', (done) => {
+          Filesystem.queryUsageAndQuota(true).subscribe(
+              (usageAndQuota: UsageAndQuota) => {
+                  expect(usageAndQuota.usedBytes >= 0).toEqual(true);
+                  expect(usageAndQuota.grantedBytes).toBeGreaterThan(0);
+                  expect(usageAndQuota.usedBytes).toBeLessThan(
+                      usageAndQuota.grantedBytes);
+                  done();
+              }
+          );
+      });
 
     it('can read the root folder contents to be empty', (done) => {
         Filesystem.readFolderEntries(FILE_SYSTEM.root).subscribe(

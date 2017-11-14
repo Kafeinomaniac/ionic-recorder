@@ -6,7 +6,7 @@ import { downloadBlob, pathFileName } from '../../models';
 /** @constant {number} */
 export const DEFAULT_REQUEST_SIZE: number = 1024 * 1024 * 1024;
 
-interface UsageAndQuota {
+export interface UsageAndQuota {
     usedBytes: number;
     grantedBytes: number;
 }
@@ -494,6 +494,8 @@ export class Filesystem {
                                   bSuffix: boolean = name.slice(len - 4, len)
                                   .toLowerCase() === '.wav';
                             downloadBlob(file, bSuffix ? name : name + '.wav');
+                            observer.next();
+                            observer.complete();
                         }
                     );
                 }
