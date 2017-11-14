@@ -43,7 +43,7 @@ export class AppFilesystem {
     }
 
     /**
-     *
+     * @returns void
      */
     private setUpFileSystem(): void {
         // get the filesystem and remember it
@@ -129,7 +129,7 @@ export class AppFilesystem {
     }
 
     /**
-     *
+     * @returns Observable<void>
      */
     public downloadFileToDevice(filePath: string): Observable<void> {
         console.log('downloadFileToDevice(' + filePath + ')');
@@ -140,44 +140,42 @@ export class AppFilesystem {
     }
 
     /**
-     *
+     * @returns FileSystem
      */
     public getFilesystem(): FileSystem {
         return this.fileSystem;
     }
 
     /**
-     *
+     * @returns Metadata
      */
-    /*
-      public getMetadata(fullPath: string): Observable<Metadata> {
-      return Filesystem.getMetadata(this.fileSystem, fullPath);
-      }
-    */
+    public getMetadata(fullPath: string): Observable<Metadata> {
+        return Filesystem.getMetadata(this.fileSystem, fullPath);
+    }
 
     /**
-     *
+     * @returns Observable<FileEntry>
      */
     public appendToFile(fullPath: string, blob: Blob): Observable<FileEntry> {
         return Filesystem.appendToFile(this.fileSystem, fullPath, blob);
     }
 
     /**
-     *
+     * @returns string
      */
     public getPath(): string {
         return this.getFullPath(this.folderEntry);
     }
 
     /**
-     *
+     * @returns string[]
      */
     public getSelectedPathsArray(): string[] {
         return Object.keys(this.selectedPaths);
     }
 
     /**
-     *
+     * @returns void
      */
     public clearSelection(): void {
         for (let key in this.selectedPaths) {
@@ -191,7 +189,7 @@ export class AppFilesystem {
 
     /**
      * Wait until file system is ready for use, to emit observable.
-     * @return {Observable<FileSystem>} Observable that emits the file
+     * @returns Observable<FileSystem> Observable that emits the file
      * system when it's ready for use.
      */
     public whenReady(): Observable<void> {
@@ -212,7 +210,7 @@ export class AppFilesystem {
     }
 
     /**
-     *
+     * @returns Observable <Entry[]>
      */
     public getSelectedEntries(): Observable <Entry[]> {
         console.log('getSelectedEntries()');
@@ -242,7 +240,7 @@ export class AppFilesystem {
     }
 
     /**
-     *
+     * @returns Observable<DirectoryEntry>
      */
     public createFolder(path: string): Observable<DirectoryEntry> {
         console.log('createFolder(' + path + ')');
@@ -271,7 +269,7 @@ export class AppFilesystem {
     }
 
     /**
-     *
+     * @returns Observable<void>
      */
     public refreshFolder(): Observable<void> {
         const obs: Observable<void> = Observable.create((observer) => {
@@ -299,7 +297,7 @@ export class AppFilesystem {
 
     /**
      * Wait until file system is ready for use, to emit observable.
-     * @return {Observable<FileSystem>} Observable that emits the file
+     * @returns Observable<FileSystem> Observable that emits the file
      * system when it's ready for use.
      */
     public switchFolder(path: string): Observable <Entry[]> {
@@ -340,6 +338,7 @@ export class AppFilesystem {
 
     /**
      * @param {Entry} entry
+     * @returns string
      */
     public entryIcon(entry: Entry): string {
         return entry.isDirectory ? 'folder' : 'play';
@@ -347,6 +346,7 @@ export class AppFilesystem {
 
     /**
      * @param {Entry} entry
+     * @returns string
      */
     public getFullPath(entry: Entry): string {
         const fullPath: string = entry.fullPath;
@@ -356,6 +356,7 @@ export class AppFilesystem {
 
     /**
      * @param {string} path
+     * @returns boolean
      */
     public isPathSelected(path: string): boolean {
         // return this.selectedPaths.hasOwnProperty(path);
@@ -364,36 +365,42 @@ export class AppFilesystem {
 
     /**
      * @param {Entry} entry
+     * @returns boolean
      */
     public isEntrySelected(entry: Entry): boolean {
         return this.isPathSelected(this.getFullPath(entry));
     }
 
     /**
-     * Assumes
+     * Get the number indicating order
+     * @param {string} entryPath
+     * @returns number
      */
-    public getOrderIndex(entryPath: string): number {
-        const len: number = entryPath.length,
+    public getOrderIndex(path: string): number {
+        const len: number = path.length,
               lenM1: number = len - 1;
-        if (len > 1 && entryPath[lenM1] === '/') {
-            entryPath = entryPath.substr(0, len - 1);
+        if (len > 1 && path[lenM1] === '/') {
+            path = path.substr(0, len - 1);
         }
         let result: number = -1;
-        this.entries.find((entry, index) => {
-            if (entry.fullPath === entryPath) {
-                result = index;
-                return true;
+        this.entries.find(
+            (entry, index) => {
+                if (entry.fullPath === path) {
+                    result = index;
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
-            else {
-                return false;
-            }
-        });
-        console.log('getOrderIndex(' + entryPath + ') -> ' + result);
+        );
+        console.log('getOrderIndex(' + path + ') -> ' + result);
         return result;
     }
 
     /**
-     *
+     * @param {string} path
+     * @returns void
      */
     public selectPath(path: string): void {
         // const orderIndex: number = this.nSelected();
@@ -405,13 +412,14 @@ export class AppFilesystem {
 
     /**
      * @param {Entry} entry
+     * @returns void
      */
     public selectEntry(entry: Entry): void {
         this.selectPath(this.getFullPath(entry));
     }
 
     /**
-     *
+     * @returns boolean
      */
     public atHome(): boolean {
         // console.log('atHome(): ' +
@@ -420,7 +428,7 @@ export class AppFilesystem {
     }
 
     /**
-     *
+     * @returns number
      */
     public nEntries(): number {
         // console.log('nEntries(): ' + this.entries.length);
@@ -428,7 +436,7 @@ export class AppFilesystem {
     }
 
     /**
-     *
+     * @returns number
      */
     public nSelected(): number {
         // console.log('nSelected(isReady:' + this.isReady +
@@ -437,16 +445,18 @@ export class AppFilesystem {
     }
 
     /**
-     *
+     * @param {string} path
+     * @returns void
      */
-    public unselectPath(fullPath: string): void {
-        console.log('unselectPath(' + fullPath + ')');
-        delete this.selectedPaths[fullPath];
+    public unselectPath(path: string): void {
+        console.log('unselectPath(' + path + ')');
+        delete this.selectedPaths[path];
         this.storage.set('filesystemSelected', this.selectedPaths);
     }
 
     /**
      * @param {Entry} entry
+     * @returns void
      */
     public unSelectEntry(entry: Entry): void {
         this.unselectPath(this.getFullPath(entry));
@@ -454,6 +464,7 @@ export class AppFilesystem {
 
     /**
      * @param {Entry} entry
+     * @returns void
      */
     public toggleSelectEntry(entry: Entry): void {
         const fullPath: string = this.getFullPath(entry);
@@ -469,6 +480,7 @@ export class AppFilesystem {
     /**
      * Select all or no items in current folder, depending on 'all; argument
      * @param {boolean} if true, select all, if false, select none
+     * @returns void
      */
     public selectAllOrNone(bSelectAll: boolean): void {
         console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
@@ -492,6 +504,8 @@ export class AppFilesystem {
 
     /**
      * Moves selected entries to current folder (here).
+     * @param {string[]} paths
+     * @returns Observable<void>
      */
     public movePaths(paths: string[]): Observable<void> {
         console.log('movePaths(): ' + paths);
@@ -533,6 +547,7 @@ export class AppFilesystem {
 
     /**
      * Moves selected entries to current folder (here).
+     * @returns Observable<void>
      */
     public moveSelected(): Observable<void> {
         console.log('moveSelected()');
@@ -542,6 +557,7 @@ export class AppFilesystem {
 
     /**
      * Deletes selected entries.
+     * @returns Observable<void>
      */
     public deleteSelected(): Observable<void> {
         const obs: Observable<void> = Observable.create((observer) => {
@@ -603,15 +619,14 @@ export class AppFilesystem {
 
     /**
      * Deletes a collection of files.
+     * @param {string[]} paths
+     * @returns Observable<void>
      */
-    public deletePaths(filePaths: string[]): Observable<void> {
+    public deletePaths(paths: string[]): Observable<void> {
         const obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
-                    Filesystem.deleteEntries(
-                        this.fileSystem,
-                        filePaths
-                    ).subscribe(
+                    Filesystem.deleteEntries(this.fileSystem, paths).subscribe(
                         () => {
                             observer.next();
                             observer.complete();
@@ -637,6 +652,7 @@ export class AppFilesystem {
      * If not ending with a slash, it is a file.
      * trailing slash  directories (folders).
      * @param {string} newName - renames to this.
+     * @returns Observable<void>
      */
     public rename(fullPath: string, newName: string): Observable<void> {
         console.log('rename(' + fullPath + ', ' + newName + ')');
