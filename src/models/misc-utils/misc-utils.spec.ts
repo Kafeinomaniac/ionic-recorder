@@ -6,6 +6,7 @@ import {
     formatTime,
     formatUnixTimestamp,
     has,
+    isDefined,
     isEven,
     isFunction,
     isOdd,
@@ -71,6 +72,9 @@ describe('models/misc-utils/misc-utils', () => {
         expect(isOdd(0)).toBe(false);
         expect(isOdd(2)).toBe(false);
         expect(isOdd(3)).toBe(true);
+        const x: string[] = [];
+        expect(isDefined(x['a'])).toBe(false);
+        expect(isDefined(x.length)).toBe(true);
     });
 
     it('can run has', () => {
