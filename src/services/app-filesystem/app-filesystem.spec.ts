@@ -118,9 +118,10 @@ describe('services/app-filesystem', () => {
                     () => {
                         appFilesystem.switchFolder('/').subscribe(
                             () => {
+                                expect(appFilesystem.atHome()).toBe(true);
                                 expect(appFilesystem.entries).toBeTruthy();
-                                const nEntries: number = 
-                                      appFilesystem.entries.length;
+                                const nEntries: number =
+                                      appFilesystem.nEntries();
                                 expect(nEntries).toEqual(3);
                                 expect(appFilesystem.getOrderIndex(
                                      TEST_FILE_PATH)).toEqual(1);
