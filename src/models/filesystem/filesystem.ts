@@ -12,8 +12,11 @@ interface UsageAndQuota {
 }
 
 export class Filesystem {
+
     /**
-     *
+     * @param  {FileSystem} fileSystem
+     * @param  {string[]} paths
+     * @returns Observable<Entry[]>
      */
     public static getEntriesFromPaths(
         fileSystem: FileSystem,
@@ -43,7 +46,9 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param  {FileSystem} fileSystem
+     * @param  {string[]} paths
+     * @returns Observable<void>
      */
     public static deleteEntries(
         fileSystem: FileSystem,
@@ -77,7 +82,10 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param  {FileSystem} fileSystem
+     * @param  {string[]} paths
+     * @param  {DirectoryEntry} parent
+     * @returns Observable<void>
      */
     public static moveEntries(
         fileSystem: FileSystem,
@@ -113,7 +121,9 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param  {Entry} entry
+     * @param  {DirectoryEntry} parent
+     * @returns Observable<void>
      */
     public static moveEntry(
         entry: Entry,
@@ -138,7 +148,8 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param  {Entry} entry
+     * @returns Observable<void>
      */
     public static deleteEntry(entry: Entry): Observable<void> {
         const src: Observable<void> = Observable.create((observer) => {
@@ -169,7 +180,10 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param  {FileSystem} fileSystem
+     * @param  {string} path
+     * @param  {boolean=false} bCreate
+     * @returns Observable<Entry>
      */
     public static getPathEntry(
         fileSystem: FileSystem,
@@ -217,7 +231,8 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param  {boolean} bPersistent
+     * @returns Observable<UsageAndQuota>
      */
     public static queryUsageAndQuota(
         bPersistent: boolean
@@ -244,7 +259,8 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param  {boolean} bPersistent
+     * @returns Observable<number>
      */
     public static requestQuota(bPersistent: boolean): Observable<number> {
         const
@@ -266,7 +282,9 @@ export class Filesystem {
     }
 
     /**
-     *
+     * @param  {boolean=true} bPersistent
+     * @param  {number=DEFAULT_REQUEST_SIZE} requestSize
+     * @returns Observable<FileSystem>
      */
     public static getFileSystem(
         bPersistent: boolean = true,
@@ -306,7 +324,7 @@ export class Filesystem {
      * @param {Blob} blob - the data to write.
      * @param {number} seekOffset - the location (byte) to start writing from.
      * @param {boolean} bCreate - whether to create the file first or not.
-     * @return {Observable<void>}
+     * @returns Observable<void>
      */
     public static writeToFile(
         fs: FileSystem,
@@ -354,6 +372,7 @@ export class Filesystem {
      * @param {FileSystem} fs - the file system we're working with
      * @param {string} path - the file to append to
      * @param {Blob} blob - the data to write
+     * @returns Observable<FileEntry>
      */
     public static appendToFile(
         fs: FileSystem,
@@ -401,6 +420,7 @@ export class Filesystem {
      *
      * @param {FileSystem} fs - the file system we're working with
      * @param {string} path - the file to get metadata from
+     * @returns Observable<Metadata>
      */
     public static getMetadata(
         fs: FileSystem,
@@ -433,6 +453,7 @@ export class Filesystem {
     /**
      * @param {FileSystem} fs - the file system we're working with
      * @param {string} path - the path of the file to download
+     * @returns Observable<void>
      */
     public static downloadFileToDevice(
         fs: FileSystem,
@@ -461,8 +482,9 @@ export class Filesystem {
     /**
      * @param {FileSystem} fs - the file system we're working with
      * @param {string} path - the file to read from
-     * @param {number} startByte -
-     * @param {number} endByte -
+     * @param {number} startByte
+     * @param {number} endByte
+     * @returns Observable<ArrayBuffer>
      */
     public static readFromFile(
         fs: FileSystem,
@@ -525,8 +547,9 @@ export class Filesystem {
     }
 
     /**
-     * @param {DirectoryEntry} parentDirectoryEntry -
-     * @param {string} name -
+     * @param {DirectoryEntry} parentDirectoryEntry
+     * @param {string} name
+     * @returns Observable<DirectoryEntry>
      */
     public static createFolder(
         parentDirectoryEntry: DirectoryEntry,
@@ -586,7 +609,8 @@ export class Filesystem {
     }
 
     /**
-     * @param {FileSystem} fileSystem - file system where we're erasing all
+     * @param {FileSystem} fileSystem - file system where we're erasing
+     * @returns Observable<void>
      */
     public static eraseEverything(fileSystem: FileSystem): Observable<void> {
         const src: Observable<void> = Observable.create((observer) => {

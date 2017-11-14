@@ -110,8 +110,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Wait indefinitely until DB is ready for use, via an observable.
-     * @return {Observable<IDBDatabase>} Observable that emits the database
-     * when it's ready for use.
+     * @returns Observable<void> - Observable that emits when ready for use.
      */
     public waitForWAA(): Observable<void> {
         // NOTE:this loop should only repeat a handful of times or so
@@ -133,6 +132,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Initialize audio, get it ready to record
+     * @returns void
      */
     private initAudio(): void {
         console.log('initAudio(): SAMPLE RATE: ' + SAMPLE_RATE);
@@ -198,6 +198,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * @param {AudioProcessingEvent}
+     * @returns void
      */
     private onAudioProcess(processingEvent: AudioProcessingEvent): void {
         // console.log('onAudioProcess() ' + this.isRecording);
@@ -245,6 +246,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Create audioGainNode & scriptProcessorNode
+     * @returns void
      */
     private createNodes(): void {
         console.log('createNodes()');
@@ -269,6 +271,7 @@ export abstract class WebAudioRecorder {
      *      |--> this.scriptProcessorNode (createScriptProcessor)
      *           |--> MediaStreamAudioDestinationNode
      * @param {MediaStream} stream the stream obtained by getUserMedia
+     * @returns void
      */
     private connectNodes(stream: MediaStream): void {
         console.log('connectNodes()');
@@ -308,6 +311,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Ensures change detection every GRAPHICS_REFRESH_INTERVAL
+     * @returns void
      */
     public startMonitoring(): void {
         console.log('startMonitoring()');
@@ -340,6 +344,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Stops monitoring (stops change detection)
+     * @returns void
      */
     public stopMonitoring(): void {
         console.log('stopMonitoring()');
@@ -349,6 +354,7 @@ export abstract class WebAudioRecorder {
     /**
      * Reset all peak stats as if we've just started playing audio at
      * time 0. Call this when you want to compute stats from now.
+     * @returns void
      */
     public resetPeaks(): void {
         this.maxVolumeSinceReset = 0;
@@ -365,6 +371,7 @@ export abstract class WebAudioRecorder {
     /**
      * Set the multiplier on input volume (gain) effectively changing volume
      * @param {number} factor fraction of volume, where 1.0 is no change
+     * @returns void
      */
     public setGainFactor(factor: number): void {
         if (this.status === RecordStatus.READY_STATE) {
@@ -375,6 +382,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Start recording
+     * @returns void
      */
     public start(): void {
         this.nRecordedSamples = 0;
@@ -384,6 +392,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Pause recording
+     * @returns void
      */
     public pause(): void {
         this.isRecording = false;
@@ -391,6 +400,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Resume recording
+     * @returns void
      */
     public resume(): void {
         this.isRecording = true;
@@ -398,6 +408,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Stop recording, reset all for next recording.
+     * @returns void
      */
     protected reset(): void {
         this.isRecording = false;
@@ -406,7 +417,7 @@ export abstract class WebAudioRecorder {
 
     /**
      * Returns recording time, in seconds.
-     * @return {number}
+     * @returns number
      */
     private getTime(): number {
         return this.isInactive ? 0 : this.nRecordedSamples / SAMPLE_RATE;
