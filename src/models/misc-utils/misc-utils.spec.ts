@@ -37,6 +37,14 @@ describe('models/misc-utils/misc-utils', () => {
         expect(folderPathParent('/a/b/c/')).toEqual('/a/b/');
         expect(folderPathParent('/a/b/c//')).toEqual('/a/b/');
         expect(folderPathParent('/a/b/c///')).toEqual('/a/b/');
+        expect(folderPathParent('/')).toEqual('/');
+        expect(folderPathParent('//')).toEqual('/');
+        expect(folderPathParent('///')).toEqual('/');
+        expect(folderPathParent('////')).toEqual('/');
+        expect(folderPathParent('/x')).toEqual('/');
+        expect(folderPathParent('/x/')).toEqual('/');
+        expect(folderPathParent('/x//')).toEqual('/');
+        expect(folderPathParent('/x///')).toEqual('/');
     });
 
     it('isX() functions work as expected', () => {
