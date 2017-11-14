@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 /* tslint:disable */
 import { Storage } from '@ionic/storage';
 /* tslint:enable */
-import { Filesystem, has } from '../../models';
+import { Filesystem, has, objectInspector } from '../../models';
 
 /** @const {string} - the default save path */
 export const DEFAULT_PATH: string = '/Unfiled/';
@@ -165,8 +165,9 @@ export class AppFilesystem {
         for (let key in this.selectedPaths) {
             delete this.selectedPaths[key];
         }
-        if (this.selectedPaths !== {}) {
-            alert('noway');
+        if (Object.keys(this.selectedPaths).length !== 0) {
+            throw Error('Expected nothing to be selected but ' +
+                        (Object.keys(this.selectedPaths).length) + ' are!');
         }
         this.storage.set('filesystemSelected', {});
     }
