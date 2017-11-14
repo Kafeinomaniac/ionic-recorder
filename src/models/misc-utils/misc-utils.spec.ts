@@ -19,7 +19,7 @@ import {
     prependArray
 } from './misc-utils';
 
-describe('models/misc-utils/misc-utils', () => {
+describe('models/misc-utils', () => {
     it('can pathFileName()', () => {
         expect(pathFileName('/a/b/c/jane')).toEqual('jane');
         expect(pathFileName('/a/b/c//jane')).toEqual('jane');

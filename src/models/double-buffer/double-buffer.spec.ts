@@ -25,7 +25,7 @@ beforeEach(() => {
     setter = new DoubleBufferSetter(buffer1, buffer2, preSetCB);
 });
 
-describe('utils/double-buffer', () => {
+describe('models/double-buffer', () => {
 
     it ('initializes', () => {
         expect(getter).not.toBeNull();

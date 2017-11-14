@@ -78,6 +78,10 @@ export class TestUtils {
 
     public static configureIonicTestingModule(
         components: Array<any>): typeof TestBed {
+            // const appStorageMock: AppStorageMock = new AppStorageMock(),
+            //       appFilesystemMock: AppFilesystemMock =
+            //       new AppFilesystemMock();
+
             return TestBed.configureTestingModule({
                 declarations: [
                         ...components
@@ -119,11 +123,15 @@ export class TestUtils {
                     },
                     {
                         provide: AppStorage,
-                        useClass: AppStorageMock
+                        // useClass: AppStorageMock
+                        // useValue: appStorageMock
+                        useFactory: () => new AppStorageMock()
                     },
                     {
                         provide: AppFilesystem,
-                        useClass: AppFilesystemMock
+                        // useClass: AppFilesystemMock
+                        // useValue: appFilesystemMock
+                        useFactory: () => new AppFilesystemMock()
                     }
                 ],
                 imports: [
