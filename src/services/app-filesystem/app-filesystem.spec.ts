@@ -33,7 +33,16 @@ describe('services/app-filesystem', () => {
                         expect(dirEntry).toBeTruthy();
                         appFilesystem.switchFolder(TEST_FOLDER_PATH).subscribe(
                             () => {
-                                done();
+                                expect(appFilesystem.getPath())
+                                    .toEqual(TEST_FOLDER_PATH);
+                                appFilesystem.refreshFolder().subscribe(
+                                    () => {
+                                        expect(appFilesystem.getOrderIndex(
+                                            TEST_FOLDER_PATH
+                                        )).toEqual(-1);
+                                        done();
+                                    }
+                                );
                             }
                         );
                     }
@@ -109,18 +118,29 @@ describe('services/app-filesystem', () => {
                     true
                 ).subscribe(
                     () => {
-                        appFilesystem.downloadFileToDevice(TEST_FILE_PATH)
-                            .subscribe(
-                                () => {
-                                    appFilesystem.deletePaths(
-                                        [TEST_FILE_PATH]
-                                    ).subscribe(
-                                        () => {
-                                            done();
-                                        }
-                                    );
-                                }
-                            );
+                        appFilesystem.switchFolder('/').subscribe(
+                            () => {
+                                expect(appFilesystem.entries).toBeTruthy();
+                                console.log('ENTRIES: ' +
+                                            appFilesystem.getPath());
+                                console.log(appFilesystem.entries);
+                                expect(appFilesystem.getOrderIndex(
+                                     TEST_FILE_PATH)).toEqual(1);
+                                appFilesystem.downloadFileToDevice(
+                                    TEST_FILE_PATH
+                                ).subscribe(
+                                    () => {
+                                        appFilesystem.deletePaths(
+                                            [TEST_FILE_PATH]
+                                        ).subscribe(
+                                            () => {
+                                                done();
+                                            }
+                                        );
+                                    }
+                                );
+                            }
+                        );
                     }
                 );
             }
