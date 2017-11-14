@@ -121,9 +121,9 @@ describe('services/app-filesystem', () => {
                         appFilesystem.switchFolder('/').subscribe(
                             () => {
                                 expect(appFilesystem.entries).toBeTruthy();
-                                console.log('ENTRIES: ' +
-                                            appFilesystem.getPath());
-                                console.log(appFilesystem.entries);
+                                const nEntries: number = 
+                                      appFilesystem.entries.length;
+                                expect(nEntries).toEqual(3);
                                 expect(appFilesystem.getOrderIndex(
                                      TEST_FILE_PATH)).toEqual(1);
                                 appFilesystem.downloadFileToDevice(
@@ -134,7 +134,17 @@ describe('services/app-filesystem', () => {
                                             [TEST_FILE_PATH]
                                         ).subscribe(
                                             () => {
-                                                done();
+                                                appFilesystem.refreshFolder()
+                                                    .subscribe(
+                                                        () => {
+                                                            expect(
+                                                                appFilesystem
+                                                                    .entries
+                                                                    .length
+                                                            ).toEqual(2);
+                                                            done();
+                                                        }
+                                                    );
                                             }
                                         );
                                     }
