@@ -28,7 +28,7 @@ describe('models/filesystem', () => {
             WAIT_MSEC);
     });
 
-    it('can get the root dir entry', (done) => {
+    it('can get the root dir entry via getPathEntry()', (done) => {
         Filesystem.getPathEntry(FILE_SYSTEM, '/', false).subscribe(
             (entry: Entry) => {
                 expect(entry.name).toEqual('');
@@ -40,6 +40,19 @@ describe('models/filesystem', () => {
         );
     });
 
+    it('can get the root dir entry via getEntriesFromPaths()', (done) => {
+        Filesystem.getEntriesFromPaths(FILE_SYSTEM, ['/']).subscribe(
+            (entries: Entry[]) => {
+                const entry: Entry = entries[0];
+                expect(entry.name).toEqual('');
+                expect(entry.fullPath).toEqual('/');
+                expect(entry.isFile).toBeFalsy();
+                expect(entry.isDirectory).toBeTruthy();
+                done();
+            }
+        );
+    });
+    
     it('can erase everything', (done) => {
         Filesystem.eraseEverything(FILE_SYSTEM).subscribe(
             () => {
@@ -78,7 +91,7 @@ describe('models/filesystem', () => {
     // system should allow us to create a folder that's already
     // been created, without error
 
-    it('can create folder /Unfiled', (done) => {
+    it('can create folder /Unfiled/', (done) => {
         Filesystem.getPathEntry(FILE_SYSTEM, '/Unfiled/', true).subscribe(
             (entry: Entry) => {
                 expect(entry.name).toEqual('Unfiled');
@@ -90,7 +103,7 @@ describe('models/filesystem', () => {
         );
     });
 
-    it('can create folder /Unfiled/tstsubdir', (done) => {
+    it('can create folder /Unfiled/tstsubdir/', (done) => {
         Filesystem.getPathEntry(
             FILE_SYSTEM,
             '/Unfiled/tstsubdir/',
@@ -102,6 +115,46 @@ describe('models/filesystem', () => {
                 expect(entry.isFile).toBeFalsy();
                 expect(entry.isDirectory).toBeTruthy();
                 done();
+            }
+        );
+    });
+
+    it('can move /Unfiled/tstsubdir/ to home: /tstsubdir/', (done) => {
+        Filesystem.getPathEntry(
+            FILE_SYSTEM,
+            '/',
+            false
+        ).subscribe(
+            (entry: DirectoryEntry) => {
+                Filesystem.moveEntries(
+                    FILE_SYSTEM,
+                    ['/Unfiled/tstsubdir/'],
+                    entry
+                ).subscribe(
+                    () => {
+                        done();
+                    }
+                );
+            }
+        );
+    });
+
+    it('can move /tstsubdir/ to /Unfiled/tstsubdir/', (done) => {
+        Filesystem.getPathEntry(
+            FILE_SYSTEM,
+            '/Unfiled/',
+            false
+        ).subscribe(
+            (entry: DirectoryEntry) => {
+                Filesystem.moveEntries(
+                    FILE_SYSTEM,
+                    ['/tstsubdir/'],
+                    entry
+                ).subscribe(
+                    () => {
+                        done();
+                    }
+                );
             }
         );
     });

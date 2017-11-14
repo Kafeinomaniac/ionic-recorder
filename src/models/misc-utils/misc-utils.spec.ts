@@ -1,19 +1,33 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import {
-    isPositiveWholeNumber,
-    objectInspector,
-    prependArray,
+    copyFromObject,
     formatTime,
     formatUnixTimestamp,
-    copyFromObject,
     has,
     isFunction,
+    isPositiveWholeNumber,
+    isString,
     isUndefined,
-    isString
+    objectInspector,
+    pathFileName,
+    pathFolderName,
+    prependArray
 } from './misc-utils';
 
 describe('models/misc-utils/misc-utils', () => {
+    it('can pathFileName()', () => {
+        expect(pathFileName('/a/b/c/jane')).toEqual('jane');
+        expect(pathFileName('/a/b/c//jane')).toEqual('jane');
+        expect(pathFileName('/a/b/c///jane')).toEqual('jane');
+    });
+
+    it('can pathFolderName()', () => {
+        expect(pathFolderName('/a/b/c/jane')).toEqual('/a/b/c/');
+        expect(pathFolderName('/jane/jane/jane')).toEqual('/jane/jane/');
+        expect(pathFolderName('/a/b/c//d')).toEqual('/a/b/c//');
+        expect(pathFolderName('/a/b/c//d////')).toEqual('/a/b/c//d////');
+    });
 
     it('isX() functions work as expected', () => {
         expect(isFunction(isPositiveWholeNumber)).toBe(true);

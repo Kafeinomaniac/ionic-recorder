@@ -149,7 +149,6 @@ export class Filesystem {
                         observer.complete();
                     },
                     (err: FileError) => {
-                        console.log(err);
                         observer.error(err);
                     }
                 );
@@ -161,7 +160,6 @@ export class Filesystem {
                         observer.complete();
                     },
                     (err: FileError) => {
-                        console.log(err);
                         observer.error(err);
                     }
                 );
@@ -194,7 +192,6 @@ export class Filesystem {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log(err);
                         observer.error(err);
                     }
                 );
@@ -211,7 +208,6 @@ export class Filesystem {
                         observer.complete();
                     },
                     (err: any) => {
-                        console.log(err);
                         observer.error(err);
                     }
                 );
@@ -294,7 +290,6 @@ export class Filesystem {
                             observer.complete();
                         },
                         (err: any) => {
-                            console.log(err);
                             observer.error(err);
                         }
                     );
@@ -383,7 +378,6 @@ export class Filesystem {
                                 observer.complete();
                             };
                             fileWriter.onerror = (err1: any) => {
-                                console.log(err1);
                                 observer.error(err1);
                             };
                             // see to end and write from there
@@ -391,13 +385,11 @@ export class Filesystem {
                             fileWriter.write(blob);
                         },
                         (err2: any) => {
-                            console.log(err2);
                             observer.error(err2);
                         }
                     );
                 },
                 (err3: any) => {
-                    console.log(err3);
                     observer.error(err3);
                 }
             ); // fs.root.getFile(
@@ -426,13 +418,11 @@ export class Filesystem {
                             observer.complete();
                         },
                         (err1: FileError) => {
-                            console.log(err1);
                             observer.error(err1);
                         }
                     );
                 },
                 (err2: any) => {
-                    console.log(err2);
                     observer.error(err2);
                 }
             ); // fs.root.getFile(
@@ -499,7 +489,6 @@ export class Filesystem {
                             };
 
                             fileReader.onerror = (err1: any) => {
-                                console.log(err1);
                                 observer.error(err1);
                             };
 
@@ -522,13 +511,11 @@ export class Filesystem {
                             }
                         },
                         (err2: any) => {
-                            console.log(err2);
                             observer.error(err2);
                         }
                     );
                 },
                 (err3: any) => {
-                    console.log(err3);
                     observer.error(err3);
                 }
             ); // fs.root.getFile(

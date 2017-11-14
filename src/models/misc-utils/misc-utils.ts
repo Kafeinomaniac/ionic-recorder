@@ -17,7 +17,8 @@ export function pathFileName(filePath: string): string {
  * @return {string}
  */
 export function pathFolderName(filePath: string): string {
-    return filePath.replace(pathFileName(filePath), '');
+    // return filePath.replace(pathFileName(filePath), '');
+    return filePath.match(/^.*[\\\/]/).toString();
 }
 
 /**
