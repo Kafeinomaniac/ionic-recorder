@@ -6,8 +6,7 @@ import { Filesystem } from '../../models';
 const TEST_FILE_PATH: string = '/foo_file';
 const TEST_FOLDER_PATH: string = '/foo_folder/';
 
-let appFilesystem: AppFilesystem = null,
-    folderEntry: DirectoryEntry = null;
+let appFilesystem: AppFilesystem = null;
 
 describe('services/app-filesystem', () => {
     beforeEach(() => {
@@ -29,7 +28,6 @@ describe('services/app-filesystem', () => {
             () => {
                 appFilesystem.createFolder(TEST_FOLDER_PATH).subscribe(
                     (dirEntry: DirectoryEntry) => {
-                        folderEntry = dirEntry;
                         expect(dirEntry).toBeTruthy();
                         appFilesystem.switchFolder(TEST_FOLDER_PATH).subscribe(
                             () => {
