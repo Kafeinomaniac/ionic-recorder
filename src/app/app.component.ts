@@ -38,10 +38,10 @@ export class IonicRecorderApp {
     private appStorage: AppStorage;
 
     constructor(
-        platform: Platform,
+        appStorage: AppStorage,
         menu: MenuController,
-        statusBar: StatusBar,
-        appStorage: AppStorage
+        platform: Platform,
+        statusBar: StatusBar
     ) {
         console.log('constructor()');
 

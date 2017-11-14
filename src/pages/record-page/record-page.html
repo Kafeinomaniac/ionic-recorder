@@ -59,7 +59,8 @@
     <ion-card *ngIf="recorderLastSavedFile() && recorder.isInactive">
         <p>Last recording:</p>
         <button ion-button clear icon-left (click)="onPlayLastRecording()">
-            <ion-icon name="play"></ion-icon> &nbsp; {{recorderLastSavedFile()}}
+            <ion-icon name="play">
+            </ion-icon> &nbsp; {{recorderLastSavedFile()}}
         </button>
     </ion-card>
 </ion-content>

@@ -427,25 +427,48 @@ export class Filesystem {
         path: string
     ): Observable<Metadata> {
         console.log('getMetadata(fs, ' + path + ')');
+        const isFolder: boolean = (path[path.length - 1] === '/');
         const src: Observable<Metadata> = Observable.create((observer) => {
-            fs.root.getFile(
-                path,
-                { create: false },
-                (fileEntry: FileEntry) => {
-                    fileEntry.getMetadata(
-                        (metadata: Metadata) => {
-                            observer.next(metadata);
-                            observer.complete();
-                        },
-                        (err1: FileError) => {
-                            observer.error(err1);
-                        }
-                    );
-                },
-                (err2: any) => {
-                    observer.error(err2);
-                }
-            ); // fs.root.getFile(
+            if (isFolder) {
+                fs.root.getDirectory(
+                    path,
+                    { create: false },
+                    (directoryEntry: DirectoryEntry) => {
+                        directoryEntry.getMetadata(
+                            (metadata: Metadata) => {
+                                observer.next(metadata);
+                                observer.complete();
+                            },
+                            (err1: FileError) => {
+                                observer.error(err1);
+                            }
+                        );
+                    },
+                    (err2: any) => {
+                        observer.error(err2);
+                    }
+                ); // fs.root.getFile(
+            }
+            else {
+                fs.root.getFile(
+                    path,
+                    { create: false },
+                    (fileEntry: FileEntry) => {
+                        fileEntry.getMetadata(
+                            (metadata: Metadata) => {
+                                observer.next(metadata);
+                                observer.complete();
+                            },
+                            (err1: FileError) => {
+                                observer.error(err1);
+                            }
+                        );
+                    },
+                    (err2: any) => {
+                        observer.error(err2);
+                    }
+                ); // fs.root.getFile(
+            }
         });
         return src;
     }

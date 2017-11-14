@@ -17,7 +17,7 @@ import {
 
 // clock frequency, in Hz
 const CLOCK_FREQUENCY_HZ: number = 24;
-const CLOCK_INTERVAL_MSEC: number = 1000 / CLOCK_FREQUENCY_HZ;
+export const CLOCK_INTERVAL_MSEC: number = 1000 / CLOCK_FREQUENCY_HZ;
 
 @Injectable()
 export class Heartbeat {
@@ -29,7 +29,9 @@ export class Heartbeat {
     /**
      * constructor
      */
-    constructor(applicationRef: ApplicationRef) {
+    constructor(
+        applicationRef: ApplicationRef
+    ) {
         console.log('constructor()');
         this.applicationRef = applicationRef;
         this.intervalId = null;

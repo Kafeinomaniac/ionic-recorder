@@ -2,7 +2,8 @@ import { Filesystem } from './filesystem';
 
 const WAIT_MSEC: number = 60;
 const REQUEST_SIZE: number = 1024 * 1024 * 1024;
-const TEST_FILE_PATH: string = 'test_file.txt';
+const TEST_FILE_PATH: string = '/test_file.txt';
+const TEST_FOLDER_PATH: string = '/blah_folder/';
 
 let FILE_SYSTEM: FileSystem = null;
 
@@ -217,6 +218,64 @@ describe('models/filesystem', () => {
                 );
             }
         );
+    });
+
+    it('can create a folder and get metadata for it', (done) => {
+        Filesystem.getPathEntry(FILE_SYSTEM, '/', false).subscribe(
+            (rootEntry: DirectoryEntry) => {
+                Filesystem.createFolder(rootEntry, TEST_FOLDER_PATH).subscribe(
+                    (entry: DirectoryEntry) => {
+                        expect(entry.fullPath + '/').toEqual(TEST_FOLDER_PATH);
+                        expect(entry.isFile).toBeFalsy();
+                        expect(entry.isDirectory).toBeTruthy();
+                        Filesystem.getMetadata(
+                            FILE_SYSTEM,
+                            TEST_FOLDER_PATH
+                        ).subscribe(
+                            (metadata: Metadata) => {
+                                expect(metadata.modificationTime).toBeTruthy();
+                                expect(metadata.size).toEqual(0);
+                                // clean up
+                                Filesystem.deleteEntries(
+                                    FILE_SYSTEM,
+                                    [TEST_FOLDER_PATH]
+                                ).subscribe(
+                                    () => {
+                                        done();
+                                    }
+                                );
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    });
+
+    it('can create a file and get metadata for it', (done) => {
+        const data: string = 'test data',
+              dataLen: number = data.length;
+        Filesystem.writeToFile(
+            FILE_SYSTEM,
+            TEST_FILE_PATH,
+            new Blob([data], { type: 'text/plain' }),
+            0,
+            true
+        ).subscribe(() => {
+            Filesystem.getMetadata(FILE_SYSTEM, TEST_FILE_PATH).subscribe(
+                (metadata: Metadata) => {
+                    expect(metadata.modificationTime).toBeTruthy();
+                    expect(metadata.size).toEqual(dataLen);
+                    // clean up
+                    Filesystem.deleteEntries(FILE_SYSTEM, [TEST_FILE_PATH])
+                        .subscribe(
+                            () => {
+                                done();
+                            }
+                        );
+                }
+            );
+        });
     });
 
     it('can read the root folder contents to be empty', (done) => {
