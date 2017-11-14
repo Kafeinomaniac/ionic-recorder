@@ -2,7 +2,7 @@
 
 import { IonicRecorderApp } from './app.component';
 import { MenuMock, PlatformMock, StatusBarMock } from 'ionic-mocks';
-import { AppStorageMock } from '../services/mocks';
+import { AppStorageMock } from '../mocks';
 import { LoadingPage } from '../pages';
 
 let instance: IonicRecorderApp = null;

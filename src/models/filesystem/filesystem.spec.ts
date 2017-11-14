@@ -52,7 +52,7 @@ describe('models/filesystem', () => {
             }
         );
     });
-    
+
     it('can erase everything', (done) => {
         Filesystem.eraseEverything(FILE_SYSTEM).subscribe(
             () => {

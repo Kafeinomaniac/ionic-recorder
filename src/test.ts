@@ -38,7 +38,7 @@ import {
 } from 'ionic-mocks';
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { AppFilesystem, AppStorage, Heartbeat } from './services';
-import { AppFilesystemMock, AppStorageMock } from './services/mocks';
+import { AppFilesystemMock, AppStorageMock } from './mocks';
 
 // Unfortunately there's no typing for the `__karma__` variable. Just
 // declare it as any.
