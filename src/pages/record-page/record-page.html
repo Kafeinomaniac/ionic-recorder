@@ -9,10 +9,12 @@
         <ion-buttons end *ngIf="recorderIsReady() && gainFactor !== 0">
             <button ion-button small (click)="recorder.resetPeaks()">
                 <ion-badge item-right button-on-dark-bg text-lowercase>
-                    <span class="none-clipped" *ngIf="recorder.nClippedPerBuffer">
+                    <span class="none-clipped"
+                          *ngIf="recorder.nClippedPerBuffer">
                         {{recorder.nClipped}}
                     </span>
-                    <span class="some-clipped" *ngIf="!recorder.nClippedPerBuffer">
+                    <span class="some-clipped"
+                          *ngIf="!recorder.nClippedPerBuffer">
                         {{recorder.nClipped}}
                     </span>
                     clipped / {{recorder.percentPeaksAtMax}}% peaks
@@ -45,21 +47,17 @@
         <button ion-button color="logo-red"
                 [disabled]="!recorderIsReady()"
                 (click)="onClickStartPauseButton()">
-            <ion-icon [name]="recordButtonIcon">
-            </ion-icon>
+            <ion-icon [name]="recordButtonIcon"></ion-icon>
         </button>
         <button ion-button color="logo-orange"
                 [disabled]="!recorderIsReady() || recorder.isInactive"
                 (click)="onClickStopButton()">
-            <ion-icon name="square">
-            </ion-icon>
+            <ion-icon name="square"></ion-icon>
         </button>
     </div>
 
     <ion-card *ngIf="recorderLastSavedFile() && recorder.isInactive">
-        <p>
-            Last recording:
-        </p>
+        <p>Last recording:</p>
         <button ion-button clear icon-left (click)="onPlayLastRecording()">
             <ion-icon name="play"></ion-icon> &nbsp; {{recorderLastSavedFile()}}
         </button>

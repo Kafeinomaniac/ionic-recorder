@@ -1,27 +1,65 @@
 // Copyright (c) 2017 Abouttunes Inc
 
-import { ComponentFixture, async } from '@angular/core/testing';
-import { TestUtils } from '../../test';
-import { AboutPage } from '../../pages';
+// demonstration on how to manually compile the test bed (as
+// opposed to calling TestUtils)
+
+import {
+    async,
+    fakeAsync,
+    ComponentFixture,
+    TestBed
+} from '@angular/core/testing';
+import {
+    App,
+    Config,
+    DomController,
+    IonicModule,
+    Keyboard,
+    MenuController,
+    NavController,
+    Platform
+} from 'ionic-angular';
+import {
+    ConfigMock,
+    PlatformMock
+} from 'ionic-mocks';
+import { AboutPage }      from './about-page';
 
 let fixture: ComponentFixture<AboutPage> = null;
 let instance: any = null;
 
 describe('pages/about-page', () => {
-
-    beforeEach(async(() => TestUtils.beforeEachCompiler(
-        [AboutPage]
-    ).then(compiled => {
-        fixture = compiled.fixture;
-        instance = compiled.instance;
-        fixture.detectChanges();
-    })));
+    // demonstration on how to manually compile the test bed (as
+    // opposed to calling test.ts:TestUtils)
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [AboutPage],
+            providers: [
+                App,
+                DomController,
+                Keyboard,
+                MenuController,
+                NavController,
+                {provide: Config, useFactory: () => ConfigMock.instance()},
+                {provide: Platform, useFactory: () => PlatformMock.instance()},
+            ],
+            imports: [
+                IonicModule,
+            ],
+        }).compileComponents().then(() => {
+            fixture = TestBed.createComponent(AboutPage);
+            instance = fixture;
+            fixture.detectChanges();
+        });
+    }));
 
     afterEach(() => {
         fixture.destroy();
     });
 
-    it('initialises', () => {
+    it('should create AboutPage', () => {
+        expect(fixture).toBeTruthy();
         expect(instance).toBeTruthy();
     });
+
 });

@@ -36,7 +36,6 @@ import {
     NavParamsMock,
     ViewControllerMock
 } from 'ionic-mocks';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { AppFilesystem, AppStorage, Heartbeat } from './services';
 import { AppFilesystemMock, AppStorageMock } from './services/mocks';
@@ -67,46 +66,71 @@ export class TestUtils {
 
     public static beforeEachCompiler(
         components: Array<any>): Promise<{fixture: any, instance: any}> {
-        return TestUtils.configureIonicTestingModule(components)
-            .compileComponents().then(() => {
-                let fixture: any = TestBed.createComponent(components[0]);
-                return {
-                    fixture: fixture,
-                    instance: fixture.debugElement.componentInstance
-                };
-            });
-    }
+            return TestUtils.configureIonicTestingModule(components)
+                .compileComponents().then(() => {
+                    let fixture: any = TestBed.createComponent(components[0]);
+                    return {
+                        fixture: fixture,
+                        instance: fixture.debugElement.componentInstance
+                    };
+                });
+        }
 
     public static configureIonicTestingModule(
         components: Array<any>): typeof TestBed {
-        return TestBed.configureTestingModule({
-            declarations: [
-                    ...components
-            ],
-            providers: [
-                ActionSheetController, AlertController, App, Form, Keyboard,
-                DomController, MenuController, ModalController,
-                GestureController, NavController, Heartbeat,
-                // For DeepLinker line below see this discussion:
-                // https://forum.ionicframework.com/t/error-no-provider-for-...
-                // ...deeplinker-while-unit-testing-components/76975/3
-                {provide: DeepLinker, useValue: {} },
-                {provide: NavParams, 
-                 useFactory: () => NavParamsMock.instance()},
-                {provide: ViewController, 
-                 useFactory: () => ViewControllerMock.instance()},
-                {provide: Platform, useFactory: () => PlatformMock.instance()},
-                {provide: Config, useFactory: () => ConfigMock.instance()},
-                {provide: AppStorage, useClass: AppStorageMock},
-                {provide: AppFilesystem, useClass: AppFilesystemMock}
-            ],
-            imports: [
-                FormsModule,
-                IonicModule,
-                ReactiveFormsModule
-            ]
-        });
-    }
+            return TestBed.configureTestingModule({
+                declarations: [
+                        ...components
+                ],
+                providers: [
+                    ActionSheetController,
+                    AlertController,
+                    App,
+                    Form,
+                    Keyboard,
+                    DomController,
+                    MenuController,
+                    ModalController,
+                    GestureController,
+                    NavController,
+                    Heartbeat,
+                    // For DeepLinker line below see this discussion:
+                    // https://forum.ionicframework.com/t/error-no-provider-..
+                    // ..for-deeplinker-while-unit-testing-components/76975/3
+                    {
+                        provide: DeepLinker,
+                        useValue: {}
+                    },
+                    {
+                        provide: NavParams,
+                        useFactory: () => NavParamsMock.instance()
+                    },
+                    {
+                        provide: ViewController,
+                        useFactory: () => ViewControllerMock.instance()
+                    },
+                    {
+                        provide: Platform,
+                        useFactory: () => PlatformMock.instance()
+                    },
+                    {
+                        provide: Config,
+                        useFactory: () => ConfigMock.instance()
+                    },
+                    {
+                        provide: AppStorage,
+                        useClass: AppStorageMock
+                    },
+                    {
+                        provide: AppFilesystem,
+                        useClass: AppFilesystemMock
+                    }
+                ],
+                imports: [
+                    IonicModule
+                ]
+            });
+        }
 
     // http://stackoverflow.com/questions/2705583/...
     // ...how-to-simulate-a-click-with-javascript
