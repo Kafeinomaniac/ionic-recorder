@@ -88,25 +88,9 @@ export class AppFilesystem {
                                                     () => {
                                                         this.isReady = true;
                                                     },
-                                                    (err0: any) => {
-                                                        // err - try switching
-                                                        // to /Unfiled/ instead
-                                                        this.switchFolder(
-                                                            '/Unfiled/'
-                                                        ).subscribe(
-                                                            () => {
-                                                                this.isReady =
-                                                                    true;
-                                                            },
-                                                            (err1: any) => {
-                                                                alert('err0:' +
-                                                                      err0 +
-                                                                      'err1:' +
-                                                                      err1);
-                                                            }
-                                                        );
+                                                    (err: any) => {
+                                                        throw Error(err);
                                                     }
-
                                                 ); // this.switchFolder(
                                         }
                                 ).catch((err2: any) => {

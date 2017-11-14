@@ -99,7 +99,6 @@ describe('models/misc-utils/misc-utils', () => {
 
     it('can formatTime', () => {
         let x: string = formatTime(0, 0);
-        alert(x);
         expect(x).toEqual('00.00');
         x = formatTime(0, Infinity);
         expect(x).toEqual('0:00:00.00');

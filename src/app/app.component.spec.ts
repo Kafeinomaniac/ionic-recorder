@@ -10,12 +10,13 @@ import {
 import { AppStorageMock } from '../mocks';
 import { LoadingPage } from '../pages';
 
-let instance: IonicRecorderApp = null;
+let instance: IonicRecorderApp = null,
+    appStorageMock: AppStorageMock = new AppStorageMock();
 
 describe('app/app', () => {
     beforeEach(() => {
         instance = new IonicRecorderApp(
-                <any>AppStorageMock,
+                <any>appStorageMock,
                 <any>MenuMock.instance(),
                 <any>PlatformMock.instance(),
                 <any>StatusBarMock.instance()
