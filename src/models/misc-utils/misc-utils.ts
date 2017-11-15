@@ -5,7 +5,7 @@
 /**
  * Extracts the filename out of a full-path
  * @param {string}
- * @return {string}
+ * @returns string
  */
 export function pathFileName(filePath: string): string {
     return filePath.replace(/^.*[\\\/]/, '');
@@ -14,7 +14,7 @@ export function pathFileName(filePath: string): string {
 /**
  * Extracts the folder out of a full-path
  * @param {string}
- * @return {string}
+ * @returns string
  */
 export function pathFolderName(filePath: string): string {
     // return filePath.replace(pathFileName(filePath), '');
@@ -24,7 +24,7 @@ export function pathFolderName(filePath: string): string {
 /**
  * Extracts the parent folder out of a full-path of a folder argument.
  * @param {string}
- * @return {string}
+ * @returns string
  */
 export function folderPathParent(dirPath: string): string {
     const pathParts: string[] =
@@ -40,7 +40,7 @@ export function folderPathParent(dirPath: string): string {
  * Update object 'dest' by adding or changing any fields that differ in 'src'
  * @param {Object} 'src' the source object from which to update 'dest'
  * @param {Object} 'dest' the destination object to update and return
- * @return {Object} the updated 'dest' object
+ * @returns Object - the updated 'dest' object
  */
 export function copyFromObject(src: Object, dest: Object): Object {
     for (let prop in src) {
@@ -54,7 +54,7 @@ export function copyFromObject(src: Object, dest: Object): Object {
 /**
  * @param {any}
  * @param {any}
- * @return {boolean}
+ * @returns boolean
  */
 export function has(obj: any, prop: any): boolean {
     return Object.prototype.hasOwnProperty.call(obj, prop);
@@ -63,7 +63,7 @@ export function has(obj: any, prop: any): boolean {
 /**
  * Checks if the given argument is a function.
  * @param {any}
- * @return {boolean}
+ * @returns boolean
  */
 export function isFunction(func: any): boolean {
     return (typeof func) === 'function';
@@ -72,7 +72,7 @@ export function isFunction(func: any): boolean {
 /**
  * Checks if the given argument is defined.
  * @param {any}
- * @return {boolean}
+ * @returns boolean
  */
 export function isDefined(obj: any): boolean {
     return (typeof obj) !== 'undefined';
@@ -81,7 +81,7 @@ export function isDefined(obj: any): boolean {
 /**
  * Checks if the given argument is undefined.
  * @param {any}
- * @return {boolean}
+ * @returns boolean
  */
 export function isUndefined(obj: any): boolean {
     return (typeof obj) === 'undefined';
@@ -90,7 +90,7 @@ export function isUndefined(obj: any): boolean {
 /**
  * Checks if the given argument is a string.
  * @param {any}
- * @return {boolean}
+ * @returns boolean
  */
 export function isString(obj: any): boolean {
     return Object.prototype.toString.call(obj) === '[object String]';
@@ -99,7 +99,7 @@ export function isString(obj: any): boolean {
 /**
  * Positive whole number test
  * @param {number} the number we're verifying
- * @return {boolean} whether argument is a positive whole number
+ * @returns boolean - whether argument is a positive whole number
  */
 export function isPositiveWholeNumber(num: number): boolean {
     return<boolean>(isWholeNumber(num) && num > 0);
@@ -108,7 +108,7 @@ export function isPositiveWholeNumber(num: number): boolean {
 /**
  * Whole number test
  * @param {number} the number we're verifying
- * @return {boolean} whether argument is a whole number
+ * @returns boolean - whether argument is a whole number
  */
 export function isWholeNumber(num: number): boolean {
     return<boolean>(
@@ -129,12 +129,16 @@ export function isOdd(num: number): boolean {
 
 /**
  * @param {number}
- * @return {boolean}
+ * @returns boolean
  */
 export function isEven(num: number): boolean {
     return !isOdd(num);
 }
 
+/**
+ * @param {number}
+ * @returns string
+ */
 function addZero(num: number): string {
     return (num < 10) ? '0' : '';
 }
@@ -143,7 +147,7 @@ function addZero(num: number): string {
  * format time into H*:MM:SS.CC
  * @param {number} - number of seconds, float
  * @param {number} - maximum time, determines final string length/components
- * @return {string} - the time string representation
+ * @returns string - the time string representation
  */
 export function formatTime(
     timeInSeconds: number,
@@ -180,7 +184,7 @@ export function formatTime(
  * Create a string that reflects the Unix timestamp 'timestamp'
  * at 1 second resolution in human readable form
  * @param {number} timestamp - Unix timestamp representation of datetime
- * @return {string} - human readable text representation of timestamp
+ * @returns string - human readable text representation of timestamp
  */
 export function formatUnixTimestamp(timestamp: number): string {
     return formatDate(new Date(timestamp));
@@ -190,7 +194,7 @@ export function formatUnixTimestamp(timestamp: number): string {
  * Create a string that reflects the Unix date 'date'
  * at 1 second resolution in human readable form
  * @param {number} timestamp - Unix timestamp representation of datetime
- * @return {string} - human readable text representation of timestamp
+ * @returns string - human readable text representation of timestamp
  */
 export function formatDate(date: Date): string {
     return [
@@ -207,7 +211,7 @@ export function formatDate(date: Date): string {
 /**
  * Digs through a Javascript object to display all its properties.
  * @param {Object} - a Javascript object to inspect
- * @return {string} - concatenated descriptions of all object properties
+ * @returns string - concatenated descriptions of all object properties
  */
 export function objectInspector(object: Object): string {
     let rows: string[] = [],
@@ -232,7 +236,7 @@ export function objectInspector(object: Object): string {
  * Adds a value to an array as its first element.
  * @param {any} value - value to add to array.
  * @param {any[]} arr - the array to add to.
- * @return {any[]} - the appended-to array.
+ * @returns any[] - the appended-to array.
  */
 export function prependArray(value: any, arr: any[]): any[] {
     let newArray: any[] = arr.slice(0);
@@ -286,7 +290,7 @@ export function downloadBlob(blob: Blob, filename: string): void {
  * Simulate a click event.
  * @public
  * @param {Element} elem  the element to simulate a click on
- * @return {boolean} True if canceled, false otherwise
+ * @returns boolean - True if canceled, false otherwise
  */
 function simulateClick(element: Element): boolean {
     // Create our event (with options)

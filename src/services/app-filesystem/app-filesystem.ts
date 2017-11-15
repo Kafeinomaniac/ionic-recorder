@@ -41,9 +41,22 @@ export class AppFilesystem {
     }
 
     /**
+     * @param {selectedPaths: {[path: string]: number}}
      * @returns void
      */
-    private setUpFileSystem(): void {
+    public saveSelectedPaths(
+        selectedPaths: { [path: string]: number } = null
+    ): void {
+        if (selectedPaths !== null) {
+            this.selectedPaths = selectedPaths;
+        }
+        this.storage.set('filesystemSelected', this.selectedPaths);
+    }
+
+    /**
+     * @returns void
+     */
+    public setUpFileSystem(): void {
         // get the filesystem and remember it
         Filesystem.getFileSystem(true).subscribe(
             (fs: FileSystem) => {
@@ -75,11 +88,7 @@ export class AppFilesystem {
                                                 this.selectedPaths = paths;
                                             }
                                             else {
-                                                this.selectedPaths = {};
-                                                this.storage.set(
-                                                    'filesystemSelected',
-                                                    this.selectedPaths
-                                                );
+                                                this.saveSelectedPaths({});
                                             }
                                             this.switchFolder(folderPath)
                                                 .subscribe(
