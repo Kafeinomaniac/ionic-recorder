@@ -1,7 +1,7 @@
 {
   "name": "ionic-recorder",
   "description": "Sound recording app (Angular/Ionic/WebAudioAPI SPA/PWA)",
-  "version": "0.5.0-alpha.20",
+  "version": "0.5.0-alpha.21",
   "author": "Tracktunes Inc",
   "license": "GPL-2.0",
   "homepage": "https://github.com/tracktunes/ionic-recorder",
@@ -62,7 +62,7 @@
     "zone.js": "^0.8.18"
   },
   "devDependencies": {
-    "@angular/cli": "1.5.0",
+    "@angular/cli": "1.4.1",
     "@ionic/app-scripts": "nightly",
     "@types/jasmine": "2.8.1",
     "@types/node": "8.0.52",
