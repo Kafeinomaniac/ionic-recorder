@@ -5,7 +5,6 @@ import {
     ActionSheetController,
     Alert,
     AlertController,
-    ModalController,
     NavController,
     NavParams,
     ViewController
@@ -33,7 +32,6 @@ export class TrackPage {
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
     private appFilesystem: AppFilesystem;
-    private modalController: ModalController;
     private navController: NavController;
     private viewController: ViewController;
 
@@ -57,7 +55,6 @@ export class TrackPage {
         actionSheetController: ActionSheetController,
         alertController: AlertController,
         appFilesystem: AppFilesystem,
-        modalController: ModalController,
         navController: NavController,
         navParams: NavParams,
         viewController: ViewController
@@ -66,7 +63,6 @@ export class TrackPage {
         this.actionSheetController = actionSheetController;
         this.alertController = alertController;
         this.appFilesystem = appFilesystem;
-        this.modalController = modalController;
         this.navController = navController;
         this.viewController = viewController;
         this.encoding = WAV_MIME_TYPE;
@@ -177,8 +173,6 @@ export class TrackPage {
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton()');
-        // const modal: Modal = this.modalController.create(MoveToPage);
-        // modal.present();
         this.navController.push(MoveToPage, this.filePath);
         console.log('after modal.present();');
     }

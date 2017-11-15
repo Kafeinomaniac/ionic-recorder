@@ -2,6 +2,7 @@
 
 export class ApplicationRefMock {
     constructor() {
+        console.log('ApplicationRefMock.constructor()');
     }
 
     public bootstrap(): any {

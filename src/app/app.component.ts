@@ -62,7 +62,7 @@ export class IonicRecorderApp {
             { tabIndex: 4, title: 'About', component: AboutPage }
         ];
 
-        platform.ready().then(() => {
+        this.platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]

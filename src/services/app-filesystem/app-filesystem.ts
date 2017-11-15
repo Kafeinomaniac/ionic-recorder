@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 /* tslint:disable */
 import { Storage } from '@ionic/storage';
 /* tslint:enable */
-import { Filesystem, has, objectInspector } from '../../models';
+import { Filesystem, has } from '../../models';
 
 /** @const {string} - the default save path */
 export const DEFAULT_PATH: string = '/Unfiled/';
@@ -23,7 +23,6 @@ export class AppFilesystem {
     public folderEntry: DirectoryEntry;
     public selectedPaths: { [path: string]: number };
     private fileSystem: FileSystem;
-    private nWavFileSamples: number;
 
     /**
      * @constructor
@@ -37,7 +36,6 @@ export class AppFilesystem {
         this.folderEntry = null;
         this.selectedPaths = {};
         this.fileSystem = null;
-        this.nWavFileSamples = 0;
 
         this.setUpFileSystem();
     }
@@ -57,12 +55,12 @@ export class AppFilesystem {
                         console.log('Created /Unfiled/ (or already there)');
                         // grab remembered location from storage and go there
                         if (!this.storage) {
-                            alert('!this.storage');
+                            throw Error('!this.storage!');
                         }
                         this.storage.get('filesystemPath').then(
                             (folderPath: string) => {
                                 if (folderPath === '//') {
-                                    alert('dir path is //');
+                                    throw Error('dir path is //');
                                 }
                                 if (!folderPath) {
                                     // current path not in storage, use default
@@ -88,28 +86,28 @@ export class AppFilesystem {
                                                     () => {
                                                         this.isReady = true;
                                                     },
-                                                    (err: any) => {
-                                                        throw Error(err);
+                                                    (err1: any) => {
+                                                        throw Error(err1);
                                                     }
-                                                ); // this.switchFolder(
+                                                ); // this.switchFolder( ..
                                         }
                                 ).catch((err2: any) => {
-                                    alert('err2: ' + err2);
-                                }); // .then(..).catch((err2: any) => {..
-                            } // (folderPath: string) => {
+                                    throw Error(err2);
+                                }); // this.storage.get('filesystemSelected') ..
+                            }
                         ).catch((err3: any) => {
-                            alert('* err3: ' + err3);
-                        }); // .then(..).catch((err3: any) => {
-                    }, // (folderEntry: DirectoryEntry) => {
+                            throw Error(err3);
+                        }); // this.storage.get('filesystemPath') ..
+                    },
                     (err4: any) => {
-                        alert('err4: ' + err4);
+                        throw Error(err4);
                     }
-                ); // getPathEntry(fileSystem, '/Unfiled/', true).subs..
+                ); // getPathEntry(fileSystem, '/Unfiled/', true) ..
             },
             (err5: any) => {
-                alert('err5: ' + err5);
+                throw Error(err5);
             }
-        );
+        ); // Filesystem.getFileSystem(true).subscribe( ..
     }
 
     /**

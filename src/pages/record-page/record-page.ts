@@ -34,7 +34,6 @@ export class RecordPage {
     public maxGainFactor: number;
     public gainFactor: number;
     public decibels: string;
-
     // gainRangeSliderValue referenced by template
     public gainRangeSliderValue: number;
     // maxGainSliderValue referenced by template
@@ -42,9 +41,6 @@ export class RecordPage {
     // private gainSliderLeftIcon: string;
 
     private navController: NavController;
-
-    private lastRecordingPath: string;
-    private lastRecordingDuration: string;
 
     /**
      * @constructor
@@ -59,8 +55,6 @@ export class RecordPage {
         this.appStorage = appStorage;
         this.recorder = recorder;
         this.maxGainSliderValue = MAX_GAIN_SLIDER_VALUE;
-        this.lastRecordingPath = '';
-        this.lastRecordingDuration = '';
 
         // initialize with "remembered" gain values
         this.appStorage.get('gain').then(

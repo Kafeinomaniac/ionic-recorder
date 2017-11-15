@@ -27,10 +27,9 @@ const PROGRESS_BY_PLAYER: number = -1;
 export class AudioPlayer implements OnChanges {
     @Input() public filePath: string;
     public player: WavPlayer;
-
-    private changeDetectorRef: ChangeDetectorRef;
-    private filenameOrProgress: string;
     public progress: number;
+    public filenameOrProgress: string;
+    private changeDetectorRef: ChangeDetectorRef;
 
     /**
      * @constructor

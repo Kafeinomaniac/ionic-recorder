@@ -28,7 +28,7 @@ export interface ButtonbarButton {
 })
 export class ButtonBar implements OnChanges {
     @Input() public buttons: ButtonbarButton[];
-    private buttonWidth: string;
+    public buttonWidth: string;
 
     /**
      * @constructor

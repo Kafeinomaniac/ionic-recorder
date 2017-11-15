@@ -12,7 +12,7 @@ import { AppFilesystem } from '../../services';
     templateUrl: 'loading-page.html'
 })
 export class LoadingPage {
-    private appFilesystem: AppFilesystem;
+    public appFilesystem: AppFilesystem;
 
     /**
      * @constructor

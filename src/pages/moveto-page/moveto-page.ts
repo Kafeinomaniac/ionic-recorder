@@ -33,7 +33,7 @@ export class MoveToPage {
     private modalController: ModalController;
     private viewController: ViewController;
     private changeDetectorRef: ChangeDetectorRef;
-    private headerButtons: ButtonbarButton[];
+    public headerButtons: ButtonbarButton[];
 
     /**
      * @constructor
