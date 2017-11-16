@@ -1,7 +1,13 @@
 // Copyright (c) 2017 Tracktunes Inc
 
-import { AppFilesystem } from './app-filesystem';
+import { AppFilesystem, DEFAULT_PATH } from './app-filesystem';
 import { Filesystem, copyFromObject } from '../../models';
+
+const TEST_FILENAME: string = 'foo_file.txt';
+const TEST_FILENAME2: string = 'foo_file2.txt';
+const TEST_FOLDER_PATH: string = '/foo_folder/';
+const TEST_FULL_PATH: string = TEST_FOLDER_PATH + TEST_FILENAME;
+const TEST_DATA: string = 'test data';
 
 let appFilesystem: AppFilesystem = null;
 
@@ -35,6 +41,8 @@ describe('services/app-filesystem', () => {
                     () => {
                         expect(appFilesystem.atHome()).toBe(true);
                         expect(appFilesystem.entries).toBeTruthy();
+                        expect(appFilesystem.entries.length)
+                            .toEqual(1);
                         done();
                     }
                 );
@@ -125,134 +133,57 @@ describe('services/app-filesystem', () => {
         );
     });
 
-    /*
-
-    it('can create a file and download it to device', (done) => {
-        const data: string = 'test data',
-              dataLen: number = data.length;
-        appFilesystem.whenReady().subscribe(
-            () => {
-                Filesystem.writeToFile(
-                    appFilesystem.getFilesystem(),
-                    TEST_FILE_PATH,
-                    new Blob([data], { type: 'text/plain' }),
-                    0,
-                    true
-                ).subscribe(
-                    () => {
-                        appFilesystem.switchFolder('/').subscribe(
-                            () => {
-                                expect(appFilesystem.atHome()).toBe(true);
-                                expect(appFilesystem.entries).toBeTruthy();
-                                const nEntries: number =
-                                      appFilesystem.nEntries();
-                                expect(nEntries).toEqual(3);
-                                expect(appFilesystem.getOrderIndex(
-                                    TEST_FILE_PATH)).toEqual(1);
-                                appFilesystem.downloadFileToDevice(
-                                    TEST_FILE_PATH
-                                ).subscribe(
-                                    () => {
-                                        appFilesystem.deletePaths(
-                                            [TEST_FILE_PATH]
-                                        ).subscribe(
-                                            () => {
-                                                appFilesystem.refreshFolder()
-                                                    .subscribe(
-                                                        () => {
-                                                            expect(
-                                                                appFilesystem
-                                                                    .entries
-                                                                    .length
-                                                            ).toEqual(2);
-                                                            done();
-                                                        }
-                                                    );
-                                            }
-                                        );
-                                    }
-                                );
-                            }
-                        );
-                    }
-                );
-            }
-        );
-    });
-
-    it('can create a file and move it', (done) => {
-        const data: string = 'test data',
-              dataLen: number = data.length;
-        appFilesystem.whenReady().subscribe(
-            () => {
-                appFilesystem.switchFolder(TEST_FOLDER_PATH).subscribe(
-                    () => {
-                        const nEntriesBefore: number = appFilesystem.nEntries();
-                        Filesystem.writeToFile(
-                            appFilesystem.getFilesystem(),
-                            TEST_FILE_PATH,
-                            new Blob([data], { type: 'text/plain' }),
-                            0,
-                            true
-                        ).subscribe(
-                            () => {
-                                appFilesystem.movePaths(
-                                    [TEST_FILE_PATH]
-                                ).subscribe(
-                                    () => {
-                                        // file moved to TEST_FOLDER_PATH
-                                        // appFilesystem.nEntries()
-                                        expect(nEntriesBefore + 1)
-                                            .toEqual(appFilesystem.nEntries());
-                                        done();
-                                    }
-                                ); // appFilesystem.movePaths(
-                            }
-                        ); // Filesystem.writeToFile(
-                    }
-                ); // appFilesystem.switchFolder(TEST_FOLDER_PATH).subscribe(
-            }
-        ); // appFilesystem.whenReady().subscribe(
-    });
-
-    it('can create a file and rename it', (done) => {
-        const data: string = 'test data',
-              dataLen: number = data.length;
+    it('can move file to /', (done) => {
         appFilesystem.whenReady().subscribe(
             () => {
                 appFilesystem.switchFolder('/').subscribe(
                     () => {
-                        const nEntriesBefore: number = appFilesystem.nEntries(),
-                              path: string = TEST_FOLDER_PATH + TEST_FILE_PATH;
-                        Filesystem.writeToFile(
-                            appFilesystem.getFilesystem(),
-                            path,
-                            new Blob([data], { type: 'text/plain' }),
-                            0,
-                            true
-                        ).subscribe(
+                        const nEntriesBefore: number = appFilesystem.nEntries();
+                        appFilesystem.movePaths([TEST_FULL_PATH]).subscribe(
                             () => {
-                                appFilesystem.rename(
-                                    path,
-                                    TEST_FILE_PATH2
-                                ).subscribe(
-                                    () => {
-                                        done();
-                                    }
-                                ); // appFilesystem.movePaths(
+                                expect(nEntriesBefore + 1)
+                                    .toEqual(appFilesystem.nEntries());
+                                done();
                             }
-                        ); // Filesystem.writeToFile(
+                        ); // appFilesystem.movePaths(
                     }
-                ); // appFilesystem.switchFolder(TEST_FOLDER_PATH).subscribe(
+                ); // Filesystem.writeToFile(
             }
         ); // appFilesystem.whenReady().subscribe(
     });
-    */
+
+    it('can rename ' + TEST_FILENAME + ' to ' + TEST_FILENAME2, (done) => {
+        appFilesystem.whenReady().subscribe(
+            () => {
+                appFilesystem.rename(
+                    '/' + TEST_FILENAME,
+                    TEST_FILENAME2
+                ).subscribe(
+                    () => {
+                        done();
+                    }
+                ); // appFilesystem.movePaths(
+            }
+        ); // appFilesystem.whenReady().subscribe(
+    });
+
+    it('can verify order index of ' + TEST_FILENAME2, (done) => {
+        appFilesystem.whenReady().subscribe(
+            () => {
+                expect(appFilesystem.getOrderIndex('/' + TEST_FILENAME2) <
+                       appFilesystem.entries.length).toBeTruthy();
+                done();
+            }
+        ); // appFilesystem.whenReady().subscribe(
+    });
 
     it('can clean up after above operations', (done) => {
         appFilesystem.whenReady().subscribe(
             () => {
-                appFilesystem.deletePaths([TEST_FOLDER_PATH]).subscribe(
+                appFilesystem.deletePaths([
+                    TEST_FOLDER_PATH,
+                    '/' + TEST_FILENAME2
+                ]).subscribe(
                     () => {
                         done();
                     }
