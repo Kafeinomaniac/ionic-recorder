@@ -9,7 +9,7 @@ let instance: any = null;
 describe('pages/record-page', () => {
 
     beforeEach(async(() => TestUtils.beforeEachCompiler(
-        [ButtonBar, VuGauge, RecordPage]
+        [RecordPage, ButtonBar, VuGauge]
     ).then(compiled => {
         fixture = compiled.fixture;
         instance = compiled.instance;

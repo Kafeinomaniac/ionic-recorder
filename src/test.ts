@@ -17,6 +17,7 @@ import {
     DomController,
     Form,
     GestureController,
+    Haptic,
     IonicModule,
     Keyboard,
     MenuController,
@@ -32,12 +33,14 @@ import {
 } from '@angular/platform-browser-dynamic/testing';
 import {
     ConfigMock,
+    HapticMock,
     PlatformMock,
     NavParamsMock,
     ViewControllerMock
 } from 'ionic-mocks';
+import { ChangeDetectorRef } from '@angular/core';
 import { getTestBed, TestBed } from '@angular/core/testing';
-import { AppFilesystem, AppStorage, Heartbeat } from './services';
+import { AppFilesystem, AppStorage, Heartbeat, WavRecorder } from './services';
 import { AppFilesystemMock, AppStorageMock } from './mocks';
 
 // Unfortunately there's no typing for the `__karma__` variable. Just
@@ -90,6 +93,9 @@ export class TestUtils {
                     ActionSheetController,
                     AlertController,
                     App,
+                    AppStorage,
+                    AppFilesystem,
+                    ChangeDetectorRef,
                     Form,
                     Keyboard,
                     DomController,
@@ -98,6 +104,7 @@ export class TestUtils {
                     GestureController,
                     NavController,
                     Heartbeat,
+                    WavRecorder,
                     // For DeepLinker line below see this discussion:
                     // https://forum.ionicframework.com/t/error-no-provider-..
                     // ..for-deeplinker-while-unit-testing-components/76975/3
@@ -114,24 +121,28 @@ export class TestUtils {
                         useFactory: () => ViewControllerMock.instance()
                     },
                     {
+                        provide: Haptic,
+                        useFactory: () => HapticMock.instance()
+                    },
+                    {
                         provide: Platform,
                         useFactory: () => PlatformMock.instance()
                     },
                     {
                         provide: Config,
                         useFactory: () => ConfigMock.instance()
-                    },
-                    {
-                        provide: AppStorage,
+//                    },
+//                    {
+//                        provide: AppStorage,
                         // useClass: AppStorageMock
                         // useValue: appStorageMock
-                        useFactory: () => new AppStorageMock()
-                    },
-                    {
-                        provide: AppFilesystem,
+//                        useFactory: () => new AppStorageMock()
+//                    },
+//                    {
+//                        provide: AppFilesystem,
                         // useClass: AppFilesystemMock
                         // useValue: appFilesystemMock
-                        useFactory: () => new AppFilesystemMock()
+//                        useFactory: () => new AppFilesystemMock()
                     }
                 ],
                 imports: [
