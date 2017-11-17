@@ -41,7 +41,6 @@ import {
 import { ChangeDetectorRef } from '@angular/core';
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { AppFilesystem, AppStorage, Heartbeat, WavRecorder } from './services';
-import { AppFilesystemMock, AppStorageMock } from './mocks';
 
 // Unfortunately there's no typing for the `__karma__` variable. Just
 // declare it as any.
@@ -71,7 +70,7 @@ export class TestUtils {
         components: Array<any>): Promise<{fixture: any, instance: any}> {
             return TestUtils.configureIonicTestingModule(components)
                 .compileComponents().then(() => {
-                    let fixture: any = TestBed.createComponent(components[0]);
+                    const fixture: any = TestBed.createComponent(components[0]);
                     return {
                         fixture: fixture,
                         instance: fixture.debugElement.componentInstance
@@ -81,10 +80,6 @@ export class TestUtils {
 
     public static configureIonicTestingModule(
         components: Array<any>): typeof TestBed {
-            // const appStorageMock: AppStorageMock = new AppStorageMock(),
-            //       appFilesystemMock: AppFilesystemMock =
-            //       new AppFilesystemMock();
-
             return TestBed.configureTestingModule({
                 declarations: [
                         ...components
@@ -93,44 +88,44 @@ export class TestUtils {
                     ActionSheetController,
                     AlertController,
                     App,
-                    AppStorage,
                     AppFilesystem,
+                    AppStorage,
                     ChangeDetectorRef,
-                    Form,
-                    Keyboard,
                     DomController,
+                    Form,
+                    GestureController,
+                    Heartbeat,
+                    Keyboard,
                     MenuController,
                     ModalController,
-                    GestureController,
                     NavController,
-                    Heartbeat,
                     WavRecorder,
                     // For DeepLinker line below see this discussion:
                     // https://forum.ionicframework.com/t/error-no-provider-..
                     // ..for-deeplinker-while-unit-testing-components/76975/3
                     {
+                        provide: Config,
+                        useFactory: () => ConfigMock.instance()
+                    },
+                    {
                         provide: DeepLinker,
                         useValue: {}
-                    },
-                    {
-                        provide: NavParams,
-                        useFactory: () => NavParamsMock.instance()
-                    },
-                    {
-                        provide: ViewController,
-                        useFactory: () => ViewControllerMock.instance()
                     },
                     {
                         provide: Haptic,
                         useFactory: () => HapticMock.instance()
                     },
                     {
+                        provide: NavParams,
+                        useFactory: () => NavParamsMock.instance()
+                    },
+                    {
                         provide: Platform,
                         useFactory: () => PlatformMock.instance()
                     },
                     {
-                        provide: Config,
-                        useFactory: () => ConfigMock.instance()
+                        provide: ViewController,
+                        useFactory: () => ViewControllerMock.instance()
                     }
                 ],
                 imports: [
@@ -144,8 +139,9 @@ export class TestUtils {
     public static eventFire(el: any, etype: string): void {
         if (el.fireEvent) {
             el.fireEvent('on' + etype);
-        } else {
-            let evObj: any = document.createEvent('Events');
+        }
+        else {
+            const evObj: any = document.createEvent('Events');
             evObj.initEvent(etype, true, false);
             el.dispatchEvent(evObj);
         }
