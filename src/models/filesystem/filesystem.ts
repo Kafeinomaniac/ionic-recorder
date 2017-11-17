@@ -368,7 +368,7 @@ export class Filesystem {
     /**
      * Write data into a file, starting at a particular location.
      * @param {FileSystem} fs - the file system we're working with
-     * @param {string} path - the file to write to.
+     * @param {string} path - full path of file to write to.
      * @param {Blob} blob - the data to write.
      * @param {number} seekOffset - the location (byte) to start writing from.
      * @param {boolean} bCreate - whether to create the file first or not.

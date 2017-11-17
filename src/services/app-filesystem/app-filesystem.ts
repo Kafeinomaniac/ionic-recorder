@@ -163,13 +163,6 @@ export class AppFilesystem {
     }
 
     /**
-     * @returns string[]
-     */
-    public getSelectedPathsArray(): string[] {
-        return Object.keys(this.selectedPaths);
-    }
-
-    /**
      * @returns void
      */
     public clearSelection(): void {
@@ -216,7 +209,7 @@ export class AppFilesystem {
                 () => {
                     Filesystem.getEntriesFromPaths(
                         this.fileSystem,
-                        this.getSelectedPathsArray()
+                        Object.keys(this.selectedPaths)
                     ).subscribe(
                         (entries: Entry[]) => {
                             observer.next(entries);
@@ -633,11 +626,7 @@ export class AppFilesystem {
 
     /**
      * Renames either a file or a directory.
-     * @param {string} fullPath - full path of the entry to rename, if
-     * the last char of this path is a forward slash (/) then this is a
-     * folder and we must always end folders with a slash when specified.
-     * If not ending with a slash, it is a file.
-     * trailing slash  directories (folders).
+     * @param {string} fullPath - full path of the entry to rename.
      * @param {string} newName - renames to this.
      * @returns Observable<void>
      */
@@ -663,10 +652,13 @@ export class AppFilesystem {
                             observer.next();
                             observer.complete();
                         },
-                        (err: any) => {
-                            observer.error(err);
+                        (err1: any) => {
+                            observer.error(err1);
                         }
                     );
+                },
+                (err2: any) => {
+                    observer.error(err2);
                 }
             );
         });
