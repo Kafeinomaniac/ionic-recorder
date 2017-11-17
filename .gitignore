@@ -36,3 +36,4 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 *.bak
+junitresults.xml

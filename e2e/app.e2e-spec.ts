@@ -3,18 +3,22 @@ import { browser, element, by } from 'protractor';
 describe('IonicRecorderApp', () => {
 
     beforeEach(() => {
+        // see https://github.com/angular/protractor/issues/2643
+        // to understand line: browser.ignoreSynchronization = true;
+        browser.ignoreSynchronization = true;
         browser.get('');
     });
+
 
     it('should have a title', () => {
         browser.getTitle().then(title => 
                                 expect(title).toEqual('ionic-recorder'));
     });
 
+
     it('should have {nav}', () => {
         element(by.css('ion-navbar')).isPresent().then(
-            present =>
-                expect(present).toEqual(true));
+            present => expect(present).toEqual(true));
     });
 
     /*
