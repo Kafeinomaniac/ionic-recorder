@@ -21,11 +21,10 @@ describe('IonicRecorderApp', () => {
             present => expect(present).toEqual(true));
     });
 
-    /*
     it('should have correct nav text for Home', () => {
-        expect(element(by.css('ion-navbar:first-child')).getText()).toContain('Clickers');
+        expect(element(by.css('ion-navbar:first-child')).getText()).toContain('Record');
     });
-
+    /*
     it('has a menu button that displays the left menu', () => {
         element(by.css('.bar-button-menutoggle')).click()
             .then(() => {
