@@ -1,5 +1,8 @@
 import { browser, element, by } from 'protractor';
 
+let popupAlert: any = null,
+    alertText: any = null;
+
 describe('IonicRecorderApp', () => {
 
     beforeEach(() => {
@@ -61,6 +64,7 @@ describe('IonicRecorderApp', () => {
             browser.driver.sleep(2000); // wait for the animation
             element.all(by.css('ion-label')).get(3).getText()
                 .then(text => expect(text).toEqual('About'));
+            element(by.css('.scroll-content')).click();
         });
     });
 
