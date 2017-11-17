@@ -6,10 +6,12 @@ import { Filesystem, copyFromObject } from '../../models';
 const TEST_FILENAME: string = 'foo_file.txt';
 const TEST_FILENAME2: string = 'foo_file2.txt';
 const TEST_FOLDER_PATH: string = '/foo_folder/';
+const TEST_FOLDER_NAME2: string = 'foo_folder2';
 const TEST_FULL_PATH: string = TEST_FOLDER_PATH + TEST_FILENAME;
 const TEST_DATA: string = 'test data';
 
-let appFilesystem: AppFilesystem = null;
+let appFilesystem: AppFilesystem = null,
+    initialPath: string = null;
 
 describe('services/app-filesystem', () => {
     beforeEach(() => {
@@ -25,6 +27,8 @@ describe('services/app-filesystem', () => {
         expect(appFilesystem).not.toBeNull();
         appFilesystem.whenReady().subscribe(
             () => {
+                initialPath = appFilesystem.getPath();
+
                 expect(appFilesystem.entryIcon(appFilesystem.folderEntry))
                     .toEqual('folder');
                 expect(appFilesystem.getFilesystem()).toBeTruthy();
@@ -41,8 +45,7 @@ describe('services/app-filesystem', () => {
                     () => {
                         expect(appFilesystem.atHome()).toBe(true);
                         expect(appFilesystem.entries).toBeTruthy();
-                        expect(appFilesystem.entries.length)
-                            .toEqual(1);
+                        expect(appFilesystem.entries.length).toEqual(1);
                         done();
                     }
                 );
@@ -160,7 +163,38 @@ describe('services/app-filesystem', () => {
                     TEST_FILENAME2
                 ).subscribe(
                     () => {
-                        done();
+                        Filesystem.getPathEntry(
+                            appFilesystem.getFilesystem(),
+                            TEST_FILENAME2,
+                            false
+                        ).subscribe(
+                            (entry: Entry) => {
+                                done();
+                            }
+                        );
+                    }
+                ); // appFilesystem.movePaths(
+            }
+        ); // appFilesystem.whenReady().subscribe(
+    });
+
+    it('can rename ' + TEST_FOLDER_PATH + '->' + TEST_FOLDER_NAME2, (done) => {
+        appFilesystem.whenReady().subscribe(
+            () => {
+                appFilesystem.rename(
+                    TEST_FOLDER_PATH,
+                    TEST_FOLDER_NAME2
+                ).subscribe(
+                    () => {
+                        Filesystem.getPathEntry(
+                            appFilesystem.getFilesystem(),
+                            TEST_FOLDER_NAME2 + '/',
+                            false
+                        ).subscribe(
+                            (entry: Entry) => {
+                                done();
+                            }
+                        );
                     }
                 ); // appFilesystem.movePaths(
             }
@@ -181,10 +215,11 @@ describe('services/app-filesystem', () => {
         appFilesystem.whenReady().subscribe(
             () => {
                 appFilesystem.deletePaths([
-                    TEST_FOLDER_PATH,
+                    TEST_FOLDER_NAME2 + '/',
                     '/' + TEST_FILENAME2
                 ]).subscribe(
                     () => {
+                        appFilesystem.switchFolder(initialPath).subscribe();
                         done();
                     }
                 );

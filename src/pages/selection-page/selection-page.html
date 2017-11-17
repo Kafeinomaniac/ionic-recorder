@@ -28,7 +28,7 @@
                        (click)="appFilesystem.toggleSelectEntry(entry)">
                 <ion-icon [name]="appFilesystem.entryIcon(entry)"></ion-icon>
                 &nbsp;
-                {{appFilesystem.getFullPath(entry)}}
+                {{getFullPath(entry)}}
             </ion-label>
             <ion-checkbox [checked]="appFilesystem.isEntrySelected(entry)"
                           (click)="appFilesystem.toggleSelectEntry(entry)">

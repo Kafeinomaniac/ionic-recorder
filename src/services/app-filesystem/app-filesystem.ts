@@ -2,10 +2,14 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-/* tslint:disable */
 import { Storage } from '@ionic/storage';
-/* tslint:enable */
-import { Filesystem, has } from '../../models';
+import {
+    Filesystem,
+    getFullPath,
+    has,
+    pathParent,
+    pathChild
+} from '../../models';
 
 /** @const {string} - the default save path */
 export const DEFAULT_PATH: string = '/Unfiled/';
@@ -155,7 +159,7 @@ export class AppFilesystem {
      * @returns string
      */
     public getPath(): string {
-        return this.getFullPath(this.folderEntry);
+        return getFullPath(this.folderEntry);
     }
 
     /**
@@ -268,7 +272,7 @@ export class AppFilesystem {
             this.whenReady().subscribe(
                 () => {
                     this.switchFolder(
-                        this.getFullPath(this.folderEntry)
+                        getFullPath(this.folderEntry)
                     ).subscribe(
                         () => {
                             observer.next();
@@ -337,16 +341,6 @@ export class AppFilesystem {
     }
 
     /**
-     * @param {Entry} entry
-     * @returns string
-     */
-    public getFullPath(entry: Entry): string {
-        const fullPath: string = entry.fullPath;
-        return entry.isDirectory && (fullPath.length > 1) ?
-            fullPath + '/' : fullPath;
-    }
-
-    /**
      * @param {string} path
      * @returns boolean
      */
@@ -360,7 +354,7 @@ export class AppFilesystem {
      * @returns boolean
      */
     public isEntrySelected(entry: Entry): boolean {
-        return this.isPathSelected(this.getFullPath(entry));
+        return this.isPathSelected(getFullPath(entry));
     }
 
     /**
@@ -407,7 +401,7 @@ export class AppFilesystem {
      * @returns void
      */
     public selectEntry(entry: Entry): void {
-        this.selectPath(this.getFullPath(entry));
+        this.selectPath(getFullPath(entry));
     }
 
     /**
@@ -451,7 +445,7 @@ export class AppFilesystem {
      * @returns void
      */
     public unSelectEntry(entry: Entry): void {
-        this.unselectPath(this.getFullPath(entry));
+        this.unselectPath(getFullPath(entry));
     }
 
     /**
@@ -459,7 +453,7 @@ export class AppFilesystem {
      * @returns void
      */
     public toggleSelectEntry(entry: Entry): void {
-        const fullPath: string = this.getFullPath(entry);
+        const fullPath: string = getFullPath(entry);
         console.log('toggleSelectEntry(' + fullPath + ')');
         if (this.isPathSelected(fullPath)) {
             this.unselectPath(fullPath);
@@ -478,7 +472,7 @@ export class AppFilesystem {
         console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
-            const fullPath: string = this.getFullPath(entry),
+            const fullPath: string = getFullPath(entry),
                   isSelected: boolean = this.isEntrySelected(entry);
             if (bSelectAll && !isSelected) {
                 this.selectPath(fullPath);
@@ -515,7 +509,7 @@ export class AppFilesystem {
                             paths.forEach((path: string) => {
                                 this.unselectPath(path);
                             });
-                            this.switchFolder(this.getFullPath(
+                            this.switchFolder(getFullPath(
                                 this.folderEntry
                             )).subscribe(
                                 (entries: Entry[]) => {
@@ -560,7 +554,7 @@ export class AppFilesystem {
                     const paths: string[] =
                           Object.keys(this.selectedPaths).sort(),
                           fullPath: string =
-                          this.getFullPath(this.folderEntry),
+                          getFullPath(this.folderEntry),
                           fullPathSize: number = fullPath.length;
                     console.log('deleteSelected([' + paths.join(', ') + '])');
 
@@ -584,7 +578,7 @@ export class AppFilesystem {
                             this.storage.set('filesystemSelected',
                                              this.selectedPaths);
                             const refreshFolder: string = switchHome ? '/'
-                                  : this.getFullPath(this.folderEntry);
+                                  : getFullPath(this.folderEntry);
 
                             this.switchFolder(refreshFolder).subscribe(
                                 () => {
@@ -615,6 +609,7 @@ export class AppFilesystem {
      * @returns Observable<void>
      */
     public deletePaths(paths: string[]): Observable<void> {
+        console.log('deletePaths(' + paths + ')');
         const obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
@@ -647,61 +642,35 @@ export class AppFilesystem {
      * @returns Observable<void>
      */
     public rename(fullPath: string, newName: string): Observable<void> {
-        console.log('rename(' + fullPath + ', ' + newName + ')');
+        const fullPathParent: string = pathParent(fullPath),
+              fullPathChild: string = pathChild(fullPath);
+        console.log('rename(' + fullPath + ', ' + newName + ') - parent: ' +
+                    fullPathParent + ', child: ' + fullPathChild);
         const obs: Observable<void> = Observable.create((observer) => {
-            if (fullPath[fullPath.length - 1] === '/') {
-                console.log('ITS A FOLDER');
-                this.fileSystem.root.getDirectory(
-                    fullPath,
-                    { create: false },
-                    (entry: Entry) => {
-                        console.log('rename(): got: ' + entry.name);
-                        entry.moveTo(this.folderEntry, newName);
-                        this.switchFolder(
-                            this.getFullPath(this.folderEntry)
-                        ).subscribe(
-                            () => {
-                                observer.next();
-                                observer.complete();
-                            },
-                            (err1: any) => {
-                                observer.error('err1 ' + err1);
-                            }
-                        );
-                    },
-                    (err2: any) => {
-                        observer.error(err2);
-                    }
-                );
-
-            }
-            else {
-                console.log('ITS A FILE');
-                this.fileSystem.root.getFile(
-                    fullPath,
-                    { create: false },
-                    (entry: Entry) => {
-                        console.log('rename(): got: ' + entry.name);
-                        entry.moveTo(this.folderEntry, newName);
-                        this.switchFolder(
-                            this.getFullPath(this.folderEntry)
-                        ).subscribe(
-                            () => {
-                                observer.next();
-                                observer.complete();
-                            },
-                            (err1: any) => {
-                                observer.error('err1 ' + err1);
-                            }
-                        );
-                    },
-                    (err2: any) => {
-                        observer.error(err2);
-                    }
-                );
-
-            }
+            Filesystem.getPathEntry(
+                this.fileSystem,
+                fullPathParent,
+                false
+            ).subscribe(
+                (parentDirectoryEntry: DirectoryEntry) => {
+                    Filesystem.rename(
+                        this.fileSystem,
+                        parentDirectoryEntry,
+                        fullPathChild,
+                        newName
+                    ).subscribe(
+                        () => {
+                            observer.next();
+                            observer.complete();
+                        },
+                        (err: any) => {
+                            observer.error(err);
+                        }
+                    );
+                }
+            );
         });
         return obs;
     }
+
 }

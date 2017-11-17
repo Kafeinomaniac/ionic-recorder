@@ -17,7 +17,7 @@ import {
     WavInfo,
     formatDate,
     pathFileName,
-    pathFolderName
+    pathParent
 } from '../../models';
 import { MoveToPage } from '../../pages';
 
@@ -73,7 +73,7 @@ export class TrackPage {
             // which include the track's file full path
             this.filePath = navParams.data;
             this.filename = pathFileName(this.filePath);
-            this.parentFolder = pathFolderName(this.filePath);
+            this.parentFolder = pathParent(this.filePath);
 
             WavFile.readWavFileInfo(this.filePath, true).subscribe(
                 (wavInfo: WavInfo) => {

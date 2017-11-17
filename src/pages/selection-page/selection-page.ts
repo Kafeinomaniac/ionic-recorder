@@ -3,6 +3,7 @@
 import { Component } from '@angular/core';
 import { ViewController } from 'ionic-angular';
 import { AppFilesystem } from '../../services';
+import { getFullPath } from '../../models';
 
 /**
  * Page to see or edit all currently selected items.
@@ -32,6 +33,10 @@ export class SelectionPage {
                 this.selectedEntries = entries;
             }
         );
+    }
+
+    public getFullPath(entry: Entry): string {
+        return getFullPath(entry);
     }
 
     public dismiss(data?: any): void {

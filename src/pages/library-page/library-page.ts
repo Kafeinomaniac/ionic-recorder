@@ -22,7 +22,7 @@ import {
 import { AppFilesystem } from '../../services';
 import { ButtonbarButton } from '../../components/';
 import { MoveToPage, SelectionPage, TrackPage } from '../../pages';
-import { folderPathParent } from '../../models';
+import { pathParent, getFullPath } from '../../models';
 
 /**
  * Files/folders music library page.
@@ -131,7 +131,7 @@ export class LibraryPage {
     }
 
     /**
-     *
+     * @returns void
      */
     public ionViewDidEnter(): void {
         console.log('ionViewDidEnter()');
@@ -147,6 +147,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when the 'Select...' button is clicked.
+     * @returns void
      */
     public onClickSelectButton(): void {
         console.log('onClickSelectButton()');
@@ -174,7 +175,7 @@ export class LibraryPage {
     }
 
     /**
-     *
+     * @returns boolean
      */
     public selectButtonDisabled(): boolean {
         // console.log('selectButtonDisabled()');
@@ -183,6 +184,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when the 'Go home' button is clicked.
+     * @returns void
      */
     public onClickHomeButton(): void {
         console.log('onClickHomeButton()');
@@ -198,6 +200,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when the 'Go home' button is clicked.
+     * @returns void
      */
     public atHome(): boolean {
         return this.appFilesystem.atHome();
@@ -205,10 +208,11 @@ export class LibraryPage {
 
     /**
      * UI calls this when the 'Go to parent' button is clicked.
+     * @returns void
      */
     public onClickParentButton(): void {
         const path: string = this.appFilesystem.getPath(),
-              parentPath: string = folderPathParent(path);
+              parentPath: string = pathParent(path);
         console.log('onClickParentButton() - path: ' + path +
                     ', parentPath: ' + parentPath);
         this.appFilesystem.switchFolder(parentPath).subscribe(
@@ -223,6 +227,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when the 'Add...' button is clicked.
+     * @returns void
      */
     public onClickAddButton(): void {
         console.log('onClickAddButton()');
@@ -260,6 +265,7 @@ export class LibraryPage {
     /**
      * UI calls this when the stats button is clicked.
      * Shows cumulative stats on all selected items.
+     * @returns void
      */
     public onClickStatsButton(): void {
         console.log('onClickStatsButton');
@@ -269,6 +275,7 @@ export class LibraryPage {
      * UI calls this when rename button is clicked.
      * Moves selected items into a folder. Prereq: only one entry is
      * selected when we call this function!
+     * @returns void
      */
     public onClickRenameButton(): void {
         console.log('onClickRenameButton()');
@@ -279,7 +286,6 @@ export class LibraryPage {
         fullPath: string = Object.keys(selectedPaths)[0],
         iEntry: number = afs.getOrderIndex(fullPath),
         entry: Entry = afs.entries[iEntry],
-        // fullPath = afs.getFullPath(entry),
         entryType: string = (entry.isFile ? 'file' : 'folder');
         console.log('fullpath: ' + fullPath);
         const renameAlert: Alert = this.alertController.create({
@@ -323,7 +329,7 @@ export class LibraryPage {
 
     /**
      * UI calls this to determine whether to disable the rename button.
-     * @return {boolean}
+     * @returns boolean
      */
     public renameButtonDisabled(): boolean {
         return this.appFilesystem.nSelected() !== 1;
@@ -332,6 +338,7 @@ export class LibraryPage {
     /**
      * UI calls this when move button is clicked.
      * Moves selected items into a folder.
+     * @returns void
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton');
@@ -342,7 +349,7 @@ export class LibraryPage {
 
     /**
      * UI calls this to determine whether to disable the move button.
-     * @return {boolean}
+     * @returns boolean
      */
     public moveButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
@@ -355,7 +362,7 @@ export class LibraryPage {
     }
 
     /**
-     *
+     * @returns void
      */
     private confirmAndDeleteSelected(): void {
         const nSelected: number = this.appFilesystem.nSelected(),
@@ -374,16 +381,15 @@ export class LibraryPage {
                 this.appFilesystem.deleteSelected().subscribe(
                     () => {
                         this.appFilesystem.switchFolder(
-                            this.appFilesystem.getFullPath(
-                                this.appFilesystem.folderEntry
-                            )).subscribe(
-                                () => {
-                                    this.detectChanges();
-                                },
-                                (err1: any) => {
-                                    throw Error(err1);
-                                }
-                            );
+                            getFullPath(this.appFilesystem.folderEntry)
+                        ).subscribe(
+                            () => {
+                                this.detectChanges();
+                            },
+                            (err1: any) => {
+                                throw Error(err1);
+                            }
+                        );
                     },
                     (err2: any) => {
                         throw Error(err2);
@@ -397,6 +403,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when delete button is clicked.
+     * @returns void
      */
     public onClickDeleteButton(): void {
         console.log('onClickDeleteButton()');
@@ -421,7 +428,7 @@ export class LibraryPage {
 
     /**
      * UI calls this to determine whether disable the delete button
-     * @return {boolean}
+     * @returns boolean
      */
     public deleteButtonDisabled(): boolean {
         // if the only thing selected is the unfiled folder
@@ -435,6 +442,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when social sharing button is clicked
+     * @returns void
      */
     public onClickShareButton(): void {
         console.log('onClickShareButton()');
@@ -442,6 +450,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when selected badge on top right is clicked
+     * @returns void
      */
     public onClickSelectedBadge(): void {
         console.log('onClickSelectedBadge()');
@@ -453,7 +462,7 @@ export class LibraryPage {
     }
 
     /**
-     *
+     * @returns void
      */
     private detectChanges(): void {
         console.log('detectChanges()');
@@ -468,6 +477,8 @@ export class LibraryPage {
 
     /**
      * UI calls this when the new folder button is clicked
+     * @param {Entry} entry
+     * @returns void
      */
     public onClickCheckbox(entry: Entry): void {
         console.log('onClickCheckbox()');
@@ -477,12 +488,14 @@ export class LibraryPage {
 
     /**
      * UI calls this when the new folder button is clicked
+     * @param {Entry} entry
+     * @returns void
      */
     public onClickEntry(entry: Entry): void {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
             this.appFilesystem.switchFolder(
-                this.appFilesystem.getFullPath(entry)).subscribe(
+                getFullPath(entry)).subscribe(
                     () => {
                         this.detectChanges();
                     },
@@ -498,6 +511,7 @@ export class LibraryPage {
 
     /**
      * UI calls this when the new folder button is clicked
+     * @returns void
      */
     public addFolder(): void {
         const parentPath: string = this.appFilesystem.getPath(),

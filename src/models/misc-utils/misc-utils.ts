@@ -3,6 +3,26 @@
 'use strict';
 
 /**
+ * Extracts the full path of an entry, if it's a folder it ends with '/'.
+ * @param {string}
+ * @returns string
+ */
+export function getFullPath(entry: Entry): string {
+    const fullPath: string = entry.fullPath;
+    return entry.isDirectory && (fullPath.length > 1) ?
+        fullPath + '/' : fullPath;
+}
+
+/**
+ * Returns true if path is a folder and false otherwise.
+ * @param {string}
+ * @returns boolean
+ */
+export function isFolder(path: string): boolean {
+    return (path[path.length - 1] === '/');
+}
+
+/**
  * Extracts the filename out of a full-path
  * @param {string}
  * @returns string
@@ -16,9 +36,22 @@ export function pathFileName(filePath: string): string {
  * @param {string}
  * @returns string
  */
-export function pathFolderName(filePath: string): string {
+function pathFolderName(filePath: string): string {
     // return filePath.replace(pathFileName(filePath), '');
     return filePath.match(/^.*[\\\/]/).toString();
+}
+
+export function pathParent(path: string): string {
+    if (isFolder(path)) {
+        return folderPathParent(path);
+    }
+    else {
+        return pathFolderName(path);
+    }
+}
+
+export function pathChild(path: string): string {
+    return path.replace(pathParent(path), '');
 }
 
 /**
@@ -26,7 +59,7 @@ export function pathFolderName(filePath: string): string {
  * @param {string}
  * @returns string
  */
-export function folderPathParent(dirPath: string): string {
+function folderPathParent(dirPath: string): string {
     const pathParts: string[] =
           dirPath.split('/').filter((str: string) => { return str !== ''; }),
           nParts: number = pathParts.length;

@@ -2,7 +2,6 @@
 
 import {
     copyFromObject,
-    folderPathParent,
     formatTime,
     formatUnixTimestamp,
     has,
@@ -15,7 +14,8 @@ import {
     isUndefined,
     objectInspector,
     pathFileName,
-    pathFolderName,
+    pathChild,
+    pathParent,
     prependArray
 } from './misc-utils';
 
@@ -26,26 +26,46 @@ describe('models/misc-utils', () => {
         expect(pathFileName('/a/b/c///jane')).toEqual('jane');
     });
 
-    it('can pathFolderName()', () => {
-        expect(pathFolderName('/a/b/c/jane')).toEqual('/a/b/c/');
-        expect(pathFolderName('/jane/jane/jane')).toEqual('/jane/jane/');
-        expect(pathFolderName('/a/b/c//d')).toEqual('/a/b/c//');
-        expect(pathFolderName('/a/b/c//d////')).toEqual('/a/b/c//d////');
+    it('can pathParent()', () => {
+        expect(pathParent('/a/b/c/jane')).toEqual('/a/b/c/');
+        expect(pathParent('/jane/jane/jane')).toEqual('/jane/jane/');
+        expect(pathParent('/a/b/c//d')).toEqual('/a/b/c//');
+        expect(pathParent('/a/b/c//d////')).toEqual('/a/b/c/');
+        expect(pathParent('/a/b/c/d/')).toEqual('/a/b/c/');
+
+        expect(pathParent('/a/b/c')).toEqual('/a/b/');
+        expect(pathParent('/a/b/c/')).toEqual('/a/b/');
+        expect(pathParent('/a/b/c//')).toEqual('/a/b/');
+        expect(pathParent('/a/b/c///')).toEqual('/a/b/');
+        expect(pathParent('/')).toEqual('/');
+        expect(pathParent('//')).toEqual('/');
+        expect(pathParent('///')).toEqual('/');
+        expect(pathParent('////')).toEqual('/');
+        expect(pathParent('/x')).toEqual('/');
+        expect(pathParent('/x/')).toEqual('/');
+        expect(pathParent('/x//')).toEqual('/');
+        expect(pathParent('/x///')).toEqual('/');
     });
 
-    it('can folderPathParent()', () => {
-        expect(folderPathParent('/a/b/c')).toEqual('/a/b/');
-        expect(folderPathParent('/a/b/c/')).toEqual('/a/b/');
-        expect(folderPathParent('/a/b/c//')).toEqual('/a/b/');
-        expect(folderPathParent('/a/b/c///')).toEqual('/a/b/');
-        expect(folderPathParent('/')).toEqual('/');
-        expect(folderPathParent('//')).toEqual('/');
-        expect(folderPathParent('///')).toEqual('/');
-        expect(folderPathParent('////')).toEqual('/');
-        expect(folderPathParent('/x')).toEqual('/');
-        expect(folderPathParent('/x/')).toEqual('/');
-        expect(folderPathParent('/x//')).toEqual('/');
-        expect(folderPathParent('/x///')).toEqual('/');
+    it('can pathChild()', () => {
+        expect(pathChild('/a/b/c/jane')).toEqual('jane');
+        expect(pathChild('/jane/jane/jane')).toEqual('jane');
+        expect(pathChild('/a/b/c//d')).toEqual('d');
+        expect(pathChild('/a/b/c//d////')).toEqual('/d////');
+        expect(pathChild('/a/b/c/d/')).toEqual('d/');
+
+        expect(pathChild('/a/b/c')).toEqual('c');
+        expect(pathChild('/a/b/c/')).toEqual('c/');
+        expect(pathChild('/a/b/c//')).toEqual('c//');
+        expect(pathChild('/a/b/c///')).toEqual('c///');
+        expect(pathChild('/')).toEqual('');
+        expect(pathChild('//')).toEqual('/');
+        expect(pathChild('///')).toEqual('//');
+        expect(pathChild('////')).toEqual('///');
+        expect(pathChild('/x')).toEqual('x');
+        expect(pathChild('/x/')).toEqual('x/');
+        expect(pathChild('/x//')).toEqual('x//');
+        expect(pathChild('/x///')).toEqual('x///');
     });
 
     it('isX() functions work as expected', () => {
