@@ -25,7 +25,7 @@ export interface TabPage {
 }
 
 @Component({
-    templateUrl: 'app.html'
+    templateUrl: 'app.component.html'
 })
 export class IonicRecorderApp {
     // Use one of these @ViewChild declarations (both work):
