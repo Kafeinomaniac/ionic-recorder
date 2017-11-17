@@ -131,18 +131,6 @@ export class TestUtils {
                     {
                         provide: Config,
                         useFactory: () => ConfigMock.instance()
-//                    },
-//                    {
-//                        provide: AppStorage,
-                        // useClass: AppStorageMock
-                        // useValue: appStorageMock
-//                        useFactory: () => new AppStorageMock()
-//                    },
-//                    {
-//                        provide: AppFilesystem,
-                        // useClass: AppFilesystemMock
-                        // useValue: appFilesystemMock
-//                        useFactory: () => new AppFilesystemMock()
                     }
                 ],
                 imports: [
