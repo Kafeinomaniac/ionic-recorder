@@ -7,8 +7,10 @@ exports.config = {
         'browserName': 'chrome',
         chromeOptions: {
             args: [
-                '--use-fake-device-for-media-stream',
-                '--use-fake-ui-for-media-stream'
+                'unlimited-storage',
+                'disable-infobars',
+                'use-fake-device-for-media-stream',
+                'use-fake-ui-for-media-stream'
             ]
         }
     },
