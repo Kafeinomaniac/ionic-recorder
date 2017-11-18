@@ -51,7 +51,7 @@ describe('IonicRecorderApp', () => {
         element(by.css('.bar-button-menutoggle')).click().then(() => {
             // wait for the animation
             browser.driver.sleep(1000);
-            element.all(by.css('ion-label')).get(0).getText()
+            element.all(by.css('ion-label')).first().getText()
                 .then(text => expect(text).toEqual('Record'));
             element(by.css('ion-content div.scroll-content')).click();
         });
@@ -81,25 +81,38 @@ describe('IonicRecorderApp', () => {
         element(by.css('.bar-button-menutoggle')).click().then(() => {
             // wait for the animation
             browser.driver.sleep(1000);
-            element.all(by.css('ion-label')).get(3).getText()
+            element.all(by.css('ion-label')).last().getText()
                 .then(text => expect(text).toEqual('About'));
             element(by.css('ion-content div.scroll-content')).click();
         });
     });
 
-    it('can record', () => {
+    it('can record', (done) => {
         // start recording
-        element.all(by.css('div.recording-controls button')).get(0)
-            .click();
+        element.all(by.css('div.recording-controls button'))
+            .get(0).click();
         setTimeout(() => {
             // stop recording
-            element.all(by.css('div.recording-controls button')).get(1)
-                .click();
-            browser.driver.sleep(1000);
+            element.all(by.css('div.recording-controls button'))
+                .get(1).click();
+            browser.driver.sleep(500);
             element.all(by.css('ion-content ion-card button')).click();
-            browser.driver.sleep(1000);
+            browser.driver.sleep(3500);
+            element.all(by.css(
+                'track-page ion-header ion-navbar button.back-button')).click()
+            browser.driver.sleep(3900);
+            done();
         }, 3000);
+    });
 
+    it('can go to library page', (done) => {
+        element(by.css('.bar-button-menutoggle')).click().then(() => {
+            // wait for the animation
+            browser.driver.sleep(1000);
+            element.all(by.css('ion-list button')).get(1).click();
+            browser.driver.sleep(3900);
+            done();
+        });
     });
 
 });
