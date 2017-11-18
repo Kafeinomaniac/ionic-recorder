@@ -81,16 +81,16 @@ describe('IonicRecorderApp', () => {
 
     it('can record', (done) => {
         // hit record button - start recording
-        element.all(by.css('div.recording-controls button')).get(0)
-            .click();
+        element.all(by.css('div.recording-controls button')).get(0).click();
         setTimeout(() => {
-            //  hit stop-button - stop recording
+            // this block of code is done after a 3000msec wait
+            // hit stop-button - stop recording
             element.all(by.css('div.recording-controls button')).get(1)
                 .click();
             browser.driver.sleep(500);
             // click on the last recording new button to go to track page
-            element.all(by.css('ion-content ion-card button'))
-                .click();
+            element.all(by.css('ion-content ion-card button')).click();
+
             // track page displays during this next sleep and plays audio
             browser.driver.sleep(3500);
             // click track page back button to go back to record page
@@ -107,7 +107,7 @@ describe('IonicRecorderApp', () => {
         element(by.css('.bar-button-menutoggle')).click().then(() => {
             // wait for the animation
             browser.driver.sleep(1000);
-            // click the library page button to go to library page 
+            // click the library page button to go to library page
             element.all(by.css('ion-list button')).get(1).click();
             browser.driver.sleep(3900);
             done();
