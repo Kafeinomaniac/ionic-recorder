@@ -110,6 +110,11 @@ describe('IonicRecorderApp', () => {
             browser.driver.sleep(1000);
             // click to go to (first and only) track page
             element.all(by.css('ion-label.button')).get(0).click();
+            browser.driver.sleep(100);
+            expect(element.all(by.css(
+                'track-page ion-content div.scroll-content ion-list ' +
+                    'ion-item div div ion-label'
+            )).get(6).getText()).toContain('# of samples:');
             // sleep to show track page info
             browser.driver.sleep(3900);
             done();
