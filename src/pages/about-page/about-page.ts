@@ -2,7 +2,7 @@
 
 import { Component } from '@angular/core';
 
-const APP_VERSION: string = '0.5.0-alpha.40';
+const APP_VERSION: string = '0.5.0-alpha.41';
 
 /**
  * Page that displays info about the app.
