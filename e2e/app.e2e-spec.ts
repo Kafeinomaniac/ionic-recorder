@@ -1,7 +1,12 @@
 import { browser, element, by } from 'protractor';
 
-let popupAlert: any = null,
-    alertText: any = null;
+function waitForAndAcceptAlert(expectedText: string) {
+    browser.switchTo().alert().then((alertInFocus: any) => {
+        alertInFocus.getText().then(text => expect(text).toEqual('Allow'));
+        expect(alertInFocus.getText()).toEqual(expectedText);
+        alertInFocus.accept();
+    }, fail);
+}
 
 describe('IonicRecorderApp', () => {
 
@@ -12,9 +17,14 @@ describe('IonicRecorderApp', () => {
         browser.get('');
     });
 
+    // it('should pop up an alert', () => {
+    //     waitForAndAcceptAlert('');
+    // });
+
     it('should have a title', () => {
-        browser.getTitle().then(title =>
-                                expect(title).toEqual('ionic-recorder'));
+        browser.getTitle().then(
+            title => expect(title).toEqual('ionic-recorder')
+        );
     });
 
     it('should have {nav}', () => {
@@ -29,43 +39,67 @@ describe('IonicRecorderApp', () => {
 
     it('has a menu button that displays the left menu', () => {
         element(by.css('.bar-button-menutoggle')).click().then(() => {
-            browser.driver.sleep(2000); // wait for the animation
+            // wait for the animation
+            browser.driver.sleep(1000);
             element.all(by.css('.toolbar-title')).first().getText()
                 .then(text => expect(text).toEqual('Go to ...'));
+            element(by.css('ion-content div.scroll-content')).click();
         });
     });
 
     it('the left menu has 1st link with title Record', () => {
         element(by.css('.bar-button-menutoggle')).click().then(() => {
-            browser.driver.sleep(2000); // wait for the animation
+            // wait for the animation
+            browser.driver.sleep(1000);
             element.all(by.css('ion-label')).get(0).getText()
                 .then(text => expect(text).toEqual('Record'));
+            element(by.css('ion-content div.scroll-content')).click();
         });
     });
 
     it('the left menu has 2nd link with title Library', () => {
         element(by.css('.bar-button-menutoggle')).click().then(() => {
-            browser.driver.sleep(2000); // wait for the animation
+            // wait for the animation
+            browser.driver.sleep(1000);
             element.all(by.css('ion-label')).get(1).getText()
                 .then(text => expect(text).toEqual('Library'));
+            element(by.css('ion-content div.scroll-content')).click();
         });
     });
 
     it('the left menu has 3rd link with title Settings', () => {
         element(by.css('.bar-button-menutoggle')).click().then(() => {
-            browser.driver.sleep(2000); // wait for the animation
+            // wait for the animation
+            browser.driver.sleep(1000);
             element.all(by.css('ion-label')).get(2).getText()
                 .then(text => expect(text).toEqual('Settings'));
+            element(by.css('ion-content div.scroll-content')).click();
         });
     });
 
     it('the left menu has 4th link with title About', () => {
         element(by.css('.bar-button-menutoggle')).click().then(() => {
-            browser.driver.sleep(2000); // wait for the animation
+            // wait for the animation
+            browser.driver.sleep(1000);
             element.all(by.css('ion-label')).get(3).getText()
                 .then(text => expect(text).toEqual('About'));
-            element(by.css('.scroll-content')).click();
+            element(by.css('ion-content div.scroll-content')).click();
         });
+    });
+
+    it('can record', () => {
+        // start recording
+        element.all(by.css('div.recording-controls button')).get(0)
+            .click();
+        setTimeout(() => {
+            // stop recording
+            element.all(by.css('div.recording-controls button')).get(1)
+                .click();
+            browser.driver.sleep(1000);
+            element.all(by.css('ion-content ion-card button')).click();
+            browser.driver.sleep(1000);
+        }, 3000);
+
     });
 
 });
