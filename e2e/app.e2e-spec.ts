@@ -100,7 +100,7 @@ describe('IonicRecorderApp', () => {
         }, 3000);
     });
 
-    it('can go to library page and from there to track page', (done) => {
+    it('can go to library page,then to track page and verify it', (done) => {
         element(by.css('.bar-button-menutoggle')).click().then(() => {
             // wait for the animation
             browser.driver.sleep(1000);
