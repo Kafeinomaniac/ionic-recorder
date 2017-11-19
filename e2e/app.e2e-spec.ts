@@ -136,8 +136,8 @@ describe('IonicRecorderApp', () => {
 
                             // deduce duration and ensure it's reasonable
                             const nSeconds: number = nSamples / sampleRate;
-                            expect(nSeconds).toBeGreaterThan(2.5);
-                            expect(nSeconds).toBeLessThan(3.5);
+                            expect(nSeconds).toBeGreaterThan(2.9);
+                            expect(nSeconds).toBeLessThan(3.1);
                         }
                     );
                 }
