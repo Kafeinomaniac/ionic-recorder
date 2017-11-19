@@ -111,11 +111,38 @@ describe('IonicRecorderApp', () => {
             // click to go to (first and only) track page
             element.all(by.css('ion-label.button')).get(0).click();
             browser.driver.sleep(100);
-            expect(element.all(by.css(
-                'track-page ion-content div.scroll-content ion-list ' +
-                    'ion-item div div ion-label'
-            )).get(6).getText()).toContain('# of samples:');
-            // sleep to show track page info
+            let elts: any = element.all(by.css(
+                'track-page ion-content div.scroll-content ' +
+                    'ion-list ion-item div div ion-label')),
+                sampleRateElt: any = elts.get(5),
+                nSamplesElt: any = elts.get(6),
+                nSamples: number = -1,
+                sampleRate: number = -1;
+
+            sampleRateElt.getText().then(
+                text => {
+                    // scrape sample rate
+                    expect(text).toContain('Sample rate:');
+                    sampleRate = parseInt(text.replace('Sample rate:', ''), 10);
+                    expect(sampleRate).toBeGreaterThan(0);
+
+                    nSamplesElt.getText().then(
+                        text => {
+                            // scrape # of samples
+                            expect(text).toContain('# of samples:');
+                            nSamples = 
+                                parseInt(text.replace('# of samples:', ''), 10);
+                            expect(nSamples).toBeGreaterThan(0);
+
+                            // deduce duration and ensure it's reasonable
+                            const nSeconds: number = nSamples / sampleRate;
+                            expect(nSeconds).toBeGreaterThan(2.5);
+                            expect(nSeconds).toBeLessThan(3.5);
+                        }
+                    );
+                }
+            );
+
             browser.driver.sleep(3900);
             done();
         });
