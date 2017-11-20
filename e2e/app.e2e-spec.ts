@@ -111,6 +111,7 @@ describe('IonicRecorderApp', () => {
             // click to go to (first and only) track page
             element.all(by.css('ion-label.button')).get(0).click();
             browser.driver.sleep(100);
+
             let elts: any = element.all(by.css(
                 'track-page ion-content div.scroll-content ' +
                     'ion-list ion-item div div ion-label')),
