@@ -22,7 +22,7 @@ import {
 import { AppFilesystem } from '../../services';
 import { ButtonbarButton } from '../../components/';
 import { MoveToPage, SelectionPage, TrackPage } from '../../pages';
-import { pathParent, getFullPath } from '../../models';
+import { pathParent, getFullPath, Filesystem } from '../../models';
 
 /**
  * Files/folders music library page.
@@ -247,6 +247,7 @@ export class LibraryPage {
                     icon: 'link',
                     handler: () => {
                         console.log('Add URL clicked.');
+                        this.addURL();
                     }
                 },
                 {
@@ -519,7 +520,7 @@ export class LibraryPage {
                   title: 'Create a new folder in ' + parentPath,
                   inputs: [{
                       name: 'folderName',
-                      placeholder: 'Enter folder name...'
+                      placeholder: 'Enter folder name ...'
                   }],
                   buttons: [
                       {
@@ -568,4 +569,55 @@ export class LibraryPage {
               }); // newFolderAlert: Alert = this.alertController.create({
         newFolderAlert.present();
     }
+
+    /**
+     * UI calls this when the new folder button is clicked
+     * @returns void
+     */
+    public addURL(): void {
+        const parentPath: string = this.appFilesystem.getPath(),
+              newURLAlert: Alert = this.alertController.create({
+                  title: 'Create a new link in ' + parentPath,
+                  inputs: [
+                      {
+                          name: 'name',
+                          placeholder: 'Link Name ...'
+                      },
+                      {
+                          name: 'url',
+                          placeholder: 'Link URL ...'
+                      }
+                  ],
+                  buttons: [
+                      {
+                          text: 'Cancel',
+                          role: 'cancel',
+                          handler: () => {
+                              console.log('Clicked cancel in add-url alert');
+                          }
+                      },
+                      {
+                          text: 'Done',
+                          handler: (data: any) => {
+                              const url: string = data.url,
+                                    name: string = data.name;
+                              Filesystem.writeToFile(
+                                  this.appFilesystem.getFilesystem(),
+                                  this.appFilesystem.getPath() + name,
+                                  new Blob([url], { type: 'text/plain' }),
+                                  0,
+                                  true
+                              ).subscribe(
+                                  () => {
+                                      this.appFilesystem.refreshFolder()
+                                          .subscribe();
+                                  }
+                              );
+                          } // handler: (data: any) => {
+                      }
+                  ] // buttons: [
+              }); // newURLAlert: Alert = this.alertController.create({
+        newURLAlert.present();
+    }
+
 }
