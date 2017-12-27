@@ -26,7 +26,6 @@ export class VuGauge implements OnChanges {
     public ledWidth: string;
     public leds: { x: string, fill: string, strokeWidth: string }[];
 
-    private maxIndex: number;
     private hStep: number;
     private valueStep: number;
 
@@ -36,7 +35,6 @@ export class VuGauge implements OnChanges {
     constructor() {
         console.log('constructor()');
         this.leds = [];
-        this.maxIndex = 0;
 
         if (parseInt(this.height, 10)) {
             throw Error('<vu-gauge>must have a height attribute');

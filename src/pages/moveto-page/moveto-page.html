@@ -20,7 +20,7 @@
     </ion-toolbar>
     <ion-toolbar>
         <p *ngIf="appFilesystem.folderEntry" text-center>
-            {{appFilesystem.getFullPath(appFilesystem.folderEntry)}}
+            {{appFilesystem.getPath()}}
         </p>
         <button-bar [buttons]="headerButtons">
         </button-bar>

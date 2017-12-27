@@ -1,9 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Injectable } from '@angular/core';
-/* tslint:disable */
 import { Storage } from '@ionic/storage';
-/* tslint:enable */
 
 export interface GainState {
     factor: number;

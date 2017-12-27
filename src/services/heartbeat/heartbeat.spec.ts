@@ -8,7 +8,7 @@ let heartbeat: Heartbeat = null,
 
 describe('services/heartbeat', () => {
     beforeEach(() => {
-        heartbeat = new Heartbeat(new ApplicationRefMock());
+        heartbeat = new Heartbeat(<any>(new ApplicationRefMock()));
     });
 
     it('initializes', () => {

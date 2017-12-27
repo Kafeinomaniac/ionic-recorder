@@ -11,7 +11,7 @@ let instance: any = null;
 describe('pages/selection-page', () => {
 
     beforeEach(async(() => TestUtils.beforeEachCompiler(
-        [ButtonBar, SelectionPage]
+        [SelectionPage, ButtonBar]
     ).then(compiled => {
         fixture = compiled.fixture;
         instance = compiled.instance;

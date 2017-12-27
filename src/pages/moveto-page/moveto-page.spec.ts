@@ -11,7 +11,7 @@ let instance: any = null;
 describe('pages/moveto-page', () => {
 
     beforeEach(async(() => TestUtils.beforeEachCompiler(
-        [ButtonBar, MoveToPage]
+        [MoveToPage, ButtonBar]
     ).then(compiled => {
         fixture = compiled.fixture;
         instance = compiled.instance;

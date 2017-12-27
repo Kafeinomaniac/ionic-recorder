@@ -2,10 +2,14 @@
 
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-/* tslint:disable */
 import { Storage } from '@ionic/storage';
-/* tslint:enable */
-import { Filesystem, has } from '../../models';
+import {
+    Filesystem,
+    getFullPath,
+    has,
+    pathParent,
+    pathChild
+} from '../../models';
 
 /** @const {string} - the default save path */
 export const DEFAULT_PATH: string = '/Unfiled/';
@@ -23,7 +27,6 @@ export class AppFilesystem {
     public folderEntry: DirectoryEntry;
     public selectedPaths: { [path: string]: number };
     private fileSystem: FileSystem;
-    private nWavFileSamples: number;
 
     /**
      * @constructor
@@ -37,15 +40,27 @@ export class AppFilesystem {
         this.folderEntry = null;
         this.selectedPaths = {};
         this.fileSystem = null;
-        this.nWavFileSamples = 0;
 
         this.setUpFileSystem();
     }
 
     /**
+     * @param {selectedPaths: {[path: string]: number}}
      * @returns void
      */
-    private setUpFileSystem(): void {
+    public saveSelectedPaths(
+        selectedPaths: { [path: string]: number } = null
+    ): void {
+        if (selectedPaths !== null) {
+            this.selectedPaths = selectedPaths;
+        }
+        this.storage.set('filesystemSelected', this.selectedPaths);
+    }
+
+    /**
+     * @returns void
+     */
+    public setUpFileSystem(): void {
         // get the filesystem and remember it
         Filesystem.getFileSystem(true).subscribe(
             (fs: FileSystem) => {
@@ -57,12 +72,12 @@ export class AppFilesystem {
                         console.log('Created /Unfiled/ (or already there)');
                         // grab remembered location from storage and go there
                         if (!this.storage) {
-                            alert('!this.storage');
+                            throw Error('!this.storage!');
                         }
                         this.storage.get('filesystemPath').then(
                             (folderPath: string) => {
                                 if (folderPath === '//') {
-                                    alert('dir path is //');
+                                    throw Error('dir path is //');
                                 }
                                 if (!folderPath) {
                                     // current path not in storage, use default
@@ -77,55 +92,35 @@ export class AppFilesystem {
                                                 this.selectedPaths = paths;
                                             }
                                             else {
-                                                this.selectedPaths = {};
-                                                this.storage.set(
-                                                    'filesystemSelected',
-                                                    this.selectedPaths
-                                                );
+                                                this.saveSelectedPaths({});
                                             }
                                             this.switchFolder(folderPath)
                                                 .subscribe(
                                                     () => {
                                                         this.isReady = true;
                                                     },
-                                                    (err0: any) => {
-                                                        // err - try switching
-                                                        // to /Unfiled/ instead
-                                                        this.switchFolder(
-                                                            '/Unfiled/'
-                                                        ).subscribe(
-                                                            () => {
-                                                                this.isReady =
-                                                                    true;
-                                                            },
-                                                            (err1: any) => {
-                                                                alert('err0:' +
-                                                                      err0 +
-                                                                      'err1:' +
-                                                                      err1);
-                                                            }
-                                                        );
+                                                    (err1: any) => {
+                                                        throw Error(err1);
                                                     }
-
-                                                ); // this.switchFolder(
+                                                ); // this.switchFolder( ..
                                         }
                                 ).catch((err2: any) => {
-                                    alert('err2: ' + err2);
-                                }); // .then(..).catch((err2: any) => {..
-                            } // (folderPath: string) => {
+                                    throw Error(err2);
+                                }); // this.storage.get('filesystemSelected') ..
+                            }
                         ).catch((err3: any) => {
-                            alert('* err3: ' + err3);
-                        }); // .then(..).catch((err3: any) => {
-                    }, // (folderEntry: DirectoryEntry) => {
+                            throw Error(err3);
+                        }); // this.storage.get('filesystemPath') ..
+                    },
                     (err4: any) => {
-                        alert('err4: ' + err4);
+                        throw Error(err4);
                     }
-                ); // getPathEntry(fileSystem, '/Unfiled/', true).subs..
+                ); // getPathEntry(fileSystem, '/Unfiled/', true) ..
             },
             (err5: any) => {
-                alert('err5: ' + err5);
+                throw Error(err5);
             }
-        );
+        ); // Filesystem.getFileSystem(true).subscribe( ..
     }
 
     /**
@@ -164,14 +159,7 @@ export class AppFilesystem {
      * @returns string
      */
     public getPath(): string {
-        return this.getFullPath(this.folderEntry);
-    }
-
-    /**
-     * @returns string[]
-     */
-    public getSelectedPathsArray(): string[] {
-        return Object.keys(this.selectedPaths);
+        return getFullPath(this.folderEntry);
     }
 
     /**
@@ -181,8 +169,9 @@ export class AppFilesystem {
         for (let key in this.selectedPaths) {
             delete this.selectedPaths[key];
         }
-        if (this.selectedPaths !== {}) {
-            alert('noway');
+        if (Object.keys(this.selectedPaths).length !== 0) {
+            throw Error('Expected nothing to be selected but ' +
+                        (Object.keys(this.selectedPaths).length) + ' are!');
         }
         this.storage.set('filesystemSelected', {});
     }
@@ -220,7 +209,7 @@ export class AppFilesystem {
                 () => {
                     Filesystem.getEntriesFromPaths(
                         this.fileSystem,
-                        this.getSelectedPathsArray()
+                        Object.keys(this.selectedPaths)
                     ).subscribe(
                         (entries: Entry[]) => {
                             observer.next(entries);
@@ -276,7 +265,7 @@ export class AppFilesystem {
             this.whenReady().subscribe(
                 () => {
                     this.switchFolder(
-                        this.getFullPath(this.folderEntry)
+                        getFullPath(this.folderEntry)
                     ).subscribe(
                         () => {
                             observer.next();
@@ -345,16 +334,6 @@ export class AppFilesystem {
     }
 
     /**
-     * @param {Entry} entry
-     * @returns string
-     */
-    public getFullPath(entry: Entry): string {
-        const fullPath: string = entry.fullPath;
-        return entry.isDirectory && (fullPath.length > 1) ?
-            fullPath + '/' : fullPath;
-    }
-
-    /**
      * @param {string} path
      * @returns boolean
      */
@@ -368,7 +347,7 @@ export class AppFilesystem {
      * @returns boolean
      */
     public isEntrySelected(entry: Entry): boolean {
-        return this.isPathSelected(this.getFullPath(entry));
+        return this.isPathSelected(getFullPath(entry));
     }
 
     /**
@@ -415,7 +394,7 @@ export class AppFilesystem {
      * @returns void
      */
     public selectEntry(entry: Entry): void {
-        this.selectPath(this.getFullPath(entry));
+        this.selectPath(getFullPath(entry));
     }
 
     /**
@@ -459,7 +438,7 @@ export class AppFilesystem {
      * @returns void
      */
     public unSelectEntry(entry: Entry): void {
-        this.unselectPath(this.getFullPath(entry));
+        this.unselectPath(getFullPath(entry));
     }
 
     /**
@@ -467,7 +446,7 @@ export class AppFilesystem {
      * @returns void
      */
     public toggleSelectEntry(entry: Entry): void {
-        const fullPath: string = this.getFullPath(entry);
+        const fullPath: string = getFullPath(entry);
         console.log('toggleSelectEntry(' + fullPath + ')');
         if (this.isPathSelected(fullPath)) {
             this.unselectPath(fullPath);
@@ -486,7 +465,7 @@ export class AppFilesystem {
         console.log('selectAllOrNoneInFolder(' + bSelectAll + ')');
         let bChanged: boolean = false;
         this.entries.forEach((entry: Entry) => {
-            const fullPath: string = this.getFullPath(entry),
+            const fullPath: string = getFullPath(entry),
                   isSelected: boolean = this.isEntrySelected(entry);
             if (bSelectAll && !isSelected) {
                 this.selectPath(fullPath);
@@ -523,7 +502,7 @@ export class AppFilesystem {
                             paths.forEach((path: string) => {
                                 this.unselectPath(path);
                             });
-                            this.switchFolder(this.getFullPath(
+                            this.switchFolder(getFullPath(
                                 this.folderEntry
                             )).subscribe(
                                 (entries: Entry[]) => {
@@ -568,7 +547,7 @@ export class AppFilesystem {
                     const paths: string[] =
                           Object.keys(this.selectedPaths).sort(),
                           fullPath: string =
-                          this.getFullPath(this.folderEntry),
+                          getFullPath(this.folderEntry),
                           fullPathSize: number = fullPath.length;
                     console.log('deleteSelected([' + paths.join(', ') + '])');
 
@@ -592,7 +571,7 @@ export class AppFilesystem {
                             this.storage.set('filesystemSelected',
                                              this.selectedPaths);
                             const refreshFolder: string = switchHome ? '/'
-                                  : this.getFullPath(this.folderEntry);
+                                  : getFullPath(this.folderEntry);
 
                             this.switchFolder(refreshFolder).subscribe(
                                 () => {
@@ -623,6 +602,7 @@ export class AppFilesystem {
      * @returns Observable<void>
      */
     public deletePaths(paths: string[]): Observable<void> {
+        console.log('deletePaths(' + paths + ')');
         const obs: Observable<void> = Observable.create((observer) => {
             this.whenReady().subscribe(
                 () => {
@@ -646,70 +626,43 @@ export class AppFilesystem {
 
     /**
      * Renames either a file or a directory.
-     * @param {string} fullPath - full path of the entry to rename, if
-     * the last char of this path is a forward slash (/) then this is a
-     * folder and we must always end folders with a slash when specified.
-     * If not ending with a slash, it is a file.
-     * trailing slash  directories (folders).
+     * @param {string} fullPath - full path of the entry to rename.
      * @param {string} newName - renames to this.
      * @returns Observable<void>
      */
     public rename(fullPath: string, newName: string): Observable<void> {
-        console.log('rename(' + fullPath + ', ' + newName + ')');
+        const fullPathParent: string = pathParent(fullPath),
+              fullPathChild: string = pathChild(fullPath);
+        console.log('rename(' + fullPath + ', ' + newName + ') - parent: ' +
+                    fullPathParent + ', child: ' + fullPathChild);
         const obs: Observable<void> = Observable.create((observer) => {
-            if (fullPath[fullPath.length - 1] === '/') {
-                console.log('ITS A FOLDER');
-                this.fileSystem.root.getDirectory(
-                    fullPath,
-                    { create: false },
-                    (entry: Entry) => {
-                        console.log('rename(): got: ' + entry.name);
-                        entry.moveTo(this.folderEntry, newName);
-                        this.switchFolder(
-                            this.getFullPath(this.folderEntry)
-                        ).subscribe(
-                            () => {
-                                observer.next();
-                                observer.complete();
-                            },
-                            (err1: any) => {
-                                observer.error('err1 ' + err1);
-                            }
-                        );
-                    },
-                    (err2: any) => {
-                        observer.error(err2);
-                    }
-                );
-
-            }
-            else {
-                console.log('ITS A FILE');
-                this.fileSystem.root.getFile(
-                    fullPath,
-                    { create: false },
-                    (entry: Entry) => {
-                        console.log('rename(): got: ' + entry.name);
-                        entry.moveTo(this.folderEntry, newName);
-                        this.switchFolder(
-                            this.getFullPath(this.folderEntry)
-                        ).subscribe(
-                            () => {
-                                observer.next();
-                                observer.complete();
-                            },
-                            (err1: any) => {
-                                observer.error('err1 ' + err1);
-                            }
-                        );
-                    },
-                    (err2: any) => {
-                        observer.error(err2);
-                    }
-                );
-
-            }
+            Filesystem.getPathEntry(
+                this.fileSystem,
+                fullPathParent,
+                false
+            ).subscribe(
+                (parentDirectoryEntry: DirectoryEntry) => {
+                    Filesystem.rename(
+                        this.fileSystem,
+                        parentDirectoryEntry,
+                        fullPathChild,
+                        newName
+                    ).subscribe(
+                        () => {
+                            observer.next();
+                            observer.complete();
+                        },
+                        (err1: any) => {
+                            observer.error(err1);
+                        }
+                    );
+                },
+                (err2: any) => {
+                    observer.error(err2);
+                }
+            );
         });
         return obs;
     }
+
 }

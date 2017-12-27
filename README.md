@@ -77,7 +77,13 @@ under subdirectory './app'. Useful commands from 'package.json':
   which starts a server and pops up a browser tab with the app running in it, or
 
         npm test
-  which runs through the unit tests.
+  which runs through the unit tests. Or, you can run
+
+        npm run test-coverage
+  which leaves `./coverage/index.html` with a coverage report of your unit tests. Or, you can run
+
+        npm run e2e
+  which uses selenium to interact with a real copy of your app running in a browser.
 
 ## Version
 The current version is maintained in the

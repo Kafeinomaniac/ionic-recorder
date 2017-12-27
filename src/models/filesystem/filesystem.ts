@@ -1,7 +1,7 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import { Observable } from 'rxjs/Rx';
-import { downloadBlob, pathFileName } from '../../models';
+import { downloadBlob, pathFileName, isFolder } from '../../models';
 
 /** @constant {number} */
 export const DEFAULT_REQUEST_SIZE: number = 1024 * 1024 * 1024;
@@ -143,6 +143,54 @@ export class Filesystem {
                     observer.error(err);
                 }
             );
+        });
+        return src;
+    }
+
+    /**
+     * see https://www.html5rocks.com/en/tutorials/file/filesystem/
+     * @param  {Entry} entry
+     * @param  {string} oldName
+     * @param  {string} newName
+     * @returns Observable<void>
+     */
+    public static rename(
+        fileSystem: FileSystem,
+        parentDirectoryEntry: DirectoryEntry,
+        oldName: string,
+        newName: string
+    ): Observable<void> {
+        const src: Observable<void> = Observable.create((observer) => {
+            if (isFolder(oldName)) {
+                fileSystem.root.getDirectory(
+                    oldName,
+                    {create: false},
+                    (entry: Entry) => {
+                        entry.moveTo(parentDirectoryEntry, newName);
+                        console.log('RENAME DIR SUCCESS ::: ' + newName);
+                        observer.next();
+                        observer.complete();
+                    },
+                    (err: any) => {
+                        console.log('RENAME DIR ERROR ::: ' + err);
+                        observer.error(err);
+                    }
+                );
+            }
+            else {
+                fileSystem.root.getFile(
+                    oldName,
+                    {create: false},
+                    (entry: Entry) => {
+                        entry.moveTo(parentDirectoryEntry, newName);
+                        observer.next();
+                        observer.complete();
+                    },
+                    (err: any) => {
+                        observer.error(err);
+                    }
+                );
+            }
         });
         return src;
     }
@@ -320,7 +368,7 @@ export class Filesystem {
     /**
      * Write data into a file, starting at a particular location.
      * @param {FileSystem} fs - the file system we're working with
-     * @param {string} path - the file to write to.
+     * @param {string} path - full path of file to write to.
      * @param {Blob} blob - the data to write.
      * @param {number} seekOffset - the location (byte) to start writing from.
      * @param {boolean} bCreate - whether to create the file first or not.
@@ -427,9 +475,8 @@ export class Filesystem {
         path: string
     ): Observable<Metadata> {
         console.log('getMetadata(fs, ' + path + ')');
-        const isFolder: boolean = (path[path.length - 1] === '/');
         const src: Observable<Metadata> = Observable.create((observer) => {
-            if (isFolder) {
+            if (isFolder(path)) {
                 fs.root.getDirectory(
                     path,
                     { create: false },

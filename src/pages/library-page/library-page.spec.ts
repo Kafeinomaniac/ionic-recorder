@@ -11,7 +11,7 @@ let instance: any = null;
 describe('pages/library-page', () => {
 
     beforeEach(async(() => TestUtils.beforeEachCompiler(
-        [ButtonBar, LibraryPage]
+        [LibraryPage, ButtonBar]
     ).then(compiled => {
         fixture = compiled.fixture;
         instance = compiled.instance;

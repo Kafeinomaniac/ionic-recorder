@@ -17,6 +17,7 @@ import {
 import { ButtonbarButton } from '../../components';
 import { AppFilesystem } from '../../services';
 import { SelectionPage } from '../../pages';
+import { getFullPath } from '../../models';
 
 /**
  * @class MoveToPage
@@ -33,7 +34,7 @@ export class MoveToPage {
     private modalController: ModalController;
     private viewController: ViewController;
     private changeDetectorRef: ChangeDetectorRef;
-    private headerButtons: ButtonbarButton[];
+    public headerButtons: ButtonbarButton[];
 
     /**
      * @constructor
@@ -196,7 +197,7 @@ export class MoveToPage {
         console.log('onClickEntry()');
         if (entry.isDirectory) {
             this.appFilesystem.switchFolder(
-                this.appFilesystem.getFullPath(entry)
+                getFullPath(entry)
             ).subscribe(
                 () => {
                     this.detectChanges();

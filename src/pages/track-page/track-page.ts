@@ -5,7 +5,6 @@ import {
     ActionSheetController,
     Alert,
     AlertController,
-    ModalController,
     NavController,
     NavParams,
     ViewController
@@ -18,7 +17,7 @@ import {
     WavInfo,
     formatDate,
     pathFileName,
-    pathFolderName
+    pathParent
 } from '../../models';
 import { MoveToPage } from '../../pages';
 
@@ -33,7 +32,6 @@ export class TrackPage {
     private actionSheetController: ActionSheetController;
     private alertController: AlertController;
     private appFilesystem: AppFilesystem;
-    private modalController: ModalController;
     private navController: NavController;
     private viewController: ViewController;
 
@@ -57,7 +55,6 @@ export class TrackPage {
         actionSheetController: ActionSheetController,
         alertController: AlertController,
         appFilesystem: AppFilesystem,
-        modalController: ModalController,
         navController: NavController,
         navParams: NavParams,
         viewController: ViewController
@@ -66,7 +63,6 @@ export class TrackPage {
         this.actionSheetController = actionSheetController;
         this.alertController = alertController;
         this.appFilesystem = appFilesystem;
-        this.modalController = modalController;
         this.navController = navController;
         this.viewController = viewController;
         this.encoding = WAV_MIME_TYPE;
@@ -77,7 +73,7 @@ export class TrackPage {
             // which include the track's file full path
             this.filePath = navParams.data;
             this.filename = pathFileName(this.filePath);
-            this.parentFolder = pathFolderName(this.filePath);
+            this.parentFolder = pathParent(this.filePath);
 
             WavFile.readWavFileInfo(this.filePath, true).subscribe(
                 (wavInfo: WavInfo) => {
@@ -177,8 +173,6 @@ export class TrackPage {
      */
     public onClickMoveButton(): void {
         console.log('onClickMoveButton()');
-        // const modal: Modal = this.modalController.create(MoveToPage);
-        // modal.present();
         this.navController.push(MoveToPage, this.filePath);
         console.log('after modal.present();');
     }

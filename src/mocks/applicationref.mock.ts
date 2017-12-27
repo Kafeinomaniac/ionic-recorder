@@ -1,10 +1,10 @@
-import {
-    /* tslint:disable */
-    ApplicationRef
-    /* tslint:enable */
-} from '@angular/core';
+// Copyright (c) 2017 Tracktunes Inc
 
-export class ApplicationRefMock extends ApplicationRef {
+export class ApplicationRefMock {
+    constructor() {
+        console.log('ApplicationRefMock.constructor()');
+    }
+
     public bootstrap(): any {
         return null;
     }
@@ -20,9 +20,4 @@ export class ApplicationRefMock extends ApplicationRef {
     public tick(): any {
         return null;
     }
-
-    public componentTypes: any;
-    public components: any;
-    public isStable: any;
-    public viewCount: any;
 }

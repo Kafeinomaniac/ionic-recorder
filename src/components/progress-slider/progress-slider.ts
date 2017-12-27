@@ -1,11 +1,11 @@
 // Copyright (c) 2017 Tracktunes Inc
 
 import {
-    Component,
     /* tslint:disable */
     ElementRef,
     Renderer,
     /* tslint:enable */
+    Component,
     EventEmitter,
     Input,
     Output

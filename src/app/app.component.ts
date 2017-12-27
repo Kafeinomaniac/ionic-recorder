@@ -25,7 +25,7 @@ export interface TabPage {
 }
 
 @Component({
-    templateUrl: 'app.html'
+    templateUrl: 'app.component.html'
 })
 export class IonicRecorderApp {
     // Use one of these @ViewChild declarations (both work):
@@ -43,7 +43,7 @@ export class IonicRecorderApp {
         platform: Platform,
         statusBar: StatusBar
     ) {
-        console.log('constructor()');
+        console.log('IonicRecorderApp.constructor()');
 
         this.platform = platform;
         this.menu = menu;
@@ -62,7 +62,7 @@ export class IonicRecorderApp {
             { tabIndex: 4, title: 'About', component: AboutPage }
         ];
 
-        platform.ready().then(() => {
+        this.platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             // [ NOTE: cordova must be available for StatusBar ]
